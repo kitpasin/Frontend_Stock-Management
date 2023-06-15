@@ -6,17 +6,13 @@ import ContentFormatButton from "../../components/ui/toggle-format/toggle-format
 import CategoryTab from "./category-tab/category-tab";
 import ModalAddCategory from "./category-modal/cate-add-modal";
 import ButtonUI from "../../components/ui/button/button";
-import {appActions} from '../../store/app-slice';
+import { appActions } from "../../store/app-slice";
 import { getCategory } from "../../services/category.service";
 import ModalEditCategory from "./category-modal/cate-edit-modal";
 
-import "./category.scss"; 
-import {
-  faAdd,
-  faSitemap,
-  faRedo,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; 
+import "./category.scss";
+import { faAdd, faSitemap, faRedo } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const CategoryPage = () => {
   const { t } = useTranslation(["category-page"]);
@@ -26,21 +22,19 @@ const CategoryPage = () => {
   const [isRowDisplay, setIsRowDisplay] = useState(true);
   const [categoryData, setCategoryData] = useState([]);
   const [menuList, setMenuList] = useState([]);
-  const [totalData, setTotalData] = useState(0)
+  const [totalData, setTotalData] = useState(0);
   const [modalAddCate, setModalAddCate] = useState(false);
   const [modalEditCate, setModalEditCate] = useState(false);
   const [refreshData, setRefreshData] = useState(0);
 
   useEffect(() => {
-    dispatch(appActions.isSpawnActive(true))
-    getCategory(language).then(res => {
-      setCategoryData(res.data)
-      setMenuList(res.menu)
-      dispatch(appActions.isSpawnActive(false))
-    })
-
-  }, [refreshData, language])
-
+    dispatch(appActions.isSpawnActive(true));
+    getCategory(language).then((res) => {
+      setCategoryData(res.data);
+      setMenuList(res.menu);
+      dispatch(appActions.isSpawnActive(false));
+    });
+  }, [refreshData, language]);
 
   return (
     <section id="category-page">
@@ -57,24 +51,25 @@ const CategoryPage = () => {
                 onClick={() => setRefreshData(refreshData + 1)}
                 on="create"
                 isLoading={false}
-                icon={<FontAwesomeIcon icon={faRedo} />} >
+                icon={<FontAwesomeIcon icon={faRedo} />}
+              >
                 {t("Fetch")}
               </ButtonUI>
             </h2>
-            
+
             <ContentFormatButton isRowDisplay={isRowDisplay} setIsRowDisplay={setIsRowDisplay} />
-           
             <ButtonUI
               onClick={() => setModalAddCate(true)}
               className="btn-add-category"
               on="create"
               isLoading={false}
-              icon={<FontAwesomeIcon icon={faAdd} />} >
+              icon={<FontAwesomeIcon icon={faAdd} />}
+            >
               {t("Add Category")}
             </ButtonUI>
           </div>
         </div>
-         
+
         <CategoryTab
           totalData={totalData}
           setTotalData={setTotalData}
@@ -86,25 +81,25 @@ const CategoryPage = () => {
           categoryData={categoryData}
         />
 
-        <ModalAddCategory 
+        <ModalAddCategory
           totalData={totalData}
           setRefreshData={setRefreshData}
-          menuList={menuList} 
-          isOpen={modalAddCate} 
-          setClose={setModalAddCate} 
+          menuList={menuList}
+          isOpen={modalAddCate}
+          setClose={setModalAddCate}
           categoryData={categoryData}
-          />
+        />
 
-        <ModalEditCategory 
+        <ModalEditCategory
           categoryData={categoryData}
           setRefreshData={setRefreshData}
-          menuList={menuList} 
-          isOpen={modalEditCate} 
-          setClose={setModalEditCate} />
-
+          menuList={menuList}
+          isOpen={modalEditCate}
+          setClose={setModalEditCate}
+        />
       </div>
     </section>
-  )
-}
+  );
+};
 
 export default CategoryPage;

@@ -1,5 +1,14 @@
 @import "../../variables";
 
+#search {
+  background: #f3f4f6;
+  margin: .75rem;
+  padding-inline: .5rem;
+  padding-top: .25rem;
+  padding-bottom: .25rem;
+  border-radius: 5px;
+}
+
 #category-page {
   .card-head {
     border: 0;
