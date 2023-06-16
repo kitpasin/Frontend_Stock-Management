@@ -25,7 +25,14 @@ import SlidePage from './pages/slide/slide';
 import MenuPage from './pages/menu/menu';
 import InboxPage from './pages/inbox/inbox';
 import ResetPasswordPage from './pages/resetpassword/resetpassword';
+<<<<<<< HEAD
 import ProductsPage from './pages/products/ProductsPage';
+=======
+import Suppliers from './pages/supplier/Suppliers';
+import ProductCategory from './pages/productCategory/ProductCategory';
+import Amount from './pages/amount/Amount';
+import Vat from './pages/vat/Vat';
+>>>>>>> 1368091947ea12a26a08ea07d75b734fdac262b9
 
 function App() {
   const pagesAllow = useSelector((state) => state.app.pages)
@@ -44,8 +51,12 @@ function App() {
             {pagesAllow.inbox && <Route path="inbox" element={<InboxPage />} /> }
             {/* {pagesAllow.messages && <Route path="messages" element={<DashboardPage />} /> } */}
             {/* {pagesAllow.subscribe && <Route path="subscribe" element={<DashboardPage />} /> } */}
+<<<<<<< HEAD
             {/* {pagesAllow.productcate && <Route path="productcate" element={<DashboardPage />} /> } */}
             {pagesAllow.products && <Route path="/products" element={<ProductsPage />} /> }
+=======
+            {pagesAllow.products && <Route path="products" element={<DashboardPage />} /> }
+>>>>>>> 1368091947ea12a26a08ea07d75b734fdac262b9
             {/* {pagesAllow.members && <Route path="members" element={<DashboardPage />} /> } */}
             {pagesAllow.slides && <Route path="slides" element={<SlidePage />} /> }
 
@@ -55,10 +66,17 @@ function App() {
             {/* {pagesAllow.reports && <Route path="reports" element={<DashboardPage />} /> } */}
             {pagesAllow.webinfo && <Route path="webinfo" element={<WebInfoPage />} /> }
             {pagesAllow.languages && <Route path="languages" element={<LangConfigPage />} /> }
-            {pagesAllow.admins && <Route path="admins" element={<AdminPage />} /> }
             {pagesAllow.configs && <Route path="configs" element={<ConfigPage />} />  }
             {pagesAllow.profile && <Route path="profile" element={<ProfileAdminPage />} /> }
-            {isDevMode && <Route path="componentui" element={<ShowUIComponentPage />} /> }
+
+            {/* Pages setting group */}
+            {pagesAllow.suppliers && <Route path="suppliers" element={<Suppliers />} /> }
+            {pagesAllow.productcate && <Route path="productcate" element={<ProductCategory />} /> }
+            {pagesAllow.amount && <Route path="amount" element={<Amount />} /> }
+            {pagesAllow.vat && <Route path="vat" element={<Vat />} /> }
+            {pagesAllow.admins && <Route path="admins" element={<AdminPage />} /> }
+            
+            {/* {isDevMode && <Route path="componentui" element={<ShowUIComponentPage />} /> } */}
           </Route>
           <Route element={<GuestRoutes />} >
             <Route path="login"  element={<LoginPage />} />
