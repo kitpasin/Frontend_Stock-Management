@@ -3,16 +3,16 @@ const appConfigDEV = {
     language: "fr",
     timeZone: "Europe/Paris",
     languageAvailable: ["fr","en"],  
-    apiPath:"http://192.168.1.124:8000/api/backoffice/v1/",
-    uploadPath:"http://192.168.1.124:8000/",
-    webPath:"http://192.168.1.124:8000/",
+    apiPath:"http://localhost:8000/api/backoffice/v1/",
+    uploadPath:"http://localhost:8000/",
+    webPath:"http://localhost:8000/",
     pages: {
         dashboard: true,
         messages: false,
         inbox: false,
         subscribe: false,
-        productcate: false,
-        products: false,
+        productcate: true,
+        products: true,
         members: false,
         slides: true,
         menu: false,
@@ -27,7 +27,7 @@ const appConfigDEV = {
         groups: {
             notify: true,
             article: true,
-            product: false,
+            product: true,
             report: false,
             system: true,
         }
@@ -93,8 +93,8 @@ const appConfigPROD = {
     }
 }
 
-// export default appConfigDEV;
-export default appConfigPROD;
+export default appConfigDEV;
+// export default appConfigPROD;
 
 
 

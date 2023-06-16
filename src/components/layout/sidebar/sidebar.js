@@ -43,7 +43,7 @@ const SidebarComponent = (props) => {
   const pagesAllow = useSelector((state) => state.app.pages);
   const uploadPath = useSelector((state) => state.app.uploadPath);
   const isDevMode = useSelector((state) => state.app.isDevMode);
-  
+
   const languageSelectHandler = (lang) => {
     i18n.changeLanguage(lang);
     dispatch(appActions.changeLanguage(lang));
