@@ -36,13 +36,16 @@ function Tables() {
                     จำนวนคงเหลือ/หน่วย
                   </TableCell>
                   <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>
-                    ปริมาณสุทธิต่อหน่วย
+                    ปริมาณสุทธิ/หน่วย
                   </TableCell>
                   <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>ราคาขายจริง</TableCell>
                   <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>
                     วันเบิกสินค้าล่าสุด
                   </TableCell>
-                  <TableCell align="center" sx={{ fontSize: "12px", color: "#3B336B" }}>
+                  <TableCell
+                    align="center"
+                    sx={{ fontSize: "12px", color: "#3B336B", paddingRight: ".5rem" }}
+                  >
                     Supplier
                   </TableCell>
                 </TableRow>
@@ -74,7 +77,7 @@ function Tables() {
                   <TableCell sx={{ fontSize: "12px" }}>250 ml</TableCell>
                   <TableCell sx={{ fontSize: "12px" }}>20 THB</TableCell>
                   <TableCell sx={{ fontSize: "12px" }}>28 sep 2023</TableCell>
-                  <TableCell align="center" sx={{ fontSize: "12px" }}>
+                  <TableCell align="center" sx={{ fontSize: "12px", paddingRight: ".5rem" }}>
                     <figure
                       style={{
                         background: "#3B326B",
@@ -114,28 +117,36 @@ function Tables() {
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>
-                  <TableCell align="center" sx={{ fontSize: "12px", color: "#3B336B" }}>
+                  <TableCell
+                    align="center"
+                    sx={{ fontSize: "12px", color: "#3B336B", paddingLeft: ".5rem" }}
+                  >
                     ภาพ
                   </TableCell>
-                  <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>ชื่อรายการ</TableCell>
+                  <TableCell sx={{ fontSize: "12px", color: "#3B336B", width: "130px" }}>
+                    ชื่อรายการ
+                  </TableCell>
                   <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>
                     จำนวนคงเหลือ/หน่วย
                   </TableCell>
                   <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>
-                    ปริมาณสุทธิต่อหน่วย
+                    ปริมาณสุทธิ/หน่วย
                   </TableCell>
                   <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>ราคาขายจริง</TableCell>
                   <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>
                     วันเบิกสินค้าล่าสุด
                   </TableCell>
-                  <TableCell align="center" sx={{ fontSize: "12px", color: "#3B336B" }}>
+                  <TableCell
+                    align="center"
+                    sx={{ fontSize: "12px", color: "#3B336B", paddingRight: ".5rem" }}
+                  >
                     Supplier
                   </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 <TableRow hover role="checkbox">
-                  <TableCell align="center" sx={{ fontSize: "12px" }}>
+                  <TableCell align="center" sx={{ fontSize: "12px", paddingLeft: ".5rem" }}>
                     <figure
                       style={{
                         background: "#D0D0E2",
@@ -160,7 +171,7 @@ function Tables() {
                   <TableCell sx={{ fontSize: "12px" }}>250 ml</TableCell>
                   <TableCell sx={{ fontSize: "12px" }}>20 THB</TableCell>
                   <TableCell sx={{ fontSize: "12px" }}>28 sep 2023</TableCell>
-                  <TableCell align="center" sx={{ fontSize: "12px" }}>
+                  <TableCell align="center" sx={{ fontSize: "12px", paddingRight: ".5rem" }}>
                     <figure
                       style={{
                         background: "#3B326B",
@@ -202,10 +213,7 @@ function Tables() {
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>
-                  <TableCell
-                    align="center"
-                    sx={{ fontSize: "12px", color: "#3B336B", paddingLeft: ".5rem" }}
-                  >
+                  <TableCell sx={{ fontSize: "12px", color: "#3B336B", paddingLeft: ".5rem" }}>
                     ภาพ
                   </TableCell>
                   <TableCell sx={{ fontSize: "12px", color: "#3B336B", width: "130px" }}>
@@ -217,32 +225,37 @@ function Tables() {
                   <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>
                     วันเวลาเบิกออกล่าสุด
                   </TableCell>
-                  <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>วันที่ซื้อ</TableCell>
+                  <TableCell sx={{ fontSize: "12px", color: "#3B336B", width: "100px" }}>
+                    วันที่ซื้อ
+                  </TableCell>
                   <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>
                     จำนวนเบิกออกล่าสุด/หน่วย
                   </TableCell>
                   <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>
                     จำนวนคงเหลือ/หน่วย
                   </TableCell>
-                  <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>
+                  <TableCell sx={{ fontSize: "12px", color: "#3B336B", width: "100px" }}>
                     วันผลิตวันหมดอายุ
                   </TableCell>
                   <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>Vat</TableCell>
                   <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>หมวดหมู่</TableCell>
                   <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>
-                    ปริมาณสุทธิต่อหน่วย
+                    ปริมาณสุทธิ/หน่วย
                   </TableCell>
-                  <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>ต้นทุนต่อ หน่วย</TableCell>
+                  <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>ต้นทุน/หน่วย</TableCell>
                   <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>กำไร</TableCell>
                   <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>ราคาขายจริง</TableCell>
-                  <TableCell align="center" sx={{ fontSize: "12px", color: "#3B336B" }}>
+                  <TableCell
+                    align="center"
+                    sx={{ fontSize: "12px", color: "#3B336B", paddingRight: ".5rem" }}
+                  >
                     Supplier
                   </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 <TableRow hover role="checkbox">
-                  <TableCell align="center" sx={{ fontSize: "12px" }}>
+                  <TableCell align="center" sx={{ fontSize: "12px", paddingLeft: ".5rem" }}>
                     <figure
                       style={{
                         background: "#D0D0E2",
@@ -275,7 +288,7 @@ function Tables() {
                   <TableCell sx={{ fontSize: "12px" }}>5 THB</TableCell>
                   <TableCell sx={{ fontSize: "12px" }}>5 %</TableCell>
                   <TableCell sx={{ fontSize: "12px" }}>20 THB</TableCell>
-                  <TableCell align="center" sx={{ fontSize: "12px" }}>
+                  <TableCell align="center" sx={{ fontSize: "12px", paddingRight: ".5rem" }}>
                     <figure
                       style={{
                         background: "#3B326B",
@@ -315,7 +328,7 @@ function Tables() {
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>
-                  <TableCell align="center" sx={{ fontSize: "12px", color: "#3B336B" }}>
+                  <TableCell sx={{ fontSize: "12px", color: "#3B336B", paddingLeft: ".5rem" }}>
                     ภาพ
                   </TableCell>
                   <TableCell sx={{ fontSize: "12px", color: "#3B336B", width: "130px" }}>
@@ -327,32 +340,37 @@ function Tables() {
                   <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>
                     วันเวลาเบิกออกล่าสุด
                   </TableCell>
-                  <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>วันที่ซื้อ</TableCell>
+                  <TableCell sx={{ fontSize: "12px", color: "#3B336B", width: "100px" }}>
+                    วันที่ซื้อ
+                  </TableCell>
                   <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>
                     จำนวนเบิกออกล่าสุด/หน่วย
                   </TableCell>
                   <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>
                     จำนวนคงเหลือ/หน่วย
                   </TableCell>
-                  <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>
+                  <TableCell sx={{ fontSize: "12px", color: "#3B336B", width: "100px" }}>
                     วันผลิตวันหมดอายุ
                   </TableCell>
                   <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>Vat</TableCell>
                   <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>หมวดหมู่</TableCell>
                   <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>
-                    ปริมาณสุทธิต่อหน่วย
+                    ปริมาณสุทธิ/หน่วย
                   </TableCell>
-                  <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>ต้นทุนต่อ หน่วย</TableCell>
+                  <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>ต้นทุน/หน่วย</TableCell>
                   <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>กำไร</TableCell>
                   <TableCell sx={{ fontSize: "12px", color: "#3B336B" }}>ราคาขายจริง</TableCell>
-                  <TableCell align="center" sx={{ fontSize: "12px", color: "#3B336B" }}>
+                  <TableCell
+                    align="center"
+                    sx={{ fontSize: "12px", color: "#3B336B", paddingRight: ".5rem" }}
+                  >
                     Supplier
                   </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 <TableRow hover role="checkbox">
-                  <TableCell align="center" sx={{ fontSize: "12px" }}>
+                  <TableCell align="center" sx={{ fontSize: "12px", paddingLeft: ".5rem" }}>
                     <figure
                       style={{
                         background: "#D0D0E2",
@@ -385,7 +403,7 @@ function Tables() {
                   <TableCell sx={{ fontSize: "12px" }}>5 THB</TableCell>
                   <TableCell sx={{ fontSize: "12px" }}>5 %</TableCell>
                   <TableCell sx={{ fontSize: "12px" }}>20 THB</TableCell>
-                  <TableCell align="center" sx={{ fontSize: "12px" }}>
+                  <TableCell align="center" sx={{ fontSize: "12px", paddingRight: ".5rem" }}>
                     <figure
                       style={{
                         background: "#3B326B",
