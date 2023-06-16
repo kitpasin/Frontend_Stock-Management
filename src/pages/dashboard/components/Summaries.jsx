@@ -1,14 +1,34 @@
-import React from 'react'
-import { Card } from '@mui/material';
+import React from "react";
+import { Card } from "@mui/material";
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import BarChart from "./BarChart"
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
 
 function Summaries() {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   return (
     <>
       <div className="grid-container-1fr-1fr-white">
         {/* summaries 1 */}
         <Card className="item">
           <div className="content">
-            <figure className='image'>
+            <figure className="image">
               <img src="/images/icons/product-icon.png" alt="Product-icon" />
             </figure>
             <div className="text">
@@ -30,7 +50,19 @@ function Summaries() {
                 <p>15 หน่วย</p>
               </div>
             </div>
-            <button className="graph">แสดงกราฟ</button>
+            <button onClick={handleOpen} className="graph">
+              แสดงกราฟ
+            </button>
+            <Modal
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box sx={style}>
+                <BarChart />
+              </Box>
+            </Modal>
           </div>
         </Card>
 
@@ -255,4 +287,4 @@ function Summaries() {
   );
 }
 
-export default Summaries
+export default Summaries;
