@@ -5,7 +5,7 @@ import './App.scss';
 
 /* Component pages */
 import ConfigPage from "./pages/config/config";
-import DashboardPage from "./pages/dashboard/dashboard";
+import DashboardPage from "./pages/dashboard/DashboardPage";
 import LoginPage from "./pages/login/login";
 import RegisterPage from "./pages/register/register";
 import NotFoundPage from "./pages/page404";
@@ -25,6 +25,7 @@ import SlidePage from './pages/slide/slide';
 import MenuPage from './pages/menu/menu';
 import InboxPage from './pages/inbox/inbox';
 import ResetPasswordPage from './pages/resetpassword/resetpassword';
+import ProductsPage from './pages/products/ProductsPage';
 
 function App() {
   const pagesAllow = useSelector((state) => state.app.pages)
@@ -44,7 +45,7 @@ function App() {
             {/* {pagesAllow.messages && <Route path="messages" element={<DashboardPage />} /> } */}
             {/* {pagesAllow.subscribe && <Route path="subscribe" element={<DashboardPage />} /> } */}
             {/* {pagesAllow.productcate && <Route path="productcate" element={<DashboardPage />} /> } */}
-            {/* {pagesAllow.products && <Route path="products" element={<DashboardPage />} /> } */}
+            {pagesAllow.products && <Route path="/products" element={<ProductsPage />} /> }
             {/* {pagesAllow.members && <Route path="members" element={<DashboardPage />} /> } */}
             {pagesAllow.slides && <Route path="slides" element={<SlidePage />} /> }
 

@@ -47,21 +47,21 @@ const SidebarComponent = (props) => {
   const languageSelectHandler = (lang) => {
     i18n.changeLanguage(lang);
     dispatch(appActions.changeLanguage(lang));
-  }
- 
+  };
+
   const toggleSubMenu = (event) => {
     const subMenu = event.target.closest(".has-child");
     subMenu.classList.toggle("opened");
-  }
+  };
 
   const closeSidebarhandler = (e) => {
     /* ย่อแถบทำงานเฉพาะ width < 768 */
-    let elRoot = document.querySelector('#root')
-    if(elRoot && elRoot.offsetWidth <= 900) {
-      props.collapseHandler(true)
+    let elRoot = document.querySelector("#root");
+    if (elRoot && elRoot.offsetWidth <= 900) {
+      props.collapseHandler(true);
     }
-  }
-  
+  };
+
   return (
     <aside className="aside">
       <nav>
@@ -81,16 +81,15 @@ const SidebarComponent = (props) => {
         <hr className="line-section" />
         <div className="title-section">{t("Languages")}</div>
         <div className="language-selection">
-          {activateLanguage.map((lang) => ( 
+          {activateLanguage.map((lang) => (
             <Button
               variant="outlined"
               key={lang}
               onClick={(e) => languageSelectHandler(lang)}
               className={`btn-lang ${
-                lang.toLowerCase() === selectedLanguage.toLowerCase()
-                ? "selected"
-                : ""
-              }`} >
+                lang.toLowerCase() === selectedLanguage.toLowerCase() ? "selected" : ""
+              }`}
+            >
               {lang}
             </Button>
           ))}
@@ -103,13 +102,14 @@ const SidebarComponent = (props) => {
               <div className="title-section">{t("NotificationTitle")}</div>
               <ul className="nav-menu">
                 {pagesAllow.dashboard && (
-                  <li  >
+                  <li>
                     <NavLink
                       onClick={closeSidebarhandler}
                       to="/dashboard"
                       className="navlink"
                       title={t("dashboardPage")}
-                      liClass="menu-link" >
+                      liClass="menu-link"
+                    >
                       <figure className="faIcon">
                         <FontAwesomeIcon icon={faGamepad} />
                       </figure>
@@ -118,7 +118,7 @@ const SidebarComponent = (props) => {
                   </li>
                 )}
                 {pagesAllow.messages && (
-                  <li >
+                  <li>
                     <NavLink
                       onClick={closeSidebarhandler}
                       to="/messages"
@@ -134,7 +134,7 @@ const SidebarComponent = (props) => {
                   </li>
                 )}
                 {pagesAllow.inbox && (
-                  <li >
+                  <li>
                     <NavLink
                       onClick={closeSidebarhandler}
                       to="/inbox"
@@ -150,7 +150,7 @@ const SidebarComponent = (props) => {
                   </li>
                 )}
                 {pagesAllow.subscribe && (
-                  <li >
+                  <li>
                     <NavLink
                       onClick={closeSidebarhandler}
                       to="/subscribe"
@@ -172,7 +172,25 @@ const SidebarComponent = (props) => {
           {pagesAllow.groups.product && (
             <Fragment>
               <hr className="line-section gap" />
+              <div className="title-section">{t("ManageSystem")}</div>
               <ul className="nav-menu">
+                <li>
+                  <NavLink
+                    onClick={closeSidebarhandler}
+                    to="/products"
+                    className="navlink"
+                    title={t("productPage")}
+                    liClass="menu-link"
+                  >
+                    <figure className="faIcon">
+                      <img src="/images/icons/products-icon.png" alt="" />
+                    </figure>
+                    <div className="menu-title">{t("Products")}</div>
+                  </NavLink>
+                </li>
+              </ul>
+
+              {/* <ul className="nav-menu">
                 <div className="title-section">{t("ManageSystem")}</div>
                 <li className="menu-link has-child ">
                   <a
@@ -245,7 +263,7 @@ const SidebarComponent = (props) => {
                     <div className="menu-title">{t("MembersPage")}</div>
                   </NavLink>
                 )}
-              </ul>
+              </ul> */}
             </Fragment>
           )}
 
@@ -270,48 +288,41 @@ const SidebarComponent = (props) => {
                 )}
                 <li className={`menu-link has-child opened`}>
                   {/* opened */}
-                  <a className={`navlink `}
-                    onClick={toggleSubMenu}
-                    title={t("ManageWebContent")}    >
-                    <FontAwesomeIcon
-                      icon={faCaretDown}
-                      className="toggle-submenu"
-                    />
+                  <a className={`navlink `} onClick={toggleSubMenu} title={t("ManageWebContent")}>
+                    <FontAwesomeIcon icon={faCaretDown} className="toggle-submenu" />
                     <span className="collap-title">
                       <FontAwesomeIcon icon={faListOl} />
                     </span>
                     <div className="menu-title">{t("ManageWebContent")}</div>
                   </a>
                   <div className="child-menu ">
-                    <ul className="nav-items " >
+                    <ul className="nav-items ">
                       {pagesAllow.menu && (
-                        <NavLink 
+                        <NavLink
                           onClick={closeSidebarhandler}
                           to="/menu"
                           className={`items `}
                           title={t("ManageWebContent")}
-                          liClass="sub-items" >
-                          <span className="collap-title"> 
+                          liClass="sub-items"
+                        >
+                          <span className="collap-title">
                             <FontAwesomeIcon icon={faSignsPost} />
                           </span>
                           <span className="menu-title">{t("MenuPage")}</span>
                         </NavLink>
                       )}
                       {pagesAllow.category && (
-                        <NavLink  
+                        <NavLink
                           onClick={closeSidebarhandler}
                           to="/category"
                           className={`items `}
                           title={t("ManageWebContent")}
                           liClass="sub-items"
-                        > 
-                          <span className="collap-title" >
+                        >
+                          <span className="collap-title">
                             <FontAwesomeIcon icon={faSitemap} />
                           </span>
-                          <span className="menu-title">
-                            {t("CategoryPage")}
-                          </span>
-                         
+                          <span className="menu-title">{t("CategoryPage")}</span>
                         </NavLink>
                       )}
                       {pagesAllow.posts && (
@@ -323,7 +334,6 @@ const SidebarComponent = (props) => {
                           liClass="sub-items"
                         >
                           <span className="collap-title">
-                            
                             <FontAwesomeIcon icon={faNewspaper} />
                           </span>
                           <span className="menu-title">{t("PostPage")}</span>
@@ -379,9 +389,7 @@ const SidebarComponent = (props) => {
                   </NavLink>
                 )}
                 {pagesAllow.admins &&
-                  (uPermission.superAdmin ||
-                    uPermission.admin ||
-                    uPermission.officer) && (
+                  (uPermission.superAdmin || uPermission.admin || uPermission.officer) && (
                     <NavLink
                       onClick={closeSidebarhandler}
                       to="/admins"
@@ -458,19 +466,10 @@ const SidebarComponent = (props) => {
         </div>
 
         <hr className="line-section gap" />
-       
       </nav>
-      <ul
-        className="nav-menu mini-bar"
-        style={{ marginTop: "auto", paddingRight: ".5rem" }}
-      >
+      <ul className="nav-menu mini-bar" style={{ marginTop: "auto", paddingRight: ".5rem" }}>
         <li className="menu-link footerLink">
-          <a
-            href={webPath}
-            target="_blank"
-            className="navlink pink-btn "
-            title={t("GoToWebSite")}
-          >
+          <a href={webPath} target="_blank" className="navlink pink-btn " title={t("GoToWebSite")}>
             <figure className="faIcon">
               <FontAwesomeIcon icon={faHome} />
             </figure>

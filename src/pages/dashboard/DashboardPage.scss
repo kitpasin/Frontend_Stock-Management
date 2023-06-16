@@ -28,9 +28,11 @@
             }
             .text {
                 font-size: 18px;
-                font-weight: 400;
                 &-title {
                     color: #3b336b;
+                    p {
+                        font-weight: 500;
+                    }
                 }
                 &-description {
                     color: #9993b4;

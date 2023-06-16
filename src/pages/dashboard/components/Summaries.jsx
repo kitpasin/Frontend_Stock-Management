@@ -10,20 +10,32 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: 800,
   bgcolor: "background.paper",
-  border: "2px solid #000",
+  borderRadius: 5,
   boxShadow: 24,
   p: 4,
 };
 
 function Summaries() {
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+
+  function toggleGraph() {
+    setOpen(!open)
+  }
 
   return (
     <>
+      <Modal
+        open={open}
+        onClose={toggleGraph}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <BarChart />
+        </Box>
+      </Modal>
       <div className="grid-container-1fr-1fr-white">
         {/* summaries 1 */}
         <Card className="item">
@@ -50,19 +62,9 @@ function Summaries() {
                 <p>15 หน่วย</p>
               </div>
             </div>
-            <button onClick={handleOpen} className="graph">
+            <button onClick={toggleGraph} className="graph">
               แสดงกราฟ
             </button>
-            <Modal
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
-              <Box sx={style}>
-                <BarChart />
-              </Box>
-            </Modal>
           </div>
         </Card>
 
@@ -91,7 +93,9 @@ function Summaries() {
                 <p>240 หน่วย</p>
               </div>
             </div>
-            <button className="graph">แสดงกราฟ</button>
+            <button onClick={toggleGraph} className="graph">
+              แสดงกราฟ
+            </button>
           </div>
         </Card>
 
@@ -120,7 +124,9 @@ function Summaries() {
                 <p>550 หน่วย</p>
               </div>
             </div>
-            <button className="graph">แสดงกราฟ</button>
+            <button onClick={toggleGraph} className="graph">
+              แสดงกราฟ
+            </button>
           </div>
         </Card>
 
@@ -149,7 +155,9 @@ function Summaries() {
                 <p>550 หน่วย</p>
               </div>
             </div>
-            <button className="graph">แสดงกราฟ</button>
+            <button onClick={toggleGraph} className="graph">
+              แสดงกราฟ
+            </button>
           </div>
         </Card>
       </div>
