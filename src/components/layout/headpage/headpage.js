@@ -12,6 +12,8 @@ const HeadPageComponent = ({ h1, icon, breadcrums }) => {
     const language = useSelector((state) => state.app.language)
     const { t } = useTranslation("sidebar")
 
+    console.log(icon)
+
     return (
         <div className="head-page">
             <h1 className="title-page">{icon} {t(h1)} <span className="language"> ({language.toUpperCase()})</span></h1>

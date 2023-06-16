@@ -34,5 +34,8 @@
     "Edit": "แก้ไข",
     "Delete": "ลบ",
     "Save": "บันทึก",
-    "default": "ค่าเริ่มต้น"
+    "default": "ค่าเริ่มต้น",
+    "suppliersPage": "ซัพพลายเออร์",
+    "vat": "Vat",
+    "amountPage": "ปริมาณ/จำนวน"
 }

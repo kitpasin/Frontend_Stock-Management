@@ -9,7 +9,7 @@
     "MessagesPage":"Messages",
     "InboxPage":"Inbox",
     "SubscribePage":"Subscribe",
-    "ProductCategory": "Category",
+    "ProductCategory": "Product Category",
     "ProductList": "All Product",
     "ManageContent": "Content Management",
     "SlidesPage": "Slide & Image",
@@ -34,5 +34,8 @@
     "Edit": "Edit",
     "Delete": "Delete",
     "Save": "Save",
-    "default": "default"
+    "default": "default",
+    "suppliersPage": "Suppliers",
+    "vat": "Vat",
+    "amountPage": "Net Weight/Amount"
 }

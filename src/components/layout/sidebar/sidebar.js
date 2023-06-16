@@ -47,21 +47,21 @@ const SidebarComponent = (props) => {
   const languageSelectHandler = (lang) => {
     i18n.changeLanguage(lang);
     dispatch(appActions.changeLanguage(lang));
-  }
- 
+  };
+
   const toggleSubMenu = (event) => {
     const subMenu = event.target.closest(".has-child");
     subMenu.classList.toggle("opened");
-  }
+  };
 
   const closeSidebarhandler = (e) => {
     /* ย่อแถบทำงานเฉพาะ width < 768 */
-    let elRoot = document.querySelector('#root')
-    if(elRoot && elRoot.offsetWidth <= 900) {
-      props.collapseHandler(true)
+    let elRoot = document.querySelector("#root");
+    if (elRoot && elRoot.offsetWidth <= 900) {
+      props.collapseHandler(true);
     }
-  }
-  
+  };
+
   return (
     <aside className="aside">
       <nav>
@@ -81,16 +81,17 @@ const SidebarComponent = (props) => {
         <hr className="line-section" />
         <div className="title-section">{t("Languages")}</div>
         <div className="language-selection">
-          {activateLanguage.map((lang) => ( 
+          {activateLanguage.map((lang) => (
             <Button
               variant="outlined"
               key={lang}
               onClick={(e) => languageSelectHandler(lang)}
               className={`btn-lang ${
                 lang.toLowerCase() === selectedLanguage.toLowerCase()
-                ? "selected"
-                : ""
-              }`} >
+                  ? "selected"
+                  : ""
+              }`}
+            >
               {lang}
             </Button>
           ))}
@@ -103,13 +104,14 @@ const SidebarComponent = (props) => {
               <div className="title-section">{t("NotificationTitle")}</div>
               <ul className="nav-menu">
                 {pagesAllow.dashboard && (
-                  <li  >
+                  <li>
                     <NavLink
                       onClick={closeSidebarhandler}
                       to="/dashboard"
                       className="navlink"
                       title={t("dashboardPage")}
-                      liClass="menu-link" >
+                      liClass="menu-link"
+                    >
                       <figure className="faIcon">
                         <FontAwesomeIcon icon={faGamepad} />
                       </figure>
@@ -118,7 +120,7 @@ const SidebarComponent = (props) => {
                   </li>
                 )}
                 {pagesAllow.messages && (
-                  <li >
+                  <li>
                     <NavLink
                       onClick={closeSidebarhandler}
                       to="/messages"
@@ -134,7 +136,7 @@ const SidebarComponent = (props) => {
                   </li>
                 )}
                 {pagesAllow.inbox && (
-                  <li >
+                  <li>
                     <NavLink
                       onClick={closeSidebarhandler}
                       to="/inbox"
@@ -150,7 +152,7 @@ const SidebarComponent = (props) => {
                   </li>
                 )}
                 {pagesAllow.subscribe && (
-                  <li >
+                  <li>
                     <NavLink
                       onClick={closeSidebarhandler}
                       to="/subscribe"
@@ -185,7 +187,6 @@ const SidebarComponent = (props) => {
                       className="toggle-submenu"
                     />
                     <span className="collap-title">
-                      
                       <FontAwesomeIcon icon={faBoxOpen} />
                     </span>
                     <div className="menu-title">{t("ProductsTitleMenu")}</div>
@@ -202,7 +203,6 @@ const SidebarComponent = (props) => {
                             liClass="sub-items"
                           >
                             <span className="collap-title">
-                              
                               <FontAwesomeIcon icon={faSignsPost} />
                             </span>
                             <span className="menu-title">
@@ -220,7 +220,6 @@ const SidebarComponent = (props) => {
                           liClass="sub-items"
                         >
                           <span className="collap-title">
-                            
                             <FontAwesomeIcon icon={faSignsPost} />
                           </span>
                           <span className="menu-title">
@@ -270,9 +269,11 @@ const SidebarComponent = (props) => {
                 )}
                 <li className={`menu-link has-child opened`}>
                   {/* opened */}
-                  <a className={`navlink `}
+                  <a
+                    className={`navlink `}
                     onClick={toggleSubMenu}
-                    title={t("ManageWebContent")}    >
+                    title={t("ManageWebContent")}
+                  >
                     <FontAwesomeIcon
                       icon={faCaretDown}
                       className="toggle-submenu"
@@ -283,35 +284,35 @@ const SidebarComponent = (props) => {
                     <div className="menu-title">{t("ManageWebContent")}</div>
                   </a>
                   <div className="child-menu ">
-                    <ul className="nav-items " >
+                    <ul className="nav-items ">
                       {pagesAllow.menu && (
-                        <NavLink 
+                        <NavLink
                           onClick={closeSidebarhandler}
                           to="/menu"
                           className={`items `}
                           title={t("ManageWebContent")}
-                          liClass="sub-items" >
-                          <span className="collap-title"> 
+                          liClass="sub-items"
+                        >
+                          <span className="collap-title">
                             <FontAwesomeIcon icon={faSignsPost} />
                           </span>
                           <span className="menu-title">{t("MenuPage")}</span>
                         </NavLink>
                       )}
                       {pagesAllow.category && (
-                        <NavLink  
+                        <NavLink
                           onClick={closeSidebarhandler}
                           to="/category"
                           className={`items `}
                           title={t("ManageWebContent")}
                           liClass="sub-items"
-                        > 
-                          <span className="collap-title" >
+                        >
+                          <span className="collap-title">
                             <FontAwesomeIcon icon={faSitemap} />
                           </span>
                           <span className="menu-title">
                             {t("CategoryPage")}
                           </span>
-                         
                         </NavLink>
                       )}
                       {pagesAllow.posts && (
@@ -323,7 +324,6 @@ const SidebarComponent = (props) => {
                           liClass="sub-items"
                         >
                           <span className="collap-title">
-                            
                             <FontAwesomeIcon icon={faNewspaper} />
                           </span>
                           <span className="menu-title">{t("PostPage")}</span>
@@ -364,6 +364,80 @@ const SidebarComponent = (props) => {
               <hr className="line-section gap" />
               <div className="title-section">{t("SettingsTitle")}</div>
               <ul className="nav-menu">
+                {pagesAllow.suppliers &&
+                  (uPermission.superAdmin ||
+                    uPermission.admin ||
+                    uPermission.officer) && (
+                    <NavLink
+                      onClick={closeSidebarhandler}
+                      to="/suppliers"
+                      className={`navlink `}
+                      title={t("suppliersPage")}
+                      liClass="menu-link"
+                    >
+                      <figure className="faIcon">
+                        {/* <FontAwesomeIcon icon={faUserShield} /> */}
+                        <img src="images/icons/entypo_shop.png" alt="" />
+                      </figure>
+                      <div className="menu-title">{t("suppliersPage")}</div>
+                    </NavLink>
+                  )}
+                {pagesAllow.productcate &&
+                  (uPermission.superAdmin ||
+                    uPermission.admin ||
+                    uPermission.officer) && (
+                    <NavLink
+                      onClick={closeSidebarhandler}
+                      to="/productcate"
+                      className={`navlink `}
+                      title={t("ProductCategory")}
+                      liClass="menu-link"
+                    >
+                      <figure className="faIcon">
+                        {/* <FontAwesomeIcon icon={faUserShield} /> */}
+                        <img src="images/icons/uis_layer-group.png" alt="" />
+                      </figure>
+                      <div className="menu-title">{t("ProductCategory")}</div>
+                    </NavLink>
+                  )}
+                {pagesAllow.vat &&
+                  (uPermission.superAdmin ||
+                    uPermission.admin ||
+                    uPermission.officer) && (
+                    <NavLink
+                      onClick={closeSidebarhandler}
+                      to="/amount"
+                      className={`navlink `}
+                      title={t("amountPage")}
+                      liClass="menu-link"
+                    >
+                      <figure className="faIcon">
+                        {/* <FontAwesomeIcon icon={faUserShield} /> */}
+                        <img src="images/icons/majesticons_atom-2.png" alt="" />
+                      </figure>
+                      <div className="menu-title">{t("amountPage")}</div>
+                    </NavLink>
+                  )}
+                {pagesAllow.vat &&
+                  (uPermission.superAdmin ||
+                    uPermission.admin ||
+                    uPermission.officer) && (
+                    <NavLink
+                      onClick={closeSidebarhandler}
+                      to="/vat"
+                      className={`navlink `}
+                      title={t("vat")}
+                      liClass="menu-link"
+                    >
+                      <figure className="faIcon">
+                        {/* <FontAwesomeIcon icon={faUserShield} /> */}
+                        <img src="images/icons/foundation_graph-pie.png" alt="" />
+                      </figure>
+                      <div className="menu-title">{t("vat")}</div>
+                    </NavLink>
+                  )}
+
+
                 {pagesAllow.webinfo && (
                   <NavLink
                     onClick={closeSidebarhandler}
@@ -378,6 +452,7 @@ const SidebarComponent = (props) => {
                     <div className="menu-title">{t("WebInfoPage")}</div>
                   </NavLink>
                 )}
+
                 {pagesAllow.admins &&
                   (uPermission.superAdmin ||
                     uPermission.admin ||
@@ -425,7 +500,7 @@ const SidebarComponent = (props) => {
                     <div className="menu-title">{t("ConfigPage")}</div>
                   </NavLink>
                 )}
-                {isDevMode && (
+                {/* {isDevMode && (
                   <NavLink
                     onClick={closeSidebarhandler}
                     to="/componentui"
@@ -438,8 +513,8 @@ const SidebarComponent = (props) => {
                     </figure>
                     <div className="menu-title">UI Components</div>
                   </NavLink>
-                )}
-                <div className="menu-link">
+                )} */}
+                {/* <div className="menu-link">
                   <a
                     href={`${uploadPath}upload/manual/manual.pdf`}
                     className={`navlink `}
@@ -451,14 +526,13 @@ const SidebarComponent = (props) => {
                     </figure>
                     <div className="menu-title">Manual</div>
                   </a>
-                </div>
+                </div> */}
               </ul>
             </Fragment>
           )}
         </div>
 
         <hr className="line-section gap" />
-       
       </nav>
       <ul
         className="nav-menu mini-bar"
