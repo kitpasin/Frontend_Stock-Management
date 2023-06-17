@@ -87,13 +87,9 @@ const SidebarComponent = (props) => {
               key={lang}
               onClick={(e) => languageSelectHandler(lang)}
               className={`btn-lang ${
-<<<<<<< HEAD
-                lang.toLowerCase() === selectedLanguage.toLowerCase() ? "selected" : ""
-=======
                 lang.toLowerCase() === selectedLanguage.toLowerCase()
                   ? "selected"
                   : ""
->>>>>>> 1368091947ea12a26a08ea07d75b734fdac262b9
               }`}
             >
               {lang}
@@ -291,10 +287,6 @@ const SidebarComponent = (props) => {
                 )}
                 <li className={`menu-link has-child opened`}>
                   {/* opened */}
-<<<<<<< HEAD
-                  <a className={`navlink `} onClick={toggleSubMenu} title={t("ManageWebContent")}>
-                    <FontAwesomeIcon icon={faCaretDown} className="toggle-submenu" />
-=======
                   <a
                     className={`navlink `}
                     onClick={toggleSubMenu}
@@ -304,7 +296,6 @@ const SidebarComponent = (props) => {
                       icon={faCaretDown}
                       className="toggle-submenu"
                     />
->>>>>>> 1368091947ea12a26a08ea07d75b734fdac262b9
                     <span className="collap-title">
                       <FontAwesomeIcon icon={faListOl} />
                     </span>
@@ -337,13 +328,9 @@ const SidebarComponent = (props) => {
                           <span className="collap-title">
                             <FontAwesomeIcon icon={faSitemap} />
                           </span>
-<<<<<<< HEAD
-                          <span className="menu-title">{t("CategoryPage")}</span>
-=======
                           <span className="menu-title">
                             {t("CategoryPage")}
                           </span>
->>>>>>> 1368091947ea12a26a08ea07d75b734fdac262b9
                         </NavLink>
                       )}
                       {pagesAllow.posts && (
