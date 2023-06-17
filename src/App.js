@@ -31,6 +31,7 @@ import Suppliers from './pages/supplier/Suppliers';
 import ProductCategory from './pages/productCategory/ProductCategory';
 import Amount from './pages/amount/Amount';
 import Vat from './pages/vat/Vat';
+import CreateSupplier from './pages/supplier/createSupplier/CreateSupplier';
 
 function App() {
   const pagesAllow = useSelector((state) => state.app.pages)
@@ -64,6 +65,7 @@ function App() {
 
           {/* Pages setting group */}
           {pagesAllow.suppliers && <Route path="suppliers" element={<Suppliers />} />}
+          {pagesAllow.suppliers && <Route path="createsupplier" element={<CreateSupplier />} />}
           {pagesAllow.productcate && <Route path="productcate" element={<ProductCategory />} />}
           {pagesAllow.amount && <Route path="amount" element={<Amount />} />}
           {pagesAllow.vat && <Route path="vat" element={<Vat />} />}
