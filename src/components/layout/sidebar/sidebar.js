@@ -87,9 +87,7 @@ const SidebarComponent = (props) => {
               key={lang}
               onClick={(e) => languageSelectHandler(lang)}
               className={`btn-lang ${
-                lang.toLowerCase() === selectedLanguage.toLowerCase()
-                  ? "selected"
-                  : ""
+                lang.toLowerCase() === selectedLanguage.toLowerCase() ? "selected" : ""
               }`}
             >
               {lang}
@@ -191,6 +189,22 @@ const SidebarComponent = (props) => {
                   </NavLink>
                 </li>
               </ul>
+              <ul className="nav-menu">
+                <li>
+                  <NavLink
+                    onClick={closeSidebarhandler}
+                    to="/expiration"
+                    className="navlink"
+                    title={t("Expiration")}
+                    liClass="menu-link"
+                  >
+                    <figure className="faIcon">
+                      <img src="/images/icons/expiration-icon.png" alt="" />
+                    </figure>
+                    <div className="menu-title">{t("Expiration")}</div>
+                  </NavLink>
+                </li>
+              </ul>
 
               {/* <ul className="nav-menu">
                 <div className="title-section">{t("ManageSystem")}</div>
@@ -287,15 +301,8 @@ const SidebarComponent = (props) => {
                 )}
                 <li className={`menu-link has-child opened`}>
                   {/* opened */}
-                  <a
-                    className={`navlink `}
-                    onClick={toggleSubMenu}
-                    title={t("ManageWebContent")}
-                  >
-                    <FontAwesomeIcon
-                      icon={faCaretDown}
-                      className="toggle-submenu"
-                    />
+                  <a className={`navlink `} onClick={toggleSubMenu} title={t("ManageWebContent")}>
+                    <FontAwesomeIcon icon={faCaretDown} className="toggle-submenu" />
                     <span className="collap-title">
                       <FontAwesomeIcon icon={faListOl} />
                     </span>
@@ -328,9 +335,7 @@ const SidebarComponent = (props) => {
                           <span className="collap-title">
                             <FontAwesomeIcon icon={faSitemap} />
                           </span>
-                          <span className="menu-title">
-                            {t("CategoryPage")}
-                          </span>
+                          <span className="menu-title">{t("CategoryPage")}</span>
                         </NavLink>
                       )}
                       {pagesAllow.posts && (
@@ -383,9 +388,7 @@ const SidebarComponent = (props) => {
               <div className="title-section">{t("SettingsTitle")}</div>
               <ul className="nav-menu">
                 {pagesAllow.suppliers &&
-                  (uPermission.superAdmin ||
-                    uPermission.admin ||
-                    uPermission.officer) && (
+                  (uPermission.superAdmin || uPermission.admin || uPermission.officer) && (
                     <NavLink
                       onClick={closeSidebarhandler}
                       to="/suppliers"
@@ -401,9 +404,7 @@ const SidebarComponent = (props) => {
                     </NavLink>
                   )}
                 {pagesAllow.productcate &&
-                  (uPermission.superAdmin ||
-                    uPermission.admin ||
-                    uPermission.officer) && (
+                  (uPermission.superAdmin || uPermission.admin || uPermission.officer) && (
                     <NavLink
                       onClick={closeSidebarhandler}
                       to="/productcate"
@@ -419,9 +420,7 @@ const SidebarComponent = (props) => {
                     </NavLink>
                   )}
                 {pagesAllow.vat &&
-                  (uPermission.superAdmin ||
-                    uPermission.admin ||
-                    uPermission.officer) && (
+                  (uPermission.superAdmin || uPermission.admin || uPermission.officer) && (
                     <NavLink
                       onClick={closeSidebarhandler}
                       to="/amount"
@@ -437,9 +436,7 @@ const SidebarComponent = (props) => {
                     </NavLink>
                   )}
                 {pagesAllow.vat &&
-                  (uPermission.superAdmin ||
-                    uPermission.admin ||
-                    uPermission.officer) && (
+                  (uPermission.superAdmin || uPermission.admin || uPermission.officer) && (
                     <NavLink
                       onClick={closeSidebarhandler}
                       to="/vat"
@@ -454,7 +451,6 @@ const SidebarComponent = (props) => {
                       <div className="menu-title">{t("vat")}</div>
                     </NavLink>
                   )}
-
 
                 {pagesAllow.webinfo && (
                   <NavLink
