@@ -7,6 +7,7 @@ import "./productCategory.scss";
 
 /* import Components */
 import HeadPageComponent from "../../components/layout/headpage/headpage";
+import ProductCateTable from "./ProductCateTable";
 
 function ProductCategory() {
 
@@ -81,25 +82,15 @@ function ProductCategory() {
             <div className="action">
               <button>สร้างหมวดหมู่หลัก</button>
               <button>สร้างหมวดหมู่ย่อย</button>
-              <button className="btn-delete" style={{ width: "35px" }}>
+              {/* <button className="btn-delete" style={{ width: "35px" }}>
                 {" "}
                 <img src="images/icons/tabler_trash-x-filled.png" alt="" />{" "}
-              </button>
+              </button> */}
               <p>2,500 รายการ</p>
             </div>
           </div>
           <div className="table">
-            <DataGrid
-              checkboxSelection={true}
-              rows={[]}
-              columns={columns}
-              initialState={{
-                pagination: {
-                  paginationModel: { page: 0, pageSize: 5 },
-                },
-              }}
-              pageSizeOptions={[5, 10, 50, 100]}
-            />
+            <ProductCateTable />
           </div>
         </div>
       </div>

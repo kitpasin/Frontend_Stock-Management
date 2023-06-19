@@ -34,14 +34,14 @@ function Suppliers() {
   };
 
   const columns = [
-    { field: "id", headerName: "#", width: 30 },
+    { field: "id", headerName: "#", width: 50 },
     { field: "companyName", headerName: "Company Name", width: 200 },
-    { field: "address", headerName: "Address", width: 180 },
-    { field: "empName", headerName: "Employee Name", width: 180 },
+    { field: "address", headerName: "Address", width: 200 },
+    { field: "empName", headerName: "Employee Name", width: 200 },
     {
       field: "tel",
       headerName: "Tel",
-      width: 130,
+      width: 160,
     },
     {
       field: "email",
@@ -51,9 +51,9 @@ function Suppliers() {
       // valueGetter: (params) =>
       // `${params.row.firstName || ""} ${params.row.lastName || ""}`,
     },
-    { field: "lineId", headerName: "Line ID", width: 130, sortable: false },
-    { field: "category", headerName: "Category", width: 100 },
-    { field: "ordered", headerName: "Number of Ordered", width: 130 },
+    { field: "lineId", headerName: "Line ID", width: 140, sortable: false },
+    { field: "category", headerName: "Category", width: 140 },
+    { field: "ordered", headerName: "Number of Ordered", width: 140 },
     {
       field: "edit",
       headerName: "Edit",
