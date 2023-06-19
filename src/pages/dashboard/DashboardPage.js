@@ -9,6 +9,7 @@ import "./DashboardPage.scss";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
 import Summaries from "./components/Summaries";
 import Tables from "./components/Tables";
+import { rows } from "./data/TableData";
 
 const DashboardPage = () => {
   const { t } = useTranslation(["dashboard-page"]);
@@ -24,7 +25,7 @@ const DashboardPage = () => {
         breadcrums={[{ title: t("dashboardPage"), link: false }]}
       />
       <Summaries />
-      <Tables />
+      <Tables rows={rows}/>
     </section>
   );
 };

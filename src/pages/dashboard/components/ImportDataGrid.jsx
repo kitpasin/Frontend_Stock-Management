@@ -5,16 +5,15 @@ import { Button } from "@mui/material";
 import { Menu } from "@mui/material";
 import { MenuItem } from "@mui/material";
 
-function Table({ rows }) {
+function ImportDataGrid({ rows }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-
   function handleClick(event) {
     setAnchorEl(event.currentTarget);
-  };
+  }
   function handleClose() {
     setAnchorEl(null);
-  };
+  }
 
   const columns = [
     {
@@ -30,14 +29,26 @@ function Table({ rows }) {
     },
     { field: "name", headerName: "ชื่อรายการ", width: 150, headerClassName: "table-columns" },
     {
-      field: "quantityPerUnit",
-      headerName: "คงเหลือ/หน่วย",
+      field: "user",
+      headerName: "ผู้ใช้งาน",
+      width: 150,
+      headerClassName: "table-columns",
+    },
+    {
+      field: "exportDate",
+      headerName: "วันเบิกสินค้า",
+      width: 150,
+      headerClassName: "table-columns",
+    },
+    {
+      field: "exportQuantityPerUnit",
+      headerName: "จำนวนเบิกออกต่อหน่วย",
       width: 100,
       headerClassName: "table-columns",
     },
     {
-      field: "defective",
-      headerName: "สินค้ามีปัญหา",
+      field: "quantityPerUnit",
+      headerName: "คงเหลือ/ต่อหน่วย",
       width: 100,
       headerClassName: "table-columns",
     },
@@ -47,19 +58,22 @@ function Table({ rows }) {
       width: 100,
       headerClassName: "table-columns",
     },
-    { field: "MEDEXP", headerName: "MED EXP", width: 150, headerClassName: "table-columns" },
     {
-      field: "dateEXP",
-      headerName: "จำนวนวัน EXP",
+      field: "MEDEXP",
+      headerName: "MEDEXP",
+      width: 150,
+      headerClassName: "table-columns",
+    },
+    {
+      field: "vat",
+      headerName: "Vat",
       width: 100,
       headerClassName: "table-columns",
     },
-    { field: "vat", headerName: "Vat", width: 100, headerClassName: "table-columns" },
-    { field: "category", headerName: "หมวดหมู่", width: 100, headerClassName: "table-columns" },
     {
-      field: "countingUnit",
-      headerName: "หน่วยนับ",
-      width: 100,
+      field: "category",
+      headerName: "หมวดหมู่",
+      width: 150,
       headerClassName: "table-columns",
     },
     {
@@ -69,40 +83,14 @@ function Table({ rows }) {
       headerClassName: "table-columns",
     },
     {
-      field: "operationFee",
-      headerName: "ค่าดำเนินการ (THB)",
-      width: 100,
-      headerClassName: "table-columns",
-    },
-    {
-      field: "operationFeePerUnit",
-      headerName: "ดำเนินการ/หน่วย (THB)",
-      width: 100,
-      headerClassName: "table-columns",
-    },
-    {
-      field: "rawPrice",
-      headerName: "ราคาดิบ (THB)",
-      width: 100,
-      headerClassName: "table-columns",
-    },
-    {
-      field: "rawPricePerUnit",
-      headerName: "ราคาดิบ/หน่วย (THB)",
-      width: 100,
-      headerClassName: "table-columns",
-    },
-    { field: "cost", headerName: "ต้นทุน (THB)", width: 100, headerClassName: "table-columns" },
-    {
       field: "costPerUnit",
-      headerName: "ต้นทุนต่อหน่วย (THB)",
+      headerName: "ต้นทุน/หน่วย (THB)",
       width: 100,
       headerClassName: "table-columns",
     },
-    { field: "profit", headerName: "กำไร", width: 100, headerClassName: "table-columns" },
     {
-      field: "expectedSellingPrice",
-      headerName: "ราคาขาย (THB)",
+      field: "profit",
+      headerName: "กำไร",
       width: 100,
       headerClassName: "table-columns",
     },
@@ -207,9 +195,8 @@ function Table({ rows }) {
   ];
 
   const rowsClassName = "table-rows";
-
   return (
-    <div>
+    <>
       <DataGrid
         getRowClassName={() => rowsClassName}
         sx={{ fontSize: "12px", border: "none" }}
@@ -222,8 +209,8 @@ function Table({ rows }) {
         }}
         pageSizeOptions={[5, 10, 50, 100]}
       />
-    </div>
+    </>
   );
 }
 
-export default Table;
+export default ImportDataGrid;

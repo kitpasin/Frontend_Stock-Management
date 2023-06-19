@@ -4,6 +4,7 @@ import { Avatar } from "@mui/material";
 import { Button } from "@mui/material";
 import { Menu } from "@mui/material";
 import { MenuItem } from "@mui/material";
+import { Link } from "react-router-dom";
 
 function Table({ rows }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -11,10 +12,10 @@ function Table({ rows }) {
 
   function handleClick(event) {
     setAnchorEl(event.currentTarget);
-  };
+  }
   function handleClose() {
     setAnchorEl(null);
-  };
+  }
 
   const columns = [
     {
@@ -166,13 +167,15 @@ function Table({ rows }) {
               />
               <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>ซัพพลาย</p>
             </MenuItem>
-            <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={handleClose}>
-              <img
-                style={{ width: "18px", height: "18px" }}
-                src="/images/icons/export-icon.png"
-                alt=""
-              />
-              <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>เบิกสินค้า</p>
+            <MenuItem onClick={handleClose}>
+              <Link to="/defective/export" style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                <img
+                  style={{ width: "18px", height: "18px" }}
+                  src="/images/icons/export-icon.png"
+                  alt=""
+                />
+                <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>เบิกสินค้า</p>
+              </Link>
             </MenuItem>
             <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={handleClose}>
               <img

@@ -11,10 +11,10 @@ function Table({ rows }) {
 
   function handleClick(event) {
     setAnchorEl(event.currentTarget);
-  };
+  }
   function handleClose() {
     setAnchorEl(null);
-  };
+  }
 
   const columns = [
     {
