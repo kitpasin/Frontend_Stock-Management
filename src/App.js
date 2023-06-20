@@ -32,6 +32,11 @@ import ProductCategory from './pages/productCategory/ProductCategory';
 import Amount from './pages/amount/Amount';
 import Vat from './pages/vat/Vat';
 import CreateSupplier from './pages/supplier/createSupplier/CreateSupplier';
+import StockPage from './pages/stock/StockPage';
+import DefectivePage from './pages/defective/DefectivePage'
+import ImportPage from './pages/import/ImportPage';
+import ExportPage from './pages/export/ExportPage';
+import DefectiveExportPage from './pages/defective/DefectiveExportPage';
 
 function App() {
   const pagesAllow = useSelector((state) => state.app.pages)
@@ -52,6 +57,11 @@ function App() {
           {/* {pagesAllow.productcate && <Route path="productcate" element={<DashboardPage />} /> } */}
           {pagesAllow.products && <Route path="/products" element={<ProductsPage />} />}
           {pagesAllow.products && <Route path="/expiration" element={<ExpirationPage />} />}
+          {pagesAllow.products && <Route path="/stock" element={<StockPage />} />}
+          {pagesAllow.products && <Route path="/import" element={<ImportPage />} />}
+          {pagesAllow.products && <Route path="/export" element={<ExportPage />} />}
+          {pagesAllow.products && <Route path="/defective" element={<DefectivePage />} />}
+          {pagesAllow.products && <Route path="/defective/export" element={<DefectiveExportPage />} />}
           {pagesAllow.slides && <Route path="slides" element={<SlidePage />} />}
 
           {pagesAllow.menu && <Route path="menu" element={<MenuPage />} />}

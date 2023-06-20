@@ -10,23 +10,21 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 
-import "./ExpirationPage.scss";
+import "./ExportPage.scss";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
 import Table from "./components/Table";
 import { rows } from "./data/TableData";
 
-function ExpirationPage() {
+function ExportPage() {
   const { t } = useTranslation(["dashboard-page"]);
   const dispatch = useDispatch();
   const [rowsData, setRowsData] = useState([]);
   const [filteredRows, setFilteredRows] = useState([]);
 
-  useEffect(() => {
-
-  }, [])
+  useEffect(() => {}, []);
 
   return (
-    <section id="expiration-page">
+    <section id="export-page">
       <div
         style={{
           display: "flex",
@@ -36,24 +34,21 @@ function ExpirationPage() {
         }}
       >
         <figure style={{ width: "30px", marginBottom: "1rem" }}>
-          <img src="/images/icons/expirationPage-icon.png" alt="" />
+          <img src="/images/icons/exportPage-icon.png" alt="" />
         </figure>
         <div style={{ width: "100%" }}>
-          <HeadPageComponent
-            h1={t("Expiration")}
-            breadcrums={[{ title: t("Expiration"), link: false }]}
-          />
+          <HeadPageComponent h1={t("Export")} breadcrums={[{ title: t("Export"), link: false }]} />
         </div>
       </div>
       <Card className="flex-container-column" sx={{ borderRadius: "10px" }}>
         <div className="header">
           <div className="wrapper">
             <figure className="title">
-              <img src="/images/icons/expirationTable-icon.png" alt="" />
-              <p>สืนค้าใกล้หมดอายุ</p>
+              <img src="/images/icons/export-icon.png" alt="" />
+              <p>สินค้าเบิกออก</p>
             </figure>
             <div className="description">
-              <p>2,500 รายการ</p>
+              <p>20,500 รายการ</p>
             </div>
           </div>
           <div className="filter">
@@ -97,4 +92,4 @@ function ExpirationPage() {
   );
 }
 
-export default ExpirationPage;
+export default ExportPage;

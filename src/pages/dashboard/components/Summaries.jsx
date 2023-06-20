@@ -2,7 +2,6 @@ import React from "react";
 import { Card } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import BarChart from "./BarChart"
 
 const style = {
@@ -72,11 +71,11 @@ function Summaries() {
         <Card className="item">
           <div className="content">
             <figure className="image">
-              <img src="/images/icons/expire-icon.png" alt="Expire-icon" />
+              <img src="/images/icons/expirationTable-icon.png" alt="Expiration-icon" />
             </figure>
             <div className="text">
               <div className="text-title">
-                <p>รวมรายการ สินค้าไกล้หมด</p>
+                <p>รวมรายการ สินค้าใกล้หมดอายุ</p>
               </div>
               <div className="text-description">
                 <p>90,000 รายการ / 85,324 หน่วย</p>

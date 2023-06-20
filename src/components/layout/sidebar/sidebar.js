@@ -205,6 +205,70 @@ const SidebarComponent = (props) => {
                   </NavLink>
                 </li>
               </ul>
+              <ul className="nav-menu">
+                <li>
+                  <NavLink
+                    onClick={closeSidebarhandler}
+                    to="/stock"
+                    className="navlink"
+                    title={t("Stock")}
+                    liClass="menu-link"
+                  >
+                    <figure className="faIcon">
+                      <img src="/images/icons/stock-icon.png" alt="" />
+                    </figure>
+                    <div className="menu-title">{t("Stock")}</div>
+                  </NavLink>
+                </li>
+              </ul>
+              <ul className="nav-menu">
+                <li>
+                  <NavLink
+                    onClick={closeSidebarhandler}
+                    to="/import"
+                    className="navlink"
+                    title={t("Import")}
+                    liClass="menu-link"
+                  >
+                    <figure className="faIcon" style={{paddingRight: ".25rem"}}>
+                      <img src="/images/icons/imports-icon.png" alt="" />
+                    </figure>
+                    <div className="menu-title">{t("Import")}</div>
+                  </NavLink>
+                </li>
+              </ul>
+              <ul className="nav-menu">
+                <li>
+                  <NavLink
+                    onClick={closeSidebarhandler}
+                    to="/export"
+                    className="navlink"
+                    title={t("Export")}
+                    liClass="menu-link"
+                  >
+                    <figure className="faIcon" style={{paddingLeft: ".25rem"}}>
+                      <img src="/images/icons/exports-icon.png" alt="" />
+                    </figure>
+                    <div className="menu-title">{t("Export")}</div>
+                  </NavLink>
+                </li>
+              </ul>
+              <ul className="nav-menu">
+                <li>
+                  <NavLink
+                    onClick={closeSidebarhandler}
+                    to="/defective"
+                    className="navlink"
+                    title={t("Defective")}
+                    liClass="menu-link"
+                  >
+                    <figure className="faIcon">
+                      <img src="/images/icons/defective-icon.png" alt="" />
+                    </figure>
+                    <div className="menu-title">{t("Defective")}</div>
+                  </NavLink>
+                </li>
+              </ul>
 
               {/* <ul className="nav-menu">
                 <div className="title-section">{t("ManageSystem")}</div>
@@ -280,7 +344,7 @@ const SidebarComponent = (props) => {
             </Fragment>
           )}
 
-          {pagesAllow.groups.article && (
+          {/* {pagesAllow.groups.article && (
             <Fragment>
               <hr className="line-section gap" />
               <div className="title-section">{t("ManageContent")}</div>
@@ -300,7 +364,6 @@ const SidebarComponent = (props) => {
                   </NavLink>
                 )}
                 <li className={`menu-link has-child opened`}>
-                  {/* opened */}
                   <a className={`navlink `} onClick={toggleSubMenu} title={t("ManageWebContent")}>
                     <FontAwesomeIcon icon={faCaretDown} className="toggle-submenu" />
                     <span className="collap-title">
@@ -357,7 +420,7 @@ const SidebarComponent = (props) => {
                 </li>
               </ul>
             </Fragment>
-          )}
+          )} */}
 
           {pagesAllow.groups.report && (
             <Fragment>
