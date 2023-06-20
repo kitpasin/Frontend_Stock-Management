@@ -1,3 +1,29 @@
+export const defective = [
+  {
+    id: 1,
+    quantityPerUnit: 102,
+    name: "Jon",
+    defective: 35,
+    purchaseDate: "28/8/2023",
+    MEDEXP: "28/8/2023, 28/8/2023",
+    dateEXP: 30,
+    vat: "Vat",
+    category: "cate 1",
+    countingUnit: "กระป๋อง",
+    volumnPerUnit: "250 ml",
+    operationFee: 50,
+    operationFeePerUnit: 0,
+    rawPrice: 50,
+    rawPricePerUnit: 0,
+    cost: 100,
+    costPerUnit: 10,
+    profit: "30%",
+    expectedSellingPrice: 13.91,
+    actualSellingPrice: 14,
+    total: 3785,
+  },
+];
+
 export const rows = [
   {
     id: 1,
@@ -20,6 +46,7 @@ export const rows = [
     profit: "30%",
     expectedSellingPrice: 13.91,
     actualSellingPrice: 14,
+    total: 3785
   },
   {
     id: 2,
@@ -42,6 +69,7 @@ export const rows = [
     profit: "30%",
     expectedSellingPrice: 13.91,
     actualSellingPrice: 14,
+    total: 3785
   },
   {
     id: 3,
@@ -64,6 +92,7 @@ export const rows = [
     profit: "30%",
     expectedSellingPrice: 13.91,
     actualSellingPrice: 14,
+    total: 3785
   },
   {
     id: 4,
@@ -86,6 +115,7 @@ export const rows = [
     profit: "30%",
     expectedSellingPrice: 13.91,
     actualSellingPrice: 14,
+    total: 3785
   },
   {
     id: 5,
@@ -108,6 +138,7 @@ export const rows = [
     profit: "30%",
     expectedSellingPrice: 13.91,
     actualSellingPrice: 14,
+    total: 3785
   },
   {
     id: 6,
@@ -130,5 +161,6 @@ export const rows = [
     profit: "30%",
     expectedSellingPrice: 13.91,
     actualSellingPrice: 14,
+    total: 3785
   },
 ];
