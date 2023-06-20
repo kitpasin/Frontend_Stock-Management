@@ -1,6 +1,4 @@
 import React from "react";
-import { faStore } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DataGrid } from "@mui/x-data-grid";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 
@@ -63,7 +61,7 @@ function Suppliers() {
         return (
           <button style={buttonStyle} onClick={editHandle(cellValue.row.edit)}>
             {" "}
-            <img src="images/icons/supplier-icon.png" alt="" />{" "}
+            <img src="images/icons/eva_edit-2-fill.png" alt="" />{" "}
           </button>
         );
       },
@@ -80,7 +78,7 @@ function Suppliers() {
             onClick={deleteHandle(cellValue.row.delete)}
           >
             {" "}
-            <img src="images/icons/eva_edit-2-fill.png" alt="" />{" "}
+            <img src="images/icons/trash-icon.png" alt="" />{" "}
           </button>
         );
       },

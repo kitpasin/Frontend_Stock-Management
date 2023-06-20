@@ -8,9 +8,13 @@ import "./productCategory.scss";
 /* import Components */
 import HeadPageComponent from "../../components/layout/headpage/headpage";
 import ProductCateTable from "./ProductCateTable";
+import ModalMainCateAdd from "./modals/ModalMainCateAdd";
+import ModalSubCateAdd from "./modals/ModalSubCateAdd";
 
 function ProductCategory() {
 
+  const [openModal, setOpenModal] = React.useState(false);
+  const [openModalSub, setOpenModalSub] = React.useState(false);
   const editHandle = (_id) => {
     console.log(_id);
   };
@@ -80,8 +84,8 @@ function ProductCategory() {
               <p>หมวดหมู่สินค้าทั้งหมด</p>
             </div>
             <div className="action">
-              <button>สร้างหมวดหมู่หลัก</button>
-              <button>สร้างหมวดหมู่ย่อย</button>
+              <button onClick={() => setOpenModal(true)}>สร้างหมวดหมู่หลัก</button>
+              <button onClick={() => setOpenModalSub(true)}>สร้างหมวดหมู่ย่อย</button>
               {/* <button className="btn-delete" style={{ width: "35px" }}>
                 {" "}
                 <img src="images/icons/tabler_trash-x-filled.png" alt="" />{" "}
@@ -92,6 +96,8 @@ function ProductCategory() {
           <div className="table">
             <ProductCateTable />
           </div>
+          <ModalMainCateAdd openModalAdd={openModal} setOpenModal={setOpenModal} />
+          <ModalSubCateAdd openModal={openModalSub} setOpenModalSub={setOpenModalSub} />
         </div>
       </div>
     </section>

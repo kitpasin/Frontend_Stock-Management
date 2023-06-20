@@ -1,3 +1,89 @@
 #amount-page {
-    
+    .main-content {
+        @apply flex justify-center items-center w-full gap-4 p-4 h-screen;
+        max-width: 100%;
+        min-width: 1212px;
+        max-height: 880px;
+
+        .content-left,
+        .content-right {
+            @apply flex flex-col w-1/2 h-full;
+            background: #ffffff;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.05);
+            border-radius: 20px;
+
+            .head {
+                width: 100%;
+                height: 20px;
+                background: #3b326b;
+                border-radius: 20px 20px 0px 0px;
+            }
+
+            .content {
+                @apply flex flex-col w-full h-full;
+
+                .content-head {
+                    @apply flex items-center justify-between py-2 px-4 w-full;
+                    height: 65px;
+
+                    .title {
+                        @apply flex justify-center items-center gap-2;
+
+                        p {
+                            color: #3b326b;
+                            font-weight: 400;
+                            font-size: 18px;
+                        }
+                    }
+
+                    .action {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        width: 300px;
+                        height: 100%;
+
+                        .create {
+                            padding: 5px;
+                            color: #fff;
+                            width: 153px;
+                            height: 35px;
+                            background-color: #3b336b;
+                            border-radius: 5px;
+                            transition-duration: 0.3s;
+                            font-size: 15px;
+
+                            &:hover {
+                                background-color: #261772;
+                            }
+                        }
+
+                        .delete {
+                            @apply flex justify-center items-center;
+                            width: 35px;
+                            height: 35px;
+                            background: #3b336b;
+                            border-radius: 5px;
+
+                            &:hover {
+                                background-color: #261772;
+                            }
+                        }
+
+                        p {
+                            color: #ff0000;
+                            font-size: 16px;
+                            font-weight: 400;
+                        }
+                    }
+                }
+
+                .table {
+                    padding: 1rem;
+                    width: 100%;
+                    height: calc(100% - 65px);
+                }
+            }
+        }
+    }
 }

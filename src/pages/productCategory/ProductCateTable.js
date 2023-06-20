@@ -156,6 +156,8 @@ function ProductCateTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [newRows, setNewRows] = useState([]);
+  const [openModal, setOpenModal] = React.useState(false);
+
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
