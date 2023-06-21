@@ -1,7 +1,5 @@
 /* eslint-disable */
-import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
 import { TextField } from "@mui/material";
 import { Card } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -10,20 +8,17 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 
-import "./ProductsPage.scss";
+import "./DefectivePage.scss";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
 import Table from "./components/Table";
 import { rows } from "./data/TableData";
 import { Link } from "react-router-dom";
 
-function ProductsPage() {
+function DefectiveSearchPage() {
   const { t } = useTranslation(["dashboard-page"]);
-  const dispatch = useDispatch();
-
-  useEffect(() => {}, []);
 
   return (
-    <section id="products-page">
+    <section id="defective-search-page">
       <div
         style={{
           display: "flex",
@@ -33,12 +28,12 @@ function ProductsPage() {
         }}
       >
         <figure style={{ width: "30px", marginBottom: "1rem" }}>
-          <img src="/images/icons/productsPage-icon.png" alt="" />
+          <img src="/images/icons/defectivePage-icon.png" alt="" />
         </figure>
         <div style={{ width: "100%" }}>
           <HeadPageComponent
-            h1={t("Products")}
-            breadcrums={[{ title: t("Products"), link: false }]}
+            h1={t("เบิกสินค้าชำรุด")}
+            breadcrums={[{ title: t("เบิกสินค้าชำรุด"), link: false }]}
           />
         </div>
       </div>
@@ -46,11 +41,11 @@ function ProductsPage() {
         <div className="header">
           <div className="wrapper">
             <figure className="title">
-              <img src="/images/icons/productsTable-icon.png" alt="" />
+              <img src="/images/icons/defectiveTable-icon.png" alt="" />
               <p>สินค้าทั้งหมด</p>
             </figure>
             <div className="description">
-              <p>20,500 รายการ</p>
+              <p>2,500 รายการ</p>
             </div>
           </div>
           <div className="filter">
@@ -90,9 +85,8 @@ function ProductsPage() {
                 <FormControlLabel value="noVat" control={<Radio />} label="No Vat" />
               </RadioGroup>
             </FormControl>
-            <button className="create">เพิ่มสินค้า</button>
-            <Link to="/defective/search" className="export">
-              เบิกสินค้า
+            <Link to="/defective/export" className="export">
+              เบิกสินค้าชำรุด
             </Link>
           </div>
         </div>
@@ -104,4 +98,4 @@ function ProductsPage() {
   );
 }
 
-export default ProductsPage;
+export default DefectiveSearchPage;

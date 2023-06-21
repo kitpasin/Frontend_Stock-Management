@@ -230,7 +230,7 @@ const SidebarComponent = (props) => {
                     title={t("Import")}
                     liClass="menu-link"
                   >
-                    <figure className="faIcon" style={{paddingRight: ".25rem"}}>
+                    <figure className="faIcon" style={{ paddingRight: ".25rem" }}>
                       <img src="/images/icons/imports-icon.png" alt="" />
                     </figure>
                     <div className="menu-title">{t("Import")}</div>
@@ -246,7 +246,7 @@ const SidebarComponent = (props) => {
                     title={t("Export")}
                     liClass="menu-link"
                   >
-                    <figure className="faIcon" style={{paddingLeft: ".25rem"}}>
+                    <figure className="faIcon" style={{ paddingLeft: ".25rem" }}>
                       <img src="/images/icons/exports-icon.png" alt="" />
                     </figure>
                     <div className="menu-title">{t("Export")}</div>

@@ -167,16 +167,6 @@ function Table({ rows }) {
               />
               <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>ซัพพลาย</p>
             </MenuItem>
-            <MenuItem onClick={handleClose}>
-              <Link to="/defective/export" style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                <img
-                  style={{ width: "18px", height: "18px" }}
-                  src="/images/icons/export-icon.png"
-                  alt=""
-                />
-                <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>เบิกสินค้า</p>
-              </Link>
-            </MenuItem>
             <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={handleClose}>
               <img
                 style={{

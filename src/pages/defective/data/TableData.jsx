@@ -1,29 +1,3 @@
-export const defective = [
-  {
-    id: 1,
-    quantityPerUnit: 102,
-    name: "Jon",
-    defective: 35,
-    purchaseDate: "28/8/2023",
-    MEDEXP: "28/8/2023, 28/8/2023",
-    dateEXP: 30,
-    vat: "Vat",
-    category: "cate 1",
-    countingUnit: "กระป๋อง",
-    volumnPerUnit: "250 ml",
-    operationFee: 50,
-    operationFeePerUnit: 0,
-    rawPrice: 50,
-    rawPricePerUnit: 0,
-    cost: 100,
-    costPerUnit: 10,
-    profit: "30%",
-    expectedSellingPrice: 13.91,
-    actualSellingPrice: 14,
-    total: 3785,
-  },
-];
-
 export const rows = [
   {
     id: 1,
@@ -164,3 +138,42 @@ export const rows = [
     total: 3785
   },
 ];
+
+export const defectiveDetail = [
+  {
+    id: 1,
+    quantityPerUnit: 102,
+    name: "Jon",
+    defective: 35,
+    purchaseDate: "28/8/2023",
+    MEDEXP: "28/8/2023, 28/8/2023",
+    dateEXP: 30,
+    vat: "Vat",
+    category: "cate 1",
+    countingUnit: "กระป๋อง",
+    volumnPerUnit: "250 ml",
+    operationFee: 50,
+    operationFeePerUnit: 0,
+    rawPrice: 50,
+    rawPricePerUnit: 0,
+    cost: 100,
+    costPerUnit: 10,
+    profit: "30%",
+    expectedSellingPrice: 13.91,
+    actualSellingPrice: 14,
+    total: 3785
+  },
+];
+
+export const defectiveSupplier = [
+  {
+    id: 1,
+    name: "สยามแวร์เฮ้าส์เจริญการค้าพานิจ 01234567895846",
+    address: "120/34-35 Moo 24 Mueang Khon Kaen District, Khon Kaen 40000",
+    contact: "สมเกียติ ดีงานพระรามแปด",
+    tel: "089-536-8542",
+    email: "somsag@gmail.com",
+    lineId: "089-536-8542"
+  },
+];
+

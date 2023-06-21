@@ -1,7 +1,7 @@
 import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 
-function DetailDataGrid({ defective }) {
+function DetailDataGrid({ defectiveDetail }) {
 
   const columns = [
     {
@@ -120,14 +120,10 @@ function DetailDataGrid({ defective }) {
       <DataGrid
         getRowClassName={() => rowsClassName}
         sx={{ fontSize: "12px", border: "none" }}
-        rows={defective}
+        rows={defectiveDetail}
         columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 5 },
-          },
-        }}
-        pageSizeOptions={[5, 10, 50, 100]}
+        hideFooterPagination
+        className="no-footer"
       />
     </>
   );

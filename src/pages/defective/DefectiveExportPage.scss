@@ -58,5 +58,92 @@
     .flex-container-column {
         border-radius: 10px;
         box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.05);
+        .supplier-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            p {
+                font-weight: 400;
+                font-size: 18px;
+                color: #3b326b;
+            }
+        }
     }
+    .flex-container-center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        .quantity-left {
+            padding-inline: 4.5rem;
+            width: 400px;
+            height: 128px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: #3b326b;
+            p {
+                font-weight: 400;
+                font-size: 12px;
+            }
+            span {
+                font-weight: 500;
+                font-size: 48px;
+                line-height: 60px;
+            }
+        }
+        .quantity-export {
+            padding-inline: 4.5rem;
+            width: 400px;
+            height: 128px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 1rem;
+            color: #3b326b;
+            p {
+                font-weight: 400;
+                font-size: 12px;
+            }
+            input {
+                border: #C4C4C4 1px solid;
+                border-radius: 5px;
+                padding-left: 1rem;
+                padding-block: .25rem;
+                font-size: 18px;
+                font-weight: 400;
+                color: #3b326b;
+                margin-bottom: .5rem;
+            }
+        }
+        .submit {
+            width: 400px;
+            height: 128px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            background: #3b326b;
+            color: #fff;
+            img {
+                width: 40px;
+                height: 35px;
+            }
+            p {
+                font-weight: 400;
+                font-size: 36px;
+                line-height: 60px;
+            }
+        }
+    }
+}
+
+.no-footer .MuiDataGrid-footerContainer {
+    display: none;
 }

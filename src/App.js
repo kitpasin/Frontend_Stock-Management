@@ -36,6 +36,7 @@ import StockPage from './pages/stock/StockPage';
 import DefectivePage from './pages/defective/DefectivePage'
 import ImportPage from './pages/import/ImportPage';
 import ExportPage from './pages/export/ExportPage';
+import DefectiveSearchPage from './pages/defective/DefectiveSearchPage';
 import DefectiveExportPage from './pages/defective/DefectiveExportPage';
 
 function App() {
@@ -61,6 +62,7 @@ function App() {
           {pagesAllow.products && <Route path="/import" element={<ImportPage />} />}
           {pagesAllow.products && <Route path="/export" element={<ExportPage />} />}
           {pagesAllow.products && <Route path="/defective" element={<DefectivePage />} />}
+          {pagesAllow.products && <Route path="/defective/search" element={<DefectiveSearchPage />} />}
           {pagesAllow.products && <Route path="/defective/export" element={<DefectiveExportPage />} />}
           {pagesAllow.slides && <Route path="slides" element={<SlidePage />} />}
 

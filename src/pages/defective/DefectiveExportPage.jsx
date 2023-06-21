@@ -7,13 +7,11 @@ import { Card } from "@mui/material";
 import "./DefectiveExportPage.scss"
 import HeadPageComponent from "../../components/layout/headpage/headpage";
 import DetailDataGrid from "./components/DetailDataGrid";
-import { defective } from "./data/TableData";
+import { defectiveDetail, defectiveSupplier } from "./data/TableData";
+import SupplierDataGrid from "./components/SupplierDataGrid";
 
 function DefectiveExportPage() {
   const { t } = useTranslation(["dashboard-page"]);
-  const dispatch = useDispatch();
-  const [rowsData, setRowsData] = useState([]);
-  const [filteredRows, setFilteredRows] = useState([]);
 
   useEffect(() => {}, []);
   return (
@@ -31,8 +29,8 @@ function DefectiveExportPage() {
         </figure>
         <div style={{ width: "100%" }}>
           <HeadPageComponent
-            h1={t("Defective")}
-            breadcrums={[{ title: t("Defective"), link: false }]}
+            h1={t("เบิกสินค้าชำรุด")}
+            breadcrums={[{ title: t("เบิกสินค้าชำรุด"), link: false }]}
           />
         </div>
       </div>
@@ -61,9 +59,29 @@ function DefectiveExportPage() {
         </figure>
       </Card>
       <Card className="flex-container-column">
-        <DetailDataGrid defective={defective} />
+        <DetailDataGrid defectiveDetail={defectiveDetail} />
       </Card>
-      <Card className="flex-container-column"></Card>
+      <Card className="flex-container-column">
+        <figure className="supplier-title">
+          <img src="/images/icons/supplierTable-icon.png" alt="" />
+          <p>ซัพพลายเออร์</p>
+        </figure>
+        <SupplierDataGrid defectiveSupplier={defectiveSupplier} />
+      </Card>
+      <div className="flex-container-center">
+        <Card className="quantity-left">
+          <p>จำนวนคงเหลือ/หน่วย</p>
+          <span>800 กระป๋อง</span>
+        </Card>
+        <Card className="quantity-export">
+          <p>กรอกจำนวนสินค้าชำรุด</p>
+          <input placeholder="กรอกจำนวนสินค้า" />
+        </Card>
+        <button className="submit">
+          <img src="/images/icons/defectiveBig-icon.png" alt="" />
+          <p>ตัดสินค้าชำรุด</p>
+        </button>
+      </div>
     </section>
   );
 }

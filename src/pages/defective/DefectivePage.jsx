@@ -1,7 +1,5 @@
 /* eslint-disable */
-import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
 import { TextField } from "@mui/material";
 import { Card } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -14,14 +12,10 @@ import "./DefectivePage.scss";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
 import Table from "./components/Table";
 import { rows } from "./data/TableData";
+import { Link } from "react-router-dom";
 
 function DefectivePage() {
-    const { t } = useTranslation(["dashboard-page"]);
-    const dispatch = useDispatch();
-    const [rowsData, setRowsData] = useState([]);
-    const [filteredRows, setFilteredRows] = useState([]);
-
-    useEffect(() => {},[])
+  const { t } = useTranslation(["dashboard-page"]);
 
   return (
     <section id="defective-page">
@@ -62,7 +56,7 @@ function DefectivePage() {
               options={rows}
               getOptionLabel={(rows) => rows.name || ""}
               onChange={(event, value) => setRowsData(value)}
-              sx={{ width: 200 }}
+              sx={{ width: 150 }}
               renderInput={(params) => <TextField {...params} label="ชื่อ" />}
             />
             <Autocomplete
@@ -70,8 +64,16 @@ function DefectivePage() {
               disablePortal
               id="combo-box-demo"
               options={rows.map((e) => e.category)}
-              sx={{ width: 200 }}
+              sx={{ width: 150 }}
               renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
+            />
+            <Autocomplete
+              size="small"
+              disablePortal
+              id="combo-box-demo"
+              options={rows.map((e) => e.category)}
+              sx={{ width: 150 }}
+              renderInput={(params) => <TextField {...params} label="หมวดหมู่ย่อย" />}
             />
             <FormControl>
               <RadioGroup
@@ -84,7 +86,9 @@ function DefectivePage() {
                 <FormControlLabel value="noVat" control={<Radio />} label="No Vat" />
               </RadioGroup>
             </FormControl>
-            <button className="create">เพิ่มสินค้าเข้า</button>
+            <Link to="/defective/search" className="export">
+              ค้นหาสินค้า
+            </Link>
           </div>
         </div>
         <div>
@@ -95,4 +99,4 @@ function DefectivePage() {
   );
 }
 
-export default DefectivePage
+export default DefectivePage;
