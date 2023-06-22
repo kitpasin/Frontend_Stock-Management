@@ -11,10 +11,10 @@ function Table({ rows }) {
 
   function handleClick(event) {
     setAnchorEl(event.currentTarget);
-  };
+  }
   function handleClose() {
     setAnchorEl(null);
-  };
+  }
 
   const columns = [
     {
@@ -22,6 +22,8 @@ function Table({ rows }) {
       headerName: "ภาพ",
       width: 100,
       headerClassName: "table-columns",
+      headerAlign: "center",
+      align: "center",
       renderCell: (params) => (
         <div style={{ background: "#D0D0E2", borderRadius: "5px" }}>
           <Avatar src={`images/mock/product1.png`} alt={`Image ${params.value}`} />
@@ -221,6 +223,7 @@ function Table({ rows }) {
           },
         }}
         pageSizeOptions={[5, 10, 50, 100]}
+        checkboxSelection
       />
     </div>
   );

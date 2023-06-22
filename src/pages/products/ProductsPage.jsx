@@ -90,8 +90,8 @@ function ProductsPage() {
                 <FormControlLabel value="noVat" control={<Radio />} label="No Vat" />
               </RadioGroup>
             </FormControl>
-            <button className="create">เพิ่มสินค้า</button>
-            <Link to="/defective/search" className="export">
+            <Link to="/products/import" className="create">เพิ่มสินค้า</Link>
+            <Link to="/products/export" className="export">
               เบิกสินค้า
             </Link>
           </div>
