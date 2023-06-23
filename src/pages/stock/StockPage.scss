@@ -1,5 +1,5 @@
 .table-columns {
-    color: #3B336B;
+    color: #3b336b;
 }
 .table-rows {
     color: #000;
@@ -24,14 +24,14 @@
                 display: flex;
                 align-items: center;
                 gap: 1rem;
-                color: #3B336B;
+                color: #3b336b;
                 p {
                     font-size: 18px;
                     font-weight: 400;
                 }
             }
             .description {
-                color: #FF0000;
+                color: #ff0000;
                 p {
                     font-size: 18px;
                     font-weight: 400;
@@ -42,18 +42,14 @@
             display: flex;
             align-items: center;
             gap: 1rem;
-        }
-        .create {
-            padding: .5rem 1rem;
-            background: #eff3f9;
-            color: #3b326b;
-            border-radius: 5px;
-            font-size: 18px;
-            font-weight: 400;
-            transition: all ease-in-out .3s;
-            &:hover {
+            .create {
+                padding: 0.5rem 1rem;
                 background: #3b326b;
-                color: #fff;
+                color: #eff3f9;
+                border-radius: 5px;
+                font-size: 18px;
+                font-weight: 400;
+                transition: all ease-in-out 0.3s;
             }
         }
     }

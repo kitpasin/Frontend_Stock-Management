@@ -27,6 +27,7 @@ import InboxPage from './pages/inbox/inbox';
 import ResetPasswordPage from './pages/resetpassword/resetpassword';
 import ProductsPage from './pages/products/ProductsPage';
 import ProductsImportPage from './pages/products/ProductsImportPage';
+import ProductsImportSearchPage from './pages/products/ProductsImportSearchPage'
 import ProductsExportPage from './pages/products/ProductsExportPage';
 import ExpirationPage from './pages/expiration/ExpirationPage';
 import Suppliers from './pages/supplier/Suppliers';
@@ -60,18 +61,15 @@ function App() {
           {/* {pagesAllow.productcate && <Route path="productcate" element={<DashboardPage />} /> } */}
           {pagesAllow.products && <Route path="/products" element={<ProductsPage />} />}
           {pagesAllow.products && <Route path="/products/import" element={<ProductsImportPage />} />}
+          {pagesAllow.products && <Route path="/products/import/search" element={<ProductsImportSearchPage />} />}
           {pagesAllow.products && <Route path="/products/export" element={<ProductsExportPage />} />}
           {pagesAllow.products && <Route path="/expiration" element={<ExpirationPage />} />}
           {pagesAllow.products && <Route path="/stock" element={<StockPage />} />}
           {pagesAllow.products && <Route path="/import" element={<ImportPage />} />}
           {pagesAllow.products && <Route path="/export" element={<ExportPage />} />}
           {pagesAllow.products && <Route path="/defective" element={<DefectivePage />} />}
-          {pagesAllow.products && (
-            <Route path="/defective/search" element={<DefectiveSearchPage />} />
-          )}
-          {pagesAllow.products && (
-            <Route path="/defective/export" element={<DefectiveExportPage />} />
-          )}
+          {pagesAllow.products && (<Route path="/defective/search" element={<DefectiveSearchPage />} />)}
+          {pagesAllow.products && (<Route path="/defective/export" element={<DefectiveExportPage />} />)}
           {pagesAllow.slides && <Route path="slides" element={<SlidePage />} />}
 
           {pagesAllow.menu && <Route path="menu" element={<MenuPage />} />}

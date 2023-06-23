@@ -10,18 +10,14 @@
   justify-content: center;
   align-items: center;
   gap: .5rem;
-  background: #eff3f9;
-  color: #3b336b;
+  background: #3b336b;
+  color: #eff3f9;
   padding: 0.5rem 1rem;
   margin: auto;
   border-radius: 5px;
   font-weight: 400;
   font-size: 18px;
   transition: ease-in-out .3s;
-  &:hover {
-    color: #eff3f9;
-    background: #3b336b;
-  }
 }
 
 ::-webkit-scrollbar {

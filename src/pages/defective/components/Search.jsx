@@ -21,6 +21,8 @@ function Table({ rows }) {
       field: "image",
       headerName: "ภาพ",
       width: 100,
+      headerAlign: "center",
+      align: "center",
       headerClassName: "table-columns",
       renderCell: (params) => (
         <div style={{ background: "#D0D0E2", borderRadius: "5px" }}>
@@ -213,6 +215,7 @@ function Table({ rows }) {
           },
         }}
         pageSizeOptions={[5, 10, 50, 100]}
+        checkboxSelection
       />
     </div>
   );
