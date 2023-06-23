@@ -9,6 +9,7 @@ import AddIcon from "@mui/icons-material/Add";
 
 import "./ProductsImportPage.scss";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
+import { Link } from "react-router-dom";
 
 function ProductsImportPage() {
   const { t } = useTranslation(["dashboard-page"]);
@@ -54,12 +55,14 @@ function ProductsImportPage() {
             <figure className="header-title">
               <img src="/images/icons/import-icon.png" alt="" />
               <p>ข้อมูลสินค้า</p>
-              <button style={{marginLeft: "5.25rem"}}>
+              <Link to="/products/import/search" style={{ marginLeft: "5.25rem" }}>
                 <img src="/images/icons/search-icon.png" alt="" />
                 ค้นหาสินค้าที่มีอยู่
-              </button>
+              </Link>
             </figure>
-            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+            <div
+              style={{ display: "flex", alignItems: "center", gap: "1rem", marginRight: "1.1rem" }}
+            >
               <button style={{ display: "flex", justifyContent: "center" }}>ล้างข้อมูล</button>
               <button style={{ display: "flex", justifyContent: "center" }}>บันทึกข้อมูล</button>
             </div>
@@ -211,7 +214,7 @@ function ProductsImportPage() {
               <Card className="flex-container-column" sx={{ borderRadius: "10px" }}>
                 <div className="header">
                   <figure className="header-title">
-                    <img src="/images/icons/truck-icon.png" alt="" />
+                    <img width={25} src="/images/icons/truck-icon.png" alt="" />
                     <p>ข้อมูลค่าใช้จ่ายและจำนวนสินค้าทั้งหมด</p>
                   </figure>
                 </div>
@@ -275,7 +278,7 @@ function ProductsImportPage() {
               <Card className="flex-container-column" sx={{ borderRadius: "10px" }}>
                 <div className="header">
                   <figure className="header-title">
-                    <img src="/images/icons/supplierTable-icon.png" alt="" />
+                    <img width={25} src="/images/icons/supplierTable-icon.png" alt="" />
                     <p>ข้อมูลค่าใช้จ่ายและจำนวนสินค้าทั้งหมด</p>
                   </figure>
                 </div>
@@ -306,7 +309,7 @@ function ProductsImportPage() {
                     )}
                   />
                 </div>
-                <button class="add-supplier">
+                <button className="add-supplier">
                   <AddIcon />
                   สร้างข้อมูลซัพพลายเออร์ใหม่
                 </button>
@@ -318,7 +321,7 @@ function ProductsImportPage() {
           <Card className="flex-container-column" sx={{ borderRadius: "10px" }}>
             <div className="header">
               <figure className="header-title">
-                <img src="/images/icons/currency-icon.png" alt="" />
+                <img width={25} src="/images/icons/currency-icon.png" alt="" />
                 <p>ข้อมูลราคา</p>
               </figure>
             </div>
