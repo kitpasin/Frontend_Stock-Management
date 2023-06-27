@@ -9,6 +9,7 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
+import { Link } from "react-router-dom";
 
 import "./ImportPage.scss";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
@@ -37,18 +38,15 @@ function ImportPage() {
           <img src="/images/icons/importPage-icon.png" alt="" />
         </figure>
         <div style={{ width: "100%" }}>
-          <HeadPageComponent
-            h1={t("Import")}
-            breadcrums={[{ title: t("Import"), link: false }]}
-          />
+          <HeadPageComponent h1={t("Import")} breadcrums={[{ title: t("Import"), link: false }]} />
         </div>
       </div>
       <Card className="flex-container-column" sx={{ borderRadius: "10px" }}>
         <div className="header">
           <div className="wrapper">
             <figure className="title">
-              <img src="/images/icons/import-icon.png" alt="" />
-              <p>สินค้านำเข้า</p>
+              <img src="/images/icons/productsTable-icon.png" alt="" />
+              <p>สินค้าทั้งหมด</p>
             </figure>
             <div className="description">
               <p>20,500 รายการ</p>
@@ -61,8 +59,7 @@ function ImportPage() {
               id="combo-box-demo"
               options={rows}
               getOptionLabel={(rows) => rows.name || ""}
-              onChange={(event, value) => setRowsData(value)}
-              sx={{ width: 200 }}
+              sx={{ width: 150 }}
               renderInput={(params) => <TextField {...params} label="ชื่อ" />}
             />
             <Autocomplete
@@ -70,8 +67,16 @@ function ImportPage() {
               disablePortal
               id="combo-box-demo"
               options={rows.map((e) => e.category)}
-              sx={{ width: 200 }}
+              sx={{ width: 150 }}
               renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
+            />
+            <Autocomplete
+              size="small"
+              disablePortal
+              id="combo-box-demo"
+              options={rows.map((e) => e.category)}
+              sx={{ width: 150 }}
+              renderInput={(params) => <TextField {...params} label="หมวดหมู่ย่อย" />}
             />
             <FormControl>
               <RadioGroup
@@ -84,7 +89,12 @@ function ImportPage() {
                 <FormControlLabel value="noVat" control={<Radio />} label="No Vat" />
               </RadioGroup>
             </FormControl>
-            <button className="create">เพิ่มสินค้าเข้า</button>
+            <Link style={{ fontSize: "16px" }} to="/products/import" className="create">
+              เพิ่มสินค้า
+            </Link>
+            <Link style={{ fontSize: "16px" }} to="/products/export" className="export">
+              เบิกสินค้า
+            </Link>
           </div>
         </div>
         <div>

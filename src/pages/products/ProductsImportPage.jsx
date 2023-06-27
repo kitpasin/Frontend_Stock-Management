@@ -55,7 +55,7 @@ function ProductsImportPage() {
             <figure className="header-title">
               <img src="/images/icons/import-icon.png" alt="" />
               <p>ข้อมูลสินค้า</p>
-              <Link to="/products/import/search" style={{ marginLeft: "5.25rem" }}>
+              <Link to="/products/import/search" style={{ marginLeft: "5.7rem" }}>
                 <img src="/images/icons/search-icon.png" alt="" />
                 ค้นหาสินค้าที่มีอยู่
               </Link>
@@ -88,13 +88,13 @@ function ProductsImportPage() {
                   label="ปริมาตรสุทธิ"
                   variant="outlined"
                   size="small"
-                  sx={{ width: "33.75%" }}
+                  sx={{ width: "33.75%", bgcolor: "#E7E8EA" }}
                 />
                 <Autocomplete
                   disablePortal
                   id="combo-box-demo"
                   options={options}
-                  sx={{ width: "16.25%" }}
+                  sx={{ width: "16.25%", bgcolor: "#E7E8EA" }}
                   renderInput={(params) => (
                     <TextField {...params} label="หน่วยปริมาตรสุทธิ" size="small" />
                   )}
@@ -141,7 +141,7 @@ function ProductsImportPage() {
                     disablePortal
                     id="combo-box-demo"
                     options={options}
-                    sx={{ width: "32.5%" }}
+                    sx={{ width: "32.5%", bgcolor: "#E7E8EA" }}
                     renderInput={(params) => (
                       <TextField {...params} label="หน่วยปริมาตรสุทธิ" size="small" />
                     )}
@@ -154,7 +154,7 @@ function ProductsImportPage() {
                     disablePortal
                     id="combo-box-demo"
                     options={options}
-                    sx={{ width: "50%" }}
+                    sx={{ width: "50%", bgcolor: "#E7E8EA" }}
                     renderInput={(params) => (
                       <TextField {...params} label="หน่วยปริมาตรสุทธิ" size="small" />
                     )}
@@ -163,7 +163,7 @@ function ProductsImportPage() {
                     disablePortal
                     id="combo-box-demo"
                     options={options}
-                    sx={{ width: "50%" }}
+                    sx={{ width: "50%", bgcolor: "#E7E8EA" }}
                     renderInput={(params) => (
                       <TextField {...params} label="หน่วยปริมาตรสุทธิ" size="small" />
                     )}
@@ -255,20 +255,20 @@ function ProductsImportPage() {
                       />
                     </div>
                   </div>
-                  <div style={{ display: "flex", gap: "1rem", width: "50%" }}>
+                  <div style={{ display: "flex", gap: "1rem", width: "50%", height: "40px" }}>
                     <TextField
                       id="outlined-basic"
                       label="รวมค่าดำเนินการทั้งหมด"
                       variant="outlined"
                       size="small"
-                      sx={{ width: "50%" }}
+                      sx={{ width: "50%", bgcolor: "#E7E8EA" }}
                     />
                     <TextField
                       id="outlined-basic"
                       label="ค่าดำเนินการ/หน่วย"
                       variant="outlined"
                       size="small"
-                      sx={{ width: "50%" }}
+                      sx={{ width: "50%", bgcolor: "#E7E8EA" }}
                     />
                   </div>
                 </div>
@@ -309,7 +309,7 @@ function ProductsImportPage() {
                     )}
                   />
                 </div>
-                <button className="add-supplier">
+                <button className="add-supplier" style={{fontSize: "16px"}}>
                   <AddIcon />
                   สร้างข้อมูลซัพพลายเออร์ใหม่
                 </button>
@@ -330,19 +330,19 @@ function ProductsImportPage() {
                 <div style={{ display: "flex", gap: "1rem", width: "100%" }}>
                   <TextField
                     id="outlined-basic"
-                    label="ค่านำเข้า"
+                    label="ค่าดำเนินการ/หน่วย"
                     variant="outlined"
                     size="small"
-                    sx={{ width: "100%" }}
+                    sx={{ width: "100%", bgcolor: "#E7E8EA" }}
                   />
                 </div>
                 <div>
                   <TextField
                     id="outlined-basic"
-                    label="ราคาต่อหน่วย"
+                    label="ราคา/หน่วย"
                     variant="outlined"
                     size="small"
-                    sx={{ width: "100%" }}
+                    sx={{ width: "100%", bgcolor: "#E7E8EA" }}
                   />
                 </div>
               </div>
@@ -367,7 +367,7 @@ function ProductsImportPage() {
                     label="ต้นทุนสินค้า/หน่วย"
                     variant="outlined"
                     size="small"
-                    sx={{ width: "50%" }}
+                    sx={{ width: "50%", bgcolor: "#E7E8EA" }}
                   />
                 </div>
                 <div>
@@ -376,7 +376,7 @@ function ProductsImportPage() {
                     label="Total (รวมต้นทุนสินค้าทั้งหมด)"
                     variant="outlined"
                     size="small"
-                    sx={{ width: "100%" }}
+                    sx={{ width: "100%", bgcolor: "#E7E8EA" }}
                   />
                 </div>
               </div>
@@ -413,14 +413,14 @@ function ProductsImportPage() {
                     label="กำไรต่อหน่วยเป็นบาท"
                     variant="outlined"
                     size="small"
-                    sx={{ width: "50%" }}
+                    sx={{ width: "50%", bgcolor: "#E7E8EA" }}
                   />
                   <TextField
                     id="outlined-basic"
                     label="ราคาสินค้ารวมกำไร"
                     variant="outlined"
                     size="small"
-                    sx={{ width: "50%" }}
+                    sx={{ width: "50%", bgcolor: "#E7E8EA" }}
                   />
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
@@ -430,14 +430,14 @@ function ProductsImportPage() {
                       label="ราคาสินค้ารวมVat (ราคาขาย)"
                       variant="outlined"
                       size="small"
-                      sx={{ width: "50%" }}
+                      sx={{ width: "50%", bgcolor: "#E7E8EA" }}
                     />
                     <TextField
                       id="outlined-basic"
                       label="ราคาขายเดิม"
                       variant="outlined"
                       size="small"
-                      sx={{ width: "50%" }}
+                      sx={{ width: "50%", bgcolor: "#E7E8EA" }}
                     />
                   </div>
                   <TextField

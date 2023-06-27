@@ -32,31 +32,51 @@ function Suppliers() {
   };
 
   const columns = [
-    { field: "id", headerName: "#", width: 50 },
-    { field: "companyName", headerName: "Company Name", width: 200 },
-    { field: "address", headerName: "Address", width: 200 },
-    { field: "empName", headerName: "Employee Name", width: 200 },
+    {
+      field: "companyName",
+      headerName: "ชื่อบริษัท",
+      width: 240,
+      headerClassName: "table-columns",
+    },
+    { field: "address", headerName: "ที่อยู่", width: 240, headerClassName: "table-columns" },
+    { field: "empName", headerName: "ชื่อผู้ติดต่อ", width: 240, headerClassName: "table-columns" },
     {
       field: "tel",
-      headerName: "Tel",
-      width: 160,
+      headerName: "เบอร์โทร",
+      width: 150,
+      headerClassName: "table-columns",
     },
     {
       field: "email",
-      headerName: "Email",
+      headerName: "อีเมล",
       sortable: false,
-      width: 160,
+      width: 150,
+      headerClassName: "table-columns",
       // valueGetter: (params) =>
       // `${params.row.firstName || ""} ${params.row.lastName || ""}`,
     },
-    { field: "lineId", headerName: "Line ID", width: 140, sortable: false },
-    { field: "category", headerName: "Category", width: 140 },
-    { field: "ordered", headerName: "Number of Ordered", width: 140 },
+    {
+      field: "lineId",
+      headerName: "ไลน์ ไอดี",
+      width: 150,
+      sortable: false,
+      headerClassName: "table-columns",
+    },
+    { field: "category", headerName: "หมวดหมู่สินค้า", width: 150, headerClassName: "table-columns" },
+    {
+      field: "ordered",
+      headerName: "จำนวนสินค้าที่เคยสั่งซื้อ",
+      width: 150,
+      headerClassName: "table-columns",
+    },
     {
       field: "edit",
-      headerName: "Edit",
-      width: 60,
+      headerName: "แก้ไข",
+      width: 65,
       sortable: false,
+      headerClassName: "table-columns",
+      headerAlign: "center",
+      align: "center",
       renderCell: (cellValue) => {
         return (
           <button style={buttonStyle} onClick={editHandle(cellValue.row.edit)}>
@@ -68,15 +88,15 @@ function Suppliers() {
     },
     {
       field: "delete",
-      headerName: "Delete",
-      width: 60,
+      headerName: "ลบ",
+      width: 65,
       sortable: false,
+      headerClassName: "table-columns",
+      headerAlign: "center",
+      align: "center",
       renderCell: (cellValue) => {
         return (
-          <button
-            style={buttonStyle}
-            onClick={deleteHandle(cellValue.row.delete)}
-          >
+          <button style={buttonStyle} onClick={deleteHandle(cellValue.row.delete)}>
             {" "}
             <img src="images/icons/trash-icon.png" alt="" />{" "}
           </button>
@@ -188,13 +208,15 @@ function Suppliers() {
     },
   ];
 
+  const rowsClassName = "table-rows";
+
   return (
     <section id="supplier-page">
       <HeadPageComponent
-        h1={"ซัพพลายเออร์ทั้งหมด"}
-        icon={ <img src="images/icons/mdi_shipping-pallet.png" alt="" /> }
+        h1={"ซัพพลายเออร์"}
+        icon={<img src="images/icons/mdi_shipping-pallet.png" alt="" />}
         // icon={<FontAwesomeIcon icon={faStore} />}
-        breadcrums={[{ title: "ซัพพลายเออร์ทั้งหมด", link: false }]}
+        breadcrums={[{ title: "ซัพพลายเออร์", link: false }]}
       />
       <div className="main-content">
         <div className="head"></div>
@@ -202,15 +224,17 @@ function Suppliers() {
           <div className="content-head">
             <div className="title">
               <img src="images/icons/mdi_shipping-pallet2.png" alt="" />
-              <p>ซัพพลายเออร์ทั้งหมด</p>
+              <p>ซัพพลายเออร์</p>
+              <span>2,500 รายการ</span>
             </div>
             <div className="action">
-              <button onClick={handleLink}>Create Supplier</button>
-              <p>List : 2,500</p>
+              <button onClick={handleLink}>เพิ่มซัพพลายเออร์</button>
             </div>
           </div>
           <div className="table">
             <DataGrid
+              getRowClassName={() => rowsClassName}
+              sx={{ fontSize: "12px", border: "none" }}
               checkboxSelection={false}
               rows={rows}
               columns={columns}

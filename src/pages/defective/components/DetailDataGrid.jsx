@@ -1,116 +1,268 @@
 import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
+import { Typography } from "@mui/material";
 
 function DetailDataGrid({ defectiveDetail }) {
 
   const columns = [
     {
       field: "quantityPerUnit",
-      headerName: "คงเหลือ/หน่วย",
-      width: 100,
+      headerAlign: "center",
+      align: "center",
+      width: 70,
       headerClassName: "table-columns",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            คงเหลือ
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            /หน่วย
+          </Typography>
+        </div>
+      ),
     },
     {
       field: "defective",
-      headerName: "สินค้ามีปัญหา",
-      width: 100,
+      headerAlign: "center",
+      align: "center",
+      width: 70,
       headerClassName: "table-columns",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            สินค้า
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            มีปัญหา
+          </Typography>
+        </div>
+      ),
     },
     {
       field: "purchaseDate",
       headerName: "วันที่ซื้อ",
-      width: 100,
+      headerAlign: "center",
+      align: "center",
+      width: 95,
       headerClassName: "table-columns",
     },
     {
       field: "MEDEXP",
-      headerName: "MEDEXP",
-      width: 150,
+      headerAlign: "center",
+      align: "center",
+      width: 95,
       headerClassName: "table-columns",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            MFD
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            EXP
+          </Typography>
+        </div>
+      ),
+      renderCell: () => (
+        <div>
+          <p>28/8/2023</p>
+          <p style={{ color: "#ff0000" }}>28/8/2023</p>
+        </div>
+      ),
     },
     {
       field: "dateEXP",
-      headerName: "MEDEXP",
-      width: 100,
+      headerAlign: "center",
+      align: "center",
+      width: 70,
       headerClassName: "table-columns",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            จำนวนวัน
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            EXP
+          </Typography>
+        </div>
+      ),
     },
     {
       field: "vat",
       headerName: "Vat",
-      width: 100,
+      headerAlign: "center",
+      align: "center",
+      width: 50,
       headerClassName: "table-columns",
     },
     {
       field: "category",
       headerName: "หมวดหมู่",
-      width: 100,
+      headerAlign: "center",
+      align: "center",
+      width: 95,
       headerClassName: "table-columns",
     },
     {
       field: "countingUnit",
       headerName: "หน่วยนับ",
-      width: 100,
+      headerAlign: "center",
+      align: "center",
+      width: 95,
       headerClassName: "table-columns",
     },
     {
       field: "volumnPerUnit",
-      headerName: "ปริมาตรสุทธิ/หน่วย",
-      width: 100,
+      width: 95,
       headerClassName: "table-columns",
+      headerAlign: "center",
+      align: "center",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            ปริมาตรสุทธิ
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            /หน่วย
+          </Typography>
+        </div>
+      ),
     },
     {
       field: "operationFee",
-      headerName: "ค่าดำเนินการ (THB)",
-      width: 100,
+      width: 95,
       headerClassName: "table-columns",
+      headerAlign: "center",
+      align: "center",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            ค่าดำเนินการ
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            (THB)
+          </Typography>
+        </div>
+      ),
     },
     {
       field: "operationFeePerUnit",
-      headerName: "ดำเนินการ/หน่วย (THB)",
-      width: 100,
+      width: 95,
       headerClassName: "table-columns",
+      headerAlign: "center",
+      align: "center",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            ค่าดำเนินการ
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            /หน่วย (THB)
+          </Typography>
+        </div>
+      ),
     },
     {
       field: "rawPrice",
-      headerName: "ราคาดิบ (THB)",
-      width: 100,
+      width: 95,
       headerClassName: "table-columns",
+      headerAlign: "center",
+      align: "center",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            ราคาดิบ
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            (THB)
+          </Typography>
+        </div>
+      ),
     },
     {
       field: "rawPricePerUnit",
       headerName: "ราคาดิบ/หน่วย (THB)",
-      width: 100,
+      width: 95,
       headerClassName: "table-columns",
+      headerAlign: "center",
+      align: "center",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            ราคาดิบ
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            /หน่วย (THB)
+          </Typography>
+        </div>
+      ),
     },
     {
       field: "costPerUnit",
-      headerName: "ต้นทุนต่อหน่วย (THB)",
-      width: 100,
+      width: 95,
       headerClassName: "table-columns",
+      headerAlign: "center",
+      align: "center",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            ต้นทุนต่อหน่วย
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            (THB)
+          </Typography>
+        </div>
+      ),
     },
     {
       field: "total",
-      headerName: "รวมเป็น (THB)",
-      width: 100,
+      headerName: "Total",
+      width: 95,
       headerClassName: "table-columns",
+      headerAlign: "center",
+      align: "center",
     },
     {
       field: "profit",
       headerName: "กำไร",
-      width: 100,
+      width: 95,
       headerClassName: "table-columns",
+      headerAlign: "center",
+      align: "center",
     },
     {
       field: "expectedSellingPrice",
-      headerName: "ราคาขาย (THB)",
-      width: 100,
+      width: 95,
       headerClassName: "table-columns",
+      headerAlign: "center",
+      align: "center",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            ราคาขาย
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            (THB)
+          </Typography>
+        </div>
+      ),
     },
     {
       field: "actualSellingPrice",
-      headerName: "ราคาขายจริง (THB)",
-      width: 100,
+      width: 95,
       headerClassName: "table-columns",
+      headerAlign: "center",
+      align: "center",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            ราคาขายจริง
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            (THB)
+          </Typography>
+        </div>
+      ),
     },
   ];
 

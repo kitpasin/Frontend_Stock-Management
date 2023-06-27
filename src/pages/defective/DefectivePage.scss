@@ -26,14 +26,14 @@
                 gap: 1rem;
                 color: #3B336B;
                 p {
-                    font-size: 18px;
+                    font-size: 16px;
                     font-weight: 400;
                 }
             }
             .description {
                 color: #FF0000;
                 p {
-                    font-size: 18px;
+                    font-size: 16px;
                     font-weight: 400;
                 }
             }
@@ -44,12 +44,12 @@
             gap: 1rem;
         }
         .create, .export {
-            width: 150px;
+            width: 200px;
             padding: .5rem 1rem;
             background: #3b326b;
             color: #eff3f9;
             border-radius: 5px;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 400;
             transition: all ease-in-out .3s;
             text-align: center;

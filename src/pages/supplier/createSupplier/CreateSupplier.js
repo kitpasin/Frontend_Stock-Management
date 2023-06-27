@@ -64,8 +64,8 @@ function CreateSupplier() {
                 <p>ชื่อซัพพลายเออร์</p>
               </div>
               <div className="action">
-                <button>Clean Up</button>
-                <button>Save</button>
+                <button>ล้างข้อมูล</button>
+                <button>บันทึกข้อมูล</button>
               </div>
             </div>
             <div className="input-form">
@@ -74,13 +74,15 @@ function CreateSupplier() {
                   sx={{ width: "50%" }}
                   id="standard-basic"
                   label="ชื่อบริษัท"
-                  variant="standard"
+                  variant="outlined"
+                  size="small"
                 />
                 <TextField
                   sx={{ width: "50%" }}
                   id="standard-basic"
                   label="ที่อยู่"
-                  variant="standard"
+                  variant="outlined"
+                  size="small"
                 />
               </div>
               <div className="form form-2">
@@ -88,29 +90,33 @@ function CreateSupplier() {
                   sx={{ width: "25%" }}
                   id="standard-basic"
                   label="ชื่อผู้ติดต่อ"
-                  variant="standard"
+                  variant="outlined"
+                  size="small"
                 />
                 <TextField
                   sx={{ width: "25%" }}
                   id="standard-basic"
                   label="เบอร์โทร"
-                  variant="standard"
+                  variant="outlined"
+                  size="small"
                 />
                 <TextField
                   sx={{ width: "25%" }}
                   id="standard-basic"
                   label="อีเมล"
-                  variant="standard"
+                  variant="outlined"
+                  size="small"
                 />
                 <TextField
                   sx={{ width: "25%" }}
                   id="standard-basic"
                   label="ไลน์ ไอดี"
-                  variant="standard"
+                  variant="outlined"
+                  size="small"
                 />
               </div>
               <div className="form form-3">
-                <FormControl sx={{ m: 1, minWidth: "50%" }} size="small">
+                <FormControl sx={{ m: 1, width: "49.5%" }} size="small">
                   <InputLabel id="demo-select-small-label">
                     ประเภทสินค้าที่ขาย/หมวดหมู่หลัก
                   </InputLabel>

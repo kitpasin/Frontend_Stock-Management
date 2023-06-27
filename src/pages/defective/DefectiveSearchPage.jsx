@@ -32,8 +32,8 @@ function DefectiveSearchPage() {
         </figure>
         <div style={{ width: "100%" }}>
           <HeadPageComponent
-            h1={t("เบิกสินค้าชำรุด")}
-            breadcrums={[{ title: t("เบิกสินค้าชำรุด"), link: false }]}
+            h1={t("ค้นหาสินค้า")}
+            breadcrums={[{ title: t("ค้นหาสินค้า"), link: false }]}
           />
         </div>
       </div>
@@ -86,7 +86,7 @@ function DefectiveSearchPage() {
               </RadioGroup>
             </FormControl>
             <Link to="/defective/export" className="export">
-              เบิกสินค้าชำรุด
+              เบิกออกสินค้าชำรุด
             </Link>
           </div>
         </div>

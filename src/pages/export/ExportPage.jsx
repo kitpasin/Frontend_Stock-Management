@@ -9,6 +9,7 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
+import { Link } from "react-router-dom";
 
 import "./ExportPage.scss";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
@@ -44,8 +45,8 @@ function ExportPage() {
         <div className="header">
           <div className="wrapper">
             <figure className="title">
-              <img src="/images/icons/export-icon.png" alt="" />
-              <p>สินค้าเบิกออก</p>
+              <img src="/images/icons/productsTable-icon.png" alt="" />
+              <p>สินค้าทั้งหมด</p>
             </figure>
             <div className="description">
               <p>20,500 รายการ</p>
@@ -58,8 +59,7 @@ function ExportPage() {
               id="combo-box-demo"
               options={rows}
               getOptionLabel={(rows) => rows.name || ""}
-              onChange={(event, value) => setRowsData(value)}
-              sx={{ width: 200 }}
+              sx={{ width: 150 }}
               renderInput={(params) => <TextField {...params} label="ชื่อ" />}
             />
             <Autocomplete
@@ -67,8 +67,16 @@ function ExportPage() {
               disablePortal
               id="combo-box-demo"
               options={rows.map((e) => e.category)}
-              sx={{ width: 200 }}
+              sx={{ width: 150 }}
               renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
+            />
+            <Autocomplete
+              size="small"
+              disablePortal
+              id="combo-box-demo"
+              options={rows.map((e) => e.category)}
+              sx={{ width: 150 }}
+              renderInput={(params) => <TextField {...params} label="หมวดหมู่ย่อย" />}
             />
             <FormControl>
               <RadioGroup
@@ -81,7 +89,12 @@ function ExportPage() {
                 <FormControlLabel value="noVat" control={<Radio />} label="No Vat" />
               </RadioGroup>
             </FormControl>
-            <button className="create">เพิ่มสินค้าเข้า</button>
+            <Link style={{ fontSize: "16px" }} to="/products/import" className="create">
+              เพิ่มสินค้า
+            </Link>
+            <Link style={{ fontSize: "16px" }} to="/products/export" className="export">
+              เบิกสินค้า
+            </Link>
           </div>
         </div>
         <div>

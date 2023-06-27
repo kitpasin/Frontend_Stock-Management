@@ -35,17 +35,17 @@ function Table({ rows }) {
       headerName: "ชื่อรายการ",
       headerAlign: "center",
       align: "center",
-      width: 150,
+      width: 120,
       headerClassName: "table-columns",
       renderCell: (params) => (
-        <div style={{paddingLeft: "1.2rem"}}>
+        <div style={{ paddingLeft: "1.2rem" }}>
           <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>น้ำอัดลมกลิ่นเมลอ...</p>
           <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>01234567895846</p>
         </div>
       ),
     },
     {
-      field: "quantityPerUnit",
+      field: "importPerUnit",
       headerAlign: "center",
       align: "center",
       width: 70,
@@ -53,7 +53,7 @@ function Table({ rows }) {
       renderHeader: () => (
         <div>
           <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
-            คงเหลือ
+            นำเข้า
           </Typography>
           <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
             /หน่วย
@@ -74,6 +74,23 @@ function Table({ rows }) {
           </Typography>
           <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
             มีปัญหา
+          </Typography>
+        </div>
+      ),
+    },
+    {
+      field: "quantityPerUnit",
+      headerAlign: "center",
+      align: "center",
+      width: 70,
+      headerClassName: "table-columns",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            คงเหลือ
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            /หน่วย
           </Typography>
         </div>
       ),
@@ -115,7 +132,7 @@ function Table({ rows }) {
       field: "dateEXP",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 50,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -141,7 +158,7 @@ function Table({ rows }) {
       headerName: "หมวดหมู่",
       headerAlign: "center",
       align: "center",
-      width: 90,
+      width: 70,
       headerClassName: "table-columns",
     },
     {
@@ -188,7 +205,7 @@ function Table({ rows }) {
     },
     {
       field: "operationFeePerUnit",
-      width: 70,
+      width: 50,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -198,7 +215,10 @@ function Table({ rows }) {
             ดำเนินการ
           </Typography>
           <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
-            /หน่วย (THB)
+            /หน่วย
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            (THB)
           </Typography>
         </div>
       ),
@@ -225,7 +245,7 @@ function Table({ rows }) {
       field: "rawPricePerUnit",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 50,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -233,7 +253,10 @@ function Table({ rows }) {
             ราคาดิบ
           </Typography>
           <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
-            /หน่วย (THB)
+            /หน่วย
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            (THB)
           </Typography>
         </div>
       ),
@@ -258,7 +281,7 @@ function Table({ rows }) {
     },
     {
       field: "costPerUnit",
-      width: 70,
+      width: 50,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -268,7 +291,27 @@ function Table({ rows }) {
             ต้นทุน
           </Typography>
           <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
-            /หน่วย (THB)
+            /หน่วย
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            (THB)
+          </Typography>
+        </div>
+      ),
+    },
+    {
+      field: "total",
+      width: 50,
+      headerAlign: "center",
+      align: "center",
+      headerClassName: "table-columns",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            Total
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            (THB)
           </Typography>
         </div>
       ),
@@ -320,7 +363,7 @@ function Table({ rows }) {
       headerName: "จัดการสินค้า",
       headerAlign: "center",
       align: "center",
-      width: 90,
+      width: 100,
       headerClassName: "table-columns",
       renderCell: (params) => (
         <div>
