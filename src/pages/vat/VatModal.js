@@ -40,7 +40,7 @@ function BootstrapDialogTitle(props) {
           sx={{
             position: "absolute",
             right: 8,
-            top: 8,
+            top: 12,
             color: (theme) => theme.palette.grey[500],
             "&:hover": {
               color: "#3B336B",
@@ -72,8 +72,10 @@ function VatModal({ openModal, setOpenModal }) {
   }, [vatName, vat]);
 
   const btnSX = {
-    width: "141px",
-    height: "35px",
+    width: "150px",
+    padding: ".5rem",
+    fontWeight: 400,
+    fontSize: "16px",
     background: "#3B336B",
     borderRadius: "5px",
     color: "#ffff",
@@ -83,7 +85,7 @@ function VatModal({ openModal, setOpenModal }) {
   };
 
   return (
-    <div>
+    <>
       <BootstrapDialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
@@ -117,13 +119,13 @@ function VatModal({ openModal, setOpenModal }) {
             size="small"
           />
         </DialogContent>
-        <DialogActions>
+        <DialogActions style={{padding: "1rem"}}>
           <Button autoFocus onClick={handleClose} sx={btnSX}>
             บันทึกข้อมูล
           </Button>
         </DialogActions>
       </BootstrapDialog>
-    </div>
+    </>
   );
 }
 

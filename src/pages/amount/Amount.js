@@ -29,13 +29,15 @@ function Amount() {
               <div className="title">
                 <img src="images/icons/majesticons_atom222.png" alt="" />
                 <p>หน่วยปริมาณสุทธิ ทั้งหมด</p>
+                <p style={{ color: "#ff0000" }}>8 รายการ</p>
               </div>
               <div className="action">
-                <button className="create" onClick={() => setOpenModal(true)}>สร้างหน่วยปริมาณใหม่</button>
+                <button className="create" onClick={() => setOpenModal(true)}>
+                  สร้างหน่วยปริมาณใหม่
+                </button>
                 <button className="delete">
                   <img src="images/icons/tabler_trash-x-filled.png" alt="" />
                 </button>
-                <p>8 รายการ</p>
               </div>
             </div>
             <div className="table">
@@ -48,25 +50,27 @@ function Amount() {
           <div className="content">
             <div className="content-head">
               <div className="title">
-                <img
-                  src="images/icons/fluent_tray-item-add-24-filled.png"
-                  alt=""
-                />
+                <img src="images/icons/fluent_tray-item-add-24-filled.png" alt="" />
                 <p>หน่วยจำนวน ทั้งหมด</p>
+                <p style={{ color: "#ff0000" }}>8 รายการ</p>
               </div>
               <div className="action">
-                <button className="create" onClick={() => setOpenModalAmount(true)}>สร้างหน่วยจำนวนใหม่</button>
+                <button className="create" onClick={() => setOpenModalAmount(true)}>
+                  สร้างหน่วยจำนวนใหม่
+                </button>
                 <button className="delete">
                   <img src="images/icons/tabler_trash-x-filled.png" alt="" />
                 </button>
-                <p>8 รายการ</p>
               </div>
             </div>
             <div className="table">
               <TableAmount />
             </div>
             <ModalNet openModal={openModal} setOpenModal={setOpenModal} />
-            <ModalAmount openModalAmount={openModalAmount} setOpenModalAmount={setOpenModalAmount} />
+            <ModalAmount
+              openModalAmount={openModalAmount}
+              setOpenModalAmount={setOpenModalAmount}
+            />
           </div>
         </div>
       </div>

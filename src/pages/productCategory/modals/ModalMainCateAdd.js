@@ -35,7 +35,7 @@ function BootstrapDialogTitle(props) {
           sx={{
             position: "absolute",
             right: 8,
-            top: 8,
+            top: 12,
             color: (theme) => theme.palette.grey[500],
             "&:hover": {
               color: "#3B336B",
@@ -65,10 +65,12 @@ function ModalMainCateAdd({ openModalAdd, setOpenModal }) {
   }, [cateName])
 
   const btnSX = {
-    width: "141px",
-    height: "35px",
+    width: "150px",
     background: "#3B336B",
     borderRadius: "5px",
+    padding: ".5rem 1rem",
+    fontWeight: 400,
+    fontSize: "16px",
     color: "#ffff",
     "&:hover": {
       background: "#201a42",
@@ -100,7 +102,7 @@ function ModalMainCateAdd({ openModalAdd, setOpenModal }) {
             size="small"
           />
         </DialogContent>
-        <DialogActions>
+        <DialogActions style={{padding: "1rem"}}>
           <Button autoFocus onClick={handleClose} sx={btnSX}>
             บันทึกข้อมูล
           </Button>

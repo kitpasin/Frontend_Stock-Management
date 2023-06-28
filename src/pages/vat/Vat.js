@@ -27,10 +27,10 @@ function Vat() {
             <div className="title">
               <img src="images/icons/foundation_graph-pie (2).png" alt="" />
               <p>Vat ทั้งหมด</p>
+              <p style={{color: "#ff0000"}}>8 รายการ</p>
             </div>
             <div className="action">
               <button onClick={() => setOpenModal(true)}>สร้าง Vat ใหม่</button>
-              <p>8 รายการ</p>
             </div>
           </div>
           <div className="table">

@@ -21,13 +21,20 @@ function TableAmount() {
     backgroundColor: "#3B336B",
   };
   const columns = [
-    { field: "id", headerName: "#", width: 50 },
-    { field: "amount", headerName: "ชื่อหน่วยปริมาณ", width: 500 },
+    {
+      field: "amount",
+      headerName: "ชื่อหน่วยปริมาณ",
+      width: 580,
+      headerClassName: "table-columns",
+    },
     {
       field: "edit",
-      headerName: "Edit",
+      headerName: "แก้ไข",
       width: 60,
       sortable: false,
+      headerAlign: "center",
+      align: "center",
+      headerClassName: "table-columns",
       renderCell: (cellValue) => {
         return (
           <button style={buttonStyle} onClick={editHandle(cellValue.row.edit)}>
@@ -39,15 +46,15 @@ function TableAmount() {
     },
     {
       field: "delete",
-      headerName: "Delete",
+      headerName: "ลบ",
       width: 60,
       sortable: false,
+      headerAlign: "center",
+      align: "center",
+      headerClassName: "table-columns",
       renderCell: (cellValue) => {
         return (
-          <button
-            style={buttonStyle}
-            onClick={deleteHandle(cellValue.row.delete)}
-          >
+          <button style={buttonStyle} onClick={deleteHandle(cellValue.row.delete)}>
             {" "}
             <img src="images/icons/trash-icon.png" alt="" />{" "}
           </button>
@@ -81,6 +88,7 @@ function TableAmount() {
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <DataGrid
+        sx={{border: "none"}}
         checkboxSelection={true}
         rows={rows}
         columns={columns}

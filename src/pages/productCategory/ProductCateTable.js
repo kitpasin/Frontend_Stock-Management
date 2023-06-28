@@ -44,7 +44,6 @@ const btnStyle = {
   color: "#fff",
   borderRadius: "5px",
 };
-
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
@@ -86,13 +85,13 @@ function Row(props) {
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell>ชื่อหมวดหมู่</TableCell>
-                    <TableCell>จำนวนรายการสินค้าในหมวดหมู่</TableCell>
-                    <TableCell width={50} align="center">
-                      Edit
+                    <TableCell style={{ color: "#3B326B" }}>ชื่อหมวดหมู่</TableCell>
+                    <TableCell style={{ color: "#3B326B" }}>จำนวนรายการสินค้าในหมวดหมู่</TableCell>
+                    <TableCell style={{ color: "#3B326B" }} width={50} align="center">
+                      แก้ไข
                     </TableCell>
-                    <TableCell width={50} align="center">
-                      Delete
+                    <TableCell style={{ color: "#3B326B" }} width={50} align="center">
+                      ลบ
                     </TableCell>
                   </TableRow>
                 </TableHead>
@@ -181,13 +180,15 @@ function ProductCateTable() {
           <TableHead>
             <TableRow>
               <TableCell />
-              <TableCell>หมวดหมู่หลัก</TableCell>
-              <TableCell align="left">จำนวนรายการสินค้าในหมวดหมู่</TableCell>
-              <TableCell width={60} align="center">
-                Edit
+              <TableCell style={{ color: "#3B326B" }}>หมวดหมู่หลัก</TableCell>
+              <TableCell style={{ color: "#3B326B" }} align="left">
+                จำนวนรายการสินค้าในหมวดหมู่
               </TableCell>
-              <TableCell width={60} align="center">
-                Delete
+              <TableCell style={{ color: "#3B326B" }} width={60} align="center">
+                แก้ไข
+              </TableCell>
+              <TableCell style={{ color: "#3B326B" }} width={60} align="center">
+                ลบ
               </TableCell>
             </TableRow>
           </TableHead>

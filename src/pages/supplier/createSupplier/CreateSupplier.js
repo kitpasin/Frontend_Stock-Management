@@ -2,7 +2,6 @@ import React from "react";
 import { faStore } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DataGrid } from "@mui/x-data-grid";
-import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -22,29 +21,74 @@ function CreateSupplier() {
   };
 
   const columns = [
-    { field: "id", headerName: "#", width: 30 },
-    { field: "image", headerName: "ภาพ", width: 30 },
-    { field: "nameList", headerName: "ชื่อรายการ", width: 180 },
-    { field: "ordered", headerName: "จำนวนที่สั่งซื้อ", width: 180 },
+    { field: "image", headerName: "ภาพ", width: 50, headerAlign: "center", align: "center" },
+    {
+      field: "nameList",
+      headerName: "ชื่อรายการ",
+      width: 150,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "ordered",
+      headerName: "จำนวนที่สั่งซื้อ",
+      width: 150,
+      headerAlign: "center",
+      align: "center",
+    },
     {
       field: "orderDate",
       headerName: "วันที่ซื้อ",
-      width: 130,
+      width: 150,
+      headerAlign: "center",
+      align: "center",
     },
     {
       field: "expDate",
       headerName: "วันหมดอายุ",
-      width: 160,
+      width: 150,
+      headerAlign: "center",
+      align: "center",
       // valueGetter: (params) =>
       // `${params.row.firstName || ""} ${params.row.lastName || ""}`,
     },
-    { field: "vat", headerName: "Vat", width: 80 },
-    { field: "category", headerName: "หมวดหมู่", width: 100 },
-    { field: "unit", headerName: "หน่วยนับ", width: 130 },
-    { field: "netWeight", headerName: "ปริมาณสุทธิต่อหน่วย", width: 130 },
-    { field: "unitCost", headerName: "ต้นทุนต่อหน่วย", width: 130 },
-    { field: "unitPrice", headerName: "ราคาต่อหน่วย", width: 130 },
-    { field: "totalCost", headerName: "รวมต้นทุนต่อหน่วย", width: 130 },
+    { field: "vat", headerName: "Vat", width: 50, headerAlign: "center", align: "center" },
+    {
+      field: "category",
+      headerName: "หมวดหมู่",
+      width: 100,
+      headerAlign: "center",
+      align: "center",
+    },
+    { field: "unit", headerName: "หน่วยนับ", width: 150, headerAlign: "center", align: "center" },
+    {
+      field: "netWeight",
+      headerName: "ปริมาณสุทธิต่อหน่วย",
+      width: 150,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "unitCost",
+      headerName: "ต้นทุนต่อหน่วย",
+      width: 150,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "unitPrice",
+      headerName: "ราคาต่อหน่วย",
+      width: 150,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "totalCost",
+      headerName: "รวมต้นทุนต่อหน่วย",
+      width: 150,
+      headerAlign: "center",
+      align: "center",
+    },
   ];
 
   return (
@@ -135,7 +179,7 @@ function CreateSupplier() {
                     <MenuItem value={30}>Thirty</MenuItem>
                   </Select>
                 </FormControl>
-                <button>
+                <button style={{fontWeight: 400, fontSize: "16px"}}>
                   <img src="images/icons/ic_round-plus.png" alt="" />{" "}
                   สร้างประเภทสินค้าที่ขาย/หมวดหมู่หลัก
                 </button>
@@ -147,65 +191,81 @@ function CreateSupplier() {
           <div className="head"></div>
           <div className="content">
             <div className="content-head">
-              <div className="title">
-                <img src="images/icons/ri_file-list-3-fill2222.png" alt="" />
-                <p>ประวัติสั่งสินค้า</p>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  gap: "1rem",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                    gap: "1rem",
+                  }}
+                >
+                  <img src="images/icons/ri_file-list-3-fill2222.png" alt="" />
+                  <p style={{ color: "#3B336B", fontSize: "18px", fontWeight: 400 }}>
+                    ประวัติสั่งสินค้า
+                  </p>
+                </div>
+                <div className="action">
+                  <p>2500 จำนวนที่เคยสั่งซื้อ</p>
+                  <p>500 รายการ</p>
+                </div>
               </div>
+
               <div className="search-input">
-                <FormControl sx={{ m: 1, minWidth: 160 }} size="small">
-                  <InputLabel id="demo-select-small-label">
-                    หมวดหมู่หลัก
-                  </InputLabel>
-                  <Select
-                    labelId="demo-select-small-label"
-                    id="demo-select-small"
-                    value={age}
-                    label="Age"
-                    onChange={handleChange}
-                  >
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
-                  </Select>
-                </FormControl>
-                <FormControl sx={{ m: 1, minWidth: 160 }} size="small">
-                  <InputLabel id="demo-select-small-label">
-                    หมวดหมู่ย่อย
-                  </InputLabel>
-                  <Select
-                    labelId="demo-select-small-label"
-                    id="demo-select-small"
-                    value={age}
-                    label="Age"
-                    onChange={handleChange}
-                  >
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
-                  </Select>
-                </FormControl>
                 <TextField
-                  sx={{ width: "250px" }}
+                  sx={{ width: "150px" }}
                   id="standard-basic"
                   label="ชื่อ"
-                  variant="standard"
+                  variant="outlined"
+                  size="small"
                 />
-                <button> <img src="images/icons/fa_search.png" alt="" /> ค้นหา</button>
-              </div>
-              <div className="action">
-                <p style={{ color: "#3B336B" }}>0 จำนวนที่เคยสั่งซื้อ</p>
-                <p>List : 0</p>
+                <FormControl sx={{ width: 150 }} size="small">
+                  <InputLabel id="demo-select-small-label">หมวดหมู่หลัก</InputLabel>
+                  <Select
+                    labelId="demo-select-small-label"
+                    id="demo-select-small"
+                    value={age}
+                    label="Age"
+                    onChange={handleChange}
+                  >
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
+                    <MenuItem value={10}>Ten</MenuItem>
+                    <MenuItem value={20}>Twenty</MenuItem>
+                    <MenuItem value={30}>Thirty</MenuItem>
+                  </Select>
+                </FormControl>
+                <FormControl sx={{ width: 150 }} size="small">
+                  <InputLabel id="demo-select-small-label">หมวดหมู่ย่อย</InputLabel>
+                  <Select
+                    labelId="demo-select-small-label"
+                    id="demo-select-small"
+                    value={age}
+                    label="Age"
+                    onChange={handleChange}
+                  >
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
+                    <MenuItem value={10}>Ten</MenuItem>
+                    <MenuItem value={20}>Twenty</MenuItem>
+                    <MenuItem value={30}>Thirty</MenuItem>
+                  </Select>
+                </FormControl>
               </div>
             </div>
             <div className="table">
               <DataGrid
                 checkboxSelection={false}
+                sx={{ border: "none" }}
                 rows={[]}
                 columns={columns}
                 initialState={{

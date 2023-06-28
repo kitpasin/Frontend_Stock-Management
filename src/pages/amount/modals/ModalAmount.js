@@ -37,7 +37,7 @@ function BootstrapDialogTitle(props) {
           sx={{
             position: "absolute",
             right: 8,
-            top: 8,
+            top: 12,
             color: (theme) => theme.palette.grey[500],
             "&:hover": {
               color: "#3B336B",
@@ -67,18 +67,20 @@ function ModalAmount({ openModalAmount, setOpenModalAmount }) {
   }, [amountName]);
 
   const btnSX = {
-    width: "141px",
-    height: "35px",
+    width: "150px",
     background: "#3B336B",
     borderRadius: "5px",
     color: "#ffff",
+    padding: ".5rem",
+    fontSize: "16px",
+    fontWeight: 400,
     "&:hover": {
       background: "#201a42",
     },
   };
 
   return (
-    <div>
+    <>
       <BootstrapDialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
@@ -105,13 +107,13 @@ function ModalAmount({ openModalAmount, setOpenModalAmount }) {
             <p style={{ color: "#C4C4C4" }}>ตัวอย่างเช่น ขวด,กระป๋อง,ซอง,ถุง,กล่อง</p>
           </div>
         </DialogContent>
-        <DialogActions>
+        <DialogActions style={{padding: "1rem"}}>
           <Button autoFocus onClick={handleClose} sx={btnSX}>
             บันทึกข้อมูล
           </Button>
         </DialogActions>
       </BootstrapDialog>
-    </div>
+    </>
   );
 }
 

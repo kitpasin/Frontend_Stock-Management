@@ -21,15 +21,27 @@ function VatTable() {
   };
 
   const columns = [
-    { field: "id", headerName: "#", width: 50 },
-    { field: "vatName", headerName: "ชื่อหมวดหมู่ Vat", width: 200 },
-    { field: "vatList", headerName: "รายการสินค้าที่มี vat", width: 200 },
-    { field: "vat", headerName: "% Vat", width: 950 },
+    {
+      field: "vatName",
+      headerName: "ชื่อหมวดหมู่ Vat",
+      width: 200,
+      headerClassName: "table-columns",
+    },
+    {
+      field: "vatList",
+      headerName: "รายการสินค้าที่มี vat",
+      width: 200,
+      headerClassName: "table-columns",
+    },
+    { field: "vat", headerName: "% Vat", width: 1020, headerClassName: "table-columns" },
     {
       field: "edit",
-      headerName: "Edit",
+      headerName: "แก้ไข",
       width: 60,
       sortable: false,
+      headerAlign: "center",
+      align: "center",
+      headerClassName: "table-columns",
       renderCell: (cellValue) => {
         return (
           <button style={buttonStyle} onClick={editHandle(cellValue.row.edit)}>
@@ -41,15 +53,15 @@ function VatTable() {
     },
     {
       field: "delete",
-      headerName: "Delete",
+      headerName: "ลบ",
       width: 60,
       sortable: false,
+      headerAlign: "center",
+      align: "center",
+      headerClassName: "table-columns",
       renderCell: (cellValue) => {
         return (
-          <button
-            style={buttonStyle}
-            onClick={deleteHandle(cellValue.row.delete)}
-          >
+          <button style={buttonStyle} onClick={deleteHandle(cellValue.row.delete)}>
             {" "}
             <img src="images/icons/trash-icon.png" alt="" />{" "}
           </button>
@@ -71,26 +83,24 @@ function VatTable() {
       vatName: "Vat 2",
       vatList: "125 รายการ",
       vat: "25 %",
-      
     },
     {
       id: 3,
       vatName: "Vat 3",
       vatList: "125 รายการ",
       vat: "5 %",
-      
     },
     {
       id: 4,
       vatName: "Vat 4",
       vatList: "25 รายการ",
       vat: "7 %",
-     
     },
   ];
 
   return (
     <DataGrid
+      sx={{ border: "none" }}
       checkboxSelection={true}
       rows={rows}
       columns={columns}

@@ -20,15 +20,22 @@ function TableNet() {
     backgroundColor: "#3B336B",
   };
   const columns = [
-    { field: "id", headerName: "#", width: 50 },
-    { field: "netName", headerName: "ชื่อหน่วยปริมาณสุทธิ", width: 200 },
-    { field: "category", headerName: "หมวดหมู่หลัก", width: 300 },
-   
+    {
+      field: "netName",
+      headerName: "ชื่อหน่วยปริมาณสุทธิ",
+      width: 290,
+      headerClassName: "table-columns",
+    },
+    { field: "category", headerName: "หมวดหมู่หลัก", width: 300, headerClassName: "table-columns" },
+
     {
       field: "edit",
-      headerName: "Edit",
+      headerName: "แก้ไข",
       width: 60,
       sortable: false,
+      headerClassName: "table-columns",
+      headerAlign: "center",
+      align: "center",
       renderCell: (cellValue) => {
         return (
           <button style={buttonStyle} onClick={editHandle(cellValue.row.edit)}>
@@ -40,15 +47,15 @@ function TableNet() {
     },
     {
       field: "delete",
-      headerName: "Delete",
+      headerName: "ลบ",
       width: 60,
       sortable: false,
+      headerClassName: "table-columns",
+      headerAlign: "center",
+      align: "center",
       renderCell: (cellValue) => {
         return (
-          <button
-            style={buttonStyle}
-            onClick={deleteHandle(cellValue.row.delete)}
-          >
+          <button style={buttonStyle} onClick={deleteHandle(cellValue.row.delete)}>
             {" "}
             <img src="images/icons/trash-icon.png" alt="" />{" "}
           </button>
@@ -79,6 +86,7 @@ function TableNet() {
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <DataGrid
+        sx={{ border: "none" }}
         checkboxSelection={true}
         rows={rows}
         columns={columns}

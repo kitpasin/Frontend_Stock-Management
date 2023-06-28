@@ -42,7 +42,7 @@ function BootstrapDialogTitle(props) {
           sx={{
             position: "absolute",
             right: 8,
-            top: 8,
+            top: 12,
             color: (theme) => theme.palette.grey[500],
             "&:hover": {
               color: "#3B336B",
@@ -83,16 +83,13 @@ function ModalNet({ openModal, setOpenModal }) {
   };
 
   return (
-    <div>
+    <>
       <BootstrapDialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={openModal}
       >
-        <BootstrapDialogTitle
-          id="customized-dialog-title"
-          onClose={handleClose}
-        >
+        <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
           สร้างหน่วยปริมาณ
         </BootstrapDialogTitle>
         <DialogContent dividers>
@@ -111,13 +108,13 @@ function ModalNet({ openModal, setOpenModal }) {
             <p style={{ color: "#C4C4C4" }}>ตัวอย่างเช่น ml,gm,kg,L</p>
           </div>
         </DialogContent>
-        <DialogActions>
+        <DialogActions style={{ padding: "1rem" }}>
           <Button autoFocus onClick={handleClose} sx={btnSX}>
             บันทึกข้อมูล
           </Button>
         </DialogActions>
       </BootstrapDialog>
-    </div>
+    </>
   );
 }
 

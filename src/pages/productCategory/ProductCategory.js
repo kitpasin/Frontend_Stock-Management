@@ -82,6 +82,7 @@ function ProductCategory() {
             <div className="title">
               <img src="images/icons/uis_layer-group1.png" alt="" />
               <p>หมวดหมู่สินค้าทั้งหมด</p>
+              <p style={{color: "#ff0000"}}>2,500 รายการ</p>
             </div>
             <div className="action">
               <button onClick={() => setOpenModal(true)}>สร้างหมวดหมู่หลัก</button>
@@ -90,7 +91,6 @@ function ProductCategory() {
                 {" "}
                 <img src="images/icons/tabler_trash-x-filled.png" alt="" />{" "}
               </button> */}
-              <p>2,500 รายการ</p>
             </div>
           </div>
           <div className="table">
