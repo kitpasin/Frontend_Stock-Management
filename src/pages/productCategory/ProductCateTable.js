@@ -11,28 +11,10 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TablePagination from "@mui/material/TablePagination";
 import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-
-function createData(name, calories, fat, carbs) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    subcate: [
-      {
-        subName: "มาม่าเกาหลี",
-        amount: 250,
-      },
-      {
-        subName: "มาม่าอินโด",
-        amount: 250,
-      },
-    ],
-  };
-}
+import Swal from "sweetalert2";
+import axios from "axios";
 
 const btnStyle = {
   display: "flex",
@@ -44,33 +26,149 @@ const btnStyle = {
   color: "#fff",
   borderRadius: "5px",
 };
-function Row(props) {
-  const { row } = props;
-  const [open, setOpen] = React.useState(false);
+function Row({ row, subCatesData, getMainCates, getSubCates }) {
+  const [open, setOpen] = useState(false);
+
+  function handleEditMainCate(row) {
+    Swal.fire({
+      title: "Update Amount",
+      html: `
+        <input type="text" id="name" class="swal2-input" placeholder="Name" value=${row.name}>
+      `,
+      confirmButtonText: "Submit",
+      confirmButtonColor: "#3085d6",
+      showCancelButton: true,
+      cancelButtonColor: "#d33",
+      focusConfirm: false,
+      preConfirm: () => {
+        const name = Swal.getPopup().querySelector("#name").value;
+
+        if (!name) {
+          Swal.showValidationMessage(`Please enter your data.`);
+        }
+
+        return { name };
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const data = {
+          name: result.value.name,
+        };
+
+        axios
+          .put(`maincate/${row.id}`, data)
+          .then(function (response) {
+            Swal.fire("Updated!", "Your category has been updated.", "success").then(() => {
+              getMainCates();
+            });
+          })
+          .catch(function (error) {
+            console.error(error);
+          });
+      }
+    });
+  }
+
+  function handleEditSubCate(sub) {
+    console.log(sub.id);
+    Swal.fire({
+      title: "Update Amount",
+      html: `
+        <input type="text" id="name" class="swal2-input" placeholder="Name" value=${sub.name}>
+      `,
+      confirmButtonText: "Submit",
+      confirmButtonColor: "#3085d6",
+      showCancelButton: true,
+      cancelButtonColor: "#d33",
+      focusConfirm: false,
+      preConfirm: () => {
+        const name = Swal.getPopup().querySelector("#name").value;
+
+        if (!name) {
+          Swal.showValidationMessage(`Please enter your data.`);
+        }
+
+        return { name };
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const data = {
+          name: result.value.name,
+        };
+
+        axios
+          .put(`subcate/${sub.id}`, data)
+          .then(function (response) {
+            Swal.fire("Updated!", "Your category has been updated.", "success").then(() => {
+              getSubCates();
+            });
+          })
+          .catch(function (error) {
+            console.error(error);
+          });
+      }
+    });
+  }
+
+  function handleDeleteMainCate(row) {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.delete(`maincate/${row.id}`).then(() => {
+          Swal.fire("Deleted!", "Your Data has been deleted.", "success").then(() => {
+            getMainCates();
+          });
+        });
+      }
+    });
+  }
+
+  function handleDeleteSubCate(row) {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.delete(`subcate/${row.id}`).then(() => {
+          Swal.fire("Deleted!", "Your Data has been deleted.", "success").then(() => {
+            getSubCates();
+          });
+        });
+      }
+    });
+  }
 
   return (
-    <React.Fragment>
+    <>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-        <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
+        <TableCell width={50}>
+          <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
           {row.name}
         </TableCell>
-        <TableCell align="left">{row.calories}</TableCell>
+        <TableCell align="left">{row.quantity}</TableCell>
         <TableCell align="center">
-          <button style={btnStyle}>
+          <button style={btnStyle} onClick={() => handleEditMainCate(row)}>
             <img src="images/icons/eva_edit-2-fill.png" alt="" />
           </button>
         </TableCell>
         <TableCell align="center">
-          <button style={btnStyle}>
+          <button style={btnStyle} onClick={() => handleDeleteMainCate(row)}>
             <img src="images/icons/trash-icon.png" alt="" />
           </button>
         </TableCell>
@@ -78,14 +176,12 @@ function Row(props) {
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                หมวดหมู่ย่อย
-              </Typography>
+            <Box sx={{}}>
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell style={{ color: "#3B326B" }}>ชื่อหมวดหมู่</TableCell>
+                    <TableCell width={50} style={{ color: "#3B326B" }}></TableCell>
+                    <TableCell style={{ color: "#3B326B" }}>หมวดหมู่ย่อย</TableCell>
                     <TableCell style={{ color: "#3B326B" }}>จำนวนรายการสินค้าในหมวดหมู่</TableCell>
                     <TableCell style={{ color: "#3B326B" }} width={50} align="center">
                       แก้ไข
@@ -96,67 +192,43 @@ function Row(props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.subcate.map((sub) => (
-                    <TableRow key={sub.subName}>
-                      <TableCell component="th" scope="row">
-                        {sub.subName}
-                      </TableCell>
-                      <TableCell>{sub.amount}</TableCell>
-                      <TableCell align="center">
-                        <button style={btnStyle}>
-                          <img src="images/icons/eva_edit-2-fill.png" alt="" />
-                        </button>
-                      </TableCell>
-                      <TableCell align="center">
-                        <button style={btnStyle}>
-                          <img src="images/icons/trash-icon.png" alt="" />
-                        </button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {subCatesData.map((sub) => {
+                    if (sub.main_cate_id === row.id) {
+                      return (
+                        <TableRow key={sub.id}>
+                          <TableCell></TableCell>
+                          <TableCell>{sub.name}</TableCell>
+                          <TableCell>{sub.quantity}</TableCell>
+                          <TableCell align="center">
+                            <button style={btnStyle} onClick={() => handleEditSubCate(sub)}>
+                              <img src="images/icons/eva_edit-2-fill.png" alt="" />
+                            </button>
+                          </TableCell>
+                          <TableCell align="center">
+                            <button style={btnStyle} onClick={() => handleDeleteSubCate(sub)}>
+                              <img src="images/icons/trash-icon.png" alt="" />
+                            </button>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    } else {
+                      return null;
+                    }
+                  })}
                 </TableBody>
               </Table>
             </Box>
           </Collapse>
         </TableCell>
       </TableRow>
-    </React.Fragment>
+    </>
   );
 }
 
-Row.propTypes = {
-  row: PropTypes.shape({
-    calories: PropTypes.number.isRequired,
-    carbs: PropTypes.number.isRequired,
-    fat: PropTypes.number.isRequired,
-    history: PropTypes.arrayOf(
-      PropTypes.shape({
-        amount: PropTypes.number.isRequired,
-        customerId: PropTypes.string.isRequired,
-        date: PropTypes.string.isRequired,
-      })
-    ).isRequired,
-    name: PropTypes.string.isRequired,
-  }).isRequired,
-};
-
-const rows = [
-  createData("มาม่า", 159, 6.0, 24),
-  createData("ขนม", 237, 9.0, 37),
-  createData("อาหารกล่อง", 262, 16.0, 24),
-  createData("ฝ่ายผลิต", 305, 3.7, 67),
-  createData("ท็อปปิ้ง", 356, 16.0, 49),
-  createData("แอลกอฮอล์", 159, 6.0, 24),
-  createData("น้ำยาซัก", 237, 9.0, 37),
-  
-];
-
-function ProductCateTable() {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+function ProductCateTable({ mainCatesData, subCatesData, getMainCates, getSubCates }) {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [newRows, setNewRows] = useState([]);
-  const [openModal, setOpenModal] = React.useState(false);
-
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -169,13 +241,13 @@ function ProductCateTable() {
 
   /* set paginate  */
   useEffect(() => {
-    let data = rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+    let data = mainCatesData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
     setNewRows(data);
-  }, [page, rowsPerPage]);
+  }, [page, rowsPerPage, mainCatesData]);
 
   return (
     <>
-      <TableContainer component={Paper}>
+      <TableContainer>
         <Table aria-label="collapsible table">
           <TableHead>
             <TableRow>
@@ -194,15 +266,21 @@ function ProductCateTable() {
           </TableHead>
           <TableBody>
             {newRows?.map((row) => (
-              <Row key={row.name} row={row} />
+              <Row
+                key={row.id}
+                row={row}
+                subCatesData={subCatesData}
+                getMainCates={getMainCates}
+                getSubCates={getSubCates}
+              />
             ))}
           </TableBody>
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
+        rowsPerPageOptions={[5, 10, 50, 100]}
         component="div"
-        count={rows.length}
+        count={mainCatesData.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

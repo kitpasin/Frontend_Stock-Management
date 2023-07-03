@@ -1,72 +1,43 @@
 import React from "react";
 import { faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { DataGrid } from "@mui/x-data-grid";
 
 import "./productCategory.scss";
 
 /* import Components */
 import HeadPageComponent from "../../components/layout/headpage/headpage";
 import ProductCateTable from "./ProductCateTable";
-import ModalMainCateAdd from "./modals/ModalMainCateAdd";
-import ModalSubCateAdd from "./modals/ModalSubCateAdd";
+import { useState } from "react";
+import axios from "axios";
+import { useEffect } from "react";
+import Swal from "sweetalert2";
+import CreateMainCategory from "./createCategory/CreateMainCategory";
+import CreateSubCategory from "./createCategory/CreateSubCategory";
 
 function ProductCategory() {
+  const [mainCatesData, setMainCatesData] = useState([]);
+  const [subCatesData, setSubCatesData] = useState([]);
+  const [mainCateOpen, setMainCateOpen] = useState(false);
+  const [subCateOpen, setSubCateOpen] = useState(false);
+  const handleMainCateOpen = () => setMainCateOpen(true);
+  const handleSubCateOpen = () => setSubCateOpen(true);
 
-  const [openModal, setOpenModal] = React.useState(false);
-  const [openModalSub, setOpenModalSub] = React.useState(false);
-  const editHandle = (_id) => {
-    console.log(_id);
-  };
+  async function getMainCates() {
+    const response = await axios.get("maincates");
+    const data = response.data.mainCates;
+    setMainCatesData(data);
+  }
 
-  const deleteHandle = (_id) => {
-    console.log(_id);
-  };
-  const buttonStyle = {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    width: "35px",
-    height: "35px",
-    borderRadius: "5px",
-    backgroundColor: "#3B336B",
-  };
-  const columns = [
-    { field: "id", headerName: "#", width: 30 },
-    { field: "mainCate", headerName: "หมวดหมู่หลัก", width: 300 },
-    { field: "itemsInCate", headerName: "จำนวนรายการสินค้าในหมวดหมู่", width: 1000 },
-    {
-      field: "edit",
-      headerName: "Edit",
-      width: 60,
-      sortable: false,
-      renderCell: (cellValue) => {
-        return (
-          <button style={buttonStyle} onClick={editHandle(cellValue.row.edit)}>
-            {" "}
-            <img src="images/icons/supplier-icon.png" alt="" />{" "}
-          </button>
-        );
-      },
-    },
-    {
-      field: "delete",
-      headerName: "Delete",
-      width: 60,
-      sortable: false,
-      renderCell: (cellValue) => {
-        return (
-          <button
-            style={buttonStyle}
-            onClick={deleteHandle(cellValue.row.delete)}
-          >
-            {" "}
-            <img src="images/icons/eva_edit-2-fill.png" alt="" />{" "}
-          </button>
-        );
-      },
-    },
-  ];
+  async function getSubCates() {
+    const response = await axios.get("subcates");
+    const data = response.data.subCates;
+    setSubCatesData(data);
+  }
+
+  useEffect(() => {
+    getMainCates();
+    getSubCates();
+  }, []);
 
   return (
     <section id="productcate-page">
@@ -82,24 +53,35 @@ function ProductCategory() {
             <div className="title">
               <img src="images/icons/uis_layer-group1.png" alt="" />
               <p>หมวดหมู่สินค้าทั้งหมด</p>
-              <p style={{color: "#ff0000"}}>2,500 รายการ</p>
+              <p style={{ color: "#ff0000" }}>{mainCatesData.length} รายการ</p>
             </div>
             <div className="action">
-              <button onClick={() => setOpenModal(true)}>สร้างหมวดหมู่หลัก</button>
-              <button onClick={() => setOpenModalSub(true)}>สร้างหมวดหมู่ย่อย</button>
-              {/* <button className="btn-delete" style={{ width: "35px" }}>
-                {" "}
-                <img src="images/icons/tabler_trash-x-filled.png" alt="" />{" "}
-              </button> */}
+              <button onClick={handleMainCateOpen}>สร้างหมวดหมู่หลัก</button>
+              <button onClick={handleSubCateOpen}>สร้างหมวดหมู่ย่อย</button>
             </div>
           </div>
           <div className="table">
-            <ProductCateTable />
+            <ProductCateTable
+              mainCatesData={mainCatesData}
+              subCatesData={subCatesData}
+              getMainCates={getMainCates}
+              getSubCates={getSubCates}
+            />
           </div>
-          <ModalMainCateAdd openModalAdd={openModal} setOpenModal={setOpenModal} />
-          <ModalSubCateAdd openModal={openModalSub} setOpenModalSub={setOpenModalSub} />
         </div>
       </div>
+      <CreateMainCategory
+        mainCateOpen={mainCateOpen}
+        setMainCateOpen={setMainCateOpen}
+        getMainCates={getMainCates}
+      />
+      <CreateSubCategory
+        mainCatesData={mainCatesData}
+        setMainCatesData={setMainCatesData}
+        subCateOpen={subCateOpen}
+        setSubCateOpen={setSubCateOpen}
+        getSubCates={getSubCates}
+      />
     </section>
   );
 }
