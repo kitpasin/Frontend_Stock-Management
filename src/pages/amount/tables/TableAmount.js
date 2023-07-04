@@ -2,47 +2,16 @@ import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import Swal from "sweetalert2";
 import axios from "axios";
+import EditAmount from "../edit/EditAmount";
+import { useState } from "react";
 
 function TableAmount({ amountsData, getAmounts }) {
+  const [editAmountOpen, setEditAmountOpen] = useState(false);
+  const [cellData, setCellData] = useState([]);
 
-  function handleEditAmount(cellValue) {
-    Swal.fire({
-      title: "Update Amount",
-      html: `
-        <input type="text" id="name" class="swal2-input" placeholder="Name" value=${cellValue.row.name}>
-      `,
-      confirmButtonText: "Submit",
-      confirmButtonColor: "#3085d6",
-      showCancelButton: true,
-      cancelButtonColor: "#d33",
-      focusConfirm: false,
-      preConfirm: () => {
-        const name = Swal.getPopup().querySelector("#name").value;
-
-        if (!name) {
-          Swal.showValidationMessage(`Please enter your data.`);
-        }
-
-        return { name };
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const data = {
-          name: result.value.name,
-        };
-
-        axios
-          .put(`amount/${cellValue.row.id}`, data)
-          .then(function (response) {
-            Swal.fire("Updated!", "Your amount has been updated.", "success").then(() => {
-              getAmounts();
-            });
-          })
-          .catch(function (error) {
-            console.error(error);
-          });
-      }
-    });
+  function handleEditAmountOpen(cellValue) {
+    setEditAmountOpen(true);
+    setCellData(cellValue);
   }
 
   function handleDeleteAmount(cellValue) {
@@ -91,7 +60,7 @@ function TableAmount({ amountsData, getAmounts }) {
       headerClassName: "table-columns",
       renderCell: (cellValue) => {
         return (
-          <button style={buttonStyle} onClick={() => handleEditAmount(cellValue)}>
+          <button style={buttonStyle} onClick={() => handleEditAmountOpen(cellValue)}>
             {" "}
             <img src="images/icons/eva_edit-2-fill.png" alt="" />{" "}
           </button>
@@ -130,6 +99,12 @@ function TableAmount({ amountsData, getAmounts }) {
           },
         }}
         pageSizeOptions={[5, 10, 50, 100]}
+      />
+      <EditAmount
+        editAmountOpen={editAmountOpen}
+        setEditAmountOpen={setEditAmountOpen}
+        cellData={cellData}
+        getAmounts={getAmounts}
       />
     </div>
   );

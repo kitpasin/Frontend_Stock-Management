@@ -17,10 +17,11 @@ import CreateSubCategory from "./createCategory/CreateSubCategory";
 function ProductCategory() {
   const [mainCatesData, setMainCatesData] = useState([]);
   const [subCatesData, setSubCatesData] = useState([]);
-  const [mainCateOpen, setMainCateOpen] = useState(false);
-  const [subCateOpen, setSubCateOpen] = useState(false);
-  const handleMainCateOpen = () => setMainCateOpen(true);
-  const handleSubCateOpen = () => setSubCateOpen(true);
+  const [createMainCateOpen, setCreateMainCateOpen] = useState(false);
+  const [createSubCateOpen, setCreateSubCateOpen] = useState(false);
+
+  const handleCreateMainCateOpen = () => setCreateMainCateOpen(true);
+  const handleCreateSubCateOpen = () => setCreateSubCateOpen(true);
 
   async function getMainCates() {
     const response = await axios.get("maincates");
@@ -56,8 +57,8 @@ function ProductCategory() {
               <p style={{ color: "#ff0000" }}>{mainCatesData.length} รายการ</p>
             </div>
             <div className="action">
-              <button onClick={handleMainCateOpen}>สร้างหมวดหมู่หลัก</button>
-              <button onClick={handleSubCateOpen}>สร้างหมวดหมู่ย่อย</button>
+              <button onClick={handleCreateMainCateOpen}>สร้างหมวดหมู่หลัก</button>
+              <button onClick={handleCreateSubCateOpen}>สร้างหมวดหมู่ย่อย</button>
             </div>
           </div>
           <div className="table">
@@ -71,15 +72,15 @@ function ProductCategory() {
         </div>
       </div>
       <CreateMainCategory
-        mainCateOpen={mainCateOpen}
-        setMainCateOpen={setMainCateOpen}
+        createMainCateOpen={createMainCateOpen}
+        setCreateMainCateOpen={setCreateMainCateOpen}
         getMainCates={getMainCates}
       />
       <CreateSubCategory
         mainCatesData={mainCatesData}
         setMainCatesData={setMainCatesData}
-        subCateOpen={subCateOpen}
-        setSubCateOpen={setSubCateOpen}
+        createSubCateOpen={createSubCateOpen}
+        setCreateSubCateOpen={setCreateSubCateOpen}
         getSubCates={getSubCates}
       />
     </section>

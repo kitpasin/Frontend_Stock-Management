@@ -7,7 +7,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-function EditSupplier({ mainCatesData, setMainCates, open, setOpen, cellData, getSuppliers }) {
+function EditSupplier({ mainCatesData, open, setOpen, cellData, getSuppliers }) {
   const handleClose = () => setOpen(false);
   const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
   const checkedIcon = <CheckBoxIcon fontSize="small" />;

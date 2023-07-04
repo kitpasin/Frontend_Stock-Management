@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { faChartPie } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import "./vat.scss";
 
@@ -9,58 +7,16 @@ import HeadPageComponent from "../../components/layout/headpage/headpage";
 import VatTable from "./VatTable";
 import axios from "axios";
 import { useEffect } from "react";
-import Swal from "sweetalert2";
+import CreateVat from "./create/CreateVat";
 
 function Vat() {
+  const [createVatOpen, setCreateVatOpen] = useState(false)
   const [vatsData, setVatsData] = useState([])
 
   async function getVats() {
     const response = await axios.get("vats")
     const data = response.data.vats
     setVatsData(data)
-  }
-
-  function handleCreateVat() {
-    Swal.fire({
-      title: "Create Vat",
-      html: `
-      <input type="text" id="name" class="swal2-input" placeholder="Name">
-      <input type="text" id="percent" class="swal2-input" placeholder="Percent">
-    `,
-      confirmButtonText: "Submit",
-      confirmButtonColor: "#3085d6",
-      showCancelButton: true,
-      cancelButtonColor: "#d33",
-      focusConfirm: false,
-      preConfirm: () => {
-        const name = Swal.getPopup().querySelector("#name").value;
-        const percent = Swal.getPopup().querySelector("#percent").value;
-
-        if (!name || !percent) {
-          Swal.showValidationMessage(`Please enter all required data.`);
-        }
-
-        return { name, percent };
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const data = {
-          name: result.value.name,
-          percent: result.value.percent,
-        }
-
-        axios
-          .post("vat", data)
-          .then(function (response) {
-            Swal.fire("Created!", "Your vat has been created.", "success").then(() => {
-              getVats();
-            });
-          })
-          .catch(function (error) {
-            console.error(error);
-          });
-      }
-    });
   }
 
   useEffect(() => {
@@ -84,7 +40,7 @@ function Vat() {
               <p style={{ color: "#ff0000" }}>{vatsData.length} รายการ</p>
             </div>
             <div className="action">
-              <button onClick={handleCreateVat}>สร้าง Vat ใหม่</button>
+              <button onClick={() => setCreateVatOpen(true)}>สร้าง Vat ใหม่</button>
             </div>
           </div>
           <div className="table">
@@ -92,6 +48,7 @@ function Vat() {
           </div>
         </div>
       </div>
+      <CreateVat createVatOpen={createVatOpen} setCreateVatOpen={setCreateVatOpen} getVats={getVats} />
     </section>
   );
 }

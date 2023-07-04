@@ -1,9 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import Swal from "sweetalert2";
 import axios from "axios";
+import EditVat from "./edit/EditVat";
 
 function VatTable({ vatsData, getVats }) {
+  const [cellData, setCellData] = useState([]);
+  const [editVatOpen, setEditVatOpen] = useState(false);
+
+  function handleEditVatOpen(cellValue) {
+    setEditVatOpen(true);
+    setCellData(cellValue);
+  }
 
   function handleEditVat(cellValue) {
     Swal.fire({
@@ -102,7 +110,7 @@ function VatTable({ vatsData, getVats }) {
       headerClassName: "table-columns",
       renderCell: (cellValue) => {
         return (
-          <button style={buttonStyle} onClick={() => handleEditVat(cellValue)}>
+          <button style={buttonStyle} onClick={() => handleEditVatOpen(cellValue)}>
             {" "}
             <img src="images/icons/eva_edit-2-fill.png" alt="" />{" "}
           </button>
@@ -141,6 +149,12 @@ function VatTable({ vatsData, getVats }) {
           },
         }}
         pageSizeOptions={[5, 10, 50, 100]}
+      />
+      <EditVat
+        editVatOpen={editVatOpen}
+        setEditVatOpen={setEditVatOpen}
+        cellData={cellData}
+        getVats={getVats}
       />
     </>
   );

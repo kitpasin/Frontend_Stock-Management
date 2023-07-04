@@ -2,46 +2,16 @@ import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useState } from "react";
+import EditNet from "../edit/EditNet";
 
-function TableNet({netsData, getNets}) {
-  function handleEditNet(cellValue) {
-    Swal.fire({
-      title: "Update Net",
-      html: `
-        <input type="text" id="name" class="swal2-input" placeholder="Name" value=${cellValue.row.name}>
-      `,
-      confirmButtonText: "Submit",
-      confirmButtonColor: "#3085d6",
-      showCancelButton: true,
-      cancelButtonColor: "#d33",
-      focusConfirm: false,
-      preConfirm: () => {
-        const name = Swal.getPopup().querySelector("#name").value;
+function TableNet({ netsData, getNets, mainCatesData }) {
+  const [editNetOpen, setEditNetOpen] = useState(false);
+  const [cellData, setCellData] = useState([]);
 
-        if (!name) {
-          Swal.showValidationMessage(`Please enter your data.`);
-        }
-
-        return { name };
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const data = {
-          name: result.value.name,
-        };
-
-        axios
-          .put(`net/${cellValue.row.id}`, data)
-          .then(function (response) {
-            Swal.fire("Updated!", "Your net has been updated.", "success").then(() => {
-              getNets();
-            });
-          })
-          .catch(function (error) {
-            console.error(error);
-          });
-      }
-    });
+  function handleEditNetOpen(cellValue) {
+    setEditNetOpen(true);
+    setCellData(cellValue);
   }
 
   function handleDeleteNet(cellValue) {
@@ -77,10 +47,15 @@ function TableNet({netsData, getNets}) {
     {
       field: "name",
       headerName: "ชื่อหน่วยปริมาณสุทธิ",
-      width: 345,
+      width: 200,
       headerClassName: "table-columns",
     },
-    { field: "category", headerName: "หมวดหมู่หลัก", width: 300, headerClassName: "table-columns" },
+    {
+      field: "main_cate_id",
+      headerName: "หมวดหมู่หลัก",
+      width: 445,
+      headerClassName: "table-columns",
+    },
 
     {
       field: "edit",
@@ -92,7 +67,7 @@ function TableNet({netsData, getNets}) {
       align: "center",
       renderCell: (cellValue) => {
         return (
-          <button style={buttonStyle} onClick={() => handleEditNet(cellValue)}>
+          <button style={buttonStyle} onClick={() => handleEditNetOpen(cellValue)}>
             {" "}
             <img src="images/icons/eva_edit-2-fill.png" alt="" />{" "}
           </button>
@@ -117,26 +92,6 @@ function TableNet({netsData, getNets}) {
       },
     },
   ];
-
-  const rows = [
-    {
-      id: 1,
-      netName: "กรัม",
-      category: "เครื่องดื่ม, อาหารแช่แข็ง,มาม่า",
-      edit: 0,
-    },
-    {
-      id: 2,
-      netName: "กิโลกรัม",
-      category: "เครื่องดื่ม, อาหารแช่แข็ง,มาม่า",
-    },
-    {
-      id: 3,
-      netName: "ลิตร",
-      category: "เครื่องดื่ม",
-    },
-    
-  ];
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <DataGrid
@@ -150,6 +105,13 @@ function TableNet({netsData, getNets}) {
           },
         }}
         pageSizeOptions={[5, 10, 50, 100]}
+      />
+      <EditNet
+        editNetOpen={editNetOpen}
+        setEditNetOpen={setEditNetOpen}
+        mainCatesData={mainCatesData}
+        cellData={cellData}
+        getNets={getNets}
       />
     </div>
   );
