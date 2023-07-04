@@ -6,11 +6,11 @@ import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-function CreateSubCategory({ mainCatesData, subCateOpen, setSubCateOpen, getSubCates }) {
+function CreateSubCategory({ mainCatesData, createSubCateOpen, setCreateSubCateOpen, getSubCates }) {
   const [subCateName, setSubCateName] = useState([]);
   const [selectedMainCategory, setSelectMainCategory] = useState("")
 
-  const handleClose = () => setSubCateOpen(false);
+  const handleClose = () => setCreateSubCateOpen(false);
 
   const modalStyle = {
     display: "flex",
@@ -32,10 +32,10 @@ function CreateSubCategory({ mainCatesData, subCateOpen, setSubCateOpen, getSubC
       name: subCateName,
       main_cate_id: selectedMainCategory,
     };
-    if (data.name === "" || data.name.length === 0) {
+    if (data.name === "" || data.name.length === 0 || data.main_cate_id === "" || data.main_cate_id.length === 0) {
       handleClose();
       Swal.fire("Error!", "Please fill in all fields.", "error").then(() => {
-        setSubCateOpen(true);
+        createSubCateOpen(true);
       });
     } else {
       axios
@@ -54,7 +54,7 @@ function CreateSubCategory({ mainCatesData, subCateOpen, setSubCateOpen, getSubC
   }
   return (
     <Modal
-      open={subCateOpen}
+      open={createSubCateOpen}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
@@ -90,8 +90,8 @@ function CreateSubCategory({ mainCatesData, subCateOpen, setSubCateOpen, getSubC
               label="Main Category"
               onChange={(e) => setSelectMainCategory(e.target.value)}
             >
-              {mainCatesData.map((mainCate) => (
-                <MenuItem value={mainCate.id}>{mainCate.name}</MenuItem>
+              {mainCatesData.map((mainCate, index) => (
+                <MenuItem key={index} value={mainCate.id}>{mainCate.name}</MenuItem>
               ))}
             </Select>
           </FormControl>

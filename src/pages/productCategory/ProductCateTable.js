@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
@@ -10,11 +9,12 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TablePagination from "@mui/material/TablePagination";
-import Typography from "@mui/material/Typography";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Swal from "sweetalert2";
 import axios from "axios";
+import EditMainCategory from "./editCategory/EditMainCategory";
+import EditSubCategory from "./editCategory/EditSubCategory";
 
 const btnStyle = {
   display: "flex",
@@ -28,86 +28,19 @@ const btnStyle = {
 };
 function Row({ row, subCatesData, getMainCates, getSubCates }) {
   const [open, setOpen] = useState(false);
+  const [mainCateData, setMainCateData] = useState("")
+  const [subCateData, setSubCateData] = useState("");
+  const [editMainCateOpen, setEditMainCateOpen] = useState(false);
+  const [editSubCateOpen, setEditSubCateOpen] = useState(false);
 
-  function handleEditMainCate(row) {
-    Swal.fire({
-      title: "Update Amount",
-      html: `
-        <input type="text" id="name" class="swal2-input" placeholder="Name" value=${row.name}>
-      `,
-      confirmButtonText: "Submit",
-      confirmButtonColor: "#3085d6",
-      showCancelButton: true,
-      cancelButtonColor: "#d33",
-      focusConfirm: false,
-      preConfirm: () => {
-        const name = Swal.getPopup().querySelector("#name").value;
-
-        if (!name) {
-          Swal.showValidationMessage(`Please enter your data.`);
-        }
-
-        return { name };
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const data = {
-          name: result.value.name,
-        };
-
-        axios
-          .put(`maincate/${row.id}`, data)
-          .then(function (response) {
-            Swal.fire("Updated!", "Your category has been updated.", "success").then(() => {
-              getMainCates();
-            });
-          })
-          .catch(function (error) {
-            console.error(error);
-          });
-      }
-    });
+  function handleEditMainCateOpen(row) {
+    setEditMainCateOpen(true)
+    setMainCateData(row);
   }
 
-  function handleEditSubCate(sub) {
-    console.log(sub.id);
-    Swal.fire({
-      title: "Update Amount",
-      html: `
-        <input type="text" id="name" class="swal2-input" placeholder="Name" value=${sub.name}>
-      `,
-      confirmButtonText: "Submit",
-      confirmButtonColor: "#3085d6",
-      showCancelButton: true,
-      cancelButtonColor: "#d33",
-      focusConfirm: false,
-      preConfirm: () => {
-        const name = Swal.getPopup().querySelector("#name").value;
-
-        if (!name) {
-          Swal.showValidationMessage(`Please enter your data.`);
-        }
-
-        return { name };
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const data = {
-          name: result.value.name,
-        };
-
-        axios
-          .put(`subcate/${sub.id}`, data)
-          .then(function (response) {
-            Swal.fire("Updated!", "Your category has been updated.", "success").then(() => {
-              getSubCates();
-            });
-          })
-          .catch(function (error) {
-            console.error(error);
-          });
-      }
-    });
+  function handleEditSubCateOpen(sub) {
+    setEditSubCateOpen(true);
+    setSubCateData(sub);
   }
 
   function handleDeleteMainCate(row) {
@@ -158,12 +91,12 @@ function Row({ row, subCatesData, getMainCates, getSubCates }) {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell component="th" scope="row">
+        <TableCell width={300} component="th" scope="row">
           {row.name}
         </TableCell>
         <TableCell align="left">{row.quantity}</TableCell>
         <TableCell align="center">
-          <button style={btnStyle} onClick={() => handleEditMainCate(row)}>
+          <button style={btnStyle} onClick={() => handleEditMainCateOpen(row)}>
             <img src="images/icons/eva_edit-2-fill.png" alt="" />
           </button>
         </TableCell>
@@ -181,7 +114,7 @@ function Row({ row, subCatesData, getMainCates, getSubCates }) {
                 <TableHead>
                   <TableRow>
                     <TableCell width={50} style={{ color: "#3B326B" }}></TableCell>
-                    <TableCell style={{ color: "#3B326B" }}>หมวดหมู่ย่อย</TableCell>
+                    <TableCell width={300} style={{ color: "#3B326B" }}>หมวดหมู่ย่อย</TableCell>
                     <TableCell style={{ color: "#3B326B" }}>จำนวนรายการสินค้าในหมวดหมู่</TableCell>
                     <TableCell style={{ color: "#3B326B" }} width={50} align="center">
                       แก้ไข
@@ -200,7 +133,7 @@ function Row({ row, subCatesData, getMainCates, getSubCates }) {
                           <TableCell>{sub.name}</TableCell>
                           <TableCell>{sub.quantity}</TableCell>
                           <TableCell align="center">
-                            <button style={btnStyle} onClick={() => handleEditSubCate(sub)}>
+                            <button style={btnStyle} onClick={() => handleEditSubCateOpen(sub)}>
                               <img src="images/icons/eva_edit-2-fill.png" alt="" />
                             </button>
                           </TableCell>
@@ -221,6 +154,20 @@ function Row({ row, subCatesData, getMainCates, getSubCates }) {
           </Collapse>
         </TableCell>
       </TableRow>
+      <EditMainCategory
+        editMainCateOpen={editMainCateOpen}
+        setEditMainCateOpen={setEditMainCateOpen}
+        mainCateData={mainCateData}
+        setMainCateData={setMainCateData}
+        getMainCates={getMainCates}
+      />
+      <EditSubCategory
+        editSubCateOpen={editSubCateOpen}
+        setEditSubCateOpen={setEditSubCateOpen}
+        subCateData={subCateData}
+        setSubCateData={setSubCateData}
+        getSubCates={getSubCates}
+      />
     </>
   );
 }

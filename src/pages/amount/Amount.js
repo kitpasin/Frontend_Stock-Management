@@ -6,13 +6,17 @@ import "./amount.scss";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
 import TableNet from "./tables/TableNet";
 import TableAmount from "./tables/TableAmount";
-import Swal from "sweetalert2";
 import axios from "axios";
 import { useEffect } from "react";
+import CreateNet from "./create/CreateNet";
+import CreateAmount from "./create/CreateAmount";
 
 function Amount() {
   const [netsData, setNetsData] = useState([])
+  const [createNetOpen, setCreateNetOpen] = useState(false)
   const [amountsData, setAmountsData] = useState([]);
+  const [createAmountOpen, setCreateAmountOpen] = useState(false)
+  const [mainCatesData, setMainCatesData] = useState([]);
 
   async function getNets() {
     const response = await axios.get("nets");
@@ -24,90 +28,16 @@ function Amount() {
     const data = response.data.amounts;
     setAmountsData(data);
   }
-
-  function handleCreateNet() {
-    Swal.fire({
-      title: "Create Net",
-      html: `
-      <input type="text" id="name" class="swal2-input" placeholder="Name">
-    `,
-      confirmButtonText: "Submit",
-      confirmButtonColor: "#3085d6",
-      showCancelButton: true,
-      cancelButtonColor: "#d33",
-      focusConfirm: false,
-      preConfirm: () => {
-        const name = Swal.getPopup().querySelector("#name").value;
-
-        if (!name) {
-          Swal.showValidationMessage(`Please enter all required data.`);
-        }
-
-        return { name };
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const data = {
-          name: result.value.name,
-        };
-
-        axios
-          .post("net", data)
-          .then(function (response) {
-            Swal.fire("Created!", "Your amount has been created.", "success").then(() => {
-              getNets();
-            });
-          })
-          .catch(function (error) {
-            console.error(error);
-          });
-      }
-    });
-  }
-
-  function handleCreateAmount() {
-    Swal.fire({
-      title: "Create Amount",
-      html: `
-      <input type="text" id="name" class="swal2-input" placeholder="Name">
-    `,
-      confirmButtonText: "Submit",
-      confirmButtonColor: "#3085d6",
-      showCancelButton: true,
-      cancelButtonColor: "#d33",
-      focusConfirm: false,
-      preConfirm: () => {
-        const name = Swal.getPopup().querySelector("#name").value;
-
-        if (!name) {
-          Swal.showValidationMessage(`Please enter all required data.`);
-        }
-
-        return { name };
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const data = {
-          name: result.value.name,
-        };
-
-        axios
-          .post("amount", data)
-          .then(function (response) {
-            Swal.fire("Created!", "Your amount has been created.", "success").then(() => {
-              getAmounts();
-            });
-          })
-          .catch(function (error) {
-            console.error(error);
-          });
-      }
-    });
+  async function getMainCates() {
+    const response = await axios.get("maincates");
+    const data = response.data.mainCates;
+    setMainCatesData(data);
   }
 
   useEffect(() => {
     getAmounts();
     getNets();
+    getMainCates();
   }, []);
 
   return (
@@ -128,7 +58,7 @@ function Amount() {
                 <p style={{ color: "#ff0000" }}>{netsData.length} รายการ</p>
               </div>
               <div className="action">
-                <button className="create" onClick={handleCreateNet}>
+                <button className="create" onClick={() => setCreateNetOpen(true)}>
                   สร้างหน่วยปริมาณใหม่
                 </button>
                 {/* <button className="delete">
@@ -137,7 +67,7 @@ function Amount() {
               </div>
             </div>
             <div className="table">
-              <TableNet netsData={netsData} getNets={getNets} />
+              <TableNet netsData={netsData} getNets={getNets} mainCatesData={mainCatesData} />
             </div>
           </div>
         </div>
@@ -151,7 +81,7 @@ function Amount() {
                 <p style={{ color: "#ff0000" }}>{amountsData.length} รายการ</p>
               </div>
               <div className="action">
-                <button className="create" onClick={handleCreateAmount}>
+                <button className="create" onClick={() => setCreateAmountOpen(true)}>
                   สร้างหน่วยจำนวนใหม่
                 </button>
                 {/* <button className="delete">
@@ -165,6 +95,17 @@ function Amount() {
           </div>
         </div>
       </div>
+      <CreateNet
+        createNetOpen={createNetOpen}
+        setCreateNetOpen={setCreateNetOpen}
+        mainCatesData={mainCatesData}
+        getNets={getNets}
+      />
+      <CreateAmount
+        createAmountOpen={createAmountOpen}
+        setCreateAmountOpen={setCreateAmountOpen}
+        getAmounts={getAmounts}
+      />
     </section>
   );
 }
