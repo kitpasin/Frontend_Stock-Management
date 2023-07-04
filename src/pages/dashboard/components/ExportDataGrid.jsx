@@ -1,9 +1,10 @@
 import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Avatar } from "@mui/material";
+import { Avatar, Typography } from "@mui/material";
 import { Button } from "@mui/material";
 import { Menu } from "@mui/material";
 import { MenuItem } from "@mui/material";
+import { fontSize } from "@mui/system";
 
 function ExportDataGrid({ rows }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -19,7 +20,9 @@ function ExportDataGrid({ rows }) {
     {
       field: "image",
       headerName: "ภาพ",
-      width: 100,
+      headerAlign: "center",
+      align: "center",
+      width: 50,
       headerClassName: "table-columns",
       renderCell: (params) => (
         <div style={{ background: "#D0D0E2", borderRadius: "5px" }}>
@@ -27,83 +30,196 @@ function ExportDataGrid({ rows }) {
         </div>
       ),
     },
-    { field: "name", headerName: "ชื่อรายการ", width: 150, headerClassName: "table-columns" },
+    {
+      field: "name",
+      headerAlign: "center",
+      align: "center",
+      width: 150,
+      headerClassName: "table-columns",
+      renderHeader: () => (
+        <div style={{ paddingLeft: "1.5rem" }}>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            ชื่อรายการ
+          </Typography>
+        </div>
+      ),
+      renderCell: (params) => (
+        <div style={{ paddingLeft: "2.5rem" }}>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>น้ำอัดลมกลิ่นเมลอ...</p>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>01234567895846</p>
+        </div>
+      ),
+    },
     {
       field: "user",
       headerName: "ผู้ใช้งาน",
+      headerAlign: "center",
+      align: "center",
       width: 150,
       headerClassName: "table-columns",
     },
     {
       field: "exportDate",
       headerName: "วันเบิกสินค้า",
+      headerAlign: "center",
+      align: "center",
       width: 150,
       headerClassName: "table-columns",
+      renderCell: (params) => (
+        <div>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>28/8/2023</p>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>12:25:25 AM</p>
+        </div>
+      ),
     },
     {
       field: "exportQuantityPerUnit",
-      headerName: "จำนวนเบิกออกต่อหน่วย",
+      headerAlign: "center",
+      align: "center",
       width: 100,
       headerClassName: "table-columns",
+      renderHeader: (params) => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            จำนวนเบิกออก
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            /หน่วย
+          </Typography>
+        </div>
+      ),
     },
     {
       field: "quantityPerUnit",
-      headerName: "คงเหลือ/ต่อหน่วย",
+      headerAlign: "center",
+      align: "center",
       width: 100,
       headerClassName: "table-columns",
+      renderHeader: (params) => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            คงเหลือ
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            /หน่วย
+          </Typography>
+        </div>
+      ),
     },
     {
       field: "purchaseDate",
+      headerAlign: "center",
+      align: "center",
       headerName: "วันที่ซื้อ",
       width: 100,
       headerClassName: "table-columns",
     },
     {
       field: "MEDEXP",
-      headerName: "MEDEXP",
-      width: 150,
+      width: 100,
+      headerAlign: "center",
+      align: "center",
       headerClassName: "table-columns",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            MFD
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            EXP
+          </Typography>
+        </div>
+      ),
+      renderCell: (params) => (
+        <div>
+          <Typography style={{ fontSize: "12px", lineHeight: "12.5px" }}>28/8/2023</Typography>
+          <Typography style={{ fontSize: "12px", lineHeight: "12.5px", color: "#FF0000" }}>
+            30/8/2024
+          </Typography>
+        </div>
+      ),
     },
     {
       field: "vat",
       headerName: "Vat",
-      width: 100,
+      headerAlign: "center",
+      align: "center",
+      width: 50,
       headerClassName: "table-columns",
     },
     {
       field: "category",
       headerName: "หมวดหมู่",
-      width: 150,
+      headerAlign: "center",
+      align: "center",
+      width: 100,
       headerClassName: "table-columns",
     },
     {
       field: "volumnPerUnit",
-      headerName: "ปริมาตรสุทธิ/หน่วย",
+      headerAlign: "center",
+      align: "center",
       width: 100,
       headerClassName: "table-columns",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            ปริมาตรสุทธิ
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            /หน่วย
+          </Typography>
+        </div>
+      ),
     },
     {
       field: "costPerUnit",
-      headerName: "ต้นทุน/หน่วย (THB)",
+      headerAlign: "center",
+      align: "center",
       width: 100,
       headerClassName: "table-columns",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            ต้นทุน
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            /หน่วย
+          </Typography>
+        </div>
+      ),
     },
     {
       field: "profit",
       headerName: "กำไร",
+      headerAlign: "center",
+      align: "center",
       width: 100,
       headerClassName: "table-columns",
     },
     {
       field: "actualSellingPrice",
-      headerName: "ราคาขายจริง (THB)",
+      headerAlign: "center",
+      align: "center",
       width: 100,
       headerClassName: "table-columns",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            ราคาขายจริง
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            (THB)
+          </Typography>
+        </div>
+      ),
     },
     {
       field: "action",
       headerName: "จัดการสินค้า",
-      width: 100,
+      headerAlign: "center",
+      align: "center",
+      width: 140,
       headerClassName: "table-columns",
       renderCell: (params) => (
         <div>

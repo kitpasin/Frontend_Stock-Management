@@ -3,13 +3,13 @@ import { DataGrid } from "@mui/x-data-grid";
 import { Avatar } from "@mui/material";
 import { Link } from "react-router-dom";
 
-function Table({ rows }) {
+function Search({ rows }) {
 
   const columns = [
     {
       field: "image",
       headerName: "ภาพ",
-      width: 100,
+      width: 50,
       headerClassName: "table-columns",
       headerAlign: "center",
       align: "center",
@@ -19,30 +19,58 @@ function Table({ rows }) {
         </div>
       ),
     },
-    { field: "name", headerName: "ชื่อรายการ", width: 300, headerClassName: "table-columns" },
+    {
+      field: "name",
+      headerName: "ชื่อรายการ",
+      headerAlign: "center",
+      align: "center",
+      width: 238,
+      headerClassName: "table-columns",
+    },
     {
       field: "purchaseDate",
       headerName: "วันที่ซื้อ",
-      width: 210,
+      headerAlign: "center",
+      align: "center",
+      width: 238,
       headerClassName: "table-columns",
     },
     {
       field: "MEDEXP",
       headerName: "MFDEXP",
-      width: 210,
+      width: 238,
+      headerAlign: "center",
+      align: "center",
       headerClassName: "table-columns",
+      renderCell: () => (
+        <div>
+          <p>28/8/2023</p>
+          <p style={{ color: "#ff0000" }}>28/8/2023</p>
+        </div>
+      ),
     },
     {
       field: "category",
       headerName: "หมวดหมู่",
-      width: 210,
+      headerAlign: "center",
+      align: "center",
+      width: 238,
       headerClassName: "table-columns",
     },
-    { field: "countingUnit", headerName: "หน่วยนับ", width: 210, headerClassName: "table-columns" },
+    {
+      field: "countingUnit",
+      headerAlign: "center",
+      align: "center",
+      headerName: "หน่วยนับ",
+      width: 238,
+      headerClassName: "table-columns",
+    },
     {
       field: "volumnPerUnit",
       headerName: "ปริมาตรสุทธิ/หน่วย",
-      width: 210,
+      headerAlign: "center",
+      align: "center",
+      width: 238,
       headerClassName: "table-columns",
     },
     {
@@ -50,13 +78,11 @@ function Table({ rows }) {
       headerName: "ดึงข้อมูล",
       headerAlign: "center",
       align: "center",
-      width: 100,
+      width: 70,
       headerClassName: "table-columns",
       renderCell: (params) => (
         <div>
-          <Link
-          to="/products/import"
-          >
+          <Link to="/products/import">
             <img
               style={{
                 background: "#3B336B",
@@ -95,4 +121,4 @@ function Table({ rows }) {
   );
 }
 
-export default Table;
+export default Search;

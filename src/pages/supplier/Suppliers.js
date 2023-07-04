@@ -1,20 +1,64 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import EditSupplier from "./editSupplier/EditSupplier";
 
 import "./suppliers.scss";
 
 /* import Components */
 import HeadPageComponent from "../../components/layout/headpage/headpage";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 function Suppliers() {
-  const editHandle = (_id) => {
-    console.log(_id);
-  };
+  const [suppliersData, setSuppliersData] = useState([]);
+  const [mainCatesData, setMainCatesData] = useState([]);
+  const [mainCates, setMainCates] = useState([]);
+  const [cellData, setCellData] = useState([])
+  const [open, setOpen] = useState(false);
 
-  const deleteHandle = (_id) => {
-    console.log(_id);
-  };
+  function handleOpen(cellValue) {
+    setOpen(true)
+    setCellData(cellValue)
+  }
+
+  console.log(suppliersData)
+
+  async function getSuppliers() {
+    const response = await axios.get("suppliers");
+    const data = response.data;
+    setSuppliersData(data.suppliers);
+  }
+  async function getMainCates() {
+    const response = await axios.get("maincates");
+    const data = response.data.mainCates;
+    setMainCatesData(data);
+  }
+
+  useEffect(() => {
+    getSuppliers();
+    getMainCates();
+  }, []);
+
+  function handleDeleteSupplier(cellValue) {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.delete(`supplier/${cellValue.row.id}`).then(() => {
+          Swal.fire("Deleted!", "Your Data has been deleted.", "success").then(() => {
+            getSuppliers();
+          });
+        });
+      }
+    });
+  }
 
   const navigate = useNavigate();
   const handleLink = () => {
@@ -32,34 +76,59 @@ function Suppliers() {
   };
 
   const columns = [
-    { field: "id", headerName: "#", width: 50 },
-    { field: "companyName", headerName: "Company Name", width: 200 },
-    { field: "address", headerName: "Address", width: 200 },
-    { field: "empName", headerName: "Employee Name", width: 200 },
+    {
+      field: "name",
+      headerName: "ชื่อบริษัท",
+      width: 240,
+      headerClassName: "table-columns",
+    },
+    { field: "address", headerName: "ที่อยู่", width: 240, headerClassName: "table-columns" },
+    { field: "agent", headerName: "ชื่อผู้ติดต่อ", width: 240, headerClassName: "table-columns" },
     {
       field: "tel",
-      headerName: "Tel",
-      width: 160,
+      headerName: "เบอร์โทร",
+      width: 150,
+      headerClassName: "table-columns",
     },
     {
       field: "email",
-      headerName: "Email",
+      headerName: "อีเมล",
       sortable: false,
-      width: 160,
+      width: 150,
+      headerClassName: "table-columns",
       // valueGetter: (params) =>
       // `${params.row.firstName || ""} ${params.row.lastName || ""}`,
     },
-    { field: "lineId", headerName: "Line ID", width: 140, sortable: false },
-    { field: "category", headerName: "Category", width: 140 },
-    { field: "ordered", headerName: "Number of Ordered", width: 140 },
+    {
+      field: "line_id",
+      headerName: "ไลน์ ไอดี",
+      width: 150,
+      sortable: false,
+      headerClassName: "table-columns",
+    },
+    {
+      field: "main_cate_id",
+      headerName: "หมวดหมู่สินค้า",
+      width: 150,
+      headerClassName: "table-columns",
+    },
+    {
+      field: "ordered",
+      headerName: "จำนวนสินค้าที่เคยสั่งซื้อ",
+      width: 150,
+      headerClassName: "table-columns",
+    },
     {
       field: "edit",
-      headerName: "Edit",
-      width: 60,
+      headerName: "แก้ไข",
+      width: 65,
       sortable: false,
+      headerClassName: "table-columns",
+      headerAlign: "center",
+      align: "center",
       renderCell: (cellValue) => {
         return (
-          <button style={buttonStyle} onClick={editHandle(cellValue.row.edit)}>
+          <button style={buttonStyle} onClick={() => handleOpen(cellValue)}>
             {" "}
             <img src="images/icons/eva_edit-2-fill.png" alt="" />{" "}
           </button>
@@ -68,15 +137,15 @@ function Suppliers() {
     },
     {
       field: "delete",
-      headerName: "Delete",
-      width: 60,
+      headerName: "ลบ",
+      width: 65,
       sortable: false,
+      headerClassName: "table-columns",
+      headerAlign: "center",
+      align: "center",
       renderCell: (cellValue) => {
         return (
-          <button
-            style={buttonStyle}
-            onClick={deleteHandle(cellValue.row.delete)}
-          >
+          <button style={buttonStyle} onClick={() => handleDeleteSupplier(cellValue)}>
             {" "}
             <img src="images/icons/trash-icon.png" alt="" />{" "}
           </button>
@@ -85,116 +154,15 @@ function Suppliers() {
     },
   ];
 
-  const rows = [
-    {
-      id: 1,
-      companyName: "สยามแวร์เฮ้าส์เจริญการค้า...",
-      address: "120/34-35 Moo 24 Mueang...",
-      empName: "สมเกียติ ดีงานพระรามแปด",
-      tel: "089-536-8542",
-      email: "somsag@gmail.com",
-      lineId: "089-536-8542",
-      category: "เครื่องดื่ม",
-      ordered: "1250",
-      edit: 0,
-    },
-    {
-      id: 2,
-      companyName: "สยามแวร์เฮ้าส์เจริญการค้า...",
-      address: "120/34-35 Moo 24 Mueang...",
-      empName: "สมเกียติ ดีงานพระรามแปด",
-      tel: "089-536-8542",
-      email: "somsag@gmail.com",
-      lineId: "089-536-8542",
-      category: "เครื่องดื่ม",
-      ordered: "1250",
-    },
-    {
-      id: 3,
-      companyName: "สยามแวร์เฮ้าส์เจริญการค้า...",
-      address: "120/34-35 Moo 24 Mueang...",
-      empName: "สมเกียติ ดีงานพระรามแปด",
-      tel: "089-536-8542",
-      email: "somsag@gmail.com",
-      lineId: "089-536-8542",
-      category: "เครื่องดื่ม",
-      ordered: "1250",
-    },
-    {
-      id: 4,
-      companyName: "สยามแวร์เฮ้าส์เจริญการค้า...",
-      address: "120/34-35 Moo 24 Mueang...",
-      empName: "สมเกียติ ดีงานพระรามแปด",
-      tel: "089-536-8542",
-      email: "somsag@gmail.com",
-      lineId: "089-536-8542",
-      category: "เครื่องดื่ม",
-      ordered: "1250",
-    },
-    {
-      id: 5,
-      companyName: "สยามแวร์เฮ้าส์เจริญการค้า...",
-      address: "120/34-35 Moo 24 Mueang...",
-      empName: "สมเกียติ ดีงานพระรามแปด",
-      tel: "089-536-8542",
-      email: "somsag@gmail.com",
-      lineId: "089-536-8542",
-      category: "เครื่องดื่ม",
-      ordered: "1250",
-    },
-    {
-      id: 6,
-      companyName: "สยามแวร์เฮ้าส์เจริญการค้า...",
-      address: "120/34-35 Moo 24 Mueang...",
-      empName: "สมเกียติ ดีงานพระรามแปด",
-      tel: "089-536-8542",
-      email: "somsag@gmail.com",
-      lineId: "089-536-8542",
-      category: "เครื่องดื่ม",
-      ordered: "1250",
-    },
-    {
-      id: 7,
-      companyName: "สยามแวร์เฮ้าส์เจริญการค้า...",
-      address: "120/34-35 Moo 24 Mueang...",
-      empName: "สมเกียติ ดีงานพระรามแปด",
-      tel: "089-536-8542",
-      email: "somsag@gmail.com",
-      lineId: "089-536-8542",
-      category: "เครื่องดื่ม",
-      ordered: "1250",
-    },
-    {
-      id: 8,
-      companyName: "สยามแวร์เฮ้าส์เจริญการค้า...",
-      address: "120/34-35 Moo 24 Mueang...",
-      empName: "สมเกียติ ดีงานพระรามแปด",
-      tel: "089-536-8542",
-      email: "somsag@gmail.com",
-      lineId: "089-536-8542",
-      category: "เครื่องดื่ม",
-      ordered: "1250",
-    },
-    {
-      id: 9,
-      companyName: "สยามแวร์เฮ้าส์เจริญการค้า...",
-      address: "120/34-35 Moo 24 Mueang...",
-      empName: "สมเกียติ ดีงานพระรามแปด",
-      tel: "089-536-8542",
-      email: "somsag@gmail.com",
-      lineId: "089-536-8542",
-      category: "เครื่องดื่ม",
-      ordered: "1250",
-    },
-  ];
+  const rowsClassName = "table-rows";
 
   return (
     <section id="supplier-page">
       <HeadPageComponent
-        h1={"ซัพพลายเออร์ทั้งหมด"}
-        icon={ <img src="images/icons/mdi_shipping-pallet.png" alt="" /> }
+        h1={"ซัพพลายเออร์"}
+        icon={<img src="images/icons/mdi_shipping-pallet.png" alt="" />}
         // icon={<FontAwesomeIcon icon={faStore} />}
-        breadcrums={[{ title: "ซัพพลายเออร์ทั้งหมด", link: false }]}
+        breadcrums={[{ title: "ซัพพลายเออร์", link: false }]}
       />
       <div className="main-content">
         <div className="head"></div>
@@ -202,17 +170,19 @@ function Suppliers() {
           <div className="content-head">
             <div className="title">
               <img src="images/icons/mdi_shipping-pallet2.png" alt="" />
-              <p>ซัพพลายเออร์ทั้งหมด</p>
+              <p>ซัพพลายเออร์</p>
+              <span>{suppliersData.length} รายการ</span>
             </div>
             <div className="action">
-              <button onClick={handleLink}>Create Supplier</button>
-              <p>List : 2,500</p>
+              <button onClick={handleLink}>เพิ่มซัพพลายเออร์</button>
             </div>
           </div>
           <div className="table">
             <DataGrid
+              getRowClassName={() => rowsClassName}
+              sx={{ fontSize: "12px", border: "none" }}
               checkboxSelection={false}
-              rows={rows}
+              rows={suppliersData}
               columns={columns}
               initialState={{
                 pagination: {
@@ -222,6 +192,15 @@ function Suppliers() {
               pageSizeOptions={[5, 10, 50, 100]}
             />
           </div>
+          <EditSupplier
+            mainCatesData={mainCatesData}
+            mainCates={mainCates}
+            setMainCates={setMainCates}
+            open={open}
+            setOpen={setOpen}
+            cellData={cellData}
+            getSuppliers={getSuppliers}
+          />
         </div>
       </div>
     </section>

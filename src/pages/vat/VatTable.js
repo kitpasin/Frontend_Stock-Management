@@ -1,14 +1,72 @@
 import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
+import Swal from "sweetalert2";
+import axios from "axios";
 
-function VatTable() {
-  const editHandle = (_id) => {
-    console.log(_id);
-  };
+function VatTable({ vatsData, getVats }) {
 
-  const deleteHandle = (_id) => {
-    console.log(_id);
-  };
+  function handleEditVat(cellValue) {
+    Swal.fire({
+      title: "Update Vat",
+      html: `
+        <input type="text" id="name" class="swal2-input" placeholder="Name" value=${cellValue.row.name}>
+        <input type="text" id="percent" class="swal2-input" placeholder="Percent" value=${cellValue.row.percent}>
+      `,
+      confirmButtonText: "Submit",
+      confirmButtonColor: "#3085d6",
+      showCancelButton: true,
+      cancelButtonColor: "#d33",
+      focusConfirm: false,
+      preConfirm: () => {
+        const name = Swal.getPopup().querySelector("#name").value;
+        const percent = Swal.getPopup().querySelector("#percent").value;
+
+        if (!name || !percent) {
+          Swal.showValidationMessage(`Please enter your data.`);
+        }
+
+        return { name, percent };
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const data = {
+          name: result.value.name,
+          percent: result.value.percent,
+        };
+
+        axios
+          .put(`vat/${cellValue.row.id}`, data)
+          .then(function (response) {
+            Swal.fire("Updated!", "Your vat has been updated.", "success").then(() => {
+              getVats();
+            });
+          })
+          .catch(function (error) {
+            console.error(error);
+          });
+      }
+    });
+  }
+
+  function handleDeleteVat(cellValue) {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.delete(`vat/${cellValue.row.id}`).then(() => {
+          Swal.fire("Deleted!", "Your Data has been deleted.", "success").then(() => {
+            getVats();
+          });
+        });
+      }
+    });
+  }
 
   const buttonStyle = {
     display: "flex",
@@ -21,18 +79,30 @@ function VatTable() {
   };
 
   const columns = [
-    { field: "id", headerName: "#", width: 50 },
-    { field: "vatName", headerName: "ชื่อหมวดหมู่ Vat", width: 200 },
-    { field: "vatList", headerName: "รายการสินค้าที่มี vat", width: 200 },
-    { field: "vat", headerName: "% Vat", width: 950 },
+    {
+      field: "name",
+      headerName: "ชื่อหมวดหมู่ Vat",
+      width: 200,
+      headerClassName: "table-columns",
+    },
+    {
+      field: "vatList",
+      headerName: "รายการสินค้าที่มี vat",
+      width: 200,
+      headerClassName: "table-columns",
+    },
+    { field: "percent", headerName: "% Vat", width: 1070, headerClassName: "table-columns" },
     {
       field: "edit",
-      headerName: "Edit",
+      headerName: "แก้ไข",
       width: 60,
       sortable: false,
+      headerAlign: "center",
+      align: "center",
+      headerClassName: "table-columns",
       renderCell: (cellValue) => {
         return (
-          <button style={buttonStyle} onClick={editHandle(cellValue.row.edit)}>
+          <button style={buttonStyle} onClick={() => handleEditVat(cellValue)}>
             {" "}
             <img src="images/icons/eva_edit-2-fill.png" alt="" />{" "}
           </button>
@@ -41,15 +111,15 @@ function VatTable() {
     },
     {
       field: "delete",
-      headerName: "Delete",
+      headerName: "ลบ",
       width: 60,
       sortable: false,
+      headerAlign: "center",
+      align: "center",
+      headerClassName: "table-columns",
       renderCell: (cellValue) => {
         return (
-          <button
-            style={buttonStyle}
-            onClick={deleteHandle(cellValue.row.delete)}
-          >
+          <button style={buttonStyle} onClick={() => handleDeleteVat(cellValue)}>
             {" "}
             <img src="images/icons/trash-icon.png" alt="" />{" "}
           </button>
@@ -58,49 +128,21 @@ function VatTable() {
     },
   ];
 
-  const rows = [
-    {
-      id: 1,
-      vatName: "Vat แอลกอฮอล์",
-      vatList: "25 รายการ",
-      vat: "25 %",
-      edit: 0,
-    },
-    {
-      id: 2,
-      vatName: "Vat 2",
-      vatList: "125 รายการ",
-      vat: "25 %",
-      
-    },
-    {
-      id: 3,
-      vatName: "Vat 3",
-      vatList: "125 รายการ",
-      vat: "5 %",
-      
-    },
-    {
-      id: 4,
-      vatName: "Vat 4",
-      vatList: "25 รายการ",
-      vat: "7 %",
-     
-    },
-  ];
-
   return (
-    <DataGrid
-      checkboxSelection={true}
-      rows={rows}
-      columns={columns}
-      initialState={{
-        pagination: {
-          paginationModel: { page: 0, pageSize: 5 },
-        },
-      }}
-      pageSizeOptions={[5, 10, 50, 100]}
-    />
+    <>
+      <DataGrid
+        sx={{ border: "none" }}
+        checkboxSelection={false}
+        rows={vatsData}
+        columns={columns}
+        initialState={{
+          pagination: {
+            paginationModel: { page: 0, pageSize: 5 },
+          },
+        }}
+        pageSizeOptions={[5, 10, 50, 100]}
+      />
+    </>
   );
 }
 

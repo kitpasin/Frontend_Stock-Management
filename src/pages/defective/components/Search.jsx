@@ -1,9 +1,10 @@
 import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Avatar } from "@mui/material";
+import { Avatar, Typography } from "@mui/material";
 import { Button } from "@mui/material";
 import { Menu } from "@mui/material";
 import { MenuItem } from "@mui/material";
+import { Link } from "react-router-dom";
 
 function Table({ rows }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -20,7 +21,7 @@ function Table({ rows }) {
     {
       field: "image",
       headerName: "ภาพ",
-      width: 100,
+      width: 50,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -30,93 +31,224 @@ function Table({ rows }) {
         </div>
       ),
     },
-    { field: "name", headerName: "ชื่อรายการ", width: 150, headerClassName: "table-columns" },
     {
-      field: "quantityPerUnit",
-      headerName: "คงเหลือ/หน่วย",
-      width: 100,
+      field: "name",
+      headerName: "ชื่อรายการ",
+      headerAlign: "center",
+      align: "center",
+      width: 150,
       headerClassName: "table-columns",
+      renderCell: (params) => (
+        <div style={{ paddingLeft: "1.2rem" }}>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>น้ำอัดลมกลิ่นเมลอ...</p>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>01234567895846</p>
+        </div>
+      ),
     },
     {
-      field: "defective",
-      headerName: "สินค้ามีปัญหา",
+      field: "defectiveDate",
       width: 100,
       headerClassName: "table-columns",
+      headerAlign: "center",
+      align: "center",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            วันเวลา
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            เบิกออกล่าสุด
+          </Typography>
+        </div>
+      ),
+      renderCell: (params) => (
+        <div>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>28/08/2023</p>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>12:25:25</p>
+        </div>
+      ),
+    },
+    {
+      field: "exportPerUnit",
+      width: 100,
+      headerClassName: "table-columns",
+      headerAlign: "center",
+      align: "center",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            จำนวนเบิกออก
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            ล่าสุด/หน่วย
+          </Typography>
+        </div>
+      ),
+    },
+    {
+      field: "productLeft",
+      width: 100,
+      headerClassName: "table-columns",
+      headerAlign: "center",
+      align: "center",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            คงเหลือ
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            /หน่วย
+          </Typography>
+        </div>
+      ),
     },
     {
       field: "purchaseDate",
       headerName: "วันที่ซื้อ",
       width: 100,
       headerClassName: "table-columns",
+      headerAlign: "center",
+      align: "center",
     },
-    { field: "MEDEXP", headerName: "MED EXP", width: 150, headerClassName: "table-columns" },
     {
-      field: "dateEXP",
-      headerName: "จำนวนวัน EXP",
+      field: "MEDEXP",
       width: 100,
+      headerAlign: "center",
+      align: "center",
+      headerClassName: "table-columns",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            MFD
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            EXP
+          </Typography>
+        </div>
+      ),
+      renderCell: (params) => (
+        <div>
+          <Typography style={{ fontSize: "12px", lineHeight: "12.5px" }}>28/8/2023</Typography>
+          <Typography style={{ fontSize: "12px", lineHeight: "12.5px", color: "#FF0000" }}>
+            30/8/2024
+          </Typography>
+        </div>
+      ),
+    },
+    {
+      field: "vat",
+      headerName: "Vat",
+      headerAlign: "center",
+      align: "center",
+      width: 50,
       headerClassName: "table-columns",
     },
-    { field: "vat", headerName: "Vat", width: 100, headerClassName: "table-columns" },
-    { field: "category", headerName: "หมวดหมู่", width: 100, headerClassName: "table-columns" },
     {
-      field: "countingUnit",
-      headerName: "หน่วยนับ",
+      field: "category",
+      headerName: "หมวดหมู่",
+      headerAlign: "center",
+      align: "center",
       width: 100,
       headerClassName: "table-columns",
     },
     {
       field: "volumnPerUnit",
-      headerName: "ปริมาตรสุทธิ/หน่วย",
+      headerAlign: "center",
+      align: "center",
       width: 100,
       headerClassName: "table-columns",
-    },
-    {
-      field: "operationFee",
-      headerName: "ค่าดำเนินการ (THB)",
-      width: 100,
-      headerClassName: "table-columns",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            ปริมาตรสุทธิ
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            /หน่วย
+          </Typography>
+        </div>
+      ),
     },
     {
       field: "operationFeePerUnit",
-      headerName: "ดำเนินการ/หน่วย (THB)",
       width: 100,
+      headerAlign: "center",
+      align: "center",
       headerClassName: "table-columns",
-    },
-    {
-      field: "rawPrice",
-      headerName: "ราคาดิบ (THB)",
-      width: 100,
-      headerClassName: "table-columns",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            ดำเนินการ
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            /หน่วย (THB)
+          </Typography>
+        </div>
+      ),
     },
     {
       field: "rawPricePerUnit",
-      headerName: "ราคาดิบ/หน่วย (THB)",
+      headerAlign: "center",
+      align: "center",
       width: 100,
       headerClassName: "table-columns",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            ราคาดิบ
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            /หน่วย (THB)
+          </Typography>
+        </div>
+      ),
     },
-    { field: "cost", headerName: "ต้นทุน (THB)", width: 100, headerClassName: "table-columns" },
     {
       field: "costPerUnit",
-      headerName: "ต้นทุนต่อหน่วย (THB)",
       width: 100,
+      headerAlign: "center",
+      align: "center",
       headerClassName: "table-columns",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            ต้นทุน
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            /หน่วย (THB)
+          </Typography>
+        </div>
+      ),
     },
-    { field: "profit", headerName: "กำไร", width: 100, headerClassName: "table-columns" },
     {
-      field: "expectedSellingPrice",
-      headerName: "ราคาขาย (THB)",
+      field: "profit",
+      headerName: "กำไร",
       width: 100,
+      headerAlign: "center",
+      align: "center",
       headerClassName: "table-columns",
     },
     {
       field: "actualSellingPrice",
-      headerName: "ราคาขายจริง (THB)",
       width: 100,
+      headerAlign: "center",
+      align: "center",
       headerClassName: "table-columns",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            ราคาขายจริง
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            (THB)
+          </Typography>
+        </div>
+      ),
     },
     {
       field: "action",
       headerName: "จัดการสินค้า",
+      headerAlign: "center",
+      align: "center",
       width: 100,
       headerClassName: "table-columns",
       renderCell: (params) => (
@@ -136,7 +268,7 @@ function Table({ rows }) {
                 padding: ".65rem",
                 borderRadius: "5px",
               }}
-              src="/images/icons/management-icon.png"
+              src="/images/icons/imports-icon.png"
               alt=""
             />
           </Button>
@@ -149,51 +281,16 @@ function Table({ rows }) {
               "aria-labelledby": "basic-button",
             }}
           >
-            <MenuItem
-              sx={{
-                display: "flex",
-                gap: "1rem",
-              }}
-              onClick={handleClose}
-            >
-              <img
-                style={{
-                  width: "18px",
-                  height: "18px",
-                  filter:
-                    "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
-                }}
-                src="/images/icons/supplier-icon.png"
-                alt=""
-              />
-              <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>ซัพพลาย</p>
-            </MenuItem>
-            <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={handleClose}>
-              <img
-                style={{
-                  width: "18px",
-                  height: "18px",
-                  filter:
-                    "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
-                }}
-                src="/images/icons/edit-icon.png"
-                alt=""
-              />
-              <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>แก้ไขสินค้า</p>
-            </MenuItem>
-            <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={handleClose}>
-              <img
-                style={{
-                  width: "18px",
-                  height: "18px",
-                  filter:
-                    "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
-                }}
-                src="/images/icons/trash-icon.png"
-                alt=""
-              />
-              <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>ลบสินค้า</p>
-            </MenuItem>
+            <Link to="/defective/export">
+              <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={handleClose}>
+                <img
+                  style={{ width: "18px", height: "18px" }}
+                  src="/images/icons/export-icon.png"
+                  alt=""
+                />
+                <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>เบิกสินค้า</p>
+              </MenuItem>
+            </Link>
           </Menu>
         </div>
       ),

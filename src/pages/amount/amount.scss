@@ -1,9 +1,8 @@
 #amount-page {
     .main-content {
-        @apply flex justify-center items-center w-full gap-4 p-4 h-screen;
+        @apply flex justify-center items-start w-full gap-4 p-4;
         max-width: 100%;
         min-width: 1212px;
-        max-height: 880px;
 
         .content-left,
         .content-right {
@@ -20,14 +19,13 @@
             }
 
             .content {
-                @apply flex flex-col w-full h-full;
+                @apply flex flex-col w-full h-full p-4 gap-4;
 
                 .content-head {
-                    @apply flex items-center justify-between py-2 px-4 w-full;
-                    height: 65px;
+                    @apply flex items-center justify-between w-full;
 
                     .title {
-                        @apply flex justify-center items-center gap-2;
+                        @apply flex justify-center items-center gap-4;
 
                         p {
                             color: #3b326b;
@@ -40,18 +38,17 @@
                         display: flex;
                         align-items: center;
                         justify-content: space-between;
-                        width: 300px;
-                        height: 100%;
+                        gap: 1rem;
 
                         .create {
-                            padding: 5px;
+                            padding: .5rem 1rem;
                             color: #fff;
-                            width: 153px;
-                            height: 35px;
+                            width: 200px;
                             background-color: #3b336b;
                             border-radius: 5px;
                             transition-duration: 0.3s;
-                            font-size: 15px;
+                            font-size: 16px;
+                            font-weight: 400;
 
                             &:hover {
                                 background-color: #261772;
@@ -60,8 +57,8 @@
 
                         .delete {
                             @apply flex justify-center items-center;
-                            width: 35px;
-                            height: 35px;
+                            width: 50px;
+                            padding: .5rem;
                             background: #3b336b;
                             border-radius: 5px;
 
@@ -79,7 +76,6 @@
                 }
 
                 .table {
-                    padding: 1rem;
                     width: 100%;
                     height: calc(100% - 65px);
                 }

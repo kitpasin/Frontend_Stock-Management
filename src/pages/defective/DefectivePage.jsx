@@ -87,7 +87,7 @@ function DefectivePage() {
               </RadioGroup>
             </FormControl>
             <Link to="/defective/search" className="export">
-              ค้นหาสินค้า
+              เลือกเบิกออกสินค้าชำรุด
             </Link>
           </div>
         </div>

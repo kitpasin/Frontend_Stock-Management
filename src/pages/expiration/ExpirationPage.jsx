@@ -9,6 +9,7 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
+import { Link } from "react-router-dom";
 
 import "./ExpirationPage.scss";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
@@ -49,11 +50,11 @@ function ExpirationPage() {
         <div className="header">
           <div className="wrapper">
             <figure className="title">
-              <img src="/images/icons/expirationTable-icon.png" alt="" />
-              <p>สืนค้าใกล้หมดอายุ</p>
+              <img src="/images/icons/productsTable-icon.png" alt="" />
+              <p>สินค้าทั้งหมด</p>
             </figure>
             <div className="description">
-              <p>2,500 รายการ</p>
+              <p>20,500 รายการ</p>
             </div>
           </div>
           <div className="filter">
@@ -63,8 +64,7 @@ function ExpirationPage() {
               id="combo-box-demo"
               options={rows}
               getOptionLabel={(rows) => rows.name || ""}
-              onChange={(event, value) => setRowsData(value)}
-              sx={{ width: 200 }}
+              sx={{ width: 150 }}
               renderInput={(params) => <TextField {...params} label="ชื่อ" />}
             />
             <Autocomplete
@@ -72,8 +72,16 @@ function ExpirationPage() {
               disablePortal
               id="combo-box-demo"
               options={rows.map((e) => e.category)}
-              sx={{ width: 200 }}
+              sx={{ width: 150 }}
               renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
+            />
+            <Autocomplete
+              size="small"
+              disablePortal
+              id="combo-box-demo"
+              options={rows.map((e) => e.category)}
+              sx={{ width: 150 }}
+              renderInput={(params) => <TextField {...params} label="หมวดหมู่ย่อย" />}
             />
             <FormControl>
               <RadioGroup
@@ -86,7 +94,12 @@ function ExpirationPage() {
                 <FormControlLabel value="noVat" control={<Radio />} label="No Vat" />
               </RadioGroup>
             </FormControl>
-            <button className="create">เพิ่มสินค้าเข้า</button>
+            <Link style={{ fontSize: "16px" }} to="/products/import" className="create">
+              เพิ่มสินค้า
+            </Link>
+            <Link style={{ fontSize: "16px" }} to="/products/export" className="export">
+              เบิกสินค้า
+            </Link>
           </div>
         </div>
         <div>

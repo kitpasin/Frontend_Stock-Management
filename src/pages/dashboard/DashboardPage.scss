@@ -28,29 +28,27 @@
                 border-radius: 10px;
             }
             .text {
-                font-size: 18px;
+                font-size: 16px;
                 &-title {
                     color: #3b336b;
                     p {
                         font-weight: 500;
+                        font-size: 16px;
                     }
                 }
                 &-description {
                     color: #9993b4;
+                    font-size: 16px;
                 }
             }
             .graph {
-                background: #eff3f9;
+                background: #3b336b;
                 padding: 0.5rem 1rem;
                 border-radius: 5px;
-                font-size: 18px;
+                font-size: 16px;
                 font-weight: 400;
-                color: #3b336b;
+                color: #fff;
                 transition: all ease-in-out .3s;
-                &:hover {
-                    background: #3b336b;
-                    color: #fff;
-                }
             }
         }
     }
@@ -76,7 +74,7 @@
             border-radius: 10px;
             box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.05);
             .header {
-                font-size: 18px;
+                font-size: 16px;
                 font-weight: 500;
                 color: #3b336b;
             }
@@ -90,7 +88,8 @@
                     justify-content: center;
                     align-items: center;
                     width: 100%;
-                    max-width: 128px;
+                    max-width: 100px;
+                    max-height: 100px;
                 }
                 .wrapper {
                     display: flex;
@@ -101,7 +100,7 @@
                     gap: 0.5rem;
                     width: 100%;
                     .title {
-                        font-size: 18px;
+                        font-size: 16px;
                         font-weight: 400;
                     }
                     .description {
@@ -125,7 +124,7 @@
             color: #fff;
             border-radius: 10px;
             p {
-                font-size: 18px;
+                font-size: 16px;
                 font-weight: 500;
             }
         }
@@ -145,7 +144,7 @@
             border-radius: 10px;
             box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.05);
             .header {
-                font-size: 18px;
+                font-size: 16px;
                 font-weight: 500;
                 color: #3b336b;
             }
@@ -160,7 +159,8 @@
                     justify-content: center;
                     align-items: center;
                     width: 100%;
-                    max-width: 128px;
+                    max-width: 100px;
+                    max-height: 100px;
                 }
                 .wrapper {
                     display: flex;
@@ -171,7 +171,7 @@
                     gap: 0.5rem;
                     width: 100%;
                     .title {
-                        font-size: 18px;
+                        font-size: 16px;
                         font-weight: 400;
                     }
                     .description {
@@ -195,7 +195,7 @@
             color: #fff;
             border-radius: 10px;
             p {
-                font-size: 18px;
+                font-size: 16px;
                 font-weight: 500;
             }
         }
@@ -225,7 +225,7 @@
                 align-items: center;
                 gap: 1rem;
                 p {
-                    font-size: 18px;
+                    font-size: 16px;
                     font-weight: 400;
                     color: #3b326b;
                 }
@@ -238,14 +238,14 @@
                 button {
                     background: #3b326b;
                     padding: 0.5rem 1rem;
-                    font-size: 18px;
+                    font-size: 16px;
                     font-weight: 400;
-                    width: 200px;
+                    width: 150px;
                     color: #fff;
                     border-radius: 5px;
                 }
                 p {
-                    font-size: 18px;
+                    font-size: 16px;
                     font-weight: 400;
                     color: #ff0000;
                 }
@@ -277,7 +277,7 @@
                 align-items: center;
                 gap: 1rem;
                 p {
-                    font-size: 18px;
+                    font-size: 16px;
                     font-weight: 400;
                     color: #3b326b;
                 }
@@ -290,14 +290,14 @@
                 button {
                     background: #3b326b;
                     padding: 0.5rem 1rem;
-                    font-size: 18px;
+                    font-size: 16px;
                     font-weight: 400;
-                    width: 200px;
+                    width: 150px;
                     color: #fff;
                     border-radius: 5px;
                 }
                 p {
-                    font-size: 18px;
+                    font-size: 16px;
                     font-weight: 400;
                     color: #ff0000;
                 }

@@ -58,10 +58,11 @@ function SelectCate() {
   return (
     <div style={{ width: "100%" }}>
       <FormControl sx={{ m: 0, width: "100%" }}>
-        <InputLabel id="demo-multiple-chip-label">เลือกหมวดหมู่หลัก</InputLabel>
+        <InputLabel size="small">เลือกหมวดหมู่หลัก</InputLabel>
         <Select
           labelId="demo-multiple-chip-label"
           id="demo-multiple-chip"
+          size="small"
           multiple
           value={personName}
           onChange={handleChange}
