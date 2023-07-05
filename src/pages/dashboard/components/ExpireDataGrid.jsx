@@ -4,7 +4,6 @@ import { Avatar, Typography } from "@mui/material";
 import { Button } from "@mui/material";
 import { Menu } from "@mui/material";
 import { MenuItem } from "@mui/material";
-import { fontWeight } from "@mui/system";
 
 function ExpireDataGrid({ rows }) {
   const [anchorEl, setAnchorEl] = React.useState(null);

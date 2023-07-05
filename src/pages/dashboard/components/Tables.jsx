@@ -35,7 +35,7 @@ function Tables({ rows }) {
         <Card className="item">
           <div className="header">
             <figure className="header-title">
-              <img src="/images/icons/expire-icon.png" alt="" />
+              <img src="/images/icons/expirationTable-icon.png" alt="" />
               <p>จำนวนสินค้าใกล้หมดอายุ</p>
               <p style={{ color: "red" }}>14 รายการ</p>
             </figure>
@@ -52,7 +52,7 @@ function Tables({ rows }) {
           <div className="header">
             <figure className="header-title">
               <img src="/images/icons/import-icon.png" alt="" />
-              <p>นำเข้าสินค้า</p>
+              <p>สินค้านำเข้า</p>
               <p style={{ color: "red" }}>25 รายการ</p>
             </figure>
             <div className="header-link">
@@ -65,7 +65,7 @@ function Tables({ rows }) {
           <div className="header">
             <figure className="header-title">
               <img src="/images/icons/export-icon.png" alt="" />
-              <p>เบิกออกสินค้า</p>
+              <p>สินค้าเบิกออก</p>
               <p style={{ color: "red" }}>5 รายการ</p>
             </figure>
             <div className="header-link">
