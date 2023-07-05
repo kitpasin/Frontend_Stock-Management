@@ -18,6 +18,7 @@ function EditSupplier({ mainCatesData, open, setOpen, cellData, getSuppliers }) 
   const [email, setEmail] = useState("");
   const [lineId, setLineId] = useState("");
   const [categories, setCategories] = useState("");
+  const [selectedOptions, setSelectedOptions] = useState([]);
 
   useEffect(() => {
     if (open) {
@@ -27,8 +28,14 @@ function EditSupplier({ mainCatesData, open, setOpen, cellData, getSuppliers }) 
       setTel(cellData.row.tel || "");
       setEmail(cellData.row.email || "");
       setLineId(cellData.row.line_id || "");
+
+      const selectedIds = cellData.row.main_cate_id.split(", ");
+      const selectedOptions = mainCatesData.filter((option) =>
+        selectedIds.includes(option.id.toString())
+      );
+      setSelectedOptions(selectedOptions || []);
     }
-  }, [open, cellData]);
+  }, [open, cellData, mainCatesData]);
 
   async function handleEditSupplier() {
     const data = {
@@ -41,10 +48,10 @@ function EditSupplier({ mainCatesData, open, setOpen, cellData, getSuppliers }) 
       main_cate_id: categories,
     };
     if (Object.values(data).some((value) => value === "" || value.length === 0)) {
-      handleClose()
+      handleClose();
       Swal.fire("Error!", "Please fill in all fields.", "error").then(() => {
-        setOpen(true)
-      })
+        setOpen(true);
+      });
       return;
     }
     await axios
@@ -155,25 +162,39 @@ function EditSupplier({ mainCatesData, open, setOpen, cellData, getSuppliers }) 
           options={mainCatesData}
           disableCloseOnSelect
           getOptionLabel={(option) => option.name}
+          value={selectedOptions}
           onChange={(event, value) => {
+            setSelectedOptions(value);
             const selectedValues = value.map((option) => option.id);
             const mainCateIdsString = selectedValues.join(", ");
             setCategories(mainCateIdsString);
           }}
-          renderOption={(props, option, { selected }) => (
-            <li {...props}>
-              <Checkbox
-                icon={icon}
-                checkedIcon={checkedIcon}
-                style={{ marginRight: 8 }}
-                checked={selected}
-                value={option.id}
-              />
-              {option.name}
-            </li>
-          )}
+          renderOption={(props, option) => {
+            const selected = selectedOptions.some(
+              (selectedOption) => selectedOption.id === option.id
+            );
+            return (
+              <li {...props}>
+                <Checkbox
+                  icon={icon}
+                  checkedIcon={checkedIcon}
+                  style={{ marginRight: 8 }}
+                  checked={selected}
+                  value={option.id}
+                />
+                {option.name}
+              </li>
+            );
+          }}
           style={{ width: "100%", maxWidth: "776px" }}
-          renderInput={(params) => <TextField size="small" {...params} label="หมวดหมู่หลัก" />}
+          renderInput={(params) => (
+            <TextField
+              size="small"
+              {...params}
+              label="หมวดหมู่หลัก"
+              value={selectedOptions.map((option) => option.name).join(", ")}
+            />
+          )}
         />
         <button
           onClick={handleEditSupplier}

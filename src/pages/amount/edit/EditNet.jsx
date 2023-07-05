@@ -29,14 +29,19 @@ function EditNet({ mainCatesData, editNetOpen, setEditNetOpen, cellData, getNets
   const handleClose = () => setEditNetOpen(false);  
   const [netName, setNetName] = useState("");
   const [categories, setCategories] = useState("");
-
-  console.log(cellData)
+  const [selectedOptions, setSelectedOptions] = useState([]);
 
   useEffect(() => {
     if (editNetOpen) {
       setNetName(cellData.row.name || "");
+      
+      const selectedIds = cellData.row.main_cate_id.split(", ");
+      const selectedOptions = mainCatesData.filter((option) =>
+        selectedIds.includes(option.id.toString())
+      );
+      setSelectedOptions(selectedOptions || []);
     }
-  }, [editNetOpen, cellData]);
+  }, [editNetOpen, cellData, mainCatesData]);
 
   function handleEditNet() {
     const data = {
@@ -96,25 +101,39 @@ function EditNet({ mainCatesData, editNetOpen, setEditNetOpen, cellData, getNets
           options={mainCatesData}
           disableCloseOnSelect
           getOptionLabel={(option) => option.name}
+          value={selectedOptions}
           onChange={(event, value) => {
+            setSelectedOptions(value);
             const selectedValues = value.map((option) => option.id);
             const mainCateIdsString = selectedValues.join(", ");
             setCategories(mainCateIdsString);
           }}
-          renderOption={(props, option, { selected }) => (
-            <li {...props}>
-              <Checkbox
-                icon={icon}
-                checkedIcon={checkedIcon}
-                style={{ marginRight: 8 }}
-                checked={selected}
-                value={option.id}
-              />
-              {option.name}
-            </li>
-          )}
+          renderOption={(props, option) => {
+            const selected = selectedOptions.some(
+              (selectedOption) => selectedOption.id === option.id
+            );
+            return (
+              <li {...props}>
+                <Checkbox
+                  icon={icon}
+                  checkedIcon={checkedIcon}
+                  style={{ marginRight: 8 }}
+                  checked={selected}
+                  value={option.id}
+                />
+                {option.name}
+              </li>
+            );
+          }}
           style={{ width: "100%", maxWidth: "776px" }}
-          renderInput={(params) => <TextField size="small" {...params} label="หมวดหมู่หลัก" />}
+          renderInput={(params) => (
+            <TextField
+              size="small"
+              {...params}
+              label="หมวดหมู่หลัก"
+              value={selectedOptions.map((option) => option.name).join(", ")}
+            />
+          )}
         />
         <button
           onClick={handleEditNet}

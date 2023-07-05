@@ -22,8 +22,6 @@ function Suppliers() {
     setCellData(cellValue)
   }
 
-  console.log(suppliersData)
-
   async function getSuppliers() {
     const response = await axios.get("suppliers");
     const data = response.data;
@@ -107,7 +105,7 @@ function Suppliers() {
       headerClassName: "table-columns",
     },
     {
-      field: "main_cate_id",
+      field: "main_cate_name",
       headerName: "หมวดหมู่สินค้า",
       width: 150,
       headerClassName: "table-columns",
