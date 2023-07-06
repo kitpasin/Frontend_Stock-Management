@@ -51,7 +51,7 @@ function TableNet({ netsData, getNets, mainCatesData }) {
       headerClassName: "table-columns",
     },
     {
-      field: "main_cate_id",
+      field: "main_cate_name",
       headerName: "หมวดหมู่หลัก",
       width: 445,
       headerClassName: "table-columns",

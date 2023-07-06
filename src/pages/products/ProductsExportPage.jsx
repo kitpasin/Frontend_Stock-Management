@@ -36,7 +36,7 @@ function ProductsExportPage() {
           />
         </div>
       </div>
-      <Card className="flex-container-column">
+      <Card className="flex-container-column" style={{marginTop: "-1rem"}}>
         <div
           style={{
             display: "flex",
