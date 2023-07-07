@@ -21,14 +21,17 @@ import withReactContent from "sweetalert2-react-content";
 
 import "./ProductsImportPage.scss";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { batch } from "react-redux";
 import axios from "axios";
+import { PersonOffRounded } from "@mui/icons-material";
 
 const modalSwal = withReactContent(Swal);
 const form = {
   title: "",
-  image: "",
+  state1: false,
+  state2: false,
+  state3: false,
   unit: "",
   netweight: "",
   counting_unit: "",
@@ -39,6 +42,7 @@ const form = {
   new_barcode: "",
   main_cate_id: "",
   sub_cate_id: "",
+  sub_cate: "",
   supplier_id: "",
   supplier_cate: "",
   import_value: "",
@@ -47,7 +51,7 @@ const form = {
   import_fee: "",
   fuel_cost: "",
   other_exp: "",
-  total: "",
+  total: 0,
   op_unit: "",
   total_product: "",
 
@@ -58,11 +62,12 @@ const form = {
   cost_per_unit: "",
   total_cost: "",
   set_profit: "",
-  vat_id: "",
+  vat_id: 0,
+  vat: 0,
   profit_per_unit: "",
   pp_profit: "",
   pp_vat: "",
-  os_price: "",
+  os_price: 0,
   selling_price: "",
 };
 
@@ -81,6 +86,7 @@ const formVat = {
 }
 
 function ProductsImportPage() {
+  const navigate = useNavigate();
   const { t } = useTranslation(["dashboard-page"]);
   const [selectedPurchaseTime, setSelectedPurchaseTime] = useState(null);
   const [selectedMFDTime, setSelectedMFDTime] = useState(null);
@@ -92,6 +98,11 @@ function ProductsImportPage() {
   const [netsData, setNetsData] = useState([])
   const [amountsData, setAmountsData] = useState([])
   const [mainCatesData, setMainCatesData] = useState([]);
+  const [subCatesData, setSubCatesData] = useState([]);
+  const [vatsData, setVatsData] = useState([]);
+  const [suppliersData, setSuppliersData] = useState([]);
+  const [supplierCates, setSupplierCates] = useState([]);
+
 
   const inputRef = useRef(null);
   const imgError = "/images/mock/pre-product.png";
@@ -122,21 +133,79 @@ function ProductsImportPage() {
     setMainCatesData(data);
   }
 
-  async function getSubCateCates(main_cate) {
-    const mainCatesArr = []
-    const response = await axios.get(`subcate/bymain?main=${main_cate}`);
+  async function getMainCatesBySupplier(_supid) {
+    const response = await axios.get(`maincates?supid=${_supid}`);
     console.log(response)
-    const data = response.data.mainCates;
+    const data = response.data.supplier_cate;
+    setSupplierCates(data)
+  }
+
+
+
+  async function getSubCateCates(main_cate_id) {
+    const response = await axios.get(`subcate/bymain?mainid=${main_cate_id}`);
+    const data = response.data.subCates;
+    // console.log(data)
+    setSubCatesData(data)
+    setProductData(() => { return { ...productData, sub_cate_id: 0, main_cate_id: main_cate_id, sub_cate: "", state1: !productData.state1 } })
+
+  }
+
+  async function getVats() {
+    const response = await axios.get("vats")
+    const data = response.data.vats
+    setVatsData(data)
+  }
+
+  async function getSuppliers() {
+    const response = await axios.get("suppliers");
+    const data = response.data;
+    setSuppliersData(data.suppliers);
   }
 
   useEffect(() => {
     getNets();
     getAmounts();
     getMainCates();
+    getVats();
+    getSuppliers()
   }, [])
 
-  console.log(netsData)
-  const options = netsData;
+  /* Price details */
+  useEffect(() => {
+    const import_fee = parseFloat(productData.import_fee) || 0
+    const fuel_cost = parseFloat(productData.fuel_cost) || 0
+    const other_exp = parseFloat(productData.other_exp) || 0
+    const product_cost = parseFloat(productData.product_cost) || 0
+    const units = parseFloat(productData.units) || 1
+    const set_profit = parseFloat(productData.set_profit) || 0
+    const vat = parseFloat(productData.vat) || 0
+    
+    const totalAll = import_fee + fuel_cost + other_exp;
+    const total_product = parseInt(productData.total_product) || 1
+    
+    const op_unit = (totalAll / total_product).toFixed(2)
+    const cost_per_unit = (product_cost / units).toFixed(2)
+    const unit_price = parseFloat(cost_per_unit) + parseFloat(op_unit)
+    const total_cost = (parseFloat(cost_per_unit) + parseFloat(op_unit)) * units
+    const profit_per_unit = (parseFloat(cost_per_unit) + parseFloat(op_unit)) * set_profit / 100
+    const pp_profit = (profit_per_unit + unit_price).toFixed(2)
+    const pp_vat = parseFloat(vat * (pp_profit) / 100) + parseFloat(pp_profit)
+    console.log(pp_vat)
+
+    setProductData(() => { return { ...productData, 
+                                    total: totalAll, 
+                                    op_unit: op_unit, 
+                                    cost_per_unit: cost_per_unit,
+                                    unit_price: unit_price,
+                                    total_cost: total_cost,
+                                    profit_per_unit: profit_per_unit.toFixed(2),
+                                    pp_profit: pp_profit,
+                                    pp_vat: pp_vat.toFixed(2),
+                                  }
+                         })
+  }, [productData.import_fee, productData.fuel_cost, productData.other_exp, productData.total_product, productData.product_cost, productData.units, productData.set_profit, productData.vat])
+  /* Price details */
 
   const imageError = (e) => {
     if (preview.file !== "" || preview.src !== "") {
@@ -151,7 +220,7 @@ function ProductsImportPage() {
 
   const selectNoVat = () => {
     setVat(() => { return { ...vat, checked:true } })
-    setProductData(() => { return { ...productData, vat_id: "noVat" } })
+    setProductData(() => { return { ...productData, vat_id: 0, vat: 0, state3: !productData.state3 } })
   }
 
   function generateBarcode() {
@@ -192,6 +261,9 @@ function ProductsImportPage() {
 
   const onSaveProducthandle = (event) => {
     event.preventDefault();
+    console.log(productData)
+    // console.log(preview.file)
+    return;
 
     const errorArr = []
     if (productData.purchase_date === "" ||  productData.mfd_date === "" || productData.exp_date === "") {
@@ -216,10 +288,46 @@ function ProductsImportPage() {
       })
       return false;
     }
-    console.log(productData)
-    return;
 
     const formData = new FormData();
+    /* product */
+    formData.append('image[]', preview.file)
+    formData.append('title', productData.title)
+    formData.append('main_cate_id', productData.main_cate_id)
+    formData.append('sub_cate_id', productData.sub_cate_id)
+    formData.append('supplier_id', productData.supplier_id)
+    formData.append('supplier_cate', productData.supplier_cate)
+    formData.append('import_value', productData.import_value)
+    formData.append('unit', productData.unit)
+    formData.append('netweight', productData.netweight)
+    formData.append('counting_unit', productData.counting_unit)
+    formData.append('purchase_date', productData.purchase_date)
+    formData.append('mfd_date', productData.mfd_date)
+    formData.append('exp_date', productData.exp_date)
+    formData.append('barcode', productData.new_barcode ? productData.new_barcode : productData.barcode)
+    formData.append('defective', productData.defective)
+    /* product_expense */
+    formData.append('import_fee', productData.import_fee)
+    formData.append('fuel_cost', productData.fuel_cost)
+    formData.append('other_exp', productData.other_exp)
+    formData.append('total', productData.total)
+    formData.append('op_unit', productData.op_unit)
+    formData.append('total_product', productData.total_product)
+    /* product_price_infos */
+    formData.append('oc_unit', productData.oc_unit)
+    formData.append('unit_price', productData.unit_price)
+    formData.append('product_cost', productData.product_cost)
+    formData.append('units', productData.units)
+    formData.append('cost_per_unit', productData.cost_per_unit)
+    formData.append('total_cost', productData.total_cost)
+    formData.append('set_profit', productData.set_profit)
+    formData.append('vat_id', productData.vat_id)
+    formData.append('profit_per_unit', productData.profit_per_unit)
+    formData.append('pp_profit', productData.pp_profit)
+    formData.append('pp_vat', productData.pp_vat)
+    formData.append('os_price', productData.os_price)
+    formData.append('selling_price', productData.selling_price)
+
     
   }
 
@@ -341,7 +449,7 @@ function ProductsImportPage() {
                     onChange={(e, value) =>
                       setProductData(() => {
                         console.log(value)
-                        return { ...productData, unit: value.id };
+                        return { ...productData, unit: value ? value.id : 0 };
                       })
                     }
                     id="combo-box-demo"
@@ -424,7 +532,7 @@ function ProductsImportPage() {
                     <Autocomplete
                       // value={productData.counting_unit}
                       onChange={(e, value) => setProductData(() => {
-                        return { ...productData, counting_unit: value.id }
+                        return { ...productData, counting_unit: value ? value.id : 0 }
                       })}
                       disablePortal
                       id="combo-box-demo"
@@ -441,9 +549,7 @@ function ProductsImportPage() {
                   <div style={{ display: "flex", gap: "1rem", width: "50%" }}>
                     <Autocomplete
                       // value={productData.main_cate_id}
-                      onChange={(e, value) => setProductData(() => {
-                        return { ...productData, main_cate_id: value.id }
-                      })}
+                      onChange={(e, value) => getSubCateCates(value? value.id : 0)}
                       disabled={false}
                       id="combo-box-demo"
                       options={mainCatesData}
@@ -459,20 +565,24 @@ function ProductsImportPage() {
                       )}
                     />
                     <Autocomplete
-                      // value={productData.sub_cate_id}
+                      // label={productData.sub_cate}
+                      // value={productData.sub_cate}
+                      key={productData.state1}
                       onChange={(e, value) => setProductData(() => {
-                        return { ...productData, sub_cate_id: value }
+                        return { ...productData, sub_cate_id: value? value.id : 0, sub_cate: value ? value.name : "" }
                       })}
                       disabled={false}
                       id="combo-box-demo"
-                      options={[]}
+                      options={subCatesData}
+                      getOptionLabel={(option) => option.name || ""}
                       sx={{ width: "50%" }}
                       renderInput={(params) => (
                         <TextField
                           {...params}
                           label="หมวดหมู่ย่อย"
                           size="small"
-                          required
+                          required={subCatesData.length > 0 ? true : false}
+                        
                         />
                       )}
                     />
@@ -620,7 +730,7 @@ function ProductsImportPage() {
                       }}
                     >
                       <TextField
-                        required
+                        disabled
                         value={productData.total}
                         onChange={(e) => setProductData(() => {
                             return { ...productData, total: !isNaN(parseFloat(e.target.value))?parseFloat(e.target.value):null}
@@ -632,7 +742,7 @@ function ProductsImportPage() {
                         sx={{ width: "50%" }}
                       />
                       <TextField
-                        required
+                        disabled
                         value={productData.op_unit}
                         onChange={(e) => setProductData(() => {
                             return { ...productData, op_unit: !isNaN(parseFloat(e.target.value))?parseFloat(e.target.value):null}
@@ -671,29 +781,15 @@ function ProductsImportPage() {
                     }}
                   >
                     <Autocomplete
-                      value={productData.supplier_cate}
+                      // value={productData.supplier_id}
                       onChange={(e, value) => setProductData(() => {
-                        return { ...productData, supplier_cate: value }
+                        const sup_id = value?value.id: 0;
+                        getMainCatesBySupplier(sup_id)
+                        return { ...productData, supplier_id: value ? value.id : 0, supplier_cate: 0, state2: !productData.state2 }
                       })}
                       id="combo-box-demo"
-                      options={options}
-                      sx={{ width: "50%" }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="เลือกหมวดหมู่สินค้า"
-                          size="small"
-                          required
-                        />
-                      )}
-                    />
-                    <Autocomplete
-                      value={productData.supplier_id}
-                      onChange={(e, value) => setProductData(() => {
-                        return { ...productData, supplier_id: value }
-                      })}
-                      id="combo-box-demo"
-                      options={options}
+                      options={suppliersData}
+                      getOptionLabel={(option) => option.name || ""}
                       sx={{ width: "50%" }}
                       renderInput={(params) => (
                         <TextField
@@ -704,8 +800,26 @@ function ProductsImportPage() {
                         />
                       )}
                     />
+                    <Autocomplete
+                      key={productData.state2}
+                      onChange={(e, value) => setProductData(() => {
+                        return { ...productData, supplier_cate: value ? value.id : 0 }
+                      })}
+                      id="combo-box-demo"
+                      options={supplierCates}
+                      getOptionLabel={(option) => option.name || ""}
+                      sx={{ width: "50%" }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="เลือกหมวดหมู่สินค้า"
+                          size="small"
+                          required
+                        />
+                      )}
+                    />
                   </div>
-                  <button className="add-supplier" style={{ fontSize: "16px" }}>
+                  <button className="add-supplier" style={{ fontSize: "16px" }} onClick={() => navigate("/createsupplier")}>
                     <AddIcon />
                     สร้างข้อมูลซัพพลายเออร์ใหม่
                   </button>
@@ -732,9 +846,9 @@ function ProductsImportPage() {
                 >
                   <div style={{ display: "flex", gap: "1rem", width: "100%" }}>
                     <TextField
-                      required
+                      disabled
                       type="number"
-                      value={productData.oc_unit}
+                      value={productData.op_unit}
                       onChange={(e) => setProductData(() => {
                         return { ...productData, oc_unit: !isNaN(parseFloat(e.target.value))?parseFloat(e.target.value):null}
                       })}
@@ -747,14 +861,14 @@ function ProductsImportPage() {
                   </div>
                   <div>
                     <TextField
-                      required
+                      disabled
                       type="number"
                       value={productData.unit_price}
                       onChange={(e) => setProductData(() => {
                         return { ...productData, unit_price: !isNaN(parseFloat(e.target.value))?parseFloat(e.target.value):null}
                       })}
                       id="outlined-basic"
-                      label="ราคา/หน่วย"
+                      label="ราคา/หน่วย (บาท)"
                       variant="outlined"
                       size="small"
                       sx={{ width: "100%" }}
@@ -797,7 +911,7 @@ function ProductsImportPage() {
                       sx={{ width: "50%" }}
                     />
                     <TextField
-                      required
+                      disabled
                       type="number"
                       value={productData.cost_per_unit}
                       onChange={(e) => setProductData(() => {
@@ -812,7 +926,7 @@ function ProductsImportPage() {
                   </div>
                   <div>
                     <TextField
-                      required
+                      disabled
                       type="number"
                       value={productData.total_cost}
                       onChange={(e) => setProductData(() => {
@@ -856,14 +970,14 @@ function ProductsImportPage() {
                     style={{ display: "flex", alignItems: "center", gap: "1rem" }}
                   >
                     <Autocomplete
-                      value={productData.vat_id}
+                      key={productData.state3}
                       onChange={(e, value) => setProductData(() => {
                         setVat(() => { return { ...vat, checked:false } })
-                        return { ...productData, vat_id: value }
+                        return { ...productData, vat_id: value ? value.id : 0, vat: value ? value.percent : 0 }
                       })}
-                      disablePortal
                       id="combo-box-demo"
-                      options={options}
+                      options={vatsData}
+                      getOptionLabel={(option) => option.name || ""}
                       sx={{ width: "50%" }}
                       renderInput={(params) => (
                         <TextField
@@ -890,7 +1004,7 @@ function ProductsImportPage() {
                 >
                   <div style={{ display: "flex", gap: "1rem", width: "100%" }}>
                     <TextField
-                      required
+                      disabled
                       type="number"
                       value={productData.profit_per_unit}
                       onChange={(e) => setProductData(() => {
@@ -903,7 +1017,7 @@ function ProductsImportPage() {
                       sx={{ width: "50%" }}
                     />
                     <TextField
-                      required
+                      disabled
                       type="number"
                       value={productData.pp_profit}
                       onChange={(e) => setProductData(() => {
@@ -931,7 +1045,7 @@ function ProductsImportPage() {
                       }}
                     >
                       <TextField
-                        required
+                        disabled
                         type="number"
                         value={productData.pp_vat}
                         onChange={(e) => setProductData(() => {
@@ -944,7 +1058,7 @@ function ProductsImportPage() {
                         sx={{ width: "50%" }}
                       />
                       <TextField
-                        required
+                        disabled
                         type="number"
                         value={productData.os_price}
                         onChange={(e) => setProductData(() => {
