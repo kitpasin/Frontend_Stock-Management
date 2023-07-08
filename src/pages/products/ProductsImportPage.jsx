@@ -25,50 +25,26 @@ import { Link, useNavigate } from "react-router-dom";
 import { batch } from "react-redux";
 import axios from "axios";
 import { PersonOffRounded } from "@mui/icons-material";
+import { svCreateProduct } from "../../services/product.service";
 
 const modalSwal = withReactContent(Swal);
 const form = {
-  title: "",
-  state1: false,
-  state2: false,
-  state3: false,
-  unit: "",
-  netweight: "",
-  counting_unit: "",
-  purchase_date: "",
-  mfd_date: "",
-  exp_date: "",
-  barcode: "",
-  new_barcode: "",
-  main_cate_id: "",
-  sub_cate_id: "",
-  sub_cate: "",
-  supplier_id: "",
-  supplier_cate: "",
-  import_value: "",
+  title: "", state1: false, state2: false,
+  state3: false, reset: 0, unit: "", netweight: "",
+  counting_unit: "", purchase_date: "", mfd_date: "",
+  exp_date: "", barcode: "", new_barcode: "",
+  main_cate_id: "", sub_cate_id: "", sub_cate: "",
+  supplier_id: "", supplier_cate: "", import_value: "",
   defective: 0,
 
-  import_fee: "",
-  fuel_cost: "",
-  other_exp: "",
-  total: 0,
-  op_unit: "",
-  total_product: "",
+  import_fee: "", fuel_cost: "", other_exp: "",
+  total: 0, op_unit: "", total_product: "",
 
-  oc_unit: "",
-  unit_price: "",
-  product_cost: "",
-  units: "",
-  cost_per_unit: "",
-  total_cost: "",
-  set_profit: "",
-  vat_id: 0,
-  vat: 0,
-  profit_per_unit: "",
-  pp_profit: "",
-  pp_vat: "",
-  os_price: 0,
-  selling_price: "",
+  oc_unit: "", unit_price: "", product_cost: "",
+  units: "", cost_per_unit: "", total_cost: "",
+  set_profit: "", vat_id: 0, vat: 0,
+  profit_per_unit: "", pp_profit: "", pp_vat: "",
+  os_price: 0, selling_price: "",
 };
 
 const formPreview = {
@@ -105,6 +81,7 @@ function ProductsImportPage() {
 
 
   const inputRef = useRef(null);
+  const formInputRef = useRef(null);
   const imgError = "/images/mock/pre-product.png";
 
   async function getNets() {
@@ -135,7 +112,6 @@ function ProductsImportPage() {
 
   async function getMainCatesBySupplier(_supid) {
     const response = await axios.get(`maincates?supid=${_supid}`);
-    console.log(response)
     const data = response.data.supplier_cate;
     setSupplierCates(data)
   }
@@ -189,19 +165,18 @@ function ProductsImportPage() {
     const unit_price = parseFloat(cost_per_unit) + parseFloat(op_unit)
     const total_cost = (parseFloat(cost_per_unit) + parseFloat(op_unit)) * units
     const profit_per_unit = (parseFloat(cost_per_unit) + parseFloat(op_unit)) * set_profit / 100
-    const pp_profit = (profit_per_unit + unit_price).toFixed(2)
+    const pp_profit = parseFloat((profit_per_unit + unit_price).toFixed(2))
     const pp_vat = parseFloat(vat * (pp_profit) / 100) + parseFloat(pp_profit)
-    console.log(pp_vat)
 
     setProductData(() => { return { ...productData, 
                                     total: totalAll, 
-                                    op_unit: op_unit, 
-                                    cost_per_unit: cost_per_unit,
+                                    op_unit: parseFloat(op_unit), 
+                                    cost_per_unit: parseFloat(cost_per_unit),
                                     unit_price: unit_price,
                                     total_cost: total_cost,
-                                    profit_per_unit: profit_per_unit.toFixed(2),
+                                    profit_per_unit: parseFloat(profit_per_unit.toFixed(2)),
                                     pp_profit: pp_profit,
-                                    pp_vat: pp_vat.toFixed(2),
+                                    pp_vat: parseFloat(pp_vat.toFixed(2)),
                                   }
                          })
   }, [productData.import_fee, productData.fuel_cost, productData.other_exp, productData.total_product, productData.product_cost, productData.units, productData.set_profit, productData.vat])
@@ -244,6 +219,7 @@ function ProductsImportPage() {
   };
 
   const previewImageHandler = async (e) => {
+    console.log(e.target)
     const value = e.target.files[0];
     const image = await convertImagePreview(value);
     setPreview({
@@ -256,14 +232,25 @@ function ProductsImportPage() {
 
   const resetDataHandle = () => {
     setProductData(form)
+    setProductData((prev) => {
+      return { ...prev, reset: productData.reset + 1 }
+    })
+    formInputRef.current.value = ""
+    setPreview({
+      src: undefined,
+      file: undefined,
+      remove: false,
+      isError: true,
+    });
     setGeneratedNumber("")
+    console.log(preview.file)
   }
 
   const onSaveProducthandle = (event) => {
     event.preventDefault();
     console.log(productData)
     // console.log(preview.file)
-    return;
+    // return;
 
     const errorArr = []
     if (productData.purchase_date === "" ||  productData.mfd_date === "" || productData.exp_date === "") {
@@ -291,16 +278,16 @@ function ProductsImportPage() {
 
     const formData = new FormData();
     /* product */
-    formData.append('image[]', preview.file)
+    formData.append('image', preview.file)
     formData.append('title', productData.title)
     formData.append('main_cate_id', productData.main_cate_id)
     formData.append('sub_cate_id', productData.sub_cate_id)
     formData.append('supplier_id', productData.supplier_id)
-    formData.append('supplier_cate', productData.supplier_cate)
+    formData.append('supplier_cate_id', productData.supplier_cate)
     formData.append('import_value', productData.import_value)
-    formData.append('unit', productData.unit)
+    formData.append('unit_id', productData.unit)
     formData.append('netweight', productData.netweight)
-    formData.append('counting_unit', productData.counting_unit)
+    formData.append('counting_unit_id', productData.counting_unit)
     formData.append('purchase_date', productData.purchase_date)
     formData.append('mfd_date', productData.mfd_date)
     formData.append('exp_date', productData.exp_date)
@@ -314,7 +301,7 @@ function ProductsImportPage() {
     formData.append('op_unit', productData.op_unit)
     formData.append('total_product', productData.total_product)
     /* product_price_infos */
-    formData.append('oc_unit', productData.oc_unit)
+    formData.append('oc_unit', productData.op_unit)
     formData.append('unit_price', productData.unit_price)
     formData.append('product_cost', productData.product_cost)
     formData.append('units', productData.units)
@@ -328,6 +315,15 @@ function ProductsImportPage() {
     formData.append('os_price', productData.os_price)
     formData.append('selling_price', productData.selling_price)
 
+    svCreateProduct(formData).then((res) => {
+      if (res.status) {
+        Swal.fire("Created!", "Product has been created successfully.", "success").then(() => {
+          resetDataHandle()
+        })
+      } else {
+
+      }
+    })
     
   }
 
@@ -388,19 +384,19 @@ function ProductsImportPage() {
             <div className="content">
               <div className="content-left" style={{ position: "relative" }}>
                 <figure style={{ cursor: "pointer" }}>
-                  <input
-                    className="input-file"
-                    type="file"
-                    onChange={(e) => previewImageHandler(e)}
-                  />
+                  <div className="input-file" >
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => previewImageHandler(e)}
+                      ref={formInputRef}
+                    />
+                  </div>
                   <img
                     src={
                       !preview.isError
                         ? preview.src
                         : "/images/mock/pre-product.png"
-                    }
-                    onError={() =>
-                      (this.img.src = "/images/mock/pre-product.png")
                     }
                     alt={""}
                   />
@@ -444,11 +440,11 @@ function ProductsImportPage() {
                     sx={{ width: "33.75%" }}
                   />
                   <Autocomplete
+                    key={productData.reset}
                     required
                     // value={productData.unit}
                     onChange={(e, value) =>
                       setProductData(() => {
-                        console.log(value)
                         return { ...productData, unit: value ? value.id : 0 };
                       })
                     }
@@ -470,13 +466,12 @@ function ProductsImportPage() {
                   <div style={{ display: "flex", gap: "1rem", width: "50%" }}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
-                        required
                         label="วันสั่งซื้อ"
                         inputFormat="YYYY-MM-DD"
                         renderInput={(params) => (
                           <TextField {...params} size="small" inputProps={{...params.inputProps, readOnly: true}} required />
                         )}
-                        value={productData.purchase_date}
+                        value={productData.purchase_date || null}
                         onChange={(value) => {
                           setSelectedPurchaseTime(value);
                           setProductData(() => {
@@ -485,13 +480,12 @@ function ProductsImportPage() {
                         }}
                       />
                       <DatePicker
-                        required
                         label="วันผลิต MFD"
                         inputFormat="YYYY-MM-DD"
                         renderInput={(params) => (
                           <TextField {...params} size="small" inputProps={{...params.inputProps, readOnly: true}} required />
                         )}
-                        value={productData.mfd_date}
+                        value={productData.mfd_date || null}
                         onChange={(value) => {
                           setSelectedMFDTime(value);
                           setProductData(() => {
@@ -500,13 +494,12 @@ function ProductsImportPage() {
                         }}
                       />
                       <DatePicker
-                        required
                         label="วันหมดอายุ EXP"
                         inputFormat="YYYY-MM-DD"
                         renderInput={(params) => (
                           <TextField {...params} size="small" inputProps={{...params.inputProps, readOnly: true}} required />
                         )}
-                        value={productData.exp_date}
+                        value={productData.exp_date || null}
                         onChange={(value) => {
                           setSelectedEXPTime(value);
                           setProductData(() => {
@@ -531,6 +524,7 @@ function ProductsImportPage() {
                     />
                     <Autocomplete
                       // value={productData.counting_unit}
+                      key={productData.reset}
                       onChange={(e, value) => setProductData(() => {
                         return { ...productData, counting_unit: value ? value.id : 0 }
                       })}
@@ -549,6 +543,7 @@ function ProductsImportPage() {
                   <div style={{ display: "flex", gap: "1rem", width: "50%" }}>
                     <Autocomplete
                       // value={productData.main_cate_id}
+                      key={productData.reset}
                       onChange={(e, value) => getSubCateCates(value? value.id : 0)}
                       disabled={false}
                       id="combo-box-demo"
@@ -782,6 +777,7 @@ function ProductsImportPage() {
                   >
                     <Autocomplete
                       // value={productData.supplier_id}
+                      key={productData.reset}
                       onChange={(e, value) => setProductData(() => {
                         const sup_id = value?value.id: 0;
                         getMainCatesBySupplier(sup_id)

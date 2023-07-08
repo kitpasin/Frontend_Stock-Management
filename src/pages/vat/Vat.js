@@ -27,7 +27,7 @@ function Vat() {
     <section id="vat-page">
       <HeadPageComponent
         h1={"Vat"}
-        icon={<img src="images/icons/foundation_graph-pie (1).png" alt="" />}
+        icon={<img src="/images/icons/foundation_graph-pie(1).png" alt="" />}
         breadcrums={[{ title: "Vat", link: false }]}
       />
       <div className="main-content">

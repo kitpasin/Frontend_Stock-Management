@@ -53,7 +53,7 @@ function Amount() {
           <div className="content">
             <div className="content-head">
               <div className="title">
-                <img src="images/icons/majesticons_atom222.png" alt="" />
+                <img src="/images/icons/majesticons_atom222.png" alt="" />
                 <p>หน่วยปริมาณสุทธิ ทั้งหมด</p>
                 <p style={{ color: "#ff0000" }}>{netsData.length} รายการ</p>
               </div>
