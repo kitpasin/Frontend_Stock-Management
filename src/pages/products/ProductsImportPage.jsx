@@ -219,7 +219,6 @@ function ProductsImportPage() {
   };
 
   const previewImageHandler = async (e) => {
-    console.log(e.target)
     const value = e.target.files[0];
     const image = await convertImagePreview(value);
     setPreview({
@@ -243,14 +242,11 @@ function ProductsImportPage() {
       isError: true,
     });
     setGeneratedNumber("")
-    console.log(preview.file)
   }
 
-  const onSaveProducthandle = (event) => {
+  const saveProducthandle = (event) => {
     event.preventDefault();
-    console.log(productData)
-    // console.log(preview.file)
-    // return;
+    const barcode = productData.barcode || productData.new_barcode;
 
     const errorArr = []
     if (productData.purchase_date === "" ||  productData.mfd_date === "" || productData.exp_date === "") {
@@ -274,57 +270,73 @@ function ProductsImportPage() {
         icon: 'info'
       })
       return false;
+    } else {
+      const formData = new FormData();
+      /* product */
+      formData.append('image', preview.file)
+      formData.append('title', productData.title)
+      formData.append('main_cate_id', productData.main_cate_id)
+      formData.append('sub_cate_id', productData.sub_cate_id)
+      formData.append('supplier_id', productData.supplier_id)
+      formData.append('supplier_cate_id', productData.supplier_cate)
+      formData.append('import_value', productData.import_value)
+      formData.append('unit_id', productData.unit)
+      formData.append('netweight', productData.netweight)
+      formData.append('counting_unit_id', productData.counting_unit)
+      formData.append('purchase_date', productData.purchase_date)
+      formData.append('mfd_date', productData.mfd_date)
+      formData.append('exp_date', productData.exp_date)
+      formData.append('barcode', barcode)
+      formData.append('defective', productData.defective)
+      /* product_expense */
+      formData.append('import_fee', productData.import_fee)
+      formData.append('fuel_cost', productData.fuel_cost)
+      formData.append('other_exp', productData.other_exp)
+      formData.append('total', productData.total)
+      formData.append('op_unit', productData.op_unit)
+      formData.append('total_product', productData.total_product)
+      /* product_price_infos */
+      formData.append('oc_unit', productData.op_unit)
+      formData.append('unit_price', productData.unit_price)
+      formData.append('product_cost', productData.product_cost)
+      formData.append('units', productData.units)
+      formData.append('cost_per_unit', productData.cost_per_unit)
+      formData.append('total_cost', productData.total_cost)
+      formData.append('set_profit', productData.set_profit)
+      formData.append('vat_id', productData.vat_id)
+      formData.append('profit_per_unit', productData.profit_per_unit)
+      formData.append('pp_profit', productData.pp_profit)
+      formData.append('pp_vat', productData.pp_vat)
+      formData.append('os_price', productData.os_price)
+      formData.append('selling_price', productData.selling_price)
+
+      onSaveProduct(formData)
     }
-
-    const formData = new FormData();
-    /* product */
-    formData.append('image', preview.file)
-    formData.append('title', productData.title)
-    formData.append('main_cate_id', productData.main_cate_id)
-    formData.append('sub_cate_id', productData.sub_cate_id)
-    formData.append('supplier_id', productData.supplier_id)
-    formData.append('supplier_cate_id', productData.supplier_cate)
-    formData.append('import_value', productData.import_value)
-    formData.append('unit_id', productData.unit)
-    formData.append('netweight', productData.netweight)
-    formData.append('counting_unit_id', productData.counting_unit)
-    formData.append('purchase_date', productData.purchase_date)
-    formData.append('mfd_date', productData.mfd_date)
-    formData.append('exp_date', productData.exp_date)
-    formData.append('barcode', productData.new_barcode ? productData.new_barcode : productData.barcode)
-    formData.append('defective', productData.defective)
-    /* product_expense */
-    formData.append('import_fee', productData.import_fee)
-    formData.append('fuel_cost', productData.fuel_cost)
-    formData.append('other_exp', productData.other_exp)
-    formData.append('total', productData.total)
-    formData.append('op_unit', productData.op_unit)
-    formData.append('total_product', productData.total_product)
-    /* product_price_infos */
-    formData.append('oc_unit', productData.op_unit)
-    formData.append('unit_price', productData.unit_price)
-    formData.append('product_cost', productData.product_cost)
-    formData.append('units', productData.units)
-    formData.append('cost_per_unit', productData.cost_per_unit)
-    formData.append('total_cost', productData.total_cost)
-    formData.append('set_profit', productData.set_profit)
-    formData.append('vat_id', productData.vat_id)
-    formData.append('profit_per_unit', productData.profit_per_unit)
-    formData.append('pp_profit', productData.pp_profit)
-    formData.append('pp_vat', productData.pp_vat)
-    formData.append('os_price', productData.os_price)
-    formData.append('selling_price', productData.selling_price)
-
-    svCreateProduct(formData).then((res) => {
-      if (res.status) {
-        Swal.fire("Created!", "Product has been created successfully.", "success").then(() => {
-          resetDataHandle()
-        })
-      } else {
-
-      }
-    })
     
+  }
+
+  function onSaveProduct(_form) {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to save the data?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, save it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        svCreateProduct(_form).then((res) => {
+          if (res.status) {
+            Swal.fire("Created!", "Product has been created successfully.", "success").then(() => {
+              resetDataHandle()
+            })
+          } else {
+            alert('error')
+          }
+        })
+      }
+    });
   }
 
   return (
@@ -347,7 +359,7 @@ function ProductsImportPage() {
           />
         </div>
       </div>
-      <form onSubmit={onSaveProducthandle}>
+      <form onSubmit={saveProducthandle}>
         <div>
           <Card
             className="flex-container-column"
