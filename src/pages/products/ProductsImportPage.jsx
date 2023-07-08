@@ -953,7 +953,7 @@ function ProductsImportPage() {
                       type="number"
                       value={productData.set_profit}
                       onChange={(e) => setProductData(() => {
-                        return { ...productData, set_profit: !isNaN(parseFloat(e.target.value))?parseFloat(e.target.value):null}
+                        return { ...productData, set_profit: !isNaN(parseFloat(e.target.value))?parseFloat(e.target.value):""}
                       })}
                       id="outlined-basic"
                       label="กำไรที่ต้องการ %"

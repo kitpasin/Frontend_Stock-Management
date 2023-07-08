@@ -493,7 +493,7 @@ const SidebarComponent = (props) => {
                     >
                       <figure className="faIcon">
                         {/* <FontAwesomeIcon icon={faUserShield} /> */}
-                        <img src="images/icons/entypo_shop.png" alt="" />
+                        <img src="/images/icons/entypo_shop.png" alt="" />
                       </figure>
                       <div className="menu-title">{t("suppliersPage")}</div>
                     </NavLink>
@@ -509,7 +509,7 @@ const SidebarComponent = (props) => {
                     >
                       <figure className="faIcon">
                         {/* <FontAwesomeIcon icon={faUserShield} /> */}
-                        <img src="images/icons/uis_layer-group.png" alt="" />
+                        <img src="/images/icons/uis_layer-group.png" alt="" />
                       </figure>
                       <div className="menu-title">{t("ProductCategory")}</div>
                     </NavLink>
@@ -525,7 +525,7 @@ const SidebarComponent = (props) => {
                     >
                       <figure className="faIcon">
                         {/* <FontAwesomeIcon icon={faUserShield} /> */}
-                        <img src="images/icons/majesticons_atom-2.png" alt="" />
+                        <img src="/images/icons/majesticons_atom-2.png" alt="" />
                       </figure>
                       <div className="menu-title">{t("amountPage")}</div>
                     </NavLink>
@@ -541,7 +541,7 @@ const SidebarComponent = (props) => {
                     >
                       <figure className="faIcon">
                         {/* <FontAwesomeIcon icon={faUserShield} /> */}
-                        <img src="images/icons/foundation_graph-pie.png" alt="" />
+                        <img src="/images/icons/foundation_graph-pie.png" alt="" />
                       </figure>
                       <div className="menu-title">{t("vat")}</div>
                     </NavLink>
