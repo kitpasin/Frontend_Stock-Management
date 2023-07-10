@@ -52,7 +52,7 @@ function ProductCategory() {
         <div className="content">
           <div className="content-head">
             <div className="title">
-              <img src="images/icons/uis_layer-group1.png" alt="" />
+              <img src="/images/icons/uis_layer-group1.png" alt="" />
               <p>หมวดหมู่สินค้าทั้งหมด</p>
               <p style={{ color: "#ff0000" }}>{mainCatesData.length} รายการ</p>
             </div>

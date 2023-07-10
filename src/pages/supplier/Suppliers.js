@@ -158,7 +158,7 @@ function Suppliers() {
     <section id="supplier-page">
       <HeadPageComponent
         h1={"ซัพพลายเออร์"}
-        icon={<img src="images/icons/mdi_shipping-pallet.png" alt="" />}
+        icon={<img src="/images/icons/mdi_shipping-pallet.png" alt="" />}
         // icon={<FontAwesomeIcon icon={faStore} />}
         breadcrums={[{ title: "ซัพพลายเออร์", link: false }]}
       />
