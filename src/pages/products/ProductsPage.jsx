@@ -15,12 +15,18 @@ import HeadPageComponent from "../../components/layout/headpage/headpage";
 import Table from "./components/Table";
 import { rows } from "./data/TableData";
 import { Link } from "react-router-dom";
+import { svProductAll } from "../../services/product.service";
 
 function ProductsPage() {
   const { t } = useTranslation(["dashboard-page"]);
+  const [productsAll, setProductsAll] = useState([]);
   const dispatch = useDispatch();
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    svProductAll().then(res => {
+      setProductsAll(res.data)
+    })
+  }, []);
 
   return (
     <section id="products-page">
@@ -97,7 +103,7 @@ function ProductsPage() {
           </div>
         </div>
         <div>
-          <Table rows={rows} />
+          <Table rows={rows} productsAll={productsAll} />
         </div>
       </Card>
     </section>
