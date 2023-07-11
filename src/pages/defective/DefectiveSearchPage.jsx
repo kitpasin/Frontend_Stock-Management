@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { useTranslation } from "react-i18next";
+import { useSSR, useTranslation } from "react-i18next";
 import { TextField } from "@mui/material";
 import { Card } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -11,11 +11,51 @@ import FormControl from "@mui/material/FormControl";
 import "./DefectivePage.scss";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
 import Search from "./components/Search";
-import { rows } from "./data/TableData";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 function DefectiveSearchPage() {
   const { t } = useTranslation(["dashboard-page"]);
+  const [products, setProducts] = useState([])
+  const [mainCategories, setMainCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
+  const [title, setTitle] = useState("");
+  const [mainCategory, setMainCategory] = useState("");
+  const [subCategory, setSubCategory] = useState("");
+  const [vat, setVat] = useState("");
+
+  const filteredProduct = products.filter((product) => {
+    const matchesTitle = title ? product.title === title : true;
+    const matchesMainCategory = mainCategory ? product.main_cate_name === mainCategory : true;
+    const matchesVat = vat ? product.vat_id == vat : true;
+
+    return matchesTitle && matchesMainCategory && matchesVat;
+  });
+
+  async function getProducts() {
+    const response = await axios.get("productAll");
+    const data = response.data.data
+    setProducts(data)
+  }
+
+  async function getMainCategories() {
+    const response = await axios.get("maincates");
+    const data = response.data.mainCates;
+    setMainCategories(data);
+  }
+
+  async function getSubCategories() {
+    const response = await axios.get("subcates");
+    const data = response.data.subCates;
+    setSubCategories(data);
+  }
+
+  useEffect(() => {
+    getProducts();
+    getMainCategories();
+    getSubCategories();
+  }, [])
 
   return (
     <section id="defective-search-page">
@@ -45,7 +85,7 @@ function DefectiveSearchPage() {
               <p>สินค้าทั้งหมด</p>
             </figure>
             <div className="description">
-              <p>2,500 รายการ</p>
+              <p>{products.length} รายการ</p>
             </div>
           </div>
           <div className="filter">
@@ -53,8 +93,9 @@ function DefectiveSearchPage() {
               size="small"
               disablePortal
               id="combo-box-demo"
-              options={rows}
-              getOptionLabel={(rows) => rows.name || ""}
+              options={products}
+              getOptionLabel={(products) => products.title || ""}
+              onChange={(event, value) => setTitle(value?.title || null)}
               sx={{ width: 150 }}
               renderInput={(params) => <TextField {...params} label="ชื่อ" />}
             />
@@ -62,7 +103,9 @@ function DefectiveSearchPage() {
               size="small"
               disablePortal
               id="combo-box-demo"
-              options={rows.map((e) => e.category)}
+              options={mainCategories}
+              getOptionLabel={(mainCategories) => mainCategories.name || ""}
+              onChange={(event, value) => setMainCategory(value?.name || null)}
               sx={{ width: 150 }}
               renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
             />
@@ -70,7 +113,9 @@ function DefectiveSearchPage() {
               size="small"
               disablePortal
               id="combo-box-demo"
-              options={rows.map((e) => e.category)}
+              options={subCategories}
+              getOptionLabel={(subCategories) => subCategories.name}
+              onChange={(event, value) => setSubCategory(value?.name || null)}
               sx={{ width: 150 }}
               renderInput={(params) => <TextField {...params} label="หมวดหมู่ย่อย" />}
             />
@@ -80,9 +125,24 @@ function DefectiveSearchPage() {
                 aria-labelledby="demo-row-radio-buttons-group-label"
                 name="row-radio-buttons-group"
               >
-                <FormControlLabel value="all" control={<Radio />} label="All" />
-                <FormControlLabel value="vat" control={<Radio />} label="Vat" />
-                <FormControlLabel value="noVat" control={<Radio />} label="No Vat" />
+                <FormControlLabel
+                  value=""
+                  control={<Radio />}
+                  label="All"
+                  onChange={(e) => setVat("")}
+                />
+                <FormControlLabel
+                  value="1"
+                  control={<Radio />}
+                  label="Vat"
+                  onChange={(e) => setVat(e.target.value)}
+                />
+                <FormControlLabel
+                  value="0"
+                  control={<Radio />}
+                  label="No Vat"
+                  onChange={(e) => setVat(e.target.value)}
+                />
               </RadioGroup>
             </FormControl>
             <Link to="/defective/export" className="export">
@@ -91,7 +151,7 @@ function DefectiveSearchPage() {
           </div>
         </div>
         <div>
-          <Search rows={rows} />
+          <Search filteredProduct={filteredProduct} />
         </div>
       </Card>
     </section>

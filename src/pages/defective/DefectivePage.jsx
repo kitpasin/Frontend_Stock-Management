@@ -11,11 +11,51 @@ import FormControl from "@mui/material/FormControl";
 import "./DefectivePage.scss";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
 import Table from "./components/Table";
-import { rows } from "./data/TableData";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 function DefectivePage() {
   const { t } = useTranslation(["dashboard-page"]);
+  const [defectiveProducts, setDefectiveProducts] = useState([])
+  const [mainCategories, setMainCategories] = useState([])
+  const [subCategories, setSubCategories] = useState([]);
+  const [title, setTitle] = useState("")
+  const [mainCategory, setMainCategory] = useState("")
+  const [subCategory, setSubCategory] = useState("")
+  const [vat, setVat] = useState("")
+
+  const filteredProduct = defectiveProducts.filter((product) => {
+    const matchesTitle = title ? product.title === title : true;
+    const matchesMainCategory = mainCategory ? product.main_cate_name === mainCategory : true;
+    const matchesVat = vat ? product.vat_id == vat : true;
+
+    return matchesTitle && matchesMainCategory && matchesVat;
+  });
+
+  async function getDefectiveProducts() {
+    const response = await axios.get("product/defective");
+    const data = response.data.data
+    setDefectiveProducts(data)
+  }
+
+  async function getMainCategories() {
+    const response = await axios.get("maincates");
+    const data = response.data.mainCates;
+    setMainCategories(data);
+  }
+
+  async function getSubCategories() {
+    const response = await axios.get("subcates");
+    const data = response.data.subCates;
+    setSubCategories(data);
+  }
+
+  useEffect(() => {
+    getDefectiveProducts()
+    getMainCategories()
+    getSubCategories()
+  }, [])
 
   return (
     <section id="defective-page">
@@ -45,7 +85,7 @@ function DefectivePage() {
               <p>สินค้าชำรุด</p>
             </figure>
             <div className="description">
-              <p>2,500 รายการ</p>
+              <p>{defectiveProducts.length} รายการ</p>
             </div>
           </div>
           <div className="filter">
@@ -53,9 +93,9 @@ function DefectivePage() {
               size="small"
               disablePortal
               id="combo-box-demo"
-              options={rows}
-              getOptionLabel={(rows) => rows.name || ""}
-              onChange={(event, value) => setRowsData(value)}
+              options={defectiveProducts}
+              getOptionLabel={(defectiveProducts) => defectiveProducts.title || ""}
+              onChange={(event, value) => setTitle(value?.title || null)}
               sx={{ width: 150 }}
               renderInput={(params) => <TextField {...params} label="ชื่อ" />}
             />
@@ -63,7 +103,9 @@ function DefectivePage() {
               size="small"
               disablePortal
               id="combo-box-demo"
-              options={rows.map((e) => e.category)}
+              options={mainCategories}
+              getOptionLabel={(mainCategories) => mainCategories.name || ""}
+              onChange={(event, value) => setMainCategory(value?.name || null)}
               sx={{ width: 150 }}
               renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
             />
@@ -71,7 +113,9 @@ function DefectivePage() {
               size="small"
               disablePortal
               id="combo-box-demo"
-              options={rows.map((e) => e.category)}
+              options={subCategories}
+              getOptionLabel={(subCategories) => subCategories.name}
+              onChange={(event, value) => setSubCategory(value?.name || null)}
               sx={{ width: 150 }}
               renderInput={(params) => <TextField {...params} label="หมวดหมู่ย่อย" />}
             />
@@ -81,9 +125,24 @@ function DefectivePage() {
                 aria-labelledby="demo-row-radio-buttons-group-label"
                 name="row-radio-buttons-group"
               >
-                <FormControlLabel value="all" control={<Radio />} label="All" />
-                <FormControlLabel value="vat" control={<Radio />} label="Vat" />
-                <FormControlLabel value="noVat" control={<Radio />} label="No Vat" />
+                <FormControlLabel
+                  value=""
+                  control={<Radio />}
+                  label="All"
+                  onChange={(e) => setVat("")}
+                />
+                <FormControlLabel
+                  value="1"
+                  control={<Radio />}
+                  label="Vat"
+                  onChange={(e) => setVat(e.target.value)}
+                />
+                <FormControlLabel
+                  value="0"
+                  control={<Radio />}
+                  label="No Vat"
+                  onChange={(e) => setVat(e.target.value)}
+                />
               </RadioGroup>
             </FormControl>
             <Link to="/defective/search" className="export">
@@ -92,7 +151,7 @@ function DefectivePage() {
           </div>
         </div>
         <div>
-          <Table rows={rows} />
+          <Table filteredProduct={filteredProduct} getDefectiveProducts={getDefectiveProducts} />
         </div>
       </Card>
     </section>

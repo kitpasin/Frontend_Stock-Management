@@ -1,8 +1,9 @@
 /* eslint-disable */
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Autocomplete, Card, TextField } from "@mui/material";
+import { ProductContext } from "../../App";
 
 import "./DefectiveExportPage.scss"
 import { rows } from "./data/TableData";
@@ -10,11 +11,27 @@ import HeadPageComponent from "../../components/layout/headpage/headpage";
 import DetailDataGrid from "./components/DetailDataGrid";
 import { defectiveDetail, defectiveSupplier } from "./data/TableData";
 import SupplierDataGrid from "./components/SupplierDataGrid";
+import axios from "axios";
 
 function DefectiveExportPage() {
   const { t } = useTranslation(["dashboard-page"]);
+  const webPath = useSelector((state) => state.app.webPath);
+  const { productIds, setProductIds } = useContext(ProductContext);
+  const [products, setProducts] = useState([])
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  
+  console.log(selectedProduct);
 
-  useEffect(() => {}, []);
+  async function getProducts() {
+    const response = await axios.get('productAll');
+    const data = response.data.data
+    const filteredProducts = data.filter((product) => productIds.includes(product.product_id));
+    setProducts(filteredProducts);
+  }
+
+  useEffect(() => {
+    getProducts()
+  }, []);
   return (
     <section id="defective-export-page">
       <div
@@ -46,36 +63,42 @@ function DefectiveExportPage() {
         >
           <div className="flex-container-center">
             <img src="/images/icons/export-icon.png" alt="" />
-            <p style={{ color: "#3b326b", fontSize: "18px", fontWeight: 400 }}>เบิกออกสินค้าชำรุด</p>
+            <p style={{ color: "#3b326b", fontSize: "18px", fontWeight: 400 }}>
+              เบิกออกสินค้าชำรุด
+            </p>
           </div>
           <Autocomplete
             size="small"
             disablePortal
             id="combo-box-demo"
-            options={rows}
-            getOptionLabel={(rows) => rows.name || ""}
+            options={products}
+            getOptionLabel={(product) => product.title || ""}
             sx={{ width: "200px" }}
             renderInput={(params) => <TextField {...params} label="เลือกสินค้า" />}
+            value={
+              selectedProduct || (products.length > 0 ? setSelectedProduct(products[0]) : null)
+            }
+            onChange={(event, newValue) => setSelectedProduct(newValue)}
           />
         </div>
 
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <figure className="product-image">
-            <img src="/images/mock/product1.png" alt="" />
+            <img src={webPath + selectedProduct?.thumbnail_link} alt="" />
           </figure>
           <div className="product-name">
             <p>ชื่อสินค้า</p>
-            <span>บะหมี่กึ่งสำเร็จรูป มาม่า รสแกงเขียวหวานไก่แบบแห้ง</span>
+            <span>{selectedProduct?.title}</span>
           </div>
           <p style={{ width: "3.33%", textAlign: "center" }}>|</p>
           <div className="product-number">
             <p>รหัสสินค้า</p>
-            <span>01234567895846</span>
+            <span>{selectedProduct?.product_id}</span>
           </div>
           <p style={{ width: "3.33%", textAlign: "center" }}>|</p>
           <div className="barcode-number">
             <p>รหัสบาร์โค้ด</p>
-            <span>01234567895846</span>
+            <span>{selectedProduct?.barcode_number}</span>
           </div>
           <p style={{ width: "3.33%", textAlign: "center" }}>|</p>
           <figure className="barcode-image">

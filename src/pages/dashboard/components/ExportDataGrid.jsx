@@ -4,7 +4,6 @@ import { Avatar, Typography } from "@mui/material";
 import { Button } from "@mui/material";
 import { Menu } from "@mui/material";
 import { MenuItem } from "@mui/material";
-import { fontSize } from "@mui/system";
 
 function ExportDataGrid({ rows }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
