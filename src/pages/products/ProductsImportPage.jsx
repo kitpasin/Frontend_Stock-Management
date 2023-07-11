@@ -363,7 +363,7 @@ function ProductsImportPage() {
         <div>
           <Card
             className="flex-container-column"
-            sx={{ borderRadius: "10px", marginTop: "-1rem" }}
+            sx={{ borderRadius: "10px", marginTop: "-1rem", marginBottom: "1rem" }}
           >
             <div className="header">
               <figure className="header-title">
