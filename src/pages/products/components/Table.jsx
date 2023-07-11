@@ -5,9 +5,9 @@ import { Button } from "@mui/material";
 import { Menu } from "@mui/material";
 import { MenuItem } from "@mui/material";
 import { useSelector } from "react-redux";
+import dayjs from "dayjs";
 
 function Table({ rows, productsAll }) {
-  console.log(productsAll)
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const webPath = useSelector((state) => state.app.webPath);
@@ -23,7 +23,7 @@ function Table({ rows, productsAll }) {
     {
       field: "thumbnail_link",
       headerName: "ภาพ",
-      width: 50,
+      width: 60,
       headerClassName: "table-columns",
       headerAlign: "center",
       align: "center",
@@ -51,7 +51,7 @@ function Table({ rows, productsAll }) {
       field: "import_value",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 80,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -68,7 +68,7 @@ function Table({ rows, productsAll }) {
       field: "defective_product",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 80,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -82,10 +82,27 @@ function Table({ rows, productsAll }) {
       ),
     },
     {
+      field: "export_value",
+      headerAlign: "center",
+      align: "center",
+      width: 80,
+      headerClassName: "table-columns",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            เบิกแล้ว
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            /หน่วย
+          </Typography>
+        </div>
+      ),
+    },
+    {
       field: "quantityPerUnit",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 80,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -95,6 +112,11 @@ function Table({ rows, productsAll }) {
           <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
             /หน่วย
           </Typography>
+        </div>
+      ),
+      renderCell: (params) => (
+        <div>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#000", fontWeight: "bold" }}>{params.row.import_value - params.row.export_value}</p>
         </div>
       ),
     },
@@ -124,18 +146,18 @@ function Table({ rows, productsAll }) {
       ),
       renderCell: (params) => (
         <div>
-          <Typography style={{ fontSize: "12px", lineHeight: "12.5px" }}>{params.row.mfd_date}</Typography>
-          <Typography style={{ fontSize: "12px", lineHeight: "12.5px", color: "#FF0000" }}>
+          <Typography style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>{params.row.mfd_date}</Typography>
+          <Typography style={{ fontSize: "12px", lineHeight: "12.5px", color: params.row.diff_date <= 30 ? "#FF0000" : "#000" }}>
             {params.row.exp_date}
           </Typography>
         </div>
       ),
     },
     {
-      field: "dateEXP",
+      field: "diff_date",
       headerAlign: "center",
       align: "center",
-      width: 50,
+      width: 60,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -153,7 +175,7 @@ function Table({ rows, productsAll }) {
       headerName: "Vat",
       headerAlign: "center",
       align: "center",
-      width: 50,
+      width: 60,
       headerClassName: "table-columns",
     },
     {
@@ -161,7 +183,7 @@ function Table({ rows, productsAll }) {
       headerName: "หมวดหมู่",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 80,
       headerClassName: "table-columns",
     },
     {
@@ -169,14 +191,14 @@ function Table({ rows, productsAll }) {
       headerName: "หน่วยนับ",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 80,
       headerClassName: "table-columns",
     },
     {
       field: "volumnPerUnit",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 80,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -193,7 +215,7 @@ function Table({ rows, productsAll }) {
       field: "px_total",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 80,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -208,7 +230,7 @@ function Table({ rows, productsAll }) {
     },
     {
       field: "oc_unit",
-      width: 50,
+      width: 60,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -231,7 +253,7 @@ function Table({ rows, productsAll }) {
       headerName: "ราคาดิบ (THB)",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 80,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -248,7 +270,7 @@ function Table({ rows, productsAll }) {
       field: "cost_per_unit",
       headerAlign: "center",
       align: "center",
-      width: 50,
+      width: 60,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -269,7 +291,7 @@ function Table({ rows, productsAll }) {
     //   headerName: "ต้นทุน (THB)",
     //   headerAlign: "center",
     //   align: "center",
-    //   width: 70,
+    //   width: 80,
     //   headerClassName: "table-columns",
     //   renderHeader: () => (
     //     <div>
@@ -284,7 +306,7 @@ function Table({ rows, productsAll }) {
     // },
     {
       field: "unit_price",
-      width: 50,
+      width: 60,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -304,7 +326,7 @@ function Table({ rows, productsAll }) {
     },
     {
       field: "total_cost",
-      width: 50,
+      width: 60,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -321,7 +343,7 @@ function Table({ rows, productsAll }) {
     },
     {
       field: "set_profit",
-      width: 50,
+      width: 60,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -340,7 +362,7 @@ function Table({ rows, productsAll }) {
       field: "pp_vat",
       headerAlign: "center",
       align: "center",
-      width: 50,
+      width: 60,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -355,7 +377,7 @@ function Table({ rows, productsAll }) {
     },
     {
       field: "selling_price",
-      width: 70,
+      width: 80,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -480,7 +502,7 @@ function Table({ rows, productsAll }) {
             paginationModel: { page: 0, pageSize: 5 },
           },
         }}
-        pageSizeOptions={[5, 10, 50, 100]}
+        pageSizeOptions={[5, 10, 60, 100]}
         checkboxSelection
       />
     </div>

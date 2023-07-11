@@ -118,7 +118,7 @@ function ProductsImportPage() {
 
 
 
-  async function getSubCateCates(main_cate_id) {
+  async function getSubCates(main_cate_id) {
     const response = await axios.get(`subcate/bymain?mainid=${main_cate_id}`);
     const data = response.data.subCates;
     // console.log(data)
@@ -556,7 +556,7 @@ function ProductsImportPage() {
                     <Autocomplete
                       // value={productData.main_cate_id}
                       key={productData.reset}
-                      onChange={(e, value) => getSubCateCates(value? value.id : 0)}
+                      onChange={(e, value) => getSubCates(value? value.id : 0)}
                       disabled={false}
                       id="combo-box-demo"
                       options={mainCatesData}
