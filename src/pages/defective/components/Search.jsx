@@ -1,14 +1,23 @@
-import React from "react";
+import { useState, useContext, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Avatar, Typography } from "@mui/material";
 import { Button } from "@mui/material";
 import { Menu } from "@mui/material";
 import { MenuItem } from "@mui/material";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { ProductContext } from "../../../App.js";
 
-function Table({ rows }) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+function Table({ filteredProduct }) {
+  const {productIds, setProductIds} = useContext(ProductContext)
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const webPath = useSelector((state) => state.app.webPath);
+  const [selectedProductIds, setSelectedProductIds] = useState([])
+
+  useEffect(() => {
+    setProductIds(selectedProductIds);
+  }, [selectedProductIds])
 
   function handleClick(event) {
     setAnchorEl(event.currentTarget);
@@ -19,29 +28,31 @@ function Table({ rows }) {
 
   const columns = [
     {
-      field: "image",
+      field: "thumbnail_link",
       headerName: "ภาพ",
       width: 50,
+      headerClassName: "table-columns",
       headerAlign: "center",
       align: "center",
-      headerClassName: "table-columns",
       renderCell: (params) => (
-        <div style={{ background: "#D0D0E2", borderRadius: "5px" }}>
-          <Avatar src={`images/mock/product1.png`} alt={`Image ${params.value}`} />
-        </div>
+        <figure style={{ background: "#D0D0E2", borderRadius: "5px", padding: ".1rem" }}>
+          <Avatar alt="Thumbnail" src={`${webPath}${params.row.thumbnail_link}`} />
+        </figure>
       ),
     },
     {
       field: "name",
       headerName: "ชื่อรายการ",
       headerAlign: "center",
-      align: "center",
-      width: 150,
+      align: "left",
+      width: 140,
       headerClassName: "table-columns",
       renderCell: (params) => (
-        <div style={{ paddingLeft: "1.2rem" }}>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>น้ำอัดลมกลิ่นเมลอ...</p>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>01234567895846</p>
+        <div style={{ paddingLeft: "1.5rem" }}>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{params.row.title}</p>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>
+            {params.row.product_id}
+          </p>
         </div>
       ),
     },
@@ -63,8 +74,8 @@ function Table({ rows }) {
       ),
       renderCell: (params) => (
         <div>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>28/08/2023</p>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>12:25:25</p>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}></p>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}></p>
         </div>
       ),
     },
@@ -86,7 +97,7 @@ function Table({ rows }) {
       ),
     },
     {
-      field: "productLeft",
+      field: "import_value",
       width: 100,
       headerClassName: "table-columns",
       headerAlign: "center",
@@ -103,7 +114,7 @@ function Table({ rows }) {
       ),
     },
     {
-      field: "purchaseDate",
+      field: "purchase_date",
       headerName: "วันที่ซื้อ",
       width: 100,
       headerClassName: "table-columns",
@@ -128,23 +139,30 @@ function Table({ rows }) {
       ),
       renderCell: (params) => (
         <div>
-          <Typography style={{ fontSize: "12px", lineHeight: "12.5px" }}>28/8/2023</Typography>
-          <Typography style={{ fontSize: "12px", lineHeight: "12.5px", color: "#FF0000" }}>
-            30/8/2024
-          </Typography>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>
+            {params.row.mfd_date}
+          </p>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#FF0000" }}>
+            {params.row.exp_date}
+          </p>
         </div>
       ),
     },
     {
-      field: "vat",
+      field: "vat_id",
       headerName: "Vat",
       headerAlign: "center",
       align: "center",
       width: 50,
       headerClassName: "table-columns",
+      renderCell: (params) => (
+        <div>
+          <p>{params.row.vat_id === 0 ? "No" : "Vat"}</p>
+        </div>
+      ),
     },
     {
-      field: "category",
+      field: "main_cate_name",
       headerName: "หมวดหมู่",
       headerAlign: "center",
       align: "center",
@@ -169,7 +187,7 @@ function Table({ rows }) {
       ),
     },
     {
-      field: "operationFeePerUnit",
+      field: "oc_unit",
       width: 100,
       headerAlign: "center",
       align: "center",
@@ -186,7 +204,7 @@ function Table({ rows }) {
       ),
     },
     {
-      field: "rawPricePerUnit",
+      field: "product_cost",
       headerAlign: "center",
       align: "center",
       width: 100,
@@ -203,7 +221,7 @@ function Table({ rows }) {
       ),
     },
     {
-      field: "costPerUnit",
+      field: "unit_price",
       width: 100,
       headerAlign: "center",
       align: "center",
@@ -220,15 +238,15 @@ function Table({ rows }) {
       ),
     },
     {
-      field: "profit",
-      headerName: "กำไร",
+      field: "set_profit",
+      headerName: "กำไร (%)",
       width: 100,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
     },
     {
-      field: "actualSellingPrice",
+      field: "selling_price",
       width: 100,
       headerAlign: "center",
       align: "center",
@@ -304,7 +322,7 @@ function Table({ rows }) {
       <DataGrid
         getRowClassName={() => rowsClassName}
         sx={{ fontSize: "12px", border: "none" }}
-        rows={rows}
+        rows={filteredProduct}
         columns={columns}
         initialState={{
           pagination: {
@@ -313,6 +331,14 @@ function Table({ rows }) {
         }}
         pageSizeOptions={[5, 10, 50, 100]}
         checkboxSelection
+        disableRowSelectionOnClick
+        onRowSelectionModelChange={(data) => {
+          const selectedProductIds = data.map((rowId) => {
+            const row = filteredProduct.find((item) => item.id === rowId);
+            return row.product_id;
+          });
+          setSelectedProductIds(selectedProductIds);
+        }}
       />
     </div>
   );

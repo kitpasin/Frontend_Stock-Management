@@ -9,7 +9,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 
-function Table({ filterProduct, getDefectiveProducts }) {
+function Table({ filteredProduct, getDefectiveProducts }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const { displayName } = useSelector((state) => state.auth.profile);
@@ -154,12 +154,12 @@ function Table({ filterProduct, getDefectiveProducts }) {
       ),
       renderCell: (params) => (
         <div>
-          <Typography style={{ fontSize: "12px", lineHeight: "12.5px" }}>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>
             {params.row.mfd_date}
-          </Typography>
-          <Typography style={{ fontSize: "12px", lineHeight: "12.5px", color: "#FF0000" }}>
+          </p>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#FF0000" }}>
             {params.row.exp_date}
-          </Typography>
+          </p>
         </div>
       ),
     },
@@ -509,7 +509,7 @@ function Table({ filterProduct, getDefectiveProducts }) {
       <DataGrid
         getRowClassName={() => rowsClassName}
         sx={{ fontSize: "12px", border: "none" }}
-        rows={filterProduct}
+        rows={filteredProduct}
         columns={columns}
         initialState={{
           pagination: {

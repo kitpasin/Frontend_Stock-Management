@@ -25,7 +25,7 @@ function DefectivePage() {
   const [subCategory, setSubCategory] = useState("")
   const [vat, setVat] = useState("")
 
-  const filterProduct = defectiveProducts.filter((product) => {
+  const filteredProduct = defectiveProducts.filter((product) => {
     const matchesTitle = title ? product.title === title : true;
     const matchesMainCategory = mainCategory ? product.main_cate_name === mainCategory : true;
     const matchesVat = vat ? product.vat_id == vat : true;
@@ -130,7 +130,6 @@ function DefectivePage() {
                   control={<Radio />}
                   label="All"
                   onChange={(e) => setVat("")}
-                  checked
                 />
                 <FormControlLabel
                   value="1"
@@ -152,7 +151,7 @@ function DefectivePage() {
           </div>
         </div>
         <div>
-          <Table filterProduct={filterProduct} getDefectiveProducts={getDefectiveProducts} />
+          <Table filteredProduct={filteredProduct} getDefectiveProducts={getDefectiveProducts} />
         </div>
       </Card>
     </section>
