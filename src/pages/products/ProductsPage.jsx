@@ -9,18 +9,62 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
+import axios from "axios";
 
 import "./ProductsPage.scss";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
 import Table from "./components/Table";
 import { rows } from "./data/TableData";
 import { Link } from "react-router-dom";
+import { svProductAll } from "../../services/product.service";
+import dayjs from "dayjs";
+import { RestoreFromTrashRounded } from "@mui/icons-material";
 
 function ProductsPage() {
+  const [mainCatesData, setMainCatesData] = useState([]);
   const { t } = useTranslation(["dashboard-page"]);
+  const [productsAll, setProductsAll] = useState([]);
+  const [mainCateId, setMainCateId] = useState(0);
+  const [productTitle, setProductTitle] = useState("");
+  const [vat, setVat] = useState("all");
   const dispatch = useDispatch();
+  const current_date = dayjs().toISOString().substring(0, 10)
 
-  useEffect(() => {}, []);
+  async function getMainCates() {
+    const response = await axios.get("maincates");
+    const data = response.data.mainCates;
+    setMainCatesData(data);
+  }
+
+  function filterData(cate_id = 0, _title = "") {
+    setProductTitle(_title)
+    setMainCateId(cate_id)
+    const hasVat = vat === "vat" ? true : false;
+    if (cate_id === 0 && _title === "" && vat === "all") {
+      fetchProduct();
+    } else {
+      const data = productsAll.filter((item) => (item.main_cate_id === cate_id || item.title === _title))
+      setProductsAll(data)
+    }
+  }
+
+  function fetchProduct() {
+    svProductAll().then(res => {
+      const result = res.data.map(item => {
+        const duration = dayjs(item.exp_date).diff(current_date, 'day')
+        return { ...item, diff_date: duration }
+      })
+      // console.log(result)
+      setProductsAll(result)
+    })
+  }
+
+  useEffect(() => {
+    getMainCates()
+    fetchProduct()
+    filterData()
+    
+  }, []);
 
   return (
     <section id="products-page">
@@ -50,7 +94,7 @@ function ProductsPage() {
               <p>สินค้าทั้งหมด</p>
             </figure>
             <div className="description">
-              <p>20,500 รายการ</p>
+              <p>{productsAll.length} รายการ</p>
             </div>
           </div>
           <div className="filter">
@@ -58,36 +102,41 @@ function ProductsPage() {
               size="small"
               disablePortal
               id="combo-box-demo"
-              options={rows}
-              getOptionLabel={(rows) => rows.name || ""}
+              options={productsAll}
+              getOptionLabel={(option) => option.title || ""}
               sx={{ width: 150 }}
               renderInput={(params) => <TextField {...params} label="ชื่อ" />}
+              onChange={(e, value) => filterData(mainCateId,value?value.title:"")}
             />
             <Autocomplete
               size="small"
               disablePortal
               id="combo-box-demo"
-              options={rows.map((e) => e.category)}
+              options={mainCatesData}
+              getOptionLabel={(option) => option.name || ""}
               sx={{ width: 150 }}
               renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
+              onChange={(e, value) => filterData(value?value.id:0, productTitle)}
             />
-            <Autocomplete
+            {/* <Autocomplete
+              disabled
               size="small"
               disablePortal
               id="combo-box-demo"
               options={rows.map((e) => e.category)}
               sx={{ width: 150 }}
               renderInput={(params) => <TextField {...params} label="หมวดหมู่ย่อย" />}
-            />
+            /> */}
             <FormControl>
               <RadioGroup
                 row
                 aria-labelledby="demo-row-radio-buttons-group-label"
                 name="row-radio-buttons-group"
+                value={vat}
               >
-                <FormControlLabel value="all" control={<Radio />} label="All" />
-                <FormControlLabel value="vat" control={<Radio />} label="Vat" />
-                <FormControlLabel value="noVat" control={<Radio />} label="No Vat" />
+                <FormControlLabel value="all" control={<Radio />} label="All" onChange={() => setVat("all")} />
+                <FormControlLabel value="vat" control={<Radio />} label="Vat" onChange={() => setVat("vat")} />
+                <FormControlLabel value="noVat" control={<Radio />} label="No Vat" onChange={() => setVat("noVat")} />
               </RadioGroup>
             </FormControl>
             <Link style={{fontSize: "16px"}} to="/products/import" className="create">เพิ่มสินค้า</Link>
@@ -97,7 +146,7 @@ function ProductsPage() {
           </div>
         </div>
         <div>
-          <Table rows={rows} />
+          <Table rows={rows} productsAll={productsAll} />
         </div>
       </Card>
     </section>
