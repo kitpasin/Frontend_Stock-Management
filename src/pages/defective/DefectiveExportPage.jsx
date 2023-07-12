@@ -29,7 +29,6 @@ function DefectiveExportPage() {
   }
 
   function ExportDefectiveProduct(product) {
-    console.log(typeof(exportQuantity))
     const data = {
       product_id: product.product_id,
       title: product.title,

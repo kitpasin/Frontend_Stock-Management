@@ -3,8 +3,6 @@ import { DataGrid } from "@mui/x-data-grid";
 
 function SupplierDataGrid({ selectedProduct }) {
 
-  console.log(selectedProduct)
-  
   const columns = [
     {
       field: "supplier_name",

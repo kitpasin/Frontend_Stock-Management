@@ -91,7 +91,7 @@ function Table({ filteredProduct, getDefectiveProducts }) {
       ),
     },
     {
-      field: "defective_product",
+      field: "export_quantity",
       headerAlign: "center",
       align: "center",
       width: 50,
@@ -112,7 +112,7 @@ function Table({ filteredProduct, getDefectiveProducts }) {
       headerClassName: "table-columns",
     },
     {
-      field: "defectiveDate",
+      field: "export_date",
       width: 90,
       headerAlign: "center",
       align: "center",
@@ -127,14 +127,16 @@ function Table({ filteredProduct, getDefectiveProducts }) {
           </Typography>
         </div>
       ),
-      renderCell: (params) => (
-        <div>
-          <Typography style={{ fontSize: "12px", lineHeight: "12.5px" }}></Typography>
-          <Typography
-            style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}
-          ></Typography>
-        </div>
-      ),
+      renderCell: (params) => {
+        const date = params.row.export_date.split(" ")[0]
+        const time = params.row.export_date.split(" ")[1];
+        return (
+          <div>
+            <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{date}</p>
+            <p style={{ fontSize: "12px", color: "red" , lineHeight: "12.5px" }}>{time}</p>
+          </div>
+        );
+      },
     },
     {
       field: "MEDEXP",
