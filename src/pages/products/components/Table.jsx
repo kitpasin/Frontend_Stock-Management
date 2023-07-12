@@ -1,42 +1,18 @@
 import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Avatar, Typography } from "@mui/material";
-import { Button } from "@mui/material";
-import { Menu } from "@mui/material";
-import { MenuItem } from "@mui/material";
 import { useSelector } from "react-redux";
 
 import MenuItemList from "./MenuItemList";
-import dayjs from "dayjs";
-
-
 
 function Table({ rows, productsAll }) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [openMenu, setOpenMenu] = React.useState(false);
-  const [btnId, setbtnId] = React.useState(false);
-  const open = Boolean(anchorEl);
   const webPath = useSelector((state) => state.app.webPath);
-
-  function handleClick(event) {
-    setbtnId(event.currentTarget.getAttribute("id"))
-    setAnchorEl(event.currentTarget);
-    setOpenMenu(true)
-  }
-  function handleClose() {
-    setAnchorEl(null);
-    setOpenMenu(false)
-  }
-
-  const editHandle = (product_id) => {
-    console.log(product_id)
-  }
 
   const columns = [
     {
       field: "thumbnail_link",
       headerName: "ภาพ",
-      width: 60,
+      width: 50,
       headerClassName: "table-columns",
       headerAlign: "center",
       align: "center",
@@ -64,7 +40,7 @@ function Table({ rows, productsAll }) {
       field: "import_value",
       headerAlign: "center",
       align: "center",
-      width: 80,
+      width: 70,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -81,7 +57,7 @@ function Table({ rows, productsAll }) {
       field: "defective_product",
       headerAlign: "center",
       align: "center",
-      width: 80,
+      width: 70,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -98,7 +74,7 @@ function Table({ rows, productsAll }) {
       field: "export_value",
       headerAlign: "center",
       align: "center",
-      width: 80,
+      width: 70,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -115,7 +91,7 @@ function Table({ rows, productsAll }) {
       field: "quantityPerUnit",
       headerAlign: "center",
       align: "center",
-      width: 80,
+      width: 70,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -138,12 +114,12 @@ function Table({ rows, productsAll }) {
       headerName: "วันที่ซื้อ",
       headerAlign: "center",
       align: "center",
-      width: 90,
+      width: 80,
       headerClassName: "table-columns",
     },
     {
       field: "mfd_date",
-      width: 90,
+      width: 80,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -170,7 +146,7 @@ function Table({ rows, productsAll }) {
       field: "diff_date",
       headerAlign: "center",
       align: "center",
-      width: 60,
+      width: 50,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -188,7 +164,7 @@ function Table({ rows, productsAll }) {
       headerName: "Vat",
       headerAlign: "center",
       align: "center",
-      width: 60,
+      width: 50,
       headerClassName: "table-columns",
     },
     {
@@ -196,7 +172,7 @@ function Table({ rows, productsAll }) {
       headerName: "หมวดหมู่",
       headerAlign: "center",
       align: "center",
-      width: 80,
+      width: 70,
       headerClassName: "table-columns",
     },
     {
@@ -204,14 +180,14 @@ function Table({ rows, productsAll }) {
       headerName: "หน่วยนับ",
       headerAlign: "center",
       align: "center",
-      width: 80,
+      width: 70,
       headerClassName: "table-columns",
     },
     {
       field: "volumnPerUnit",
       headerAlign: "center",
       align: "center",
-      width: 80,
+      width: 70,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -228,7 +204,7 @@ function Table({ rows, productsAll }) {
       field: "px_total",
       headerAlign: "center",
       align: "center",
-      width: 80,
+      width: 70,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -243,7 +219,7 @@ function Table({ rows, productsAll }) {
     },
     {
       field: "oc_unit",
-      width: 60,
+      width: 50,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -266,7 +242,7 @@ function Table({ rows, productsAll }) {
       headerName: "ราคาดิบ (THB)",
       headerAlign: "center",
       align: "center",
-      width: 80,
+      width: 70,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -283,7 +259,7 @@ function Table({ rows, productsAll }) {
       field: "cost_per_unit",
       headerAlign: "center",
       align: "center",
-      width: 60,
+      width: 50,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -304,7 +280,7 @@ function Table({ rows, productsAll }) {
     //   headerName: "ต้นทุน (THB)",
     //   headerAlign: "center",
     //   align: "center",
-    //   width: 80,
+    //   width: 70,
     //   headerClassName: "table-columns",
     //   renderHeader: () => (
     //     <div>
@@ -319,7 +295,7 @@ function Table({ rows, productsAll }) {
     // },
     {
       field: "unit_price",
-      width: 60,
+      width: 50,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -339,7 +315,7 @@ function Table({ rows, productsAll }) {
     },
     {
       field: "total_cost",
-      width: 60,
+      width: 50,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -356,7 +332,7 @@ function Table({ rows, productsAll }) {
     },
     {
       field: "set_profit",
-      width: 60,
+      width: 50,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -375,7 +351,7 @@ function Table({ rows, productsAll }) {
       field: "pp_vat",
       headerAlign: "center",
       align: "center",
-      width: 60,
+      width: 50,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -390,7 +366,7 @@ function Table({ rows, productsAll }) {
     },
     {
       field: "selling_price",
-      width: 80,
+      width: 70,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -413,90 +389,90 @@ function Table({ rows, productsAll }) {
       width: 100,
       headerClassName: "table-columns",
       renderCell: (params) => (
-        <div>
-          <Button
-            id={`basic-button${params.row.id}`}
-            aria-controls={openMenu ? `basic-menu${params.row.id}` : undefined}
-            aria-haspopup="true"
-            aria-expanded={openMenu ? "true" : undefined}
-            onClick={handleClick}
-          >
-            <img
-              style={{
-                background: "#3B336B",
-                width: "40px",
-                height: "40px",
-                padding: ".65rem",
-                borderRadius: "5px",
-              }}
-              src="/images/icons/management-icon.png"
-              alt=""
-            />
-          </Button>
-          <MenuItemList params={params} anchorEl={anchorEl} open={openMenu} handleClose={handleClose} buttonId={btnId} />
-          {/* <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-            >
-              <MenuItem
-                sx={{
-                  display: "flex",
-                  gap: "1rem",
-                }}
-                onClick={handleClose}
-              >
-                <img
-                  style={{
-                    width: "18px",
-                    height: "18px",
-                    filter:
-                      "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
-                  }}
-                  src="/images/icons/supplier-icon.png"
-                  alt=""
-                />
-                <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>ซัพพลาย</p>
-              </MenuItem>
-              <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={handleClose}>
-                <img
-                  style={{ width: "18px", height: "18px" }}
-                  src="/images/icons/export-icon.png"
-                  alt=""
-                />
-                <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>เบิกสินค้า</p>
-              </MenuItem>
-              <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={() => editHandle(params.row)}>
-                <img
-                  style={{
-                    width: "18px",
-                    height: "18px",
-                    filter: "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
-                  }}
-                  src="/images/icons/edit-icon.png"
-                  alt=""
-                />
-                <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>แก้ไขสินค้า</p>
-              </MenuItem>
-              <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={handleClose}>
-                <img
-                  style={{
-                    width: "18px",
-                    height: "18px",
-                    filter:
-                      "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
-                  }}
-                  src="/images/icons/trash-icon.png"
-                  alt=""
-                />
-                <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>ลบสินค้า</p>
-              </MenuItem>
-          </Menu> */}
-        </div>
+        <MenuItemList params={params} />
+        // <div>
+        //   <Button
+        //     id={`basic-button${params.row.id}`}
+        //     aria-controls={openMenu ? `basic-menu${params.row.id}` : undefined}
+        //     aria-haspopup="true"
+        //     aria-expanded={openMenu ? "true" : undefined}
+        //     onClick={handleClick}
+        //   >
+        //     <img
+        //       style={{
+        //         background: "#3B336B",
+        //         width: "40px",
+        //         height: "40px",
+        //         padding: ".65rem",
+        //         borderRadius: "5px",
+        //       }}
+        //       src="/images/icons/management-icon.png"
+        //       alt=""
+        //     />
+        //   </Button>
+        //   {/* <Menu
+        //       id="basic-menu"
+        //       anchorEl={anchorEl}
+        //       open={open}
+        //       onClose={handleClose}
+        //       MenuListProps={{
+        //         "aria-labelledby": "basic-button",
+        //       }}
+        //     >
+        //       <MenuItem
+        //         sx={{
+        //           display: "flex",
+        //           gap: "1rem",
+        //         }}
+        //         onClick={handleClose}
+        //       >
+        //         <img
+        //           style={{
+        //             width: "18px",
+        //             height: "18px",
+        //             filter:
+        //               "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
+        //           }}
+        //           src="/images/icons/supplier-icon.png"
+        //           alt=""
+        //         />
+        //         <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>ซัพพลาย</p>
+        //       </MenuItem>
+        //       <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={handleClose}>
+        //         <img
+        //           style={{ width: "18px", height: "18px" }}
+        //           src="/images/icons/export-icon.png"
+        //           alt=""
+        //         />
+        //         <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>เบิกสินค้า</p>
+        //       </MenuItem>
+        //       <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={() => editHandle(params.row)}>
+        //         <img
+        //           style={{
+        //             width: "18px",
+        //             height: "18px",
+        //             filter: "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
+        //           }}
+        //           src="/images/icons/edit-icon.png"
+        //           alt=""
+        //         />
+        //         <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>แก้ไขสินค้า</p>
+        //       </MenuItem>
+        //       <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={handleClose}>
+        //         <img
+        //           style={{
+        //             width: "18px",
+        //             height: "18px",
+        //             filter:
+        //               "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
+        //           }}
+        //           src="/images/icons/trash-icon.png"
+        //           alt=""
+        //         />
+        //         <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>ลบสินค้า</p>
+        //       </MenuItem>
+        //   </Menu> */}
+        // </div>
       ),
     },
   ];
@@ -515,7 +491,7 @@ function Table({ rows, productsAll }) {
             paginationModel: { page: 0, pageSize: 5 },
           },
         }}
-        pageSizeOptions={[5, 10, 60, 100]}
+        pageSizeOptions={[5, 10, 50, 100]}
         checkboxSelection
       />
     </div>

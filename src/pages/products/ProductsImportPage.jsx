@@ -61,7 +61,7 @@ const formVat = {
 
 }
 
-function ProductsImportPage() {
+function ProductsImportPage({ isEdit }) {
   const navigate = useNavigate();
   const { t } = useTranslation(["dashboard-page"]);
   const [selectedPurchaseTime, setSelectedPurchaseTime] = useState(null);
@@ -341,24 +341,26 @@ function ProductsImportPage() {
 
   return (
     <section id="products-import-page">
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: "1rem",
-        }}
-      >
-        <figure style={{ width: "30px", marginBottom: "1rem" }}>
-          <img src="/images/icons/productsPage-icon.png" alt="" />
-        </figure>
-        <div style={{ width: "100%" }}>
-          <HeadPageComponent
-            h1={t("เพิ่มสินค้า")}
-            breadcrums={[{ title: t("เพิ่มสินค้า"), link: false }]}
-          />
+      { !isEdit && 
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: "1rem",
+          }}
+        >
+          <figure style={{ width: "30px", marginBottom: "1rem" }}>
+            <img src="/images/icons/productsPage-icon.png" alt="" />
+          </figure>
+          <div style={{ width: "100%" }}>
+            <HeadPageComponent
+              h1={t("เพิ่มสินค้า")}
+              breadcrums={[{ title: t("เพิ่มสินค้า"), link: false }]}
+            />
+          </div>
         </div>
-      </div>
+      }
       <form onSubmit={saveProducthandle}>
         <div>
           <Card
@@ -369,13 +371,15 @@ function ProductsImportPage() {
               <figure className="header-title">
                 <img src="/images/icons/import-icon.png" alt="" />
                 <p>ข้อมูลสินค้า</p>
-                <Link
-                  to="/products/import/search"
-                  style={{ marginLeft: "5.7rem" }}
-                >
-                  <img src="/images/icons/search-icon.png" alt="" />
-                  ค้นหาสินค้าที่มีอยู่
-                </Link>
+                { !isEdit &&
+                  <Link
+                    to="/products/import/search"
+                    style={{ marginLeft: "5.7rem" }}
+                  >
+                    <img src="/images/icons/search-icon.png" alt="" />
+                    ค้นหาสินค้าที่มีอยู่
+                  </Link>
+                }
               </figure>
               <div
                 style={{
