@@ -1,15 +1,14 @@
 /* eslint-disable */
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Autocomplete, Card, TextField } from "@mui/material";
 import { ProductContext } from "../../App";
+import Barcode from "react-barcode";
 
 import "./DefectiveExportPage.scss"
-import { rows } from "./data/TableData";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
 import DetailDataGrid from "./components/DetailDataGrid";
-import { defectiveDetail, defectiveSupplier } from "./data/TableData";
 import SupplierDataGrid from "./components/SupplierDataGrid";
 import axios from "axios";
 
@@ -20,8 +19,6 @@ function DefectiveExportPage() {
   const [products, setProducts] = useState([])
   const [selectedProduct, setSelectedProduct] = useState(null);
   
-  console.log(selectedProduct);
-
   async function getProducts() {
     const response = await axios.get('productAll');
     const data = response.data.data
@@ -29,9 +26,12 @@ function DefectiveExportPage() {
     setProducts(filteredProducts);
   }
 
+  console.log(selectedProduct)
+
   useEffect(() => {
     getProducts()
   }, []);
+
   return (
     <section id="defective-export-page">
       <div
@@ -71,7 +71,7 @@ function DefectiveExportPage() {
             size="small"
             disablePortal
             id="combo-box-demo"
-            options={products}
+            options={products || []}
             getOptionLabel={(product) => product.title || ""}
             sx={{ width: "200px" }}
             renderInput={(params) => <TextField {...params} label="เลือกสินค้า" />}
@@ -81,10 +81,17 @@ function DefectiveExportPage() {
             onChange={(event, newValue) => setSelectedProduct(newValue)}
           />
         </div>
-
+        {/* /images/mock/pre-product.png */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <figure className="product-image">
-            <img src={webPath + selectedProduct?.thumbnail_link} alt="" />
+            <img
+              src={
+                selectedProduct === null
+                  ? "/images/mock/pre-product.png"
+                  : webPath + selectedProduct?.thumbnail_link
+              }
+              alt=""
+            />
           </figure>
           <div className="product-name">
             <p>ชื่อสินค้า</p>
@@ -102,25 +109,30 @@ function DefectiveExportPage() {
           </div>
           <p style={{ width: "3.33%", textAlign: "center" }}>|</p>
           <figure className="barcode-image">
-            <img src="/images/barcode/barcode.png" alt="" />
-            <span>ภาพบาร์โคด</span>
+            {selectedProduct ? (
+              <Barcode value={selectedProduct?.barcode_number} />
+            ) : (
+              <img src="/images/barcode/barcode.png" alt="" />
+            )}
           </figure>
         </div>
       </Card>
       <Card className="flex-container-column">
-        <DetailDataGrid defectiveDetail={defectiveDetail} />
+        <DetailDataGrid selectedProduct={selectedProduct} />
       </Card>
       <Card className="flex-container-column">
         <figure className="supplier-title">
           <img src="/images/icons/supplierTable-icon.png" alt="" />
           <p>ซัพพลายเออร์</p>
         </figure>
-        <SupplierDataGrid defectiveSupplier={defectiveSupplier} />
+        <SupplierDataGrid selectedProduct={selectedProduct} />
       </Card>
       <div className="flex-container-center">
         <Card className="quantity-left">
           <p>จำนวนคงเหลือ/หน่วย</p>
-          <span>800 กระป๋อง</span>
+          <span>
+            {selectedProduct?.total_product} {selectedProduct?.amount_name}
+          </span>
         </Card>
         <Card className="quantity-export">
           <p>กรอกจำนวนสินค้าชำรุด</p>

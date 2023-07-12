@@ -2,11 +2,11 @@ import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Typography } from "@mui/material";
 
-function DetailDataGrid({ defectiveDetail }) {
+function DetailDataGrid({ selectedProduct }) {
 
   const columns = [
     {
-      field: "quantityPerUnit",
+      field: "",
       headerAlign: "center",
       align: "center",
       width: 70,
@@ -23,7 +23,7 @@ function DetailDataGrid({ defectiveDetail }) {
       ),
     },
     {
-      field: "defective",
+      field: "defective_product",
       headerAlign: "center",
       align: "center",
       width: 70,
@@ -40,7 +40,7 @@ function DetailDataGrid({ defectiveDetail }) {
       ),
     },
     {
-      field: "purchaseDate",
+      field: "purchase_date",
       headerName: "วันที่ซื้อ",
       headerAlign: "center",
       align: "center",
@@ -49,9 +49,9 @@ function DetailDataGrid({ defectiveDetail }) {
     },
     {
       field: "MEDEXP",
+      width: 90,
       headerAlign: "center",
       align: "center",
-      width: 95,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -63,10 +63,12 @@ function DetailDataGrid({ defectiveDetail }) {
           </Typography>
         </div>
       ),
-      renderCell: () => (
+      renderCell: (params) => (
         <div>
-          <p>28/8/2023</p>
-          <p style={{ color: "#ff0000" }}>28/8/2023</p>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{params.row.mfd_date}</p>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#FF0000" }}>
+            {params.row.exp_date}
+          </p>
         </div>
       ),
     },
@@ -86,9 +88,20 @@ function DetailDataGrid({ defectiveDetail }) {
           </Typography>
         </div>
       ),
+      renderCell: (params) => {
+        const startDate = new Date(params.row.mfd_date);
+        const endDate = new Date(params.row.exp_date);
+        const diffDateInMs = endDate - startDate;
+        const diffDateInDays = diffDateInMs / (1000 * 60 * 60 * 24);
+        return (
+          <div>
+            <p>{diffDateInDays} วัน</p>
+          </div>
+        );
+      },
     },
     {
-      field: "vat",
+      field: "vat_name",
       headerName: "Vat",
       headerAlign: "center",
       align: "center",
@@ -96,7 +109,7 @@ function DetailDataGrid({ defectiveDetail }) {
       headerClassName: "table-columns",
     },
     {
-      field: "category",
+      field: "main_cate_name",
       headerName: "หมวดหมู่",
       headerAlign: "center",
       align: "center",
@@ -104,7 +117,7 @@ function DetailDataGrid({ defectiveDetail }) {
       headerClassName: "table-columns",
     },
     {
-      field: "countingUnit",
+      field: "amount_name",
       headerName: "หน่วยนับ",
       headerAlign: "center",
       align: "center",
@@ -129,7 +142,7 @@ function DetailDataGrid({ defectiveDetail }) {
       ),
     },
     {
-      field: "operationFee",
+      field: "px_total",
       width: 95,
       headerClassName: "table-columns",
       headerAlign: "center",
@@ -146,7 +159,7 @@ function DetailDataGrid({ defectiveDetail }) {
       ),
     },
     {
-      field: "operationFeePerUnit",
+      field: "oc_unit",
       width: 95,
       headerClassName: "table-columns",
       headerAlign: "center",
@@ -163,7 +176,7 @@ function DetailDataGrid({ defectiveDetail }) {
       ),
     },
     {
-      field: "rawPrice",
+      field: "product_cost",
       width: 95,
       headerClassName: "table-columns",
       headerAlign: "center",
@@ -180,7 +193,7 @@ function DetailDataGrid({ defectiveDetail }) {
       ),
     },
     {
-      field: "rawPricePerUnit",
+      field: "cost_per_unit",
       headerName: "ราคาดิบ/หน่วย (THB)",
       width: 95,
       headerClassName: "table-columns",
@@ -198,7 +211,7 @@ function DetailDataGrid({ defectiveDetail }) {
       ),
     },
     {
-      field: "costPerUnit",
+      field: "unit_price",
       width: 95,
       headerClassName: "table-columns",
       headerAlign: "center",
@@ -206,16 +219,16 @@ function DetailDataGrid({ defectiveDetail }) {
       renderHeader: () => (
         <div>
           <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
-            ต้นทุนต่อหน่วย
+            ต้นทุน
           </Typography>
           <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
-            (THB)
+            /หน่วย (THB)
           </Typography>
         </div>
       ),
     },
     {
-      field: "total",
+      field: "total_cost",
       headerName: "Total",
       width: 95,
       headerClassName: "table-columns",
@@ -223,15 +236,15 @@ function DetailDataGrid({ defectiveDetail }) {
       align: "center",
     },
     {
-      field: "profit",
-      headerName: "กำไร",
+      field: "set_profit",
+      headerName: "กำไร (%)",
       width: 95,
       headerClassName: "table-columns",
       headerAlign: "center",
       align: "center",
     },
     {
-      field: "expectedSellingPrice",
+      field: "pp_vat",
       width: 95,
       headerClassName: "table-columns",
       headerAlign: "center",
@@ -248,7 +261,7 @@ function DetailDataGrid({ defectiveDetail }) {
       ),
     },
     {
-      field: "actualSellingPrice",
+      field: "selling_price",
       width: 95,
       headerClassName: "table-columns",
       headerAlign: "center",
@@ -267,12 +280,15 @@ function DetailDataGrid({ defectiveDetail }) {
   ];
 
   const rowsClassName = "table-rows";
+
+  const rowData = selectedProduct ? [selectedProduct] : [];
+
   return (
     <>
       <DataGrid
         getRowClassName={() => rowsClassName}
         sx={{ fontSize: "12px", border: "none" }}
-        rows={defectiveDetail}
+        rows={rowData}
         columns={columns}
         hideFooterPagination
         className="no-footer"
