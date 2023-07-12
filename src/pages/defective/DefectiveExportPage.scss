@@ -19,14 +19,16 @@
             width: 10%;
             display: flex;
             justify-content: end;
+            border-radius: 10px;
             img {
                 width: 128px;
                 height: 128px;
+                border-radius: 10px;
             }
         }
         .product-name {
-            width: 30%;
-            padding-left: 1.75rem;
+            width: 15%;
+            padding-left: 2.5rem;
             p {
                 color: #969a99;
             }

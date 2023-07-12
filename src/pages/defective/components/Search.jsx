@@ -149,17 +149,12 @@ function Table({ filteredProduct }) {
       ),
     },
     {
-      field: "vat_id",
+      field: "vat_name",
       headerName: "Vat",
       headerAlign: "center",
       align: "center",
       width: 50,
       headerClassName: "table-columns",
-      renderCell: (params) => (
-        <div>
-          <p>{params.row.vat_id === 0 ? "No" : "Vat"}</p>
-        </div>
-      ),
     },
     {
       field: "main_cate_name",
