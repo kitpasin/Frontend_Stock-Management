@@ -56,8 +56,6 @@ BootstrapDialogTitle.propTypes = {
 };
 
 function ProductEditModal({ open, setOpen, productShow }) {
-  console.log(productShow)
-  // const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -80,10 +78,10 @@ function ProductEditModal({ open, setOpen, productShow }) {
           id="customized-dialog-title"
           onClose={handleClose}
         >
-          แก้ไขสินค้า (product ID : {productShow.product_id}) 
+          แก้ไขสินค้า (Product ID : {productShow.product_id}) 
         </BootstrapDialogTitle>
         <DialogContent dividers>
-          <ProductsImportPage isEdit={true} />
+          <ProductsImportPage isEdit={true} productShow={productShow} />
         </DialogContent>
         {/* <DialogActions>
           <Button autoFocus onClick={handleClose}>
