@@ -6,7 +6,7 @@ function DetailDataGrid({ selectedProduct }) {
 
   const columns = [
     {
-      field: "",
+      field: "total_product",
       headerAlign: "center",
       align: "center",
       width: 70,
