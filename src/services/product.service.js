@@ -17,3 +17,12 @@ export const svProductAll = async () => {
         return { status: false, description: "Something went wrong.", errorMessage: err.response.data };
     }
 }
+
+export const svProductOne = async (_id) => {
+    try {
+        const res = await axios.get(`productOne?id=${_id}`);
+        return { status: true, data: res.data.data, message: "Get product success." };
+    } catch (err) {
+        return { status: false, description: "Something went wrong.", errorMessage: err.response.data };
+    }
+}

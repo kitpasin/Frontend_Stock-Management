@@ -22,12 +22,11 @@ import withReactContent from "sweetalert2-react-content";
 import "./ProductsImportPage.scss";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
 import { Link, useNavigate } from "react-router-dom";
-import { batch } from "react-redux";
+import { batch, useSelector } from "react-redux";
 import axios from "axios";
 import { PersonOffRounded } from "@mui/icons-material";
 import { svCreateProduct } from "../../services/product.service";
 
-const modalSwal = withReactContent(Swal);
 const form = {
   title: "", state1: false, state2: false,
   state3: false, reset: 0, unit: "", netweight: "",
@@ -47,28 +46,28 @@ const form = {
   os_price: 0, selling_price: "",
 };
 
-const formPreview = {
-  src: "",
-  file: "",
-  remove: false,
-  isError: true,
-};
+function ProductsImportPage({ isEdit, productShow }) {
+  const formPreview = {
+    src: "",
+    file: "",
+    remove: false,
+    isError: isEdit ? false : true,
+  };
 
-const formVat = {
-  checked: false,
-  disRadio: false,
-  disSelect: false,
-
-}
-
-function ProductsImportPage() {
+  const formVat = {
+    checked: isEdit && productShow.vat_id === 0 ? true : false,
+    disRadio: false,
+    disSelect: false,
+  
+  }
+  const modalSwal = withReactContent(Swal);
   const navigate = useNavigate();
   const { t } = useTranslation(["dashboard-page"]);
   const [selectedPurchaseTime, setSelectedPurchaseTime] = useState(null);
   const [selectedMFDTime, setSelectedMFDTime] = useState(null);
   const [selectedEXPTime, setSelectedEXPTime] = useState(null);
   const [generatedNumber, setGeneratedNumber] = useState("");
-  const [productData, setProductData] = useState(form);
+  const [productData, setProductData] = useState(isEdit ? productShow : form);
   const [preview, setPreview] = useState(formPreview);
   const [vat, setVat] = useState(formVat);
   const [netsData, setNetsData] = useState([])
@@ -78,10 +77,10 @@ function ProductsImportPage() {
   const [vatsData, setVatsData] = useState([]);
   const [suppliersData, setSuppliersData] = useState([]);
   const [supplierCates, setSupplierCates] = useState([]);
-
-
+  const [refreshSubCate, setRefreshSubCate] = useState(false);
   const inputRef = useRef(null);
   const formInputRef = useRef(null);
+  const webPath = useSelector((state) => state.app.webPath);
   const imgError = "/images/mock/pre-product.png";
 
   async function getNets() {
@@ -118,12 +117,16 @@ function ProductsImportPage() {
 
 
 
-  async function getSubCates(main_cate_id) {
+  async function getSubCates(main_cate_id = productData.main_cate_id) {
     const response = await axios.get(`subcate/bymain?mainid=${main_cate_id}`);
     const data = response.data.subCates;
-    // console.log(data)
     setSubCatesData(data)
-    setProductData(() => { return { ...productData, sub_cate_id: 0, main_cate_id: main_cate_id, sub_cate: "", state1: !productData.state1 } })
+    if (isEdit && !refreshSubCate) {
+      setProductData(() => { return { ...productData, main_cate_id: main_cate_id } })
+      setRefreshSubCate(true)
+    } else {
+      setProductData(() => { return { ...productData, sub_cate_id: 0, main_cate_id: main_cate_id, sub_cate: "", state1: !productData.state1 } })
+    }
 
   }
 
@@ -144,7 +147,9 @@ function ProductsImportPage() {
     getAmounts();
     getMainCates();
     getVats();
-    getSuppliers()
+    getSuppliers();
+    getSubCates();
+    getMainCatesBySupplier(productData.supplier_id)
   }, [])
 
   /* Price details */
@@ -225,7 +230,7 @@ function ProductsImportPage() {
       src: image,
       file: value,
       remove: true,
-      isError: false,
+      isError: isEdit ? true : false,
     });
   };
 
@@ -316,49 +321,55 @@ function ProductsImportPage() {
   }
 
   function onSaveProduct(_form) {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "Do you want to save the data?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, save it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        svCreateProduct(_form).then((res) => {
-          if (res.status) {
-            Swal.fire("Created!", "Product has been created successfully.", "success").then(() => {
-              resetDataHandle()
-            })
-          } else {
-            alert('error')
-          }
-        })
-      }
-    });
+    if (isEdit) {
+      console.log('okok')
+    } else {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "Do you want to save the data?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, save it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          svCreateProduct(_form).then((res) => {
+            if (res.status) {
+              Swal.fire("Created!", "Product has been created successfully.", "success").then(() => {
+                resetDataHandle()
+              })
+            } else {
+              alert('error')
+            }
+          })
+        }
+      });
+    }
   }
 
   return (
     <section id="products-import-page">
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: "1rem",
-        }}
-      >
-        <figure style={{ width: "30px", marginBottom: "1rem" }}>
-          <img src="/images/icons/productsPage-icon.png" alt="" />
-        </figure>
-        <div style={{ width: "100%" }}>
-          <HeadPageComponent
-            h1={t("เพิ่มสินค้า")}
-            breadcrums={[{ title: t("เพิ่มสินค้า"), link: false }]}
-          />
+      { !isEdit && 
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: "1rem",
+          }}
+        >
+          <figure style={{ width: "30px", marginBottom: "1rem" }}>
+            <img src="/images/icons/productsPage-icon.png" alt="" />
+          </figure>
+          <div style={{ width: "100%" }}>
+            <HeadPageComponent
+              h1={t("เพิ่มสินค้า")}
+              breadcrums={[{ title: t("เพิ่มสินค้า"), link: false }]}
+            />
+          </div>
         </div>
-      </div>
+      }
       <form onSubmit={saveProducthandle}>
         <div>
           <Card
@@ -369,13 +380,15 @@ function ProductsImportPage() {
               <figure className="header-title">
                 <img src="/images/icons/import-icon.png" alt="" />
                 <p>ข้อมูลสินค้า</p>
-                <Link
-                  to="/products/import/search"
-                  style={{ marginLeft: "5.7rem" }}
-                >
-                  <img src="/images/icons/search-icon.png" alt="" />
-                  ค้นหาสินค้าที่มีอยู่
-                </Link>
+                { !isEdit &&
+                  <Link
+                    to="/products/import/search"
+                    style={{ marginLeft: "5.7rem" }}
+                  >
+                    <img src="/images/icons/search-icon.png" alt="" />
+                    ค้นหาสินค้าที่มีอยู่
+                  </Link>
+                }
               </figure>
               <div
                 style={{
@@ -385,9 +398,11 @@ function ProductsImportPage() {
                   marginRight: "1.1rem",
                 }}
               >
+              { !isEdit &&
                 <button style={{ display: "flex", justifyContent: "center" }} onClick={resetDataHandle}>
                   ล้างข้อมูล
                 </button>
+              }
                 <button style={{ display: "flex", justifyContent: "center" }} type="submit">
                   บันทึกข้อมูล
                 </button>
@@ -404,15 +419,26 @@ function ProductsImportPage() {
                       ref={formInputRef}
                     />
                   </div>
-                  <img
-                    src={
-                      !preview.isError
-                        ? preview.src
-                        : "/images/mock/pre-product.png"
-                    }
-                    alt={""}
-                  />
-                  <p style={{ display: preview.isError ? "block" : "none" }}>
+                  { isEdit ? 
+                    <img
+                      src={
+                        !preview.isError
+                          ? webPath + productData.image_path
+                          : preview.src
+                      }
+                      alt={""}
+                    />
+                    :
+                    <img
+                      src={
+                        !preview.isError
+                          ? preview.src
+                          : "/images/mock/pre-product.png"
+                      }
+                      alt={""}
+                    />
+                  }
+                  <p style={{ display: preview.isError && (!isEdit) ? "block" : "none" }}>
                     ขนาดไฟล์ภาพไม่เกิน 10 Gb
                   </p>
                 </figure>
@@ -453,8 +479,8 @@ function ProductsImportPage() {
                   />
                   <Autocomplete
                     key={productData.reset}
+                    defaultValue={{ name: productData.unit_name || "" }}
                     required
-                    // value={productData.unit}
                     onChange={(e, value) =>
                       setProductData(() => {
                         return { ...productData, unit: value ? value.id : 0 };
@@ -537,6 +563,7 @@ function ProductsImportPage() {
                     <Autocomplete
                       // value={productData.counting_unit}
                       key={productData.reset}
+                      defaultValue={{ name: productData.counting_unit_name || "" }}
                       onChange={(e, value) => setProductData(() => {
                         return { ...productData, counting_unit: value ? value.id : 0 }
                       })}
@@ -556,6 +583,7 @@ function ProductsImportPage() {
                     <Autocomplete
                       // value={productData.main_cate_id}
                       key={productData.reset}
+                      defaultValue={{ name: productData.main_cate_name || "" }}
                       onChange={(e, value) => getSubCates(value? value.id : 0)}
                       disabled={false}
                       id="combo-box-demo"
@@ -575,6 +603,7 @@ function ProductsImportPage() {
                       // label={productData.sub_cate}
                       // value={productData.sub_cate}
                       key={productData.state1}
+                      defaultValue={{ name: productData.sub_cate || "" }}
                       onChange={(e, value) => setProductData(() => {
                         return { ...productData, sub_cate_id: value? value.id : 0, sub_cate: value ? value.name : "" }
                       })}
@@ -790,10 +819,11 @@ function ProductsImportPage() {
                     <Autocomplete
                       // value={productData.supplier_id}
                       key={productData.reset}
+                      defaultValue={{ name: productData.supplier_name || "" }}
                       onChange={(e, value) => setProductData(() => {
                         const sup_id = value?value.id: 0;
                         getMainCatesBySupplier(sup_id)
-                        return { ...productData, supplier_id: value ? value.id : 0, supplier_cate: 0, state2: !productData.state2 }
+                        return { ...productData, supplier_id: value ? value.id : 0, supplier_cate: 0, supplier_cate_name: "", state2: !productData.state2 }
                       })}
                       id="combo-box-demo"
                       options={suppliersData}
@@ -810,6 +840,7 @@ function ProductsImportPage() {
                     />
                     <Autocomplete
                       key={productData.state2}
+                      defaultValue={{ name: productData.supplier_cate_name || "" }}
                       onChange={(e, value) => setProductData(() => {
                         return { ...productData, supplier_cate: value ? value.id : 0 }
                       })}
@@ -979,6 +1010,7 @@ function ProductsImportPage() {
                   >
                     <Autocomplete
                       key={productData.state3}
+                      defaultValue={{ name: productData.vat_id !== 0 ? productData.vat : "" }}
                       onChange={(e, value) => setProductData(() => {
                         setVat(() => { return { ...vat, checked:false } })
                         return { ...productData, vat_id: value ? value.id : 0, vat: value ? value.percent : 0 }
