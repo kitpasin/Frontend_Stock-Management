@@ -11,6 +11,7 @@ import HeadPageComponent from "../../components/layout/headpage/headpage";
 import DetailDataGrid from "./components/DetailDataGrid";
 import SupplierDataGrid from "./components/SupplierDataGrid";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 function DefectiveExportPage() {
   const { t } = useTranslation(["dashboard-page"]);
@@ -18,6 +19,7 @@ function DefectiveExportPage() {
   const { productIds, setProductIds } = useContext(ProductContext);
   const [products, setProducts] = useState([])
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [exportQuantity, setExportQuantity] = useState(0)
   
   async function getProducts() {
     const response = await axios.get('productAll');
@@ -26,7 +28,37 @@ function DefectiveExportPage() {
     setProducts(filteredProducts);
   }
 
-  console.log(selectedProduct)
+  function ExportDefectiveProduct(product) {
+    console.log(typeof(exportQuantity))
+    const data = {
+      product_id: product.product_id,
+      title: product.title,
+      agent: product.supplier_agent,
+      export_quantity: exportQuantity
+    };
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to export the product?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, export it!",
+    }).then((result) => {
+     if (result.isConfirmed) {
+      axios
+        .post("product/defective/create", data)
+        .then(function (response) {
+          Swal.fire("Exported!", "Your product has been exported.", "success").then(()=> {
+            getProducts();
+          })
+        })
+        .catch(function (error) {
+          console.error(error);
+        });
+     }
+    });
+  }
 
   useEffect(() => {
     getProducts()
@@ -136,9 +168,9 @@ function DefectiveExportPage() {
         </Card>
         <Card className="quantity-export">
           <p>กรอกจำนวนสินค้าชำรุด</p>
-          <input placeholder="กรอกจำนวนสินค้า" />
+          <input type="number" placeholder="กรอกจำนวนสินค้า" value={exportQuantity} onChange={(e) => setExportQuantity(e.target.value)} />
         </Card>
-        <button className="submit">
+        <button className="submit" onClick={()=>ExportDefectiveProduct(selectedProduct)}>
           <img src="/images/icons/defectiveBig-icon.png" alt="" />
           <p>ตัดสินค้าชำรุด</p>
         </button>
