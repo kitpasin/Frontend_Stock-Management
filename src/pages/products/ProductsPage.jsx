@@ -36,35 +36,52 @@ function ProductsPage() {
     setMainCatesData(data);
   }
 
-  function filterData(cate_id = 0, _title = "") {
+  async function filterData(cate_id = 0, _title = "") {
     setProductTitle(_title)
     setMainCateId(cate_id)
-    const hasVat = vat === "vat" ? true : false;
+    const hasVat = (vat === "vat") ? true : false;
     if (cate_id === 0 && _title === "" && vat === "all") {
       fetchProduct();
+    } else if (cate_id === 0 && _title === "" && vat !== "all") {
+      const result = await fetchService();
+      const dd = await result?.filter((item) => (hasVat ? item.vat_id !== 0 : item.vat_id === 0))
+      setProductsAll(dd)
+
     } else {
-      const data = productsAll.filter((item) => (item.main_cate_id === cate_id || item.title === _title))
-      setProductsAll(data)
+      const result = await fetchService();
+      const data = await result?.filter((item) => (item.main_cate_id === cate_id || item.title === _title))
+      if (vat === "all") {
+        setProductsAll(data)
+      } else {
+        const dd = await data?.filter((item) => (hasVat ? item.vat_id !== 0 : item.vat_id === 0))
+        setProductsAll(dd)
+
+      }
     }
   }
+  
+  async function fetchService() {
+   const data = await svProductAll().then(res => res.data)
+   const result = await data.map(item => {
+    const duration = dayjs(item.exp_date).diff(current_date, 'day')
+    return { ...item, diff_date: duration }
+   })
+   return result;
+  }
 
-  function fetchProduct() {
-    svProductAll().then(res => {
-      const result = res.data.map(item => {
-        const duration = dayjs(item.exp_date).diff(current_date, 'day')
-        return { ...item, diff_date: duration }
-      })
-      // console.log(result)
-      setProductsAll(result)
-    })
+  async function fetchProduct() {
+    const result = await fetchService()
+    setProductsAll(result)
   }
 
   useEffect(() => {
     getMainCates()
     fetchProduct()
-    filterData()
-    
-  }, []);
+  }, [])
+
+  useEffect(() => {
+    filterData(mainCateId, productTitle)
+  }, [vat]);
 
   return (
     <section id="products-page">
@@ -99,6 +116,16 @@ function ProductsPage() {
           </div>
           <div className="filter">
             <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-demo"
+                options={mainCatesData}
+                getOptionLabel={(option) => option.name || ""}
+                sx={{ width: 150 }}
+                renderInput={(params) => <TextField {...params} label="หมวดหมู่" />}
+                onChange={(e, value) => filterData(value?value.id:0, productTitle)}
+            />
+            <Autocomplete
               size="small"
               disablePortal
               id="combo-box-demo"
@@ -107,16 +134,6 @@ function ProductsPage() {
               sx={{ width: 150 }}
               renderInput={(params) => <TextField {...params} label="ชื่อ" />}
               onChange={(e, value) => filterData(mainCateId,value?value.title:"")}
-            />
-            <Autocomplete
-              size="small"
-              disablePortal
-              id="combo-box-demo"
-              options={mainCatesData}
-              getOptionLabel={(option) => option.name || ""}
-              sx={{ width: 150 }}
-              renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
-              onChange={(e, value) => filterData(value?value.id:0, productTitle)}
             />
             {/* <Autocomplete
               disabled
