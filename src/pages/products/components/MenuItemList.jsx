@@ -2,11 +2,14 @@ import React from "react";
 import { Menu } from "@mui/material";
 import { MenuItem } from "@mui/material";
 import { Button } from "@mui/material";
+import Swal from "sweetalert2";
 
 import ProductEditModal from "../ProductEditModal";
 import { svProductOne } from "../../../services/product.service";
+import { svDeleteProduct } from "../../../services/product.service";
+import { ConnectingAirportsOutlined } from "@mui/icons-material";
 
-function MenuItemList({ params }) {
+function MenuItemList({ params, refreshData, setRefreshData }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openMenu, setOpenMenu] = React.useState(false);
   const [btnId, setbtnId] = React.useState(false);
@@ -18,6 +21,8 @@ function MenuItemList({ params }) {
     svProductOne(_params.id)
       .then((res) => {
         const result = {
+          id: res.data.id,
+          product_id: res.data.product_id,
           title: res.data.title,
           state1: false,
           state2: false,
@@ -48,7 +53,7 @@ function MenuItemList({ params }) {
           import_fee: res.data.import_fee,
           fuel_cost: res.data.fuel_cost,
           other_exp: res.data.other_exp,
-          total: res.data.total,
+          total: res.data.px_total,
           op_unit: res.data.op_unit,
           total_product: res.data.total_product,
 
@@ -79,6 +84,32 @@ function MenuItemList({ params }) {
         return false;
       });
   };
+
+  const deleteHandle = (product_id) => {
+    handleClose()
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to delete this product?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        svDeleteProduct(product_id).then(res => {
+          Swal.fire({
+            text: "Delete product success.",
+            icon: "success",
+            showConfirmButton: false,
+            timer: 1000,
+          }).then(() => {
+            setRefreshData(refreshData + 1)
+          })
+        }).catch(err => console.log(err))
+      }
+    });
+  }
 
   function handleClick(event) {
     setbtnId(event.currentTarget.getAttribute("id"));
@@ -169,7 +200,7 @@ function MenuItemList({ params }) {
             แก้ไขสินค้า
           </p>
         </MenuItem>
-        <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={handleClose}>
+        <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={() => deleteHandle(params.row.product_id)}>
           <img
             style={{
               width: "18px",
@@ -189,6 +220,8 @@ function MenuItemList({ params }) {
         open={openModal}
         setOpen={setOpenModal}
         productShow={productShow}
+        refreshData={refreshData}
+        setRefreshData={setRefreshData}
       />
     </div>
   );

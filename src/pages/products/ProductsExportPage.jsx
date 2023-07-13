@@ -101,7 +101,7 @@ function ProductsExportPage() {
           <span>800 กระป๋อง</span>
         </Card>
         <Card className="quantity-export">
-          <p>กรอกจำนวนสินค้าชำรุด</p>
+          <p>กรอกจำนวนสินค้าที่ต้องการเบิก</p>
           <input placeholder="กรอกจำนวนสินค้า" />
         </Card>
         <button className="submit">

@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 import MenuItemList from "./MenuItemList";
 
-function Table({ rows, productsAll }) {
+function Table({ rows, productsAll, refreshData, setRefreshData }) {
   const webPath = useSelector((state) => state.app.webPath);
 
   const columns = [
@@ -389,7 +389,7 @@ function Table({ rows, productsAll }) {
       width: 100,
       headerClassName: "table-columns",
       renderCell: (params) => (
-        <MenuItemList params={params} />
+        <MenuItemList params={params} refreshData={refreshData} setRefreshData={setRefreshData} />
         // <div>
         //   <Button
         //     id={`basic-button${params.row.id}`}

@@ -55,7 +55,7 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-function ProductEditModal({ open, setOpen, productShow }) {
+function ProductEditModal({ open, setOpen, productShow, refreshData, setRefreshData }) {
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -81,7 +81,7 @@ function ProductEditModal({ open, setOpen, productShow }) {
           แก้ไขสินค้า (Product ID : {productShow.product_id}) 
         </BootstrapDialogTitle>
         <DialogContent dividers>
-          <ProductsImportPage isEdit={true} productShow={productShow} />
+          <ProductsImportPage isEdit={true} productShow={productShow} refreshData={refreshData} setRefreshData={setRefreshData} setOpenModalEdit={setOpen} />
         </DialogContent>
         {/* <DialogActions>
           <Button autoFocus onClick={handleClose}>

@@ -27,6 +27,7 @@ function ProductsPage() {
   const [mainCateId, setMainCateId] = useState(0);
   const [productTitle, setProductTitle] = useState("");
   const [vat, setVat] = useState("all");
+  const [refreshData, setRefreshData] = useState(0)
   const dispatch = useDispatch();
   const current_date = dayjs().toISOString().substring(0, 10)
 
@@ -81,7 +82,7 @@ function ProductsPage() {
 
   useEffect(() => {
     filterData(mainCateId, productTitle)
-  }, [vat]);
+  }, [vat, refreshData]);
 
   return (
     <section id="products-page">
@@ -163,7 +164,7 @@ function ProductsPage() {
           </div>
         </div>
         <div>
-          <Table rows={rows} productsAll={productsAll} />
+          <Table rows={rows} productsAll={productsAll} refreshData={refreshData} setRefreshData={setRefreshData} />
         </div>
       </Card>
     </section>

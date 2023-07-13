@@ -26,6 +26,7 @@ import { batch, useSelector } from "react-redux";
 import axios from "axios";
 import { PersonOffRounded } from "@mui/icons-material";
 import { svCreateProduct } from "../../services/product.service";
+import { svProductUpdate } from "../../services/product.service";
 
 const form = {
   title: "", state1: false, state2: false,
@@ -46,7 +47,7 @@ const form = {
   os_price: 0, selling_price: "",
 };
 
-function ProductsImportPage({ isEdit, productShow }) {
+function ProductsImportPage({ isEdit, productShow, setOpenModalEdit, refreshData, setRefreshData }) {
   const formPreview = {
     src: "",
     file: "",
@@ -278,7 +279,10 @@ function ProductsImportPage({ isEdit, productShow }) {
     } else {
       const formData = new FormData();
       /* product */
+      formData.append('id', productData.id || null)
+      formData.append('product_id', productData.product_id || null)
       formData.append('image', preview.file)
+      formData.append('image_path', productData.image_path)
       formData.append('title', productData.title)
       formData.append('main_cate_id', productData.main_cate_id)
       formData.append('sub_cate_id', productData.sub_cate_id)
@@ -322,7 +326,17 @@ function ProductsImportPage({ isEdit, productShow }) {
 
   function onSaveProduct(_form) {
     if (isEdit) {
-      console.log('okok')
+      svProductUpdate(productData.id, _form).then(res => {
+        setOpenModalEdit(false);
+        Swal.fire({
+          text: "Product has been updated successfully.",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1000,
+        }).then(() => {
+          setRefreshData(refreshData + 1)
+        })
+      })
     } else {
       Swal.fire({
         title: "Are you sure?",
