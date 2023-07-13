@@ -7,6 +7,7 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
+import PulseLoader from "react-spinners/PulseLoader";
 
 import "./DefectivePage.scss";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
@@ -17,7 +18,10 @@ import { useEffect, useState } from "react";
 
 function DefectiveSearchPage() {
   const { t } = useTranslation(["dashboard-page"]);
-  const [products, setProducts] = useState([])
+
+  const [loading, setLoading] = useState(true);
+
+  const [products, setProducts] = useState([]);
   const [mainCategories, setMainCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
   const [title, setTitle] = useState("");
@@ -35,8 +39,9 @@ function DefectiveSearchPage() {
 
   async function getProducts() {
     const response = await axios.get("productAll");
-    const data = response.data.data
-    setProducts(data)
+    const data = response.data.data;
+    setProducts(data);
+    setLoading(false);
   }
 
   async function getMainCategories() {
@@ -55,105 +60,111 @@ function DefectiveSearchPage() {
     getProducts();
     getMainCategories();
     getSubCategories();
-  }, [])
+  }, []);
 
   return (
     <section id="defective-search-page">
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: "1rem",
-        }}
-      >
-        <figure style={{ width: "30px", marginBottom: "1rem" }}>
-          <img src="/images/icons/defectivePage-icon.png" alt="" />
-        </figure>
-        <div style={{ width: "100%" }}>
-          <HeadPageComponent
-            h1={t("ค้นหาสินค้า")}
-            breadcrums={[{ title: t("ค้นหาสินค้า"), link: false }]}
-          />
-        </div>
-      </div>
-      <Card className="flex-container-column" sx={{ borderRadius: "10px" }}>
-        <div className="header">
-          <div className="wrapper">
-            <figure className="title">
-              <img src="/images/icons/defectiveTable-icon.png" alt="" />
-              <p>สินค้าทั้งหมด</p>
+      {loading ? (
+        <PulseLoader color="#3b326b" />
+      ) : (
+        <>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: "1rem",
+            }}
+          >
+            <figure style={{ width: "30px", marginBottom: "1rem" }}>
+              <img src="/images/icons/defectivePage-icon.png" alt="" />
             </figure>
-            <div className="description">
-              <p>{products.length} รายการ</p>
+            <div style={{ width: "100%" }}>
+              <HeadPageComponent
+                h1={t("ค้นหาสินค้า")}
+                breadcrums={[{ title: t("ค้นหาสินค้า"), link: false }]}
+              />
             </div>
           </div>
-          <div className="filter">
-            <Autocomplete
-              size="small"
-              disablePortal
-              id="combo-box-demo"
-              options={products}
-              getOptionLabel={(products) => products.title || ""}
-              onChange={(event, value) => setTitle(value?.title || null)}
-              sx={{ width: 150 }}
-              renderInput={(params) => <TextField {...params} label="ชื่อ" />}
-            />
-            <Autocomplete
-              size="small"
-              disablePortal
-              id="combo-box-demo"
-              options={mainCategories}
-              getOptionLabel={(mainCategories) => mainCategories.name || ""}
-              onChange={(event, value) => setMainCategory(value?.name || null)}
-              sx={{ width: 150 }}
-              renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
-            />
-            <Autocomplete
-              size="small"
-              disablePortal
-              id="combo-box-demo"
-              options={subCategories}
-              getOptionLabel={(subCategories) => subCategories.name}
-              onChange={(event, value) => setSubCategory(value?.name || null)}
-              sx={{ width: 150 }}
-              renderInput={(params) => <TextField {...params} label="หมวดหมู่ย่อย" />}
-            />
-            <FormControl>
-              <RadioGroup
-                row
-                aria-labelledby="demo-row-radio-buttons-group-label"
-                name="row-radio-buttons-group"
-              >
-                <FormControlLabel
-                  value=""
-                  control={<Radio />}
-                  label="All"
-                  onChange={(e) => setVat("")}
+          <Card className="flex-container-column" sx={{ borderRadius: "10px" }}>
+            <div className="header">
+              <div className="wrapper">
+                <figure className="title">
+                  <img src="/images/icons/defectiveTable-icon.png" alt="" />
+                  <p>สินค้าทั้งหมด</p>
+                </figure>
+                <div className="description">
+                  <p>{products.length} รายการ</p>
+                </div>
+              </div>
+              <div className="filter">
+                <Autocomplete
+                  size="small"
+                  disablePortal
+                  id="combo-box-demo"
+                  options={products}
+                  getOptionLabel={(products) => products.title || ""}
+                  onChange={(event, value) => setTitle(value?.title || null)}
+                  sx={{ width: 150 }}
+                  renderInput={(params) => <TextField {...params} label="ชื่อ" />}
                 />
-                <FormControlLabel
-                  value="1"
-                  control={<Radio />}
-                  label="Vat"
-                  onChange={(e) => setVat(e.target.value)}
+                <Autocomplete
+                  size="small"
+                  disablePortal
+                  id="combo-box-demo"
+                  options={mainCategories}
+                  getOptionLabel={(mainCategories) => mainCategories.name || ""}
+                  onChange={(event, value) => setMainCategory(value?.name || null)}
+                  sx={{ width: 150 }}
+                  renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
                 />
-                <FormControlLabel
-                  value="0"
-                  control={<Radio />}
-                  label="No Vat"
-                  onChange={(e) => setVat(e.target.value)}
+                <Autocomplete
+                  size="small"
+                  disablePortal
+                  id="combo-box-demo"
+                  options={subCategories}
+                  getOptionLabel={(subCategories) => subCategories.name}
+                  onChange={(event, value) => setSubCategory(value?.name || null)}
+                  sx={{ width: 150 }}
+                  renderInput={(params) => <TextField {...params} label="หมวดหมู่ย่อย" />}
                 />
-              </RadioGroup>
-            </FormControl>
-            <Link to="/defective/export" className="export">
-              เบิกออกสินค้าชำรุด
-            </Link>
-          </div>
-        </div>
-        <div>
-          <Search filteredProduct={filteredProduct} />
-        </div>
-      </Card>
+                <FormControl>
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-row-radio-buttons-group-label"
+                    name="row-radio-buttons-group"
+                  >
+                    <FormControlLabel
+                      value=""
+                      control={<Radio />}
+                      label="All"
+                      onChange={(e) => setVat("")}
+                    />
+                    <FormControlLabel
+                      value="1"
+                      control={<Radio />}
+                      label="Vat"
+                      onChange={(e) => setVat(e.target.value)}
+                    />
+                    <FormControlLabel
+                      value="0"
+                      control={<Radio />}
+                      label="No Vat"
+                      onChange={(e) => setVat(e.target.value)}
+                    />
+                  </RadioGroup>
+                </FormControl>
+                <Link to="/defective/export" className="export">
+                  เบิกออกสินค้าชำรุด
+                </Link>
+              </div>
+            </div>
+            <div>
+              <Search filteredProduct={filteredProduct} />
+            </div>
+          </Card>
+        </>
+      )}
     </section>
   );
 }

@@ -10,18 +10,22 @@ import axios from "axios";
 import { useEffect } from "react";
 import CreateNet from "./create/CreateNet";
 import CreateAmount from "./create/CreateAmount";
+import PulseLoader from "react-spinners/PulseLoader";
 
 function Amount() {
-  const [netsData, setNetsData] = useState([])
-  const [createNetOpen, setCreateNetOpen] = useState(false)
+  const [loading, setLoading] = useState(true);
+
+  const [netsData, setNetsData] = useState([]);
+  const [createNetOpen, setCreateNetOpen] = useState(false);
   const [amountsData, setAmountsData] = useState([]);
-  const [createAmountOpen, setCreateAmountOpen] = useState(false)
+  const [createAmountOpen, setCreateAmountOpen] = useState(false);
   const [mainCatesData, setMainCatesData] = useState([]);
 
   async function getNets() {
     const response = await axios.get("nets");
     const data = response.data.nets;
     setNetsData(data);
+    setLoading(false);
   }
   async function getAmounts() {
     const response = await axios.get("amounts");
@@ -42,70 +46,76 @@ function Amount() {
 
   return (
     <section id="amount-page">
-      <HeadPageComponent
-        h1={"หน่วยปริมาณ/หน่วยจำนวน"}
-        icon={<img src="images/icons/majesticons_atom-111.png" alt="" />}
-        breadcrums={[{ title: "หน่วยปริมาณ/หน่วยจำนวน", link: false }]}
-      />
-      <div className="main-content">
-        <div className="content-left">
-          <div className="head"></div>
-          <div className="content">
-            <div className="content-head">
-              <div className="title">
-                <img src="/images/icons/majesticons_atom222.png" alt="" />
-                <p>หน่วยปริมาณสุทธิ ทั้งหมด</p>
-                <p style={{ color: "#ff0000" }}>{netsData.length} รายการ</p>
-              </div>
-              <div className="action">
-                <button className="create" onClick={() => setCreateNetOpen(true)}>
-                  สร้างหน่วยปริมาณใหม่
-                </button>
-                {/* <button className="delete">
+      {loading ? (
+        <PulseLoader color="#3b326b" />
+      ) : (
+        <>
+          <HeadPageComponent
+            h1={"หน่วยปริมาณ/หน่วยจำนวน"}
+            icon={<img src="images/icons/majesticons_atom-111.png" alt="" />}
+            breadcrums={[{ title: "หน่วยปริมาณ/หน่วยจำนวน", link: false }]}
+          />
+          <div className="main-content">
+            <div className="content-left">
+              <div className="head"></div>
+              <div className="content">
+                <div className="content-head">
+                  <div className="title">
+                    <img src="/images/icons/majesticons_atom222.png" alt="" />
+                    <p>หน่วยปริมาณสุทธิ ทั้งหมด</p>
+                    <p style={{ color: "#ff0000" }}>{netsData.length} รายการ</p>
+                  </div>
+                  <div className="action">
+                    <button className="create" onClick={() => setCreateNetOpen(true)}>
+                      สร้างหน่วยปริมาณใหม่
+                    </button>
+                    {/* <button className="delete">
                   <img src="images/icons/tabler_trash-x-filled.png" alt="" />
                 </button> */}
+                  </div>
+                </div>
+                <div className="table">
+                  <TableNet netsData={netsData} getNets={getNets} mainCatesData={mainCatesData} />
+                </div>
               </div>
             </div>
-            <div className="table">
-              <TableNet netsData={netsData} getNets={getNets} mainCatesData={mainCatesData} />
-            </div>
-          </div>
-        </div>
-        <div className="content-right">
-          <div className="head"></div>
-          <div className="content">
-            <div className="content-head">
-              <div className="title">
-                <img src="images/icons/fluent_tray-item-add-24-filled.png" alt="" />
-                <p>หน่วยจำนวน ทั้งหมด</p>
-                <p style={{ color: "#ff0000" }}>{amountsData.length} รายการ</p>
-              </div>
-              <div className="action">
-                <button className="create" onClick={() => setCreateAmountOpen(true)}>
-                  สร้างหน่วยจำนวนใหม่
-                </button>
-                {/* <button className="delete">
+            <div className="content-right">
+              <div className="head"></div>
+              <div className="content">
+                <div className="content-head">
+                  <div className="title">
+                    <img src="images/icons/fluent_tray-item-add-24-filled.png" alt="" />
+                    <p>หน่วยจำนวน ทั้งหมด</p>
+                    <p style={{ color: "#ff0000" }}>{amountsData.length} รายการ</p>
+                  </div>
+                  <div className="action">
+                    <button className="create" onClick={() => setCreateAmountOpen(true)}>
+                      สร้างหน่วยจำนวนใหม่
+                    </button>
+                    {/* <button className="delete">
                   <img src="images/icons/tabler_trash-x-filled.png" alt="" />
                 </button> */}
+                  </div>
+                </div>
+                <div className="table">
+                  <TableAmount amountsData={amountsData} getAmounts={getAmounts} />
+                </div>
               </div>
             </div>
-            <div className="table">
-              <TableAmount amountsData={amountsData} getAmounts={getAmounts} />
-            </div>
           </div>
-        </div>
-      </div>
-      <CreateNet
-        createNetOpen={createNetOpen}
-        setCreateNetOpen={setCreateNetOpen}
-        mainCatesData={mainCatesData}
-        getNets={getNets}
-      />
-      <CreateAmount
-        createAmountOpen={createAmountOpen}
-        setCreateAmountOpen={setCreateAmountOpen}
-        getAmounts={getAmounts}
-      />
+          <CreateNet
+            createNetOpen={createNetOpen}
+            setCreateNetOpen={setCreateNetOpen}
+            mainCatesData={mainCatesData}
+            getNets={getNets}
+          />
+          <CreateAmount
+            createAmountOpen={createAmountOpen}
+            setCreateAmountOpen={setCreateAmountOpen}
+            getAmounts={getAmounts}
+          />
+        </>
+      )}
     </section>
   );
 }

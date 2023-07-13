@@ -4,10 +4,12 @@ import { Avatar, Typography } from "@mui/material";
 import { Button } from "@mui/material";
 import { Menu } from "@mui/material";
 import { MenuItem } from "@mui/material";
+import { useSelector } from "react-redux";
 
-function Table({ rows }) {
+function Table({ filteredProduct }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const webPath = useSelector((state) => state.app.webPath);
 
   function handleClick(event) {
     setAnchorEl(event.currentTarget);
@@ -26,7 +28,7 @@ function Table({ rows }) {
       align: "center",
       renderCell: (params) => (
         <div style={{ background: "#D0D0E2", borderRadius: "5px" }}>
-          <Avatar src={`images/mock/product1.png`} alt={`Image ${params.value}`} />
+          <Avatar alt="Thumbnail" src={`${webPath}${params.row.thumbnail_link}`} />
         </div>
       ),
     },
@@ -38,14 +40,16 @@ function Table({ rows }) {
       width: 150,
       headerClassName: "table-columns",
       renderCell: (params) => (
-        <div style={{ paddingLeft: "1.2rem" }}>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>น้ำอัดลมกลิ่นเมลอ...</p>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>01234567895846</p>
+        <div style={{ paddingLeft: "1rem" }}>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{params.row.title}</p>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>
+            {params.row.product_id}
+          </p>
         </div>
       ),
     },
     {
-      field: "quantityPerUnit",
+      field: "",
       headerAlign: "center",
       align: "center",
       width: 70,
@@ -60,9 +64,22 @@ function Table({ rows }) {
           </Typography>
         </div>
       ),
+      renderCell: (params) => (
+        <div>
+          <p
+            style={{
+              fontSize: "12px",
+              lineHeight: "12.5px",
+              color: params.row.import_value <= 50 ? "#ff0000" : "#000",
+            }}
+          >
+            {params.row.import_value - params.row.export_value - params.row.export_defective_value}
+          </p>
+        </div>
+      ),
     },
     {
-      field: "defective",
+      field: "defective_product",
       headerAlign: "center",
       align: "center",
       width: 70,
@@ -79,7 +96,7 @@ function Table({ rows }) {
       ),
     },
     {
-      field: "purchaseDate",
+      field: "purchase_date",
       headerName: "วันที่ซื้อ",
       headerAlign: "center",
       align: "center",
@@ -104,10 +121,10 @@ function Table({ rows }) {
       ),
       renderCell: (params) => (
         <div>
-          <Typography style={{ fontSize: "12px", lineHeight: "12.5px" }}>28/8/2023</Typography>
-          <Typography style={{ fontSize: "12px", lineHeight: "12.5px", color: "#FF0000" }}>
-            30/8/2024
-          </Typography>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{params.row.mfd_date}</p>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>
+            {params.row.exp_date}
+          </p>
         </div>
       ),
     },
@@ -127,9 +144,28 @@ function Table({ rows }) {
           </Typography>
         </div>
       ),
+      renderCell: (params) => {
+        const startDate = new Date(params.row.mfd_date);
+        const endDate = new Date(params.row.exp_date);
+        const diffDateInMs = endDate - startDate;
+        const diffDateInDays = diffDateInMs / (1000 * 60 * 60 * 24);
+        return (
+          <div>
+            <p
+              style={{
+                fontSize: "12px",
+                lineHeight: "12.5px",
+                color: diffDateInDays <= 30 ? "#FF0000" : "#000",
+              }}
+            >
+              {diffDateInDays} วัน
+            </p>
+          </div>
+        );
+      },
     },
     {
-      field: "vat",
+      field: "vat_name",
       headerName: "Vat",
       headerAlign: "center",
       align: "center",
@@ -137,7 +173,7 @@ function Table({ rows }) {
       headerClassName: "table-columns",
     },
     {
-      field: "category",
+      field: "main_cate_name",
       headerName: "หมวดหมู่",
       headerAlign: "center",
       align: "center",
@@ -145,7 +181,7 @@ function Table({ rows }) {
       headerClassName: "table-columns",
     },
     {
-      field: "countingUnit",
+      field: "counting_unit_name",
       headerName: "หน่วยนับ",
       headerAlign: "center",
       align: "center",
@@ -153,7 +189,7 @@ function Table({ rows }) {
       headerClassName: "table-columns",
     },
     {
-      field: "volumnPerUnit",
+      field: "netweight",
       headerAlign: "center",
       align: "center",
       width: 70,
@@ -170,7 +206,7 @@ function Table({ rows }) {
       ),
     },
     {
-      field: "operationFee",
+      field: "total",
       headerAlign: "center",
       align: "center",
       width: 70,
@@ -187,7 +223,7 @@ function Table({ rows }) {
       ),
     },
     {
-      field: "operationFeePerUnit",
+      field: "oc_unit",
       width: 70,
       headerAlign: "center",
       align: "center",
@@ -204,7 +240,7 @@ function Table({ rows }) {
       ),
     },
     {
-      field: "rawPrice",
+      field: "product_cost",
       headerName: "ราคาดิบ (THB)",
       headerAlign: "center",
       align: "center",
@@ -222,7 +258,7 @@ function Table({ rows }) {
       ),
     },
     {
-      field: "rawPricePerUnit",
+      field: "cost_per_unit",
       headerAlign: "center",
       align: "center",
       width: 70,
@@ -239,7 +275,7 @@ function Table({ rows }) {
       ),
     },
     {
-      field: "cost",
+      field: "unit_price",
       headerName: "ต้นทุน (THB)",
       headerAlign: "center",
       align: "center",
@@ -257,7 +293,7 @@ function Table({ rows }) {
       ),
     },
     {
-      field: "costPerUnit",
+      field: "total_cost",
       width: 70,
       headerAlign: "center",
       align: "center",
@@ -274,7 +310,7 @@ function Table({ rows }) {
       ),
     },
     {
-      field: "profit",
+      field: "set_profit",
       headerName: "กำไร",
       width: 50,
       headerAlign: "center",
@@ -282,7 +318,7 @@ function Table({ rows }) {
       headerClassName: "table-columns",
     },
     {
-      field: "expectedSellingPrice",
+      field: "pp_vat",
       headerAlign: "center",
       align: "center",
       width: 50,
@@ -299,7 +335,7 @@ function Table({ rows }) {
       ),
     },
     {
-      field: "actualSellingPrice",
+      field: "selling_price",
       width: 70,
       headerAlign: "center",
       align: "center",
@@ -418,7 +454,7 @@ function Table({ rows }) {
       <DataGrid
         getRowClassName={() => rowsClassName}
         sx={{ fontSize: "12px", border: "none" }}
-        rows={rows}
+        rows={filteredProduct}
         columns={columns}
         initialState={{
           pagination: {

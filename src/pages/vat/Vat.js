@@ -8,8 +8,11 @@ import VatTable from "./VatTable";
 import axios from "axios";
 import { useEffect } from "react";
 import CreateVat from "./create/CreateVat";
+import PulseLoader from "react-spinners/PulseLoader";
 
 function Vat() {
+  const [loading, setLoading] = useState(true);
+
   const [createVatOpen, setCreateVatOpen] = useState(false)
   const [vatsData, setVatsData] = useState([])
 
@@ -17,6 +20,7 @@ function Vat() {
     const response = await axios.get("vats")
     const data = response.data.vats
     setVatsData(data)
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -25,6 +29,10 @@ function Vat() {
 
   return (
     <section id="vat-page">
+       {loading ? (
+        <PulseLoader color="#3b326b" />
+      ) : (
+        <>
       <HeadPageComponent
         h1={"Vat"}
         icon={<img src="/images/icons/foundation_graph-pie(1).png" alt="" />}
@@ -49,6 +57,8 @@ function Vat() {
         </div>
       </div>
       <CreateVat createVatOpen={createVatOpen} setCreateVatOpen={setCreateVatOpen} getVats={getVats} />
+      </>
+      )}
     </section>
   );
 }

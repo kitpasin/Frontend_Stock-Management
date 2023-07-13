@@ -177,6 +177,22 @@ const SidebarComponent = (props) => {
                 <li>
                   <NavLink
                     onClick={closeSidebarhandler}
+                    to="/products/import"
+                    className="navlink"
+                    title={t("เพิ่มสินค้า")}
+                    liClass="menu-link"
+                  >
+                    <figure className="faIcon" style={{ paddingRight: ".25rem" }}>
+                      <img src="/images/icons/imports-icon.png" alt="" />
+                    </figure>
+                    <div className="menu-title">{t("เพิ่มสินค้า")}</div>
+                  </NavLink>
+                </li>
+              </ul>
+              <ul className="nav-menu">
+                <li>
+                  <NavLink
+                    onClick={closeSidebarhandler}
                     to="/products"
                     className="navlink"
                     title={t("productPage")}
@@ -221,7 +237,7 @@ const SidebarComponent = (props) => {
                   </NavLink>
                 </li>
               </ul>
-              <ul className="nav-menu">
+              {/* <ul className="nav-menu">
                 <li>
                   <NavLink
                     onClick={closeSidebarhandler}
@@ -236,7 +252,23 @@ const SidebarComponent = (props) => {
                     <div className="menu-title">{t("Import")}</div>
                   </NavLink>
                 </li>
-              </ul>
+              </ul> */}
+              {/* <ul className="nav-menu">
+                <li>
+                  <NavLink
+                    onClick={closeSidebarhandler}
+                    to="products/export"
+                    className="navlink"
+                    title={t("เบิกออกสินค้า")}
+                    liClass="menu-link"
+                  >
+                    <figure className="faIcon" style={{ paddingLeft: ".25rem" }}>
+                      <img src="/images/icons/exports-icon.png" alt="" />
+                    </figure>
+                    <div className="menu-title">{t("เบิกออกสินค้า")}</div>
+                  </NavLink>
+                </li>
+              </ul> */}
               <ul className="nav-menu">
                 <li>
                   <NavLink
@@ -250,38 +282,6 @@ const SidebarComponent = (props) => {
                       <img src="/images/icons/exports-icon.png" alt="" />
                     </figure>
                     <div className="menu-title">{t("Export")}</div>
-                  </NavLink>
-                </li>
-              </ul>
-              <ul className="nav-menu">
-                <li>
-                  <NavLink
-                    onClick={closeSidebarhandler}
-                    to="/products/import"
-                    className="navlink"
-                    title={t("นำเข้าสินค้า")}
-                    liClass="menu-link"
-                  >
-                    <figure className="faIcon" style={{ paddingRight: ".25rem" }}>
-                      <img src="/images/icons/imports-icon.png" alt="" />
-                    </figure>
-                    <div className="menu-title">{t("นำเข้าสินค้า")}</div>
-                  </NavLink>
-                </li>
-              </ul>
-              <ul className="nav-menu">
-                <li>
-                  <NavLink
-                    onClick={closeSidebarhandler}
-                    to="products/export"
-                    className="navlink"
-                    title={t("เบิกออกสินค้า")}
-                    liClass="menu-link"
-                  >
-                    <figure className="faIcon" style={{ paddingLeft: ".25rem" }}>
-                      <img src="/images/icons/exports-icon.png" alt="" />
-                    </figure>
-                    <div className="menu-title">{t("เบิกออกสินค้า")}</div>
                   </NavLink>
                 </li>
               </ul>

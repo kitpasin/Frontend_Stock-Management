@@ -10,11 +10,13 @@ import ProductCateTable from "./ProductCateTable";
 import { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
-import Swal from "sweetalert2";
 import CreateMainCategory from "./createCategory/CreateMainCategory";
 import CreateSubCategory from "./createCategory/CreateSubCategory";
+import PulseLoader from "react-spinners/PulseLoader";
 
 function ProductCategory() {
+  const [loading, setLoading] = useState(true);
+
   const [mainCatesData, setMainCatesData] = useState([]);
   const [subCatesData, setSubCatesData] = useState([]);
   const [createMainCateOpen, setCreateMainCateOpen] = useState(false);
@@ -27,6 +29,7 @@ function ProductCategory() {
     const response = await axios.get("maincates");
     const data = response.data.mainCates;
     setMainCatesData(data);
+    setLoading(false);
   }
 
   async function getSubCates() {
@@ -42,47 +45,53 @@ function ProductCategory() {
 
   return (
     <section id="productcate-page">
-      <HeadPageComponent
-        h1={"หมวดหมู่สินค้าหลัก/ย่อย"}
-        icon={<FontAwesomeIcon icon={faLayerGroup} />}
-        breadcrums={[{ title: "หมวดหมู่สินค้าหลัก/ย่อย", link: false }]}
-      />
-      <div className="main-content">
-        <div className="head"></div>
-        <div className="content">
-          <div className="content-head">
-            <div className="title">
-              <img src="/images/icons/uis_layer-group1.png" alt="" />
-              <p>หมวดหมู่สินค้าทั้งหมด</p>
-              <p style={{ color: "#ff0000" }}>{mainCatesData.length} รายการ</p>
-            </div>
-            <div className="action">
-              <button onClick={handleCreateMainCateOpen}>สร้างหมวดหมู่หลัก</button>
-              <button onClick={handleCreateSubCateOpen}>สร้างหมวดหมู่ย่อย</button>
+      {loading ? (
+        <PulseLoader color="#3b326b" />
+      ) : (
+        <>
+          <HeadPageComponent
+            h1={"หมวดหมู่สินค้าหลัก/ย่อย"}
+            icon={<FontAwesomeIcon icon={faLayerGroup} />}
+            breadcrums={[{ title: "หมวดหมู่สินค้าหลัก/ย่อย", link: false }]}
+          />
+          <div className="main-content">
+            <div className="head"></div>
+            <div className="content">
+              <div className="content-head">
+                <div className="title">
+                  <img src="/images/icons/uis_layer-group1.png" alt="" />
+                  <p>หมวดหมู่สินค้าทั้งหมด</p>
+                  <p style={{ color: "#ff0000" }}>{mainCatesData.length} รายการ</p>
+                </div>
+                <div className="action">
+                  <button onClick={handleCreateMainCateOpen}>สร้างหมวดหมู่หลัก</button>
+                  <button onClick={handleCreateSubCateOpen}>สร้างหมวดหมู่ย่อย</button>
+                </div>
+              </div>
+              <div className="table">
+                <ProductCateTable
+                  mainCatesData={mainCatesData}
+                  subCatesData={subCatesData}
+                  getMainCates={getMainCates}
+                  getSubCates={getSubCates}
+                />
+              </div>
             </div>
           </div>
-          <div className="table">
-            <ProductCateTable
-              mainCatesData={mainCatesData}
-              subCatesData={subCatesData}
-              getMainCates={getMainCates}
-              getSubCates={getSubCates}
-            />
-          </div>
-        </div>
-      </div>
-      <CreateMainCategory
-        createMainCateOpen={createMainCateOpen}
-        setCreateMainCateOpen={setCreateMainCateOpen}
-        getMainCates={getMainCates}
-      />
-      <CreateSubCategory
-        mainCatesData={mainCatesData}
-        setMainCatesData={setMainCatesData}
-        createSubCateOpen={createSubCateOpen}
-        setCreateSubCateOpen={setCreateSubCateOpen}
-        getSubCates={getSubCates}
-      />
+          <CreateMainCategory
+            createMainCateOpen={createMainCateOpen}
+            setCreateMainCateOpen={setCreateMainCateOpen}
+            getMainCates={getMainCates}
+          />
+          <CreateSubCategory
+            mainCatesData={mainCatesData}
+            setMainCatesData={setMainCatesData}
+            createSubCateOpen={createSubCateOpen}
+            setCreateSubCateOpen={setCreateSubCateOpen}
+            getSubCates={getSubCates}
+          />
+        </>
+      )}
     </section>
   );
 }

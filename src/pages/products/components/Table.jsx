@@ -17,9 +17,12 @@ function Table({ rows, productsAll }) {
       headerAlign: "center",
       align: "center",
       renderCell: (params) => (
-          <div style={{ background: "#D0D0E2", borderRadius: "5px" }}>
-            <Avatar src={`${webPath}${params.row.thumbnail_link}`} alt={`Image ${params.thumbnail_title}`} />
-          </div>
+        <div style={{ background: "#D0D0E2", borderRadius: "5px" }}>
+          <Avatar
+            src={`${webPath}${params.row.thumbnail_link}`}
+            alt={`Image ${params.thumbnail_title}`}
+          />
+        </div>
       ),
     },
     {
@@ -27,12 +30,14 @@ function Table({ rows, productsAll }) {
       headerName: "ชื่อรายการ",
       headerAlign: "center",
       align: "center",
-      width: 120,
+      width: 150,
       headerClassName: "table-columns",
       renderCell: (params) => (
         <div style={{ paddingLeft: "1.2rem" }}>
           <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{`${params.row.title}`}</p>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>{params.row.product_id}</p>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>
+            {params.row.product_id}
+          </p>
         </div>
       ),
     },
@@ -40,7 +45,7 @@ function Table({ rows, productsAll }) {
       field: "import_value",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 50,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -57,7 +62,7 @@ function Table({ rows, productsAll }) {
       field: "defective_product",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 50,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -74,7 +79,7 @@ function Table({ rows, productsAll }) {
       field: "export_value",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 50,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -91,7 +96,7 @@ function Table({ rows, productsAll }) {
       field: "quantityPerUnit",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 50,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -105,7 +110,15 @@ function Table({ rows, productsAll }) {
       ),
       renderCell: (params) => (
         <div>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#000", fontWeight: "bold" }}>{params.row.import_value - params.row.export_value}</p>
+          <p
+            style={{
+              fontSize: "12px",
+              lineHeight: "12.5px",
+              color: params.row.import_value <= 50 ? "#ff0000" : "#000",
+            }}
+          >
+            {params.row.import_value - params.row.export_value}
+          </p>
         </div>
       ),
     },
@@ -114,12 +127,12 @@ function Table({ rows, productsAll }) {
       headerName: "วันที่ซื้อ",
       headerAlign: "center",
       align: "center",
-      width: 80,
+      width: 90,
       headerClassName: "table-columns",
     },
     {
       field: "mfd_date",
-      width: 80,
+      width: 90,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -135,10 +148,18 @@ function Table({ rows, productsAll }) {
       ),
       renderCell: (params) => (
         <div>
-          <Typography style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>{params.row.mfd_date}</Typography>
-          <Typography style={{ fontSize: "12px", lineHeight: "12.5px", color: params.row.diff_date <= 30 ? "#FF0000" : "#000" }}>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#000" }}>
+            {params.row.mfd_date}
+          </p>
+          <p
+            style={{
+              fontSize: "12px",
+              lineHeight: "12.5px",
+              color: "#9993B4",
+            }}
+          >
             {params.row.exp_date}
-          </Typography>
+          </p>
         </div>
       ),
     },
@@ -146,7 +167,7 @@ function Table({ rows, productsAll }) {
       field: "diff_date",
       headerAlign: "center",
       align: "center",
-      width: 50,
+      width: 70,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -156,6 +177,19 @@ function Table({ rows, productsAll }) {
           <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
             EXP
           </Typography>
+        </div>
+      ),
+      renderCell: (params) => (
+        <div>
+          <p
+            style={{
+              fontSize: "12px",
+              lineHeight: "12.5px",
+              color: params.row.diff_date <= 30 ? "#FF0000" : "#000",
+            }}
+          >
+            {params.row.diff_date} วัน
+          </p>
         </div>
       ),
     },
@@ -187,7 +221,7 @@ function Table({ rows, productsAll }) {
       field: "volumnPerUnit",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 90,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -351,7 +385,7 @@ function Table({ rows, productsAll }) {
       field: "pp_vat",
       headerAlign: "center",
       align: "center",
-      width: 50,
+      width: 70,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -386,7 +420,7 @@ function Table({ rows, productsAll }) {
       headerName: "จัดการสินค้า",
       headerAlign: "center",
       align: "center",
-      width: 100,
+      width: 90,
       headerClassName: "table-columns",
       renderCell: (params) => (
         <MenuItemList params={params} />

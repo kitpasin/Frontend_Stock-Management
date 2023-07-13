@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
@@ -9,23 +10,27 @@ import "./suppliers.scss";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
 import axios from "axios";
 import Swal from "sweetalert2";
+import PulseLoader from "react-spinners/PulseLoader";
 
 function Suppliers() {
+  const [loading, setLoading] = useState(true);
+
   const [suppliersData, setSuppliersData] = useState([]);
   const [mainCatesData, setMainCatesData] = useState([]);
   const [mainCates, setMainCates] = useState([]);
-  const [cellData, setCellData] = useState([])
+  const [cellData, setCellData] = useState([]);
   const [open, setOpen] = useState(false);
 
   function handleOpen(cellValue) {
-    setOpen(true)
-    setCellData(cellValue)
+    setOpen(true);
+    setCellData(cellValue);
   }
 
   async function getSuppliers() {
     const response = await axios.get("suppliers");
     const data = response.data;
     setSuppliersData(data.suppliers);
+    setLoading(false);
   }
   async function getMainCates() {
     const response = await axios.get("maincates");
@@ -37,6 +42,8 @@ function Suppliers() {
     getSuppliers();
     getMainCates();
   }, []);
+
+  console.log(suppliersData);
 
   function handleDeleteSupplier(cellValue) {
     Swal.fire({
@@ -111,9 +118,10 @@ function Suppliers() {
       headerClassName: "table-columns",
     },
     {
-      field: "ordered",
+      field: "product_count",
       headerName: "จำนวนสินค้าที่เคยสั่งซื้อ",
       width: 150,
+      align: "center",
       headerClassName: "table-columns",
     },
     {
@@ -156,51 +164,57 @@ function Suppliers() {
 
   return (
     <section id="supplier-page">
-      <HeadPageComponent
-        h1={"ซัพพลายเออร์"}
-        icon={<img src="/images/icons/mdi_shipping-pallet.png" alt="" />}
-        // icon={<FontAwesomeIcon icon={faStore} />}
-        breadcrums={[{ title: "ซัพพลายเออร์", link: false }]}
-      />
-      <div className="main-content">
-        <div className="head"></div>
-        <div className="content">
-          <div className="content-head">
-            <div className="title">
-              <img src="images/icons/mdi_shipping-pallet2.png" alt="" />
-              <p>ซัพพลายเออร์</p>
-              <span>{suppliersData.length} รายการ</span>
-            </div>
-            <div className="action">
-              <button onClick={handleLink}>เพิ่มซัพพลายเออร์</button>
-            </div>
-          </div>
-          <div className="table">
-            <DataGrid
-              getRowClassName={() => rowsClassName}
-              sx={{ fontSize: "12px", border: "none" }}
-              checkboxSelection={false}
-              rows={suppliersData}
-              columns={columns}
-              initialState={{
-                pagination: {
-                  paginationModel: { page: 0, pageSize: 5 },
-                },
-              }}
-              pageSizeOptions={[5, 10, 50, 100]}
-            />
-          </div>
-          <EditSupplier
-            mainCatesData={mainCatesData}
-            mainCates={mainCates}
-            setMainCates={setMainCates}
-            open={open}
-            setOpen={setOpen}
-            cellData={cellData}
-            getSuppliers={getSuppliers}
+      {loading ? (
+        <PulseLoader color="#3b326b" />
+      ) : (
+        <>
+          <HeadPageComponent
+            h1={"ซัพพลายเออร์"}
+            icon={<img src="/images/icons/mdi_shipping-pallet.png" alt="" />}
+            // icon={<FontAwesomeIcon icon={faStore} />}
+            breadcrums={[{ title: "ซัพพลายเออร์", link: false }]}
           />
-        </div>
-      </div>
+          <div className="main-content">
+            <div className="head"></div>
+            <div className="content">
+              <div className="content-head">
+                <div className="title">
+                  <img src="images/icons/mdi_shipping-pallet2.png" alt="" />
+                  <p>ซัพพลายเออร์</p>
+                  <span>{suppliersData.length} รายการ</span>
+                </div>
+                <div className="action">
+                  <button onClick={handleLink}>เพิ่มซัพพลายเออร์</button>
+                </div>
+              </div>
+              <div className="table">
+                <DataGrid
+                  getRowClassName={() => rowsClassName}
+                  sx={{ fontSize: "12px", border: "none" }}
+                  checkboxSelection={false}
+                  rows={suppliersData}
+                  columns={columns}
+                  initialState={{
+                    pagination: {
+                      paginationModel: { page: 0, pageSize: 5 },
+                    },
+                  }}
+                  pageSizeOptions={[5, 10, 50, 100]}
+                />
+              </div>
+              <EditSupplier
+                mainCatesData={mainCatesData}
+                mainCates={mainCates}
+                setMainCates={setMainCates}
+                open={open}
+                setOpen={setOpen}
+                cellData={cellData}
+                getSuppliers={getSuppliers}
+              />
+            </div>
+          </div>
+        </>
+      )}
     </section>
   );
 }

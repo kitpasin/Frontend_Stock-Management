@@ -26,6 +26,8 @@ function Table({ filteredProduct }) {
     setAnchorEl(null);
   }
 
+  console.log(filteredProduct);
+
   const columns = [
     {
       field: "thumbnail_link",
@@ -57,7 +59,7 @@ function Table({ filteredProduct }) {
       ),
     },
     {
-      field: "defectiveDate",
+      field: "export_date",
       width: 100,
       headerClassName: "table-columns",
       headerAlign: "center",
@@ -72,15 +74,19 @@ function Table({ filteredProduct }) {
           </Typography>
         </div>
       ),
-      renderCell: (params) => (
-        <div>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}></p>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}></p>
-        </div>
-      ),
+      renderCell: (params) => {
+        const date = params.row.export_date?.split(" ")[0];
+        const time = params.row.export_date?.split(" ")[1];
+        return (
+          <div>
+            <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{date}</p>
+            <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "red" }}>{time}</p>
+          </div>
+        );
+      },
     },
     {
-      field: "exportPerUnit",
+      field: "export_defective_value",
       width: 100,
       headerClassName: "table-columns",
       headerAlign: "center",
@@ -93,6 +99,13 @@ function Table({ filteredProduct }) {
           <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
             ล่าสุด/หน่วย
           </Typography>
+        </div>
+      ),
+      renderCell: (params) => (
+        <div>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>
+            {params.row.export_defective_value !== 0 ? params.row.export_defective_value : ""}
+          </p>
         </div>
       ),
     },
@@ -139,9 +152,7 @@ function Table({ filteredProduct }) {
       ),
       renderCell: (params) => (
         <div>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>
-            {params.row.mfd_date}
-          </p>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{params.row.mfd_date}</p>
           <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#FF0000" }}>
             {params.row.exp_date}
           </p>
@@ -326,7 +337,6 @@ function Table({ filteredProduct }) {
         }}
         pageSizeOptions={[5, 10, 50, 100]}
         checkboxSelection
-        disableRowSelectionOnClick
         onRowSelectionModelChange={(data) => {
           const selectedProductIds = data.map((rowId) => {
             const row = filteredProduct.find((item) => item.id === rowId);

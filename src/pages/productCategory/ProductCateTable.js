@@ -94,7 +94,7 @@ function Row({ row, subCatesData, getMainCates, getSubCates }) {
         <TableCell width={300} component="th" scope="row">
           {row.name}
         </TableCell>
-        <TableCell align="left">{row.quantity}</TableCell>
+        <TableCell align="left">{row.main_product_count}</TableCell>
         <TableCell align="center">
           <button style={btnStyle} onClick={() => handleEditMainCateOpen(row)}>
             <img src="images/icons/eva_edit-2-fill.png" alt="" />
@@ -114,7 +114,9 @@ function Row({ row, subCatesData, getMainCates, getSubCates }) {
                 <TableHead>
                   <TableRow>
                     <TableCell width={50} style={{ color: "#3B326B" }}></TableCell>
-                    <TableCell width={300} style={{ color: "#3B326B" }}>หมวดหมู่ย่อย</TableCell>
+                    <TableCell width={300} style={{ color: "#3B326B" }}>
+                      หมวดหมู่ย่อย
+                    </TableCell>
                     <TableCell style={{ color: "#3B326B" }}>จำนวนรายการสินค้าในหมวดหมู่</TableCell>
                     <TableCell style={{ color: "#3B326B" }} width={50} align="center">
                       แก้ไข
@@ -131,7 +133,7 @@ function Row({ row, subCatesData, getMainCates, getSubCates }) {
                         <TableRow key={sub.id}>
                           <TableCell></TableCell>
                           <TableCell>{sub.name}</TableCell>
-                          <TableCell>{sub.quantity}</TableCell>
+                          <TableCell>{sub.sub_product_count}</TableCell>
                           <TableCell align="center">
                             <button style={btnStyle} onClick={() => handleEditSubCateOpen(sub)}>
                               <img src="images/icons/eva_edit-2-fill.png" alt="" />

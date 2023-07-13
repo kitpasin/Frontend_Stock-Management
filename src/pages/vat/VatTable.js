@@ -94,10 +94,15 @@ function VatTable({ vatsData, getVats }) {
       headerClassName: "table-columns",
     },
     {
-      field: "vatList",
+      field: "product_count",
       headerName: "รายการสินค้าที่มี vat",
       width: 200,
       headerClassName: "table-columns",
+      renderCell: (params) => (
+        <div>
+          <p>{params.row.product_count} รายการ</p>
+        </div>
+      )
     },
     { field: "percent", headerName: "% Vat", width: 1070, headerClassName: "table-columns" },
     {
@@ -143,6 +148,7 @@ function VatTable({ vatsData, getVats }) {
         checkboxSelection={false}
         rows={vatsData}
         columns={columns}
+        disableRowSelectionOnClick
         initialState={{
           pagination: {
             paginationModel: { page: 0, pageSize: 5 },

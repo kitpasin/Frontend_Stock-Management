@@ -128,12 +128,12 @@ function Table({ filteredProduct, getDefectiveProducts }) {
         </div>
       ),
       renderCell: (params) => {
-        const date = params.row.export_date.split(" ")[0]
+        const date = params.row.export_date.split(" ")[0];
         const time = params.row.export_date.split(" ")[1];
         return (
           <div>
             <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{date}</p>
-            <p style={{ fontSize: "12px", color: "red" , lineHeight: "12.5px" }}>{time}</p>
+            <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>{time}</p>
           </div>
         );
       },
@@ -156,10 +156,8 @@ function Table({ filteredProduct, getDefectiveProducts }) {
       ),
       renderCell: (params) => (
         <div>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>
-            {params.row.mfd_date}
-          </p>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#FF0000" }}>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{params.row.mfd_date}</p>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>
             {params.row.exp_date}
           </p>
         </div>
@@ -188,7 +186,15 @@ function Table({ filteredProduct, getDefectiveProducts }) {
         const diffDateInDays = diffDateInMs / (1000 * 60 * 60 * 24);
         return (
           <div>
-            <p>{diffDateInDays} วัน</p>
+            <p
+              style={{
+                fontSize: "12px",
+                lineHeight: "12.5px",
+                color: diffDateInDays <= 30 ? "#FF0000" : "#000",
+              }}
+            >
+              {diffDateInDays} วัน
+            </p>
           </div>
         );
       },
