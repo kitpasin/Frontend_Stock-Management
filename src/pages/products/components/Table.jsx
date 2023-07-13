@@ -114,7 +114,7 @@ function Table({ rows, productsAll, refreshData, setRefreshData }) {
       headerName: "วันที่ซื้อ",
       headerAlign: "center",
       align: "center",
-      width: 80,
+      width: 90,
       headerClassName: "table-columns",
     },
     {
@@ -146,7 +146,7 @@ function Table({ rows, productsAll, refreshData, setRefreshData }) {
       field: "diff_date",
       headerAlign: "center",
       align: "center",
-      width: 50,
+      width: 60,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -158,6 +158,9 @@ function Table({ rows, productsAll, refreshData, setRefreshData }) {
           </Typography>
         </div>
       ),
+      renderCell: (param) => (
+        <p>{param.row.diff_date} วัน</p>
+      )
     },
     {
       field: "vat_name",

@@ -8,12 +8,14 @@ import ProductEditModal from "../ProductEditModal";
 import { svProductOne } from "../../../services/product.service";
 import { svDeleteProduct } from "../../../services/product.service";
 import { ConnectingAirportsOutlined } from "@mui/icons-material";
+import ExportModal from "../../export/ExportModal";
 
 function MenuItemList({ params, refreshData, setRefreshData }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openMenu, setOpenMenu] = React.useState(false);
   const [btnId, setbtnId] = React.useState(false);
   const [openModal, setOpenModal] = React.useState(false);
+  const [openExportModal, setOpenExportModal] = React.useState(false);
   const [productShow, setProductShow] = React.useState([]);
   const open = Boolean(anchorEl);
 
@@ -69,14 +71,13 @@ function MenuItemList({ params, refreshData, setRefreshData }) {
           profit_per_unit: res.data.profit_per_unit,
           pp_profit: res.data.pp_profit,
           pp_vat: res.data.pp_vat,
-          os_price:res.data.os_price,
+          os_price: res.data.os_price,
           selling_price: res.data.selling_price,
         };
         setProductShow(result);
       })
       .then(() => {
-        setAnchorEl(null);
-        setOpenMenu(false);
+        handleClose();
         setOpenModal(true);
       })
       .catch((err) => {
@@ -86,7 +87,7 @@ function MenuItemList({ params, refreshData, setRefreshData }) {
   };
 
   const deleteHandle = (product_id) => {
-    handleClose()
+    handleClose();
     Swal.fire({
       title: "Are you sure?",
       text: "Do you want to delete this product?",
@@ -97,19 +98,34 @@ function MenuItemList({ params, refreshData, setRefreshData }) {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        svDeleteProduct(product_id).then(res => {
-          Swal.fire({
-            text: "Delete product success.",
-            icon: "success",
-            showConfirmButton: false,
-            timer: 1000,
-          }).then(() => {
-            setRefreshData(refreshData + 1)
+        svDeleteProduct(product_id)
+          .then((res) => {
+            Swal.fire({
+              text: "Delete product success.",
+              icon: "success",
+              showConfirmButton: false,
+              timer: 1000,
+            }).then(() => {
+              setRefreshData(refreshData + 1);
+            });
           })
-        }).catch(err => console.log(err))
+          .catch((err) => console.log(err));
       }
     });
-  }
+  };
+
+  const exportProductOne = (_id) => {
+    svProductOne(_id)
+      .then((res) => {
+        const result = res.data;
+        setProductShow(result);
+      })
+      .then(() => {
+        handleClose();
+        setOpenExportModal(true);
+      })
+      .catch((err) => console.log(err));
+  };
 
   function handleClick(event) {
     setbtnId(event.currentTarget.getAttribute("id"));
@@ -172,7 +188,10 @@ function MenuItemList({ params, refreshData, setRefreshData }) {
             ซัพพลาย
           </p>
         </MenuItem>
-        <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={handleClose}>
+        <MenuItem
+          sx={{ display: "flex", gap: "1rem" }}
+          onClick={() => exportProductOne(params.row.id)}
+        >
           <img
             style={{ width: "18px", height: "18px" }}
             src="/images/icons/export-icon.png"
@@ -200,7 +219,10 @@ function MenuItemList({ params, refreshData, setRefreshData }) {
             แก้ไขสินค้า
           </p>
         </MenuItem>
-        <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={() => deleteHandle(params.row.product_id)}>
+        <MenuItem
+          sx={{ display: "flex", gap: "1rem" }}
+          onClick={() => deleteHandle(params.row.product_id)}
+        >
           <img
             style={{
               width: "18px",
@@ -222,6 +244,11 @@ function MenuItemList({ params, refreshData, setRefreshData }) {
         productShow={productShow}
         refreshData={refreshData}
         setRefreshData={setRefreshData}
+      />
+      <ExportModal
+        open={openExportModal}
+        setOpen={setOpenExportModal}
+        productShow={productShow}
       />
     </div>
   );

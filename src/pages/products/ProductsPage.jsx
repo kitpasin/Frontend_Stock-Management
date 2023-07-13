@@ -24,6 +24,7 @@ function ProductsPage() {
   const [mainCatesData, setMainCatesData] = useState([]);
   const { t } = useTranslation(["dashboard-page"]);
   const [productsAll, setProductsAll] = useState([]);
+  const [productsData, setProductsData] = useState([]);
   const [mainCateId, setMainCateId] = useState(0);
   const [productTitle, setProductTitle] = useState("");
   const [vat, setVat] = useState("all");
@@ -42,19 +43,29 @@ function ProductsPage() {
     setMainCateId(cate_id)
     const hasVat = (vat === "vat") ? true : false;
     if (cate_id === 0 && _title === "" && vat === "all") {
-      fetchProduct();
+      setProductsAll(productsData);
     } else if (cate_id === 0 && _title === "" && vat !== "all") {
-      const result = await fetchService();
-      const dd = await result?.filter((item) => (hasVat ? item.vat_id !== 0 : item.vat_id === 0))
+      const result = productsData;
+      const dd = result?.filter((item) => (hasVat ? item.vat_id !== 0 : item.vat_id === 0))
       setProductsAll(dd)
 
-    } else {
-      const result = await fetchService();
-      const data = await result?.filter((item) => (item.main_cate_id === cate_id || item.title === _title))
+    } else if ((cate_id === 0 && _title !== "") || (cate_id !== 0 && _title === "")) {
+      const result = productsData;
+      const data = result?.filter((item) => ((item.main_cate_id === cate_id || item.title === _title)))
       if (vat === "all") {
         setProductsAll(data)
       } else {
-        const dd = await data?.filter((item) => (hasVat ? item.vat_id !== 0 : item.vat_id === 0))
+        const dd = data?.filter((item) => (hasVat ? item.vat_id !== 0 : item.vat_id === 0))
+        setProductsAll(dd)
+
+      }
+    } else {
+      const result = productsData;
+      const data = result?.filter((item) => ((item.main_cate_id === cate_id && item.title === _title)))
+      if (vat === "all") {
+        setProductsAll(data)
+      } else {
+        const dd = data?.filter((item) => (hasVat ? item.vat_id !== 0 : item.vat_id === 0))
         setProductsAll(dd)
 
       }
@@ -72,17 +83,18 @@ function ProductsPage() {
 
   async function fetchProduct() {
     const result = await fetchService()
+    setProductsData(result)
     setProductsAll(result)
   }
 
   useEffect(() => {
     getMainCates()
     fetchProduct()
-  }, [])
+  }, [refreshData])
 
   useEffect(() => {
     filterData(mainCateId, productTitle)
-  }, [vat, refreshData]);
+  }, [vat]);
 
   return (
     <section id="products-page">
@@ -117,16 +129,6 @@ function ProductsPage() {
           </div>
           <div className="filter">
             <Autocomplete
-                size="small"
-                disablePortal
-                id="combo-box-demo"
-                options={mainCatesData}
-                getOptionLabel={(option) => option.name || ""}
-                sx={{ width: 150 }}
-                renderInput={(params) => <TextField {...params} label="หมวดหมู่" />}
-                onChange={(e, value) => filterData(value?value.id:0, productTitle)}
-            />
-            <Autocomplete
               size="small"
               disablePortal
               id="combo-box-demo"
@@ -135,6 +137,16 @@ function ProductsPage() {
               sx={{ width: 150 }}
               renderInput={(params) => <TextField {...params} label="ชื่อ" />}
               onChange={(e, value) => filterData(mainCateId,value?value.title:"")}
+            />
+            <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-demo"
+                options={mainCatesData}
+                getOptionLabel={(option) => option.name || ""}
+                sx={{ width: 150 }}
+                renderInput={(params) => <TextField {...params} label="หมวดหมู่" />}
+                onChange={(e, value) => filterData(value?value.id:0, productTitle)}
             />
             {/* <Autocomplete
               disabled
