@@ -1,8 +1,11 @@
 import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Typography } from "@mui/material";
+import dayjs from "dayjs";
 
-function DetailDataGrid({ selectedProduct }) {
+
+function DetailDataGrid({ selectedProduct, productShow, productShowArr }) {
+  const current_date = dayjs().toISOString().substring(0, 10)
 
   const columns = [
     {
@@ -48,7 +51,7 @@ function DetailDataGrid({ selectedProduct }) {
       headerClassName: "table-columns",
     },
     {
-      field: "MEDEXP",
+      field: "mfd_date",
       width: 90,
       headerAlign: "center",
       align: "center",
@@ -73,7 +76,7 @@ function DetailDataGrid({ selectedProduct }) {
       ),
     },
     {
-      field: "dateEXP",
+      field: "exp_date",
       headerAlign: "center",
       align: "center",
       width: 70,
@@ -93,9 +96,11 @@ function DetailDataGrid({ selectedProduct }) {
         const endDate = new Date(params.row.exp_date);
         const diffDateInMs = endDate - startDate;
         const diffDateInDays = diffDateInMs / (1000 * 60 * 60 * 24);
+
+        const duration = dayjs(params.row.exp_date).diff(current_date, 'day')
         return (
           <div>
-            <p>{diffDateInDays} วัน</p>
+            <p>{duration} วัน</p>
           </div>
         );
       },
@@ -288,7 +293,7 @@ function DetailDataGrid({ selectedProduct }) {
       <DataGrid
         getRowClassName={() => rowsClassName}
         sx={{ fontSize: "12px", border: "none" }}
-        rows={rowData}
+        rows={productShowArr}
         columns={columns}
         hideFooterPagination
         className="no-footer"

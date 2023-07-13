@@ -167,7 +167,7 @@ function Table({ rows, productsAll, refreshData, setRefreshData }) {
       field: "diff_date",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 60,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -179,19 +179,9 @@ function Table({ rows, productsAll, refreshData, setRefreshData }) {
           </Typography>
         </div>
       ),
-      renderCell: (params) => (
-        <div>
-          <p
-            style={{
-              fontSize: "12px",
-              lineHeight: "12.5px",
-              color: params.row.diff_date <= 30 ? "#FF0000" : "#000",
-            }}
-          >
-            {params.row.diff_date} วัน
-          </p>
-        </div>
-      ),
+      renderCell: (param) => (
+        <p>{param.row.diff_date} วัน</p>
+      )
     },
     {
       field: "vat_name",
