@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { TextField } from "@mui/material";
@@ -31,6 +31,7 @@ function ProductsPage() {
   const [mainCateId, setMainCateId] = useState(0);
   const [productTitle, setProductTitle] = useState("");
   const [vat, setVat] = useState("all");
+  const [refreshData, setRefreshData] = useState(0);
   const dispatch = useDispatch();
   const current_date = dayjs().toISOString().substring(0, 10);
 
@@ -86,7 +87,7 @@ function ProductsPage() {
 
   useEffect(() => {
     filterData(mainCateId, productTitle);
-  }, [vat]);
+  }, [vat, refreshData]);
 
   return (
     <section id="products-page">
@@ -127,7 +128,7 @@ function ProductsPage() {
                 <Autocomplete
                   size="small"
                   disablePortal
-                  id="combo-box-demo"
+                  id="combo-box-cate"
                   options={mainCatesData}
                   getOptionLabel={(option) => option.name || ""}
                   sx={{ width: 150 }}
@@ -137,47 +138,24 @@ function ProductsPage() {
                 <Autocomplete
                   size="small"
                   disablePortal
-                  id="combo-box-demo"
+                  id="combo-box-title"
                   options={productsAll}
                   getOptionLabel={(option) => option.title || ""}
                   sx={{ width: 150 }}
                   renderInput={(params) => <TextField {...params} label="ชื่อ" />}
                   onChange={(e, value) => filterData(mainCateId, value ? value.title : "")}
                 />
-                {/* <Autocomplete
-              disabled
-              size="small"
-              disablePortal
-              id="combo-box-demo"
-              options={rows.map((e) => e.category)}
-              sx={{ width: 150 }}
-              renderInput={(params) => <TextField {...params} label="หมวดหมู่ย่อย" />}
-            /> */}
                 <FormControl>
                   <RadioGroup
                     row
                     aria-labelledby="demo-row-radio-buttons-group-label"
                     name="row-radio-buttons-group"
                     value={vat}
+                    onChange={(e) => setVat(e.target.value)}
                   >
-                    <FormControlLabel
-                      value="all"
-                      control={<Radio />}
-                      label="All"
-                      onChange={() => setVat("all")}
-                    />
-                    <FormControlLabel
-                      value="vat"
-                      control={<Radio />}
-                      label="Vat"
-                      onChange={() => setVat("vat")}
-                    />
-                    <FormControlLabel
-                      value="noVat"
-                      control={<Radio />}
-                      label="No Vat"
-                      onChange={() => setVat("noVat")}
-                    />
+                    <FormControlLabel value="all" control={<Radio />} label="All" />
+                    <FormControlLabel value="vat" control={<Radio />} label="Vat" />
+                    <FormControlLabel value="noVat" control={<Radio />} label="No Vat" />
                   </RadioGroup>
                 </FormControl>
                 <Link style={{ fontSize: "16px" }} to="/products/import" className="create">
@@ -189,7 +167,12 @@ function ProductsPage() {
               </div>
             </div>
             <div>
-              <Table rows={rows} productsAll={productsAll} />
+              <Table
+                rows={rows}
+                productsAll={productsAll}
+                refreshData={refreshData}
+                setRefreshData={setRefreshData}
+              />
             </div>
           </Card>
         </>

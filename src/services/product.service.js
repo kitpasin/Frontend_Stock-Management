@@ -26,3 +26,21 @@ export const svProductOne = async (_id) => {
         return { status: false, description: "Something went wrong.", errorMessage: err.response.data };
     }
 }
+
+export const svProductUpdate = async (_id, _form) => {
+    try {
+        const res = await axios.post(`product/update/${_id}`, _form);
+        return { status: true, data: res.data.data, message: "Update product success." };
+    } catch (err) {
+        return { status: false, description: "Something went wrong.", errorMessage: err };
+    }
+}
+
+export const svDeleteProduct = async (product_id) => {
+    try {
+        const res = await axios.delete(`product/delete/${product_id}`);
+        return { status: true, data: res.data.data, message: "Delete product success." };
+    } catch (err) {
+        return { status: false, description: "Something went wrong.", errorMessage: err };
+    }
+}
