@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { TextField } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { Card } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import Radio from "@mui/material/Radio";
@@ -19,10 +19,14 @@ import { rows } from "./data/TableData";
 import { Link } from "react-router-dom";
 import { svProductAll } from "../../services/product.service";
 import dayjs from "dayjs";
+import MultiExportModal from "../export/MultiExportModal";
 import { RestoreFromTrashRounded } from "@mui/icons-material";
+import Swal from "sweetalert2";
 
 function ProductsPage() {
   const [mainCatesData, setMainCatesData] = useState([]);
+  const [productSelected, setProductSelected] = useState([]);
+  const [openMultiExportModal, setOpenMultiexportModal] = useState(false);
   const { t } = useTranslation(["dashboard-page"]);
 
   const [loading, setLoading] = useState(true);
@@ -35,6 +39,20 @@ function ProductsPage() {
   const [refreshData, setRefreshData] = useState(0);
   const dispatch = useDispatch();
   const current_date = dayjs().toISOString().substring(0, 10);
+
+  const multiExportHandle = () => {
+    if (productSelected.length === 0) {
+      Swal.fire({
+        text: "เลือกสินค้าที่ต้องการเบิก",
+        icon: "info",
+      }).then(() => {
+        return false;
+      });
+    } else {
+      console.log(productSelected);
+      setOpenMultiexportModal(true);
+    }
+  };
 
   async function getMainCates() {
     const response = await axios.get("maincates");
@@ -50,24 +68,37 @@ function ProductsPage() {
       setProductsAll(productsData);
     } else if (cate_id === 0 && _title === "" && vat !== "all") {
       const result = productsData;
-      const dd = result?.filter((item) => (hasVat ? item.vat_id !== 0 : item.vat_id === 0));
+      const dd = result?.filter((item) =>
+        hasVat ? item.vat_id !== 0 : item.vat_id === 0
+      );
       setProductsAll(dd);
-    } else if ((cate_id === 0 && _title !== "") || (cate_id !== 0 && _title === "")) {
+    } else if (
+      (cate_id === 0 && _title !== "") ||
+      (cate_id !== 0 && _title === "")
+    ) {
       const result = productsData;
-      const data = result?.filter((item) => item.main_cate_id === cate_id || item.title === _title);
+      const data = result?.filter(
+        (item) => item.main_cate_id === cate_id || item.title === _title
+      );
       if (vat === "all") {
         setProductsAll(data);
       } else {
-        const dd = data?.filter((item) => (hasVat ? item.vat_id !== 0 : item.vat_id === 0));
+        const dd = data?.filter((item) =>
+          hasVat ? item.vat_id !== 0 : item.vat_id === 0
+        );
         setProductsAll(dd);
       }
     } else {
       const result = productsData;
-      const data = result?.filter((item) => item.main_cate_id === cate_id && item.title === _title);
+      const data = result?.filter(
+        (item) => item.main_cate_id === cate_id && item.title === _title
+      );
       if (vat === "all") {
         setProductsAll(data);
       } else {
-        const dd = data?.filter((item) => (hasVat ? item.vat_id !== 0 : item.vat_id === 0));
+        const dd = data?.filter((item) =>
+          hasVat ? item.vat_id !== 0 : item.vat_id === 0
+        );
         setProductsAll(dd);
       }
     }
@@ -86,7 +117,7 @@ function ProductsPage() {
     const result = await fetchService();
     setProductsData(result);
     setProductsAll(result);
-    setLoading(false)
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -141,8 +172,12 @@ function ProductsPage() {
                   options={productsAll}
                   getOptionLabel={(option) => option.title || ""}
                   sx={{ width: 150 }}
-                  renderInput={(params) => <TextField {...params} label="ชื่อ" />}
-                  onChange={(e, value) => filterData(mainCateId, value ? value.title : "")}
+                  renderInput={(params) => (
+                    <TextField {...params} label="ชื่อ" />
+                  )}
+                  onChange={(e, value) =>
+                    filterData(mainCateId, value ? value.title : "")
+                  }
                 />
                 <Autocomplete
                   size="small"
@@ -151,8 +186,12 @@ function ProductsPage() {
                   options={mainCatesData}
                   getOptionLabel={(option) => option.name || ""}
                   sx={{ width: 150 }}
-                  renderInput={(params) => <TextField {...params} label="หมวดหมู่" />}
-                  onChange={(e, value) => filterData(value ? value.id : 0, productTitle)}
+                  renderInput={(params) => (
+                    <TextField {...params} label="หมวดหมู่" />
+                  )}
+                  onChange={(e, value) =>
+                    filterData(value ? value.id : 0, productTitle)
+                  }
                 />
                 {/* <Autocomplete
               disabled
@@ -190,12 +229,20 @@ function ProductsPage() {
                     />
                   </RadioGroup>
                 </FormControl>
-                <Link style={{ fontSize: "16px" }} to="/products/import" className="create">
+                <Link
+                  style={{ fontSize: "16px" }}
+                  to="/products/import"
+                  className="create"
+                >
                   เพิ่มสินค้า
                 </Link>
-                <Link style={{ fontSize: "16px" }} to="/products/export" className="export">
+                <Button
+                  style={{ fontSize: "16px" }}
+                  className="export"
+                  onClick={() => multiExportHandle()}
+                >
                   เบิกสินค้า
-                </Link>
+                </Button>
               </div>
             </div>
             <div>
@@ -204,9 +251,20 @@ function ProductsPage() {
                 productsAll={productsAll}
                 refreshData={refreshData}
                 setRefreshData={setRefreshData}
+                setProductSelected={setProductSelected}
+                productSelected={productSelected}
               />
             </div>
           </Card>
+          <MultiExportModal
+            open={openMultiExportModal}
+            setOpen={setOpenMultiexportModal}
+            productShow={productSelected}
+            refreshData={refreshData}
+            setRefreshData={setRefreshData}
+            setProductSelected={setProductSelected}
+            productSelected={productSelected}
+          />
         </>
       )}
     </section>

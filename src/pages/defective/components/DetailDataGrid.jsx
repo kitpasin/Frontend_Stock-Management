@@ -3,9 +3,8 @@ import { DataGrid } from "@mui/x-data-grid";
 import { Typography } from "@mui/material";
 import dayjs from "dayjs";
 
-
-function DetailDataGrid({ selectedProduct, productShow, productShowArr }) {
-  const current_date = dayjs().toISOString().substring(0, 10)
+function DetailDataGrid({ selectedProduct, productShow, productShowArr, stock }) {
+  const current_date = dayjs().toISOString().substring(0, 10);
 
   const columns = [
     {
@@ -16,14 +15,23 @@ function DetailDataGrid({ selectedProduct, productShow, productShowArr }) {
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             คงเหลือ
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             /หน่วย
           </Typography>
         </div>
       ),
+      renderCell: (params) => (
+        <div>
+          <p>{params.row.import_value - (params.row.export_value + params.row.export_defective_value)}</p>
+        </div>
+      )
     },
     {
       field: "defective_product",
@@ -33,10 +41,14 @@ function DetailDataGrid({ selectedProduct, productShow, productShowArr }) {
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             สินค้า
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             มีปัญหา
           </Typography>
         </div>
@@ -58,18 +70,26 @@ function DetailDataGrid({ selectedProduct, productShow, productShowArr }) {
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             MFD
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             EXP
           </Typography>
         </div>
       ),
       renderCell: (params) => (
         <div>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{params.row.mfd_date}</p>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#FF0000" }}>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>
+            {params.row.mfd_date}
+          </p>
+          <p
+            style={{ fontSize: "12px", lineHeight: "12.5px", color: "#FF0000" }}
+          >
             {params.row.exp_date}
           </p>
         </div>
@@ -83,10 +103,14 @@ function DetailDataGrid({ selectedProduct, productShow, productShowArr }) {
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             จำนวนวัน
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             EXP
           </Typography>
         </div>
@@ -97,7 +121,7 @@ function DetailDataGrid({ selectedProduct, productShow, productShowArr }) {
         const diffDateInMs = endDate - startDate;
         const diffDateInDays = diffDateInMs / (1000 * 60 * 60 * 24);
 
-        const duration = dayjs(params.row.exp_date).diff(current_date, 'day')
+        const duration = dayjs(params.row.exp_date).diff(current_date, "day");
         return (
           <div>
             <p>{duration} วัน</p>
@@ -137,10 +161,14 @@ function DetailDataGrid({ selectedProduct, productShow, productShowArr }) {
       align: "center",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ปริมาตรสุทธิ
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             /หน่วย
           </Typography>
         </div>
@@ -154,10 +182,14 @@ function DetailDataGrid({ selectedProduct, productShow, productShowArr }) {
       align: "center",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ค่าดำเนินการ
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             (THB)
           </Typography>
         </div>
@@ -171,10 +203,14 @@ function DetailDataGrid({ selectedProduct, productShow, productShowArr }) {
       align: "center",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ค่าดำเนินการ
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             /หน่วย (THB)
           </Typography>
         </div>
@@ -188,10 +224,14 @@ function DetailDataGrid({ selectedProduct, productShow, productShowArr }) {
       align: "center",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ราคาดิบ
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             (THB)
           </Typography>
         </div>
@@ -206,10 +246,14 @@ function DetailDataGrid({ selectedProduct, productShow, productShowArr }) {
       align: "center",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ราคาดิบ
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             /หน่วย (THB)
           </Typography>
         </div>
@@ -223,10 +267,14 @@ function DetailDataGrid({ selectedProduct, productShow, productShowArr }) {
       align: "center",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ต้นทุน
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             /หน่วย (THB)
           </Typography>
         </div>
@@ -256,10 +304,14 @@ function DetailDataGrid({ selectedProduct, productShow, productShowArr }) {
       align: "center",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ราคาขาย
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             (THB)
           </Typography>
         </div>
@@ -273,10 +325,14 @@ function DetailDataGrid({ selectedProduct, productShow, productShowArr }) {
       align: "center",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ราคาขายจริง
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             (THB)
           </Typography>
         </div>

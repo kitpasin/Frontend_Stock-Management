@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { Autocomplete, Card, TextField } from "@mui/material";
 import Barcode from "react-barcode";
+import Swal from "sweetalert2";
 
 import "./ProductsExportPage.scss";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
@@ -14,30 +15,123 @@ import {
 } from "../defective/data/TableData";
 import SupplierDataGrid from "../defective/components/SupplierDataGrid";
 import { rows } from "./data/TableData";
+import { svExportProduct } from "../../services/product.service";
+import dayjs from "dayjs";
 
-function ProductsExportPage({ exportOne, productShow }) {
-  const stock = productShow.import_value - productShow.export_value;
+function ProductsExportPage({
+  exportOne,
+  multiExprot,
+  productDatas,
+  refreshData,
+  setRefreshData,
+  open,
+  setOpen,
+  setProductSelected
+}) {
+  const [stock, setStock] = useState(0);
   const webPath = useSelector((state) => state.app.webPath);
   const [productShowArr, setProductShowArr] = useState([]);
+  const [productData, setProductData] = useState(productDatas);
+  const [productShow, setProductShow] = useState([]);
   const [exportValue, setExportValue] = useState(0);
+  const [id, setId] = useState(0);
+  const inputRef = useRef();
   const { t } = useTranslation(["dashboard-page"]);
 
-  const onExportProduct = (_id) => {
-    if (exportValue <= 0) {
-      console.log("errorerereoreroereor");
+  useEffect(() => {
+    if (multiExprot && !exportOne) {
+      setProductShowArr((prev) => {
+        return [...prev, productData[0]];
+      });
+      setProductShow(productData[0])
+      setStock(productData[0].import_value - (productData[0].export_value + productData[0].export_defective_value))
+      setId(productDatas[0].id);
+      
     } else {
-      console.log("okokoko");
+      setProductShow(productData)
+      setProductShowArr((prev) => {
+        return [productData];
+      });
+      setStock(productData.import_value - (productData.export_value + productData.export_defective_value))
+    }
+  }, []);
+
+  function onSelectProductHandle(_id) {
+    setId(_id)
+    if (_id === 0) {
+      setProductShow(productData[0])
+      setStock(productData[0].import_value - (productData[0].export_value + productData[0].export_defective_value))
+      setProductShowArr((prev) => {
+        return [productData[0]];
+      });
+      return;
+    } 
+    const result = productData.filter(item => item.id === _id)
+    setProductShow(result[0])
+    setProductShowArr((prev) => {
+      return [result[0]];
+    });
+    setStock(result[0].import_value - (result[0].export_value + result[0].export_defective_value))
+    setExportValue(0)
+  }
+
+  const onExportProduct = (_id) => {
+    const formExport = {
+      product_id: productShow.product_id,
+      quantity: exportValue,
+    };
+    if (exportValue <= 0) {
+      inputRef.current.focus();
+    } else {
+      Swal.fire({
+        title: "ยืนยันการเบิกสินค้า",
+        html:
+          `<p>รหัสสินค้า : ${productShow.product_id}</p>` +
+          `<p>ชื่อสินค้า : ${productShow.title}</p>` +
+          `<p>จำนวนที่ต้องการเบิก : ${exportValue}</p>`,
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "ยืนยัน",
+        cancelButtonText: "ยกเลิก",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          svExportProduct(formExport)
+            .then((res) => {
+              Swal.fire({
+                title: "เบิกสินค้าสำเร็จ",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1500,
+              }).then(() => {
+                setRefreshData(refreshData + 1);
+                if (multiExprot && !exportOne && productData.length > 1) {
+                  const newProductData = productData.filter(item => item.id !== id)
+                  setProductData(newProductData)
+                  setProductShow(newProductData[0])
+                  setId(newProductData[0].id)
+                  setStock(newProductData[0].import_value - (newProductData[0].export_value + newProductData[0].export_defective_value))
+                  setExportValue(0)
+                  setProductShowArr((prev) => {
+                    return [newProductData[0]];
+                  });
+                } else {
+                  setOpen(false)
+                }
+              });
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      });
     }
   };
 
-  useEffect(() => {
-    setProductShowArr((prev) => {
-      return [...prev, productShow];
-    });
-  }, []);
+  
   return (
     <section id="products-export-page">
-      {!exportOne && (
+      {!exportOne && false && (
         <div
           style={{
             display: "flex",
@@ -74,15 +168,17 @@ function ProductsExportPage({ exportOne, productShow }) {
           </div>
           {!exportOne && (
             <Autocomplete
+              defaultValue={{ title: productData[0].title }}
               size="small"
               disablePortal
               id="combo-box-demo"
-              options={rows}
-              getOptionLabel={(rows) => rows.name || ""}
+              options={productData}
+              getOptionLabel={(rows) => rows.title || ""}
               sx={{ width: "200px" }}
               renderInput={(params) => (
                 <TextField {...params} label="เลือกสินค้า" />
               )}
+              onChange={(e, value) => onSelectProductHandle(value?value.id:0)}
             />
           )}
         </div>
@@ -121,6 +217,7 @@ function ProductsExportPage({ exportOne, productShow }) {
         <DetailDataGrid
           defectiveDetail={defectiveDetail}
           productShowArr={productShowArr}
+          stock={stock}
         />
       </Card>
       <Card className="flex-container-column">
@@ -143,6 +240,7 @@ function ProductsExportPage({ exportOne, productShow }) {
         <Card className="quantity-export">
           <p>กรอกจำนวนสินค้าที่ต้องการเบิก</p>
           <input
+            ref={inputRef}
             placeholder="กรอกจำนวนสินค้า"
             value={exportValue}
             onChange={(e) =>
@@ -155,7 +253,10 @@ function ProductsExportPage({ exportOne, productShow }) {
             }
           />
         </Card>
-        <button className="submit" onClick={() => onExportProduct(productShow.id)}>
+        <button
+          className="submit"
+          onClick={() => onExportProduct(productShow.id)}
+        >
           <img src="/images/icons/importBig-icon.png" alt="" />
           <p>ยืนยันจำนวน</p>
         </button>
