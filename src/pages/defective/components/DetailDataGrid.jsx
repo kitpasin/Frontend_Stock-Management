@@ -29,7 +29,9 @@ function DetailDataGrid({ selectedProduct, productShow, productShowArr, stock })
       ),
       renderCell: (params) => (
         <div>
-          <p>{params.row.import_value - (params.row.export_value + params.row.export_defective_value)}</p>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>
+            {params.row.import_value - params.row.export_value - params.row.export_defective_value}
+          </p>
         </div>
       )
     },
@@ -349,7 +351,7 @@ function DetailDataGrid({ selectedProduct, productShow, productShowArr, stock })
       <DataGrid
         getRowClassName={() => rowsClassName}
         sx={{ fontSize: "12px", border: "none" }}
-        rows={productShowArr}
+        rows={rowData}
         columns={columns}
         hideFooterPagination
         className="no-footer"

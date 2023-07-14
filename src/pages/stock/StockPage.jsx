@@ -120,7 +120,7 @@ function StockPage() {
                   sx={{ width: 150 }}
                   renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
                 />
-                <Autocomplete
+                {/* <Autocomplete
                   size="small"
                   disablePortal
                   id="combo-box-demo"
@@ -129,7 +129,7 @@ function StockPage() {
                   onChange={(event, value) => setSubCategory(value?.name || null)}
                   sx={{ width: 150 }}
                   renderInput={(params) => <TextField {...params} label="หมวดหมู่ย่อย" />}
-                />
+                /> */}
                 <FormControl>
                   <RadioGroup
                     row

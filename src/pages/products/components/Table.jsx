@@ -233,7 +233,11 @@ function Table({
           </Typography>
         </div>
       ),
-      renderCell: (param) => <p>{param.row.diff_date} วัน</p>,
+      renderCell: (param) => (
+        <p style={{ color: param.row.diff_date <= 30 ? "#ff0000" : "#000" }}>
+          {param.row.diff_date} วัน
+        </p>
+      ),
     },
     {
       field: "vat_name",
