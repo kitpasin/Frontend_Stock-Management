@@ -24,6 +24,13 @@ function DetailDataGrid({ selectedProduct, productShow, productShowArr }) {
           </Typography>
         </div>
       ),
+      renderCell: (params) => (
+        <div>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>
+            {params.row.import_value - params.row.export_value - params.row.export_defective_value}
+          </p>
+        </div>
+      )
     },
     {
       field: "defective_product",
@@ -293,7 +300,7 @@ function DetailDataGrid({ selectedProduct, productShow, productShowArr }) {
       <DataGrid
         getRowClassName={() => rowsClassName}
         sx={{ fontSize: "12px", border: "none" }}
-        rows={productShowArr}
+        rows={rowData}
         columns={columns}
         hideFooterPagination
         className="no-footer"

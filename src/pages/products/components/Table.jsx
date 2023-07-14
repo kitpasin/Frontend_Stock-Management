@@ -8,6 +8,8 @@ import MenuItemList from "./MenuItemList";
 function Table({ rows, productsAll, refreshData, setRefreshData }) {
   const webPath = useSelector((state) => state.app.webPath);
 
+  console.log(productsAll)
+
   const columns = [
     {
       field: "thumbnail_link",
@@ -117,7 +119,7 @@ function Table({ rows, productsAll, refreshData, setRefreshData }) {
               color: params.row.import_value <= 50 ? "#ff0000" : "#000",
             }}
           >
-            {params.row.import_value - params.row.export_value}
+            {params.row.import_value - params.row.export_value - params.row.export_defective_value}
           </p>
         </div>
       ),
@@ -180,8 +182,10 @@ function Table({ rows, productsAll, refreshData, setRefreshData }) {
         </div>
       ),
       renderCell: (param) => (
-        <p>{param.row.diff_date} วัน</p>
-      )
+        <p style={{ color: param.row.diff_date <= 30 ? "#ff0000" : "#000" }}>
+          {param.row.diff_date} วัน
+        </p>
+      ),
     },
     {
       field: "vat_name",

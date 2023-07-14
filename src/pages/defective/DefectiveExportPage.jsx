@@ -25,13 +25,39 @@ function DefectiveExportPage() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [exportQuantity, setExportQuantity] = useState(0);
 
+  const storedArrayString = localStorage.getItem("SelectedProductIds");
+  const storedArray = JSON.parse(storedArrayString);
+
+  useEffect(() => {
+    async function fetchData() {
+      await getProducts();
+    }
+
+    fetchData();
+  }, []);
+
   async function getProducts() {
     const response = await axios.get("productAll");
     const data = response.data.data;
-    const filteredProducts = data.filter((product) => productIds.includes(product.product_id));
+    const filteredProducts = data.filter((product) => storedArray.includes(product.product_id));
+
     setProducts(filteredProducts);
+
+    if (selectedProduct) {
+      const foundProduct = filteredProducts.find(
+        (product) => product.product_id === selectedProduct.product_id
+      );
+      if (foundProduct) {
+        setSelectedProduct(foundProduct);
+        setExportQuantity(0)
+      } else {
+        setSelectedProduct(null);
+      }
+    }
+
     setLoading(false);
   }
+
 
   function ExportDefectiveProduct(product) {
     const data = {
@@ -63,10 +89,6 @@ function DefectiveExportPage() {
       }
     });
   }
-
-  useEffect(() => {
-    getProducts();
-  }, []);
 
   return (
     <section id="defective-export-page">
@@ -171,7 +193,10 @@ function DefectiveExportPage() {
             <Card className="quantity-left">
               <p>จำนวนคงเหลือ/หน่วย</p>
               <span>
-                {selectedProduct?.total_product} {selectedProduct?.amount_name}
+                {selectedProduct?.import_value -
+                  selectedProduct?.export_value -
+                  selectedProduct?.export_defective_value
+                } {selectedProduct?.amount_name}
               </span>
             </Card>
             <Card className="quantity-export">

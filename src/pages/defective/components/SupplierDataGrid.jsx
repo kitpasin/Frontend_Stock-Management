@@ -50,7 +50,7 @@ function SupplierDataGrid({ selectedProduct, productShowArr }) {
       <DataGrid
         getRowClassName={() => rowsClassName}
         sx={{ fontSize: "12px", border: "none" }}
-        rows={productShowArr}
+        rows={rowData}
         columns={columns}
         hideFooterPagination
         className="no-footer"

@@ -107,7 +107,7 @@ function Table({ filteredProduct }) {
               color: params.row.import_value <= 50 ? "#ff0000" : "#000",
             }}
           >
-            {params.row.import_value - params.row.export_value}
+            {params.row.import_value - params.row.export_value - params.row.export_defective_value}
           </p>
         </div>
       ),

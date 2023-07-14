@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useState, useContext, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Avatar, Typography } from "@mui/material";
@@ -17,6 +18,8 @@ function Table({ filteredProduct }) {
 
   useEffect(() => {
     setProductIds(selectedProductIds);
+    const arrayString = JSON.stringify(selectedProductIds);
+    localStorage.setItem("SelectedProductIds", arrayString);
   }, [selectedProductIds])
 
   function handleClick(event) {
@@ -25,8 +28,6 @@ function Table({ filteredProduct }) {
   function handleClose() {
     setAnchorEl(null);
   }
-
-  console.log(filteredProduct);
 
   const columns = [
     {
