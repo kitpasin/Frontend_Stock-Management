@@ -47,16 +47,16 @@ const form = {
   os_price: 0, selling_price: "",
 };
 
-function ProductsImportPage({ isEdit, productShow, setOpenModalEdit, refreshData, setRefreshData }) {
+function ProductsImportPage({ isEdit, isFetchImport, productShow, setOpenModalEdit, refreshData, setRefreshData }) {
   const formPreview = {
     src: "",
     file: "",
     remove: false,
-    isError: isEdit ? false : true,
+    isError: (isEdit || isFetchImport) ? false : true,
   };
 
   const formVat = {
-    checked: isEdit && productShow.vat_id === 0 ? true : false,
+    checked: (isEdit || isFetchImport) && productShow.vat_id === 0 ? true : false,
     disRadio: false,
     disSelect: false,
   
@@ -68,7 +68,7 @@ function ProductsImportPage({ isEdit, productShow, setOpenModalEdit, refreshData
   const [selectedMFDTime, setSelectedMFDTime] = useState(null);
   const [selectedEXPTime, setSelectedEXPTime] = useState(null);
   const [generatedNumber, setGeneratedNumber] = useState("");
-  const [productData, setProductData] = useState(isEdit ? productShow : form);
+  const [productData, setProductData] = useState((isEdit || isFetchImport) ? productShow : form);
   const [preview, setPreview] = useState(formPreview);
   const [vat, setVat] = useState(formVat);
   const [netsData, setNetsData] = useState([])
@@ -122,7 +122,7 @@ function ProductsImportPage({ isEdit, productShow, setOpenModalEdit, refreshData
     const response = await axios.get(`subcate/bymain?mainid=${main_cate_id}`);
     const data = response.data.subCates;
     setSubCatesData(data)
-    if (isEdit && !refreshSubCate) {
+    if ((isEdit || isFetchImport) && !refreshSubCate) {
       setProductData(() => { return { ...productData, main_cate_id: main_cate_id } })
       setRefreshSubCate(true)
     } else {
@@ -149,7 +149,7 @@ function ProductsImportPage({ isEdit, productShow, setOpenModalEdit, refreshData
     getMainCates();
     getVats();
     getSuppliers();
-    getSubCates();
+    // getSubCates();
     getMainCatesBySupplier(productData.supplier_id)
   }, [])
 
@@ -231,14 +231,14 @@ function ProductsImportPage({ isEdit, productShow, setOpenModalEdit, refreshData
       src: image,
       file: value,
       remove: true,
-      isError: isEdit ? true : false,
+      isError: (isEdit || isFetchImport) ? true : false,
     });
   };
 
   const resetDataHandle = () => {
     setProductData(form)
     setProductData((prev) => {
-      return { ...prev, reset: productData.reset + 1 }
+      return { ...prev, reset: productData.reset + 1, state1: !productData.state1, state2: !productData.state2, state3: !productData.state3, vat: "", vat_id: "" }
     })
     formInputRef.current.value = ""
     setPreview({
@@ -247,6 +247,9 @@ function ProductsImportPage({ isEdit, productShow, setOpenModalEdit, refreshData
       remove: false,
       isError: true,
     });
+    setVat((prev) => {
+      return { ...prev, checked: false }
+    })
     setGeneratedNumber("")
   }
 
@@ -328,7 +331,7 @@ function ProductsImportPage({ isEdit, productShow, setOpenModalEdit, refreshData
   }
 
   function onSaveProduct(_form) {
-    if (isEdit) {
+    if (isEdit && !isFetchImport) {
       svProductUpdate(productData.id, _form).then(res => {
         setOpenModalEdit(false);
         Swal.fire({
@@ -354,10 +357,15 @@ function ProductsImportPage({ isEdit, productShow, setOpenModalEdit, refreshData
           svCreateProduct(_form).then((res) => {
             if (res.status) {
               Swal.fire("Created!", "Product has been created successfully.", "success").then(() => {
-                resetDataHandle()
+                if (isFetchImport) {
+                  setRefreshData(refreshData + 1)
+                  setOpenModalEdit(false)
+
+                } else {
+                  resetDataHandle()
+                }
               })
             } else {
-              // alert('error')
               console.log(res)
             }
           })
@@ -368,7 +376,7 @@ function ProductsImportPage({ isEdit, productShow, setOpenModalEdit, refreshData
 
   return (
     <section id="products-import-page">
-      { !isEdit && 
+      { !isEdit && !isFetchImport &&
         <div
           style={{
             display: "flex",
@@ -398,9 +406,9 @@ function ProductsImportPage({ isEdit, productShow, setOpenModalEdit, refreshData
               <figure className="header-title">
                 <img src="/images/icons/import-icon.png" alt="" />
                 <p>ข้อมูลสินค้า</p>
-                { !isEdit &&
+                { !isEdit && !isFetchImport &&
                   <Link
-                    to="/products/import/search"
+                    to="/products"
                     style={{ marginLeft: "5.7rem" }}
                   >
                     <img src="/images/icons/search-icon.png" alt="" />
@@ -417,7 +425,7 @@ function ProductsImportPage({ isEdit, productShow, setOpenModalEdit, refreshData
                 }}
               >
               { !isEdit &&
-                <button style={{ display: "flex", justifyContent: "center" }} onClick={resetDataHandle}>
+                <button type="button" style={{ display: "flex", justifyContent: "center" }} onClick={resetDataHandle}>
                   ล้างข้อมูล
                 </button>
               }
@@ -437,12 +445,12 @@ function ProductsImportPage({ isEdit, productShow, setOpenModalEdit, refreshData
                       ref={formInputRef}
                     />
                   </div>
-                  { isEdit ? 
+                  { (isEdit || isFetchImport) ? 
                     <img
                       src={
                         !preview.isError
                           ? webPath + productData.image_path
-                          : preview.src
+                          : preview.src || "/images/mock/pre-product.png"
                       }
                       alt={""}
                     />
@@ -456,7 +464,7 @@ function ProductsImportPage({ isEdit, productShow, setOpenModalEdit, refreshData
                       alt={""}
                     />
                   }
-                  <p style={{ display: preview.isError && (!isEdit) ? "block" : "none" }}>
+                  <p style={{ display: preview.isError && (!isEdit && !isFetchImport) ? "block" : "none" }}>
                     ขนาดไฟล์ภาพไม่เกิน 10 Gb
                   </p>
                 </figure>

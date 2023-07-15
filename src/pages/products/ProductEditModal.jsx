@@ -55,7 +55,7 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-function ProductEditModal({ open, setOpen, productShow, refreshData, setRefreshData }) {
+function ProductEditModal({ isEdit, isFetchImport, open, setOpen, productShow, refreshData, setRefreshData }) {
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -77,11 +77,13 @@ function ProductEditModal({ open, setOpen, productShow, refreshData, setRefreshD
         <BootstrapDialogTitle
           id="customized-dialog-title"
           onClose={handleClose}
-        >
-          แก้ไขสินค้า (Product ID : {productShow.product_id}) 
+        > 
+          { isEdit ? `แก้ไขสินค้า (Product ID : ${productShow.product_id})` : "เพิ่มสินค้า"}
+          
+           
         </BootstrapDialogTitle>
         <DialogContent dividers>
-          <ProductsImportPage isEdit={true} productShow={productShow} refreshData={refreshData} setRefreshData={setRefreshData} setOpenModalEdit={setOpen} />
+          <ProductsImportPage isEdit={isEdit} isFetchImport={isFetchImport} productShow={productShow} refreshData={refreshData} setRefreshData={setRefreshData} setOpenModalEdit={setOpen} />
         </DialogContent>
         {/* <DialogActions>
           <Button autoFocus onClick={handleClose}>

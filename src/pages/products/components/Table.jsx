@@ -15,18 +15,12 @@ function Table({
 }) {
   const webPath = useSelector((state) => state.app.webPath);
 
-  const [selectionModel, setSelectionModel] = React.useState([]);
-
   const onRowsSelectionHandler = (ids) => {
     const selectedRowsData = ids.map((id) =>
       productsAll.find((product) => product.id === id)
     );
     setProductSelected(selectedRowsData);
   };
-
-  useEffect(() => {
-    setSelectionModel([])
-  }, [refreshData])
 
   const columns = [
     {
@@ -526,7 +520,6 @@ function Table({
   ];
 
   const rowsClassName = "table-rows";
-  console.log(productSelected);
 
   return (
     <div>
@@ -537,13 +530,11 @@ function Table({
         columns={columns}
         initialState={{
           pagination: {
-            paginationModel: { page: 0, pageSize: 5 },
+            paginationModel: { page: 0, pageSize: 10 },
           },
         }}
         pageSizeOptions={[5, 10, 50, 100]}
         checkboxSelection
-        onSelectionModelChange={setSelectionModel}
-        selectionModel={selectionModel}
         onRowSelectionModelChange={(ids) => onRowsSelectionHandler(ids)}
       />
     </div>
