@@ -12,8 +12,9 @@ import StockDataGrid from "./StockDataGrid";
 import ExpireDataGrid from "./ExpireDataGrid";
 import ExportDataGrid from "./ExportDataGrid";
 import ImportDataGrid from "./ImportDataGrid";
+import { Link } from "react-router-dom";
 
-function Tables({ rows }) {
+function Tables({ rows, productsOutOfStock, productsAboutToExpire, productsImport }) {
   useEffect(() => {}, []);
   return (
     <>
@@ -23,13 +24,13 @@ function Tables({ rows }) {
             <figure className="header-title">
               <img src="/images/icons/product-icon.png" alt="" />
               <p>จำนวนสินค้าใกล้หมด</p>
-              <p style={{ color: "red" }}>8,540 รายการ</p>
+              <p style={{ color: "red" }}>{productsOutOfStock.length} รายการ</p>
             </figure>
             <div className="header-link">
-              <button>ดูรายการเพิ่มเติม</button>
+              <Link to="/stock">ดูรายการเพิ่มเติม</Link>
             </div>
           </div>
-          <StockDataGrid rows={rows} />
+          <StockDataGrid productsOutOfStock={productsOutOfStock} />
         </Card>
 
         <Card className="item">
@@ -37,13 +38,15 @@ function Tables({ rows }) {
             <figure className="header-title">
               <img src="/images/icons/expirationTable-icon.png" alt="" />
               <p>จำนวนสินค้าใกล้หมดอายุ</p>
-              <p style={{ color: "red" }}>14 รายการ</p>
+              <p style={{ color: "red" }}>{productsAboutToExpire.length} รายการ</p>
             </figure>
             <div className="header-link">
-              <button>ดูรายการเพิ่มเติม</button>
+              <button>
+                <Link to="/expiration">ดูรายการเพิ่มเติม</Link>
+              </button>
             </div>
           </div>
-          <ExpireDataGrid rows={rows} />
+          <ExpireDataGrid productsAboutToExpire={productsAboutToExpire} />
         </Card>
       </div>
 
@@ -53,13 +56,13 @@ function Tables({ rows }) {
             <figure className="header-title">
               <img src="/images/icons/import-icon.png" alt="" />
               <p>สินค้านำเข้า</p>
-              <p style={{ color: "red" }}>25 รายการ</p>
+              <p style={{ color: "red" }}>{productsImport.length} รายการ</p>
             </figure>
             <div className="header-link">
               <button>ดูรายการเพิ่มเติม</button>
             </div>
           </div>
-          <ImportDataGrid rows={rows} />
+          <ImportDataGrid productsImport={productsImport} />
         </Card>
         <Card className="item">
           <div className="header">

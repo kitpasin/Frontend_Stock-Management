@@ -86,7 +86,7 @@ function Table({ filteredProduct, getDefectiveProducts }) {
       headerClassName: "table-columns",
       renderCell: () => (
         <div>
-          <p>{displayName}</p>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{displayName}</p>
         </div>
       ),
     },

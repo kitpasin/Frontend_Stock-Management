@@ -3,6 +3,7 @@ import { Card } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import BarChart from "./BarChart"
+import { useSelector } from "react-redux";
 
 const style = {
   position: "absolute",
@@ -16,12 +17,25 @@ const style = {
   p: 4,
 };
 
-function Summaries() {
+function Summaries({
+  mostExportedProduct,
+  mostProductInStock,
+  mostProductExpire,
+  mostProductOutOfStock,
+}) {
   const [open, setOpen] = React.useState(false);
+  const webPath = useSelector((state) => state.app.webPath);
+
+  const startDate = new Date(mostProductExpire.mfd_date);
+  const endDate = new Date(mostProductExpire.exp_date);
+  const diffDateInMs = endDate - startDate;
+  const diffDateInDays = diffDateInMs / (1000 * 60 * 60 * 24);
 
   function toggleGraph() {
-    setOpen(!open)
+    setOpen(!open);
   }
+
+  console.log(mostProductExpire);
 
   return (
     <>
@@ -165,21 +179,23 @@ function Summaries() {
         <div className="grid-container-1fr-1fr-purple">
           {/* summaries 5 */}
           <Card className="item">
-            <p className="header">สินค้า เบิกออกมากที่สุด/เดือน</p>
+            <p className="header">สินค้า เบิกออกมากสุด/เดือน</p>
             <div className="content">
               <figure className="image">
-                <img src="/images/mock/product1.png" alt="" />
+                <img src={`${webPath}${mostExportedProduct.thumbnail_link}`} alt="" />
               </figure>
               <div className="wrapper">
-                <p className="title">เลย์ล็อคแผ่นหยักรส ออริจิ นอล บิก แพ็ค...</p>
+                <p className="title">{mostExportedProduct.title}</p>
                 <div>
                   <div className="description">
-                    <p>ปริมาณสุทธิ</p>
-                    <p>150 gm</p>
+                    <p>ปริมาตรสุทธิ</p>
+                    <p>
+                      {mostExportedProduct.netweight} {mostExportedProduct.unit_name}
+                    </p>
                   </div>
                   <div className="description">
                     <p>ราคาขาย</p>
-                    <p>100 THB</p>
+                    <p>{mostExportedProduct.selling_price} THB</p>
                   </div>
                   <div className="description">
                     <p>วันเบิก</p>
@@ -190,27 +206,29 @@ function Summaries() {
             </div>
             <div className="summary">
               <p>จำนวนเบิกออก</p>
-              <p>150 หน่วย</p>
+              <p>{mostExportedProduct.export_value} หน่วย</p>
             </div>
           </Card>
 
           {/* summaries 6 */}
           <Card className="item">
-            <p className="header">สินค้า คงเหลือในสต็อกมากสุด</p>
+            <p className="header">สินค้า คงเหลือในสต็อกมากสุด/เดือน</p>
             <div className="content">
               <figure className="image">
-                <img src="/images/mock/product1.png" alt="" />
+                <img src={`${webPath}${mostProductInStock.thumbnail_link}`} alt="" />
               </figure>
               <div className="wrapper">
-                <p className="title">มาม่าแกงเขียวหวานไก่</p>
+                <p className="title">{mostProductInStock.title}</p>
                 <div>
                   <div className="description">
                     <p>ปริมาณสุทธิ</p>
-                    <p>150 gm</p>
+                    <p>
+                      {mostProductInStock.netweight} {mostProductInStock.unit_name}
+                    </p>
                   </div>
                   <div className="description">
                     <p>ราคาขาย</p>
-                    <p>100 THB</p>
+                    <p>{mostProductInStock.selling_price} THB</p>
                   </div>
                   <div className="description">
                     <p>วันเบิก</p>
@@ -221,7 +239,12 @@ function Summaries() {
             </div>
             <div className="summary">
               <p>คงเหลือ</p>
-              <p>4500 หน่วย</p>
+              <p>
+                {mostProductInStock.import_value -
+                  mostProductInStock.export_value -
+                  mostProductInStock.export_defective_value}{" "}
+                หน่วย
+              </p>
             </div>
           </Card>
         </div>
@@ -229,21 +252,23 @@ function Summaries() {
         <div className="grid-container-1fr-1fr-orange">
           {/* summaries 7 */}
           <Card className="item">
-            <p className="header">สินค้าไกลหมดอายุ</p>
+            <p className="header">สินค้าไกลหมดอายุมากสุด</p>
             <div className="content">
               <figure className="image">
-                <img src="/images/mock/product1.png" alt="" />
+                <img src={`${webPath}${mostProductExpire.thumbnail_link}`} alt="" />
               </figure>
               <div className="wrapper">
-                <p className="title">กูลิโกะ ป๊อกกี้ บิสกิตแท่ง เคลือบช็อกโกแ...</p>
+                <p className="title">{mostProductExpire.title}</p>
                 <div>
                   <div className="description">
                     <p>ปริมาณสุทธิ</p>
-                    <p>150 gm</p>
+                    <p>
+                      {mostProductExpire.netweight} {mostProductExpire.unit_name}
+                    </p>
                   </div>
                   <div className="description">
                     <p>ราคาขาย</p>
-                    <p>100 THB</p>
+                    <p>{mostProductExpire.selling_price} THB</p>
                   </div>
                   <div className="description">
                     <p>วันเบิก</p>
@@ -253,28 +278,30 @@ function Summaries() {
               </div>
             </div>
             <div className="summary">
-              <p>จำนวน</p>
-              <p>150 หน่วย</p>
+              <p>วันที่เหลือ</p>
+              <p>{diffDateInDays} วัน</p>
             </div>
           </Card>
 
           {/* Summaries 8 */}
           <Card className="item">
-            <p className="header">สินค้าไกล้หมด สต็อก</p>
+            <p className="header">สินค้าใกล้หมด สต็อก</p>
             <div className="content">
               <figure className="image">
-                <img src="/images/mock/product1.png" alt="" />
+                <img src={`${webPath}${mostProductOutOfStock.thumbnail_link}`} alt="" />
               </figure>
               <div className="wrapper">
-                <p className="title">มาม่าคัฟรสต้มยำกุ้ง</p>
+                <p className="title">{mostProductOutOfStock.title}</p>
                 <div>
                   <div className="description">
                     <p>ปริมาณสุทธิ</p>
-                    <p>150 gm</p>
+                    <p>
+                      {mostProductOutOfStock.netweight} {mostProductOutOfStock.unit_name}
+                    </p>
                   </div>
                   <div className="description">
                     <p>ราคาขาย</p>
-                    <p>100 THB</p>
+                    <p>{mostProductOutOfStock.selling_price} THB</p>
                   </div>
                   <div className="description">
                     <p>วันเบิก</p>
@@ -284,8 +311,13 @@ function Summaries() {
               </div>
             </div>
             <div className="summary">
-              <p>จำนวน</p>
-              <p>10 หน่วย</p>
+              <p>คงเหลือ</p>
+              <p>
+                {mostProductOutOfStock.import_value -
+                  mostProductOutOfStock.export_value -
+                  mostProductOutOfStock.export_defective_value}{" "}
+                หน่วย
+              </p>
             </div>
           </Card>
         </div>

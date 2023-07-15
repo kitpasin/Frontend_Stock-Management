@@ -4,10 +4,13 @@ import { Avatar, Typography } from "@mui/material";
 import { Button } from "@mui/material";
 import { Menu } from "@mui/material";
 import { MenuItem } from "@mui/material";
+import { useSelector } from "react-redux";
 
-function ExpireDataGrid({ rows }) {
+function ExpireDataGrid({ productsAboutToExpire }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const webPath = useSelector((state) => state.app.webPath);
+
   function handleClick(event) {
     setAnchorEl(event.currentTarget);
   }
@@ -17,40 +20,36 @@ function ExpireDataGrid({ rows }) {
 
   const columns = [
     {
-      field: "image",
+      field: "thumbnail_link",
       headerName: "ภาพ",
-      headerAlign: "center",
-      align: "center",
       width: 50,
       headerClassName: "table-columns",
+      headerAlign: "center",
+      align: "center",
       renderCell: (params) => (
-        <div style={{ background: "#D0D0E2", borderRadius: "5px" }}>
-          <Avatar src={`images/mock/product1.png`} alt={`Image ${params.value}`} />
-        </div>
+        <figure style={{ background: "#D0D0E2", borderRadius: "5px", padding: ".1rem" }}>
+          <Avatar alt="Thumbnail" src={`${webPath}${params.row.thumbnail_link}`} />
+        </figure>
       ),
     },
     {
       field: "name",
+      headerName: "ชื่อรายการ",
       headerAlign: "center",
       align: "center",
       width: 150,
       headerClassName: "table-columns",
-      renderHeader: () => (
-        <div style={{ paddingLeft: ".5rem" }}>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
-            ชื่อรายการ
-          </Typography>
-        </div>
-      ),
       renderCell: (params) => (
-        <div style={{ paddingLeft: "1.5rem" }}>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>น้ำอัดลมกลิ่นเมลอ...</p>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>01234567895846</p>
+        <div style={{ paddingLeft: "1rem" }}>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{params.row.title}</p>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>
+            {params.row.product_id}
+          </p>
         </div>
       ),
     },
     {
-      field: "quantityPerUnit",
+      field: "dateEXP",
       headerAlign: "center",
       align: "center",
       width: 70,
@@ -58,16 +57,35 @@ function ExpireDataGrid({ rows }) {
       renderHeader: () => (
         <div>
           <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
-            คงเหลือ
+            จำนวนวัน
           </Typography>
           <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
-            /หน่วย
+            EXP
           </Typography>
         </div>
       ),
+      renderCell: (params) => {
+        const startDate = new Date(params.row.mfd_date);
+        const endDate = new Date(params.row.exp_date);
+        const diffDateInMs = endDate - startDate;
+        const diffDateInDays = diffDateInMs / (1000 * 60 * 60 * 24);
+        return (
+          <div>
+            <p
+              style={{
+                fontSize: "12px",
+                lineHeight: "12.5px",
+                color: diffDateInDays <= 30 ? "#FF0000" : "#000",
+              }}
+            >
+              {diffDateInDays} วัน
+            </p>
+          </div>
+        );
+      },
     },
     {
-      field: "countingUnit",
+      field: "counting_unit_name",
       headerName: "หน่วยนับ",
       headerAlign: "center",
       align: "center",
@@ -76,33 +94,31 @@ function ExpireDataGrid({ rows }) {
     },
     {
       field: "MEDEXP",
+      width: 100,
       headerAlign: "center",
       align: "center",
-      width: 100,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography
-            style={{ fontSize: "12px", fontWeight: 500, fontWeight: 500, lineHeight: "12.5px" }}
-          >
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
             MFD
           </Typography>
-          <Typography
-            style={{ fontSize: "12px", fontWeight: 500, fontWeight: 500, lineHeight: "12.5px" }}
-          >
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
             EXP
           </Typography>
         </div>
       ),
       renderCell: (params) => (
         <div>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>28/8/2023</p>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#FF0000" }}>30/8/2023</p>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{params.row.mfd_date}</p>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>
+            {params.row.exp_date}
+          </p>
         </div>
       ),
     },
     {
-      field: "volumnPerUnit",
+      field: "netweight",
       headerAlign: "center",
       align: "center",
       width: 100,
@@ -117,9 +133,16 @@ function ExpireDataGrid({ rows }) {
           </Typography>
         </div>
       ),
+      renderCell: (params) => (
+        <div>
+          <p>
+            {params.row.netweight} {params.row.unit_name}
+          </p>
+        </div>
+      ),
     },
     {
-      field: "actualSellingPrice",
+      field: "selling_price",
       headerAlign: "center",
       align: "center",
       width: 100,
@@ -237,7 +260,8 @@ function ExpireDataGrid({ rows }) {
       <DataGrid
         getRowClassName={() => rowsClassName}
         sx={{ fontSize: "12px", border: "none" }}
-        rows={rows}
+        rows={productsAboutToExpire}
+        disableRowSelectionOnClick
         columns={columns}
         initialState={{
           pagination: {

@@ -4,10 +4,13 @@ import { Avatar, Typography } from "@mui/material";
 import { Button } from "@mui/material";
 import { Menu } from "@mui/material";
 import { MenuItem } from "@mui/material";
+import { useSelector } from "react-redux";
 
-function StockDataGrid({ rows }) {
+function StockDataGrid({ productsOutOfStock }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const webPath = useSelector((state) => state.app.webPath)
+
   function handleClick(event) {
     setAnchorEl(event.currentTarget);
   }
@@ -17,33 +20,31 @@ function StockDataGrid({ rows }) {
 
   const columns = [
     {
-      field: "image",
+      field: "thumbnail_link",
       headerName: "ภาพ",
       width: 50,
+      headerClassName: "table-columns",
       headerAlign: "center",
       align: "center",
-      headerClassName: "table-columns",
       renderCell: (params) => (
-        <div style={{ background: "#D0D0E2", borderRadius: "5px" }}>
-          <Avatar src={`images/mock/product1.png`} alt={`Image ${params.value}`} />
-        </div>
+        <figure style={{ background: "#D0D0E2", borderRadius: "5px", padding: ".1rem" }}>
+          <Avatar alt="Thumbnail" src={`${webPath}${params.row.thumbnail_link}`} />
+        </figure>
       ),
     },
     {
       field: "name",
+      headerName: "ชื่อรายการ",
       headerAlign: "center",
       align: "center",
       width: 150,
       headerClassName: "table-columns",
-      renderHeader: () => (
-        <div style={{paddingLeft: "1rem"}}>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>ชื่อรายการ</Typography>
-        </div>
-      ),
       renderCell: (params) => (
-        <div style={{ paddingLeft: "2rem" }}>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>น้ำอัดลมกลิ่นเมลอ...</p>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>01234567895846</p>
+        <div style={{ paddingLeft: "1rem" }}>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{params.row.title}</p>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>
+            {params.row.product_id}
+          </p>
         </div>
       ),
     },
@@ -63,9 +64,22 @@ function StockDataGrid({ rows }) {
           </Typography>
         </div>
       ),
+      renderCell: (params) => (
+        <div>
+          <p
+            style={{
+              fontSize: "12px",
+              lineHeight: "12.5px",
+              color: params.row.import_value <= 50 ? "#ff0000" : "#000",
+            }}
+          >
+            {params.row.import_value - params.row.export_value - params.row.export_defective_value}
+          </p>
+        </div>
+      ),
     },
     {
-      field: "volumnPerUnit",
+      field: "netweight",
       headerAlign: "center",
       align: "center",
       width: 100,
@@ -80,9 +94,16 @@ function StockDataGrid({ rows }) {
           </Typography>
         </div>
       ),
+      renderCell: (params) => (
+        <div>
+          <p>
+            {params.row.netweight} {params.row.unit_name}
+          </p>
+        </div>
+      ),
     },
     {
-      field: "actualSellingPrice",
+      field: "selling_price",
       headerAlign: "center",
       align: "center",
       width: 100,
@@ -214,7 +235,8 @@ function StockDataGrid({ rows }) {
       <DataGrid
         getRowClassName={() => rowsClassName}
         sx={{ fontSize: "12px", border: "none" }}
-        rows={rows}
+        rows={productsOutOfStock}
+        disableRowSelectionOnClick
         columns={columns}
         initialState={{
           pagination: {
