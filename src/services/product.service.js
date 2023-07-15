@@ -44,3 +44,12 @@ export const svDeleteProduct = async (product_id) => {
         return { status: false, description: "Something went wrong.", errorMessage: err };
     }
 }
+
+export const svExportProduct = async (form) => {
+    try {
+        const res = await axios.post(`product/export`, form);
+        return { status: true, data: res.data.data, message: "Export product success." };
+    } catch (err) {
+        return { status: false, description: "Something went wrong.", errorMessage: err };
+    }
+}

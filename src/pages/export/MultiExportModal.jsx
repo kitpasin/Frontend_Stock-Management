@@ -52,12 +52,13 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-function ExportModal({
+function MultiExportModal({
   open,
   setOpen,
   productShow,
   refreshData,
   setRefreshData,
+  productSelected,
   setProductSelected,
 }) {
   const handleClickOpen = () => {
@@ -97,7 +98,6 @@ function ExportModal({
               >
                 เบิกสินค้า
               </span>{" "}
-              (Product ID : {productShow.product_id})
             </Typography>
             <Typography></Typography>
           </div>
@@ -106,7 +106,8 @@ function ExportModal({
           <ProductsExportPage
             open={open}
             setOpen={setOpen}
-            exportOne={true}
+            exportOne={false}
+            multiExprot={true}
             productDatas={productShow}
             refreshData={refreshData}
             setRefreshData={setRefreshData}
@@ -123,4 +124,4 @@ function ExportModal({
   );
 }
 
-export default ExportModal;
+export default MultiExportModal;

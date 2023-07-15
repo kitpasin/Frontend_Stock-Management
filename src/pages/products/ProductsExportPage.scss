@@ -103,14 +103,14 @@
                 font-size: 12px;
             }
             input {
-                border: #C4C4C4 1px solid;
+                border: #c4c4c4 1px solid;
                 border-radius: 5px;
                 padding-left: 1rem;
-                padding-block: .25rem;
+                padding-block: 0.25rem;
                 font-size: 16px;
                 font-weight: 400;
                 color: #3b326b;
-                margin-bottom: .5rem;
+                margin-bottom: 0.5rem;
             }
         }
         .submit {
@@ -139,4 +139,8 @@
 
 .no-footer .MuiDataGrid-footerContainer {
     display: none;
+}
+
+.swal2-container {
+    z-index: 20000 !important;
 }

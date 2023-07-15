@@ -10,7 +10,7 @@ import { svDeleteProduct } from "../../../services/product.service";
 import { ConnectingAirportsOutlined } from "@mui/icons-material";
 import ExportModal from "../../export/ExportModal";
 
-function MenuItemList({ params, refreshData, setRefreshData }) {
+function MenuItemList({ params, refreshData, setRefreshData, setProductSelected }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openMenu, setOpenMenu] = React.useState(false);
   const [btnId, setbtnId] = React.useState(false);
@@ -246,9 +246,12 @@ function MenuItemList({ params, refreshData, setRefreshData }) {
         setRefreshData={setRefreshData}
       />
       <ExportModal
+        setProductSelecte={setProductSelected}
         open={openExportModal}
         setOpen={setOpenExportModal}
         productShow={productShow}
+        refreshData={refreshData}
+        setRefreshData={setRefreshData}
       />
     </div>
   );

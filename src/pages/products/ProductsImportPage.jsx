@@ -279,8 +279,11 @@ function ProductsImportPage({ isEdit, productShow, setOpenModalEdit, refreshData
     } else {
       const formData = new FormData();
       /* product */
-      formData.append('id', productData.id || null)
-      formData.append('product_id', productData.product_id || null)
+      if (isEdit) {
+        formData.append('id', productData.id)
+        formData.append('product_id', productData.product_id)
+
+      }
       formData.append('image', preview.file)
       formData.append('image_path', productData.image_path)
       formData.append('title', productData.title)
@@ -354,7 +357,8 @@ function ProductsImportPage({ isEdit, productShow, setOpenModalEdit, refreshData
                 resetDataHandle()
               })
             } else {
-              alert('error')
+              // alert('error')
+              console.log(res)
             }
           })
         }
