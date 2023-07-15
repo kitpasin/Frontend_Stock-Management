@@ -26,8 +26,8 @@ function Summaries({
   const [open, setOpen] = React.useState(false);
   const webPath = useSelector((state) => state.app.webPath);
 
-  const startDate = new Date(mostProductExpire.mfd_date);
-  const endDate = new Date(mostProductExpire.exp_date);
+  const startDate = new Date(mostProductExpire?.mfd_date);
+  const endDate = new Date(mostProductExpire?.exp_date);
   const diffDateInMs = endDate - startDate;
   const diffDateInDays = diffDateInMs / (1000 * 60 * 60 * 24);
 
@@ -182,20 +182,20 @@ function Summaries({
             <p className="header">สินค้า เบิกออกมากสุด/เดือน</p>
             <div className="content">
               <figure className="image">
-                <img src={`${webPath}${mostExportedProduct.thumbnail_link}`} alt="" />
+                <img src={`${webPath}${mostExportedProduct?.thumbnail_link}`} alt="" />
               </figure>
               <div className="wrapper">
-                <p className="title">{mostExportedProduct.title}</p>
+                <p className="title">{mostExportedProduct?.title}</p>
                 <div>
                   <div className="description">
                     <p>ปริมาตรสุทธิ</p>
                     <p>
-                      {mostExportedProduct.netweight} {mostExportedProduct.unit_name}
+                      {mostExportedProduct?.netweight} {mostExportedProduct?.unit_name}
                     </p>
                   </div>
                   <div className="description">
                     <p>ราคาขาย</p>
-                    <p>{mostExportedProduct.selling_price} THB</p>
+                    <p>{mostExportedProduct?.selling_price} THB</p>
                   </div>
                   <div className="description">
                     <p>วันเบิก</p>
@@ -206,7 +206,7 @@ function Summaries({
             </div>
             <div className="summary">
               <p>จำนวนเบิกออก</p>
-              <p>{mostExportedProduct.export_value} หน่วย</p>
+              <p>{mostExportedProduct?.export_value} หน่วย</p>
             </div>
           </Card>
 
@@ -215,20 +215,20 @@ function Summaries({
             <p className="header">สินค้า คงเหลือในสต็อกมากสุด/เดือน</p>
             <div className="content">
               <figure className="image">
-                <img src={`${webPath}${mostProductInStock.thumbnail_link}`} alt="" />
+                <img src={`${webPath}${mostProductInStock?.thumbnail_link}`} alt="" />
               </figure>
               <div className="wrapper">
-                <p className="title">{mostProductInStock.title}</p>
+                <p className="title">{mostProductInStock?.title}</p>
                 <div>
                   <div className="description">
                     <p>ปริมาณสุทธิ</p>
                     <p>
-                      {mostProductInStock.netweight} {mostProductInStock.unit_name}
+                      {mostProductInStock?.netweight} {mostProductInStock?.unit_name}
                     </p>
                   </div>
                   <div className="description">
                     <p>ราคาขาย</p>
-                    <p>{mostProductInStock.selling_price} THB</p>
+                    <p>{mostProductInStock?.selling_price} THB</p>
                   </div>
                   <div className="description">
                     <p>วันเบิก</p>
@@ -240,9 +240,9 @@ function Summaries({
             <div className="summary">
               <p>คงเหลือ</p>
               <p>
-                {mostProductInStock.import_value -
-                  mostProductInStock.export_value -
-                  mostProductInStock.export_defective_value}{" "}
+                {mostProductInStock?.import_value -
+                  mostProductInStock?.export_value -
+                  mostProductInStock?.export_defective_value}{" "}
                 หน่วย
               </p>
             </div>
@@ -255,20 +255,20 @@ function Summaries({
             <p className="header">สินค้าไกลหมดอายุมากสุด</p>
             <div className="content">
               <figure className="image">
-                <img src={`${webPath}${mostProductExpire.thumbnail_link}`} alt="" />
+                <img src={`${webPath}${mostProductExpire?.thumbnail_link}`} alt="" />
               </figure>
               <div className="wrapper">
-                <p className="title">{mostProductExpire.title}</p>
+                <p className="title">{mostProductExpire?.title}</p>
                 <div>
                   <div className="description">
                     <p>ปริมาณสุทธิ</p>
                     <p>
-                      {mostProductExpire.netweight} {mostProductExpire.unit_name}
+                      {mostProductExpire?.netweight} {mostProductExpire?.unit_name}
                     </p>
                   </div>
                   <div className="description">
                     <p>ราคาขาย</p>
-                    <p>{mostProductExpire.selling_price} THB</p>
+                    <p>{mostProductExpire?.selling_price} THB</p>
                   </div>
                   <div className="description">
                     <p>วันเบิก</p>
@@ -288,20 +288,20 @@ function Summaries({
             <p className="header">สินค้าใกล้หมด สต็อก</p>
             <div className="content">
               <figure className="image">
-                <img src={`${webPath}${mostProductOutOfStock.thumbnail_link}`} alt="" />
+                <img src={`${webPath}${mostProductOutOfStock?.thumbnail_link}`} alt="" />
               </figure>
               <div className="wrapper">
-                <p className="title">{mostProductOutOfStock.title}</p>
+                <p className="title">{mostProductOutOfStock?.title}</p>
                 <div>
                   <div className="description">
                     <p>ปริมาณสุทธิ</p>
                     <p>
-                      {mostProductOutOfStock.netweight} {mostProductOutOfStock.unit_name}
+                      {mostProductOutOfStock?.netweight} {mostProductOutOfStock?.unit_name}
                     </p>
                   </div>
                   <div className="description">
                     <p>ราคาขาย</p>
-                    <p>{mostProductOutOfStock.selling_price} THB</p>
+                    <p>{mostProductOutOfStock?.selling_price} THB</p>
                   </div>
                   <div className="description">
                     <p>วันเบิก</p>
@@ -313,9 +313,9 @@ function Summaries({
             <div className="summary">
               <p>คงเหลือ</p>
               <p>
-                {mostProductOutOfStock.import_value -
-                  mostProductOutOfStock.export_value -
-                  mostProductOutOfStock.export_defective_value}{" "}
+                {mostProductOutOfStock?.import_value -
+                  mostProductOutOfStock?.export_value -
+                  mostProductOutOfStock?.export_defective_value}{" "}
                 หน่วย
               </p>
             </div>
