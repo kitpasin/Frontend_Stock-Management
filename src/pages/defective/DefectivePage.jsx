@@ -23,11 +23,13 @@ function DefectivePage() {
 
   const [defectiveProducts, setDefectiveProducts] = useState([]);
   const [mainCategories, setMainCategories] = useState([]);
-  const [subCategories, setSubCategories] = useState([]);
   const [title, setTitle] = useState("");
   const [mainCategory, setMainCategory] = useState("");
-  const [subCategory, setSubCategory] = useState("");
   const [vat, setVat] = useState("");
+
+  const [refreshData, setRefreshData] = useState(0);
+  const [productSelected, setProductSelected] = useState([]);
+  const [openMultiExportModal, setOpenMultiexportModal] = useState(false);
 
   const filteredProduct = defectiveProducts.filter((product) => {
     const matchesTitle = title ? product.title === title : true;
@@ -50,17 +52,10 @@ function DefectivePage() {
     setMainCategories(data);
   }
 
-  async function getSubCategories() {
-    const response = await axios.get("subcates");
-    const data = response.data.subCates;
-    setSubCategories(data);
-  }
-
   useEffect(() => {
     getDefectiveProducts();
     getMainCategories();
-    getSubCategories();
-  }, []);
+  }, [refreshData]);
 
   return (
     <section id="defective-page">
@@ -118,27 +113,18 @@ function DefectivePage() {
                   sx={{ width: 150 }}
                   renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
                 />
-                {/* <Autocomplete
-                  size="small"
-                  disablePortal
-                  id="combo-box-demo"
-                  options={subCategories}
-                  getOptionLabel={(subCategories) => subCategories.name}
-                  onChange={(event, value) => setSubCategory(value?.name || null)}
-                  sx={{ width: 150 }}
-                  renderInput={(params) => <TextField {...params} label="หมวดหมู่ย่อย" />}
-                /> */}
                 <FormControl>
                   <RadioGroup
                     row
                     aria-labelledby="demo-row-radio-buttons-group-label"
                     name="row-radio-buttons-group"
+                    value={vat}
                   >
                     <FormControlLabel
                       value=""
                       control={<Radio />}
                       label="All"
-                      onChange={(e) => setVat("")}
+                      onChange={(e) => setVat(e.target.value)}
                     />
                     <FormControlLabel
                       value="1"
@@ -161,8 +147,11 @@ function DefectivePage() {
             </div>
             <div>
               <Table
-                filteredProduct={filteredProduct}
-                getDefectiveProducts={getDefectiveProducts}
+                productsData={filteredProduct}
+                refreshData={refreshData}
+                setRefreshData={setRefreshData}
+                setProductSelected={setProductSelected}
+                productSelected={productSelected}
               />
             </div>
           </Card>

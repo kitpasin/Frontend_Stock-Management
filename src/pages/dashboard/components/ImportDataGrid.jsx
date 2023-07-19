@@ -38,7 +38,7 @@ function ImportDataGrid({ productsImport }) {
       headerName: "ชื่อรายการ",
       headerAlign: "center",
       align: "center",
-      width: 150,
+      width: 140,
       headerClassName: "table-columns",
       renderCell: (params) => (
         <div style={{ paddingLeft: "1rem" }}>
@@ -54,7 +54,7 @@ function ImportDataGrid({ productsImport }) {
       headerName: "ผู้ใช้งาน",
       headerAlign: "center",
       align: "center",
-      width: 150,
+      width: 120,
       headerClassName: "table-columns",
       renderCell: () => (
         <div>
@@ -84,7 +84,7 @@ function ImportDataGrid({ productsImport }) {
       field: "import_value",
       headerAlign: "center",
       align: "center",
-      width: 100,
+      width: 120,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -101,7 +101,7 @@ function ImportDataGrid({ productsImport }) {
       field: "quantityPerUnit",
       headerAlign: "center",
       align: "center",
-      width: 100,
+      width: 120,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -119,7 +119,13 @@ function ImportDataGrid({ productsImport }) {
             style={{
               fontSize: "12px",
               lineHeight: "12.5px",
-              color: params.row.import_value <= 50 ? "#ff0000" : "#000",
+              color:
+                params.row.import_value -
+                  params.row.export_value -
+                  params.row.export_defective_value <=
+                50
+                  ? "#ff0000"
+                  : "#000",
             }}
           >
             {params.row.import_value - params.row.export_value - params.row.export_defective_value}
@@ -132,12 +138,12 @@ function ImportDataGrid({ productsImport }) {
       headerName: "วันที่ซื้อ",
       headerAlign: "center",
       align: "center",
-      width: 100,
+      width: 120,
       headerClassName: "table-columns",
     },
     {
       field: "MEDEXP",
-      width: 100,
+      width: 120,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -173,14 +179,14 @@ function ImportDataGrid({ productsImport }) {
       headerName: "หมวดหมู่",
       headerAlign: "center",
       align: "center",
-      width: 150,
+      width: 120,
       headerClassName: "table-columns",
     },
     {
       field: "netweight",
       headerAlign: "center",
       align: "center",
-      width: 100,
+      width: 120,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -204,7 +210,7 @@ function ImportDataGrid({ productsImport }) {
       field: "unit_price",
       headerAlign: "center",
       align: "center",
-      width: 100,
+      width: 120,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -219,15 +225,15 @@ function ImportDataGrid({ productsImport }) {
     },
     {
       field: "set_profit",
-      headerName: "กำไร",
+      headerName: "กำไร (%)",
       headerAlign: "center",
       align: "center",
-      width: 50,
+      width: 120,
       headerClassName: "table-columns",
     },
     {
       field: "selling_price",
-      width: 100,
+      width: 120,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -239,100 +245,6 @@ function ImportDataGrid({ productsImport }) {
           <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
             (THB)
           </Typography>
-        </div>
-      ),
-    },
-    {
-      field: "action",
-      headerName: "จัดการสินค้า",
-      headerAlign: "center",
-      align: "center",
-      width: 140,
-      headerClassName: "table-columns",
-      renderCell: (params) => (
-        <div>
-          <Button
-            id="basic-button"
-            aria-controls={open ? "basic-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-            onClick={handleClick}
-          >
-            <img
-              style={{
-                background: "#3B336B",
-                width: "40px",
-                height: "40px",
-                padding: ".65rem",
-                borderRadius: "5px",
-              }}
-              src="/images/icons/management-icon.png"
-              alt=""
-            />
-          </Button>
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-              "aria-labelledby": "basic-button",
-            }}
-          >
-            <MenuItem
-              sx={{
-                display: "flex",
-                gap: "1rem",
-              }}
-              onClick={handleClose}
-            >
-              <img
-                style={{
-                  width: "18px",
-                  height: "18px",
-                  filter:
-                    "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
-                }}
-                src="/images/icons/supplier-icon.png"
-                alt=""
-              />
-              <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>ซัพพลาย</p>
-            </MenuItem>
-            <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={handleClose}>
-              <img
-                style={{ width: "18px", height: "18px" }}
-                src="/images/icons/export-icon.png"
-                alt=""
-              />
-              <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>เบิกสินค้า</p>
-            </MenuItem>
-            <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={handleClose}>
-              <img
-                style={{
-                  width: "18px",
-                  height: "18px",
-                  filter:
-                    "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
-                }}
-                src="/images/icons/edit-icon.png"
-                alt=""
-              />
-              <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>แก้ไขสินค้า</p>
-            </MenuItem>
-            <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={handleClose}>
-              <img
-                style={{
-                  width: "18px",
-                  height: "18px",
-                  filter:
-                    "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
-                }}
-                src="/images/icons/trash-icon.png"
-                alt=""
-              />
-              <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>ลบสินค้า</p>
-            </MenuItem>
-          </Menu>
         </div>
       ),
     },
@@ -351,7 +263,7 @@ function ImportDataGrid({ productsImport }) {
             paginationModel: { page: 0, pageSize: 5 },
           },
         }}
-        pageSizeOptions={[5, 10, 50, 100]}
+        pageSizeOptions={[5, 10, 50, 120]}
       />
     </>
   );

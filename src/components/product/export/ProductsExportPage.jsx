@@ -7,15 +7,15 @@ import Barcode from "react-barcode";
 import Swal from "sweetalert2";
 
 import "./ProductsExportPage.scss";
-import HeadPageComponent from "../../components/layout/headpage/headpage";
-import DetailDataGrid from "../defective/components/DetailDataGrid";
+import HeadPageComponent from "../../layout/headpage/headpage";
+import DetailDataGrid from "../../datagrid/DetailDataGrid";
 import {
   defectiveDetail,
   defectiveSupplier,
-} from "../defective/data/TableData";
-import SupplierDataGrid from "../defective/components/SupplierDataGrid";
-import { rows } from "./data/TableData";
-import { svExportProduct } from "../../services/product.service";
+} from "../../../pages/defective/data/TableData";
+import SupplierDataGrid from "../../datagrid/SupplierDataGrid";
+import { rows } from "../../../pages/products/data/TableData";
+import { svExportProduct } from "../../../services/product.service";
 import dayjs from "dayjs";
 
 function ProductsExportPage({
@@ -74,6 +74,8 @@ function ProductsExportPage({
     setStock(result[0].import_value - (result[0].export_value + result[0].export_defective_value))
     setExportValue(0)
   }
+
+  console.log(productShow)
 
   const onExportProduct = (_id) => {
     const formExport = {

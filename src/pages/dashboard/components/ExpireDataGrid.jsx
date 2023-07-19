@@ -68,7 +68,7 @@ function ExpireDataGrid({ productsAboutToExpire }) {
         const startDate = new Date(params.row.mfd_date);
         const endDate = new Date(params.row.exp_date);
         const diffDateInMs = endDate - startDate;
-        const diffDateInDays = diffDateInMs / (1000 * 60 * 60 * 24);
+        const diffDateInDays = diffDateInMs / (1000 * 3600 * 24);
         return (
           <div>
             <p
@@ -89,12 +89,12 @@ function ExpireDataGrid({ productsAboutToExpire }) {
       headerName: "หน่วยนับ",
       headerAlign: "center",
       align: "center",
-      width: 100,
+      width: 125,
       headerClassName: "table-columns",
     },
     {
       field: "MEDEXP",
-      width: 100,
+      width: 125,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -121,7 +121,7 @@ function ExpireDataGrid({ productsAboutToExpire }) {
       field: "netweight",
       headerAlign: "center",
       align: "center",
-      width: 100,
+      width: 125,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -145,7 +145,7 @@ function ExpireDataGrid({ productsAboutToExpire }) {
       field: "selling_price",
       headerAlign: "center",
       align: "center",
-      width: 100,
+      width: 125,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -155,100 +155,6 @@ function ExpireDataGrid({ productsAboutToExpire }) {
           <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
             (THB)
           </Typography>
-        </div>
-      ),
-    },
-    {
-      field: "action",
-      headerName: "จัดการสินค้า",
-      headerAlign: "center",
-      align: "center",
-      width: 100,
-      headerClassName: "table-columns",
-      renderCell: (params) => (
-        <div>
-          <Button
-            id="basic-button"
-            aria-controls={open ? "basic-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-            onClick={handleClick}
-          >
-            <img
-              style={{
-                background: "#3B336B",
-                width: "40px",
-                height: "40px",
-                padding: ".65rem",
-                borderRadius: "5px",
-              }}
-              src="/images/icons/management-icon.png"
-              alt=""
-            />
-          </Button>
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-              "aria-labelledby": "basic-button",
-            }}
-          >
-            <MenuItem
-              sx={{
-                display: "flex",
-                gap: "1rem",
-              }}
-              onClick={handleClose}
-            >
-              <img
-                style={{
-                  width: "18px",
-                  height: "18px",
-                  filter:
-                    "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
-                }}
-                src="/images/icons/supplier-icon.png"
-                alt=""
-              />
-              <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>ซัพพลาย</p>
-            </MenuItem>
-            <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={handleClose}>
-              <img
-                style={{ width: "18px", height: "18px" }}
-                src="/images/icons/export-icon.png"
-                alt=""
-              />
-              <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>เบิกสินค้า</p>
-            </MenuItem>
-            <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={handleClose}>
-              <img
-                style={{
-                  width: "18px",
-                  height: "18px",
-                  filter:
-                    "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
-                }}
-                src="/images/icons/edit-icon.png"
-                alt=""
-              />
-              <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>แก้ไขสินค้า</p>
-            </MenuItem>
-            <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={handleClose}>
-              <img
-                style={{
-                  width: "18px",
-                  height: "18px",
-                  filter:
-                    "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
-                }}
-                src="/images/icons/trash-icon.png"
-                alt=""
-              />
-              <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>ลบสินค้า</p>
-            </MenuItem>
-          </Menu>
         </div>
       ),
     },
@@ -268,7 +174,7 @@ function ExpireDataGrid({ productsAboutToExpire }) {
             paginationModel: { page: 0, pageSize: 5 },
           },
         }}
-        pageSizeOptions={[5, 10, 50, 100]}
+        pageSizeOptions={[5, 10, 50, 125]}
       />
     </>
   );

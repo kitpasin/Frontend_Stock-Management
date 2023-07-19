@@ -15,6 +15,8 @@ import "./ExportPage.scss";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
 import Table from "./components/Table";
 import axios from "axios";
+import MultiExportModal from "../../components/product/modal/MultiExportModal";
+import Swal from "sweetalert2";
 
 function ExportPage() {
   const { t } = useTranslation(["dashboard-page"]);
@@ -23,11 +25,13 @@ function ExportPage() {
 
   const [exportedProducts, setExportedProducts] = useState([]);
   const [mainCategories, setMainCategories] = useState([]);
-  const [subCategories, setSubCategories] = useState([]);
   const [title, setTitle] = useState("");
   const [mainCategory, setMainCategory] = useState("");
-  const [subCategory, setSubCategory] = useState("");
   const [vat, setVat] = useState("");
+
+  const [refreshData, setRefreshData] = useState(0);
+  const [productSelected, setProductSelected] = useState([]);
+  const [openMultiExportModal, setOpenMultiexportModal] = useState(false);
 
   const filteredProduct = exportedProducts.filter((product) => {
     const matchesTitle = title ? product.title === title : true;
@@ -36,6 +40,20 @@ function ExportPage() {
 
     return matchesTitle && matchesMainCategory && matchesVat;
   });
+
+  const multiExportHandle = () => {
+    if (productSelected.length === 0) {
+      Swal.fire({
+        text: "เลือกสินค้าที่ต้องการเบิก",
+        icon: "info",
+      }).then(() => {
+        return false;
+      });
+    } else {
+      console.log(productSelected);
+      setOpenMultiexportModal(true);
+    }
+  };
 
   async function getExportedProduct() {
     const response = await axios.get("product/export");
@@ -50,17 +68,11 @@ function ExportPage() {
     setMainCategories(data);
   }
 
-  async function getSubCategories() {
-    const response = await axios.get("subcates");
-    const data = response.data.subCates;
-    setSubCategories(data);
-  }
 
   useEffect(() => {
     getExportedProduct();
-  }, []);
-
-  console.log(exportedProducts);
+    getMainCategories();
+  }, [refreshData]);
 
   return (
     <section id="export-page">
@@ -118,27 +130,18 @@ function ExportPage() {
                   sx={{ width: 150 }}
                   renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
                 />
-                {/* <Autocomplete
-                  size="small"
-                  disablePortal
-                  id="combo-box-demo"
-                  options={subCategories}
-                  getOptionLabel={(subCategories) => subCategories.name}
-                  onChange={(event, value) => setSubCategory(value?.name || null)}
-                  sx={{ width: 150 }}
-                  renderInput={(params) => <TextField {...params} label="หมวดหมู่ย่อย" />}
-                /> */}
                 <FormControl>
                   <RadioGroup
                     row
                     aria-labelledby="demo-row-radio-buttons-group-label"
                     name="row-radio-buttons-group"
+                    value={vat}
                   >
                     <FormControlLabel
                       value=""
                       control={<Radio />}
                       label="All"
-                      onChange={(e) => setVat("")}
+                      onChange={(e) => setVat(e.target.value)}
                     />
                     <FormControlLabel
                       value="1"
@@ -157,15 +160,34 @@ function ExportPage() {
                 <Link style={{ fontSize: "16px" }} to="/products/import" className="create">
                   เพิ่มสินค้า
                 </Link>
-                <Link style={{ fontSize: "16px" }} to="/products/export" className="export">
+                <Link
+                  style={{ fontSize: "16px" }}
+                  onClick={() => multiExportHandle()}
+                  className="export"
+                >
                   เบิกสินค้า
                 </Link>
               </div>
             </div>
             <div>
-              <Table filteredProduct={filteredProduct} />
+              <Table
+                productsData={filteredProduct}
+                refreshData={refreshData}
+                setRefreshData={setRefreshData}
+                setProductSelected={setProductSelected}
+                productSelected={productSelected}
+              />
             </div>
           </Card>
+          <MultiExportModal
+            open={openMultiExportModal}
+            setOpen={setOpenMultiexportModal}
+            productShow={productSelected}
+            refreshData={refreshData}
+            setRefreshData={setRefreshData}
+            setProductSelected={setProductSelected}
+            productSelected={productSelected}
+          />
         </>
       )}
     </section>

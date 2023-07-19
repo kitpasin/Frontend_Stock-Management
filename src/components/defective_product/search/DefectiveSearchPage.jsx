@@ -9,12 +9,14 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import PulseLoader from "react-spinners/PulseLoader";
 
-import "./DefectivePage.scss";
-import HeadPageComponent from "../../components/layout/headpage/headpage";
-import Search from "./components/Search";
+import "../../../pages/defective/DefectivePage.scss";
+import HeadPageComponent from "../../layout/headpage/headpage";
+import Search from "../../../pages/defective/components/Search";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import MultiExportModal from "../modal/MultiExportModal";
+import Swal from "sweetalert2";
 
 function DefectiveSearchPage() {
   const { t } = useTranslation(["dashboard-page"]);
@@ -23,11 +25,13 @@ function DefectiveSearchPage() {
 
   const [products, setProducts] = useState([]);
   const [mainCategories, setMainCategories] = useState([]);
-  const [subCategories, setSubCategories] = useState([]);
   const [title, setTitle] = useState("");
   const [mainCategory, setMainCategory] = useState("");
-  const [subCategory, setSubCategory] = useState("");
   const [vat, setVat] = useState("");
+
+  const [refreshData, setRefreshData] = useState(0);
+  const [productSelected, setProductSelected] = useState([]);
+  const [openMultiExportModal, setOpenMultiexportModal] = useState(false);
 
   const filteredProduct = products.filter((product) => {
     const matchesTitle = title ? product.title === title : true;
@@ -36,6 +40,20 @@ function DefectiveSearchPage() {
 
     return matchesTitle && matchesMainCategory && matchesVat;
   });
+
+  const multiExportHandle = () => {
+    if (productSelected.length === 0) {
+      Swal.fire({
+        text: "เลือกสินค้าที่ต้องการเบิก",
+        icon: "info",
+      }).then(() => {
+        return false;
+      });
+    } else {
+      console.log(productSelected);
+      setOpenMultiexportModal(true);
+    }
+  };
 
   async function getProducts() {
     const response = await axios.get("productAll");
@@ -50,17 +68,10 @@ function DefectiveSearchPage() {
     setMainCategories(data);
   }
 
-  async function getSubCategories() {
-    const response = await axios.get("subcates");
-    const data = response.data.subCates;
-    setSubCategories(data);
-  }
-
   useEffect(() => {
     getProducts();
     getMainCategories();
-    getSubCategories();
-  }, []);
+  }, [refreshData]);
 
   return (
     <section id="defective-search-page">
@@ -118,27 +129,18 @@ function DefectiveSearchPage() {
                   sx={{ width: 150 }}
                   renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
                 />
-                <Autocomplete
-                  size="small"
-                  disablePortal
-                  id="combo-box-demo"
-                  options={subCategories}
-                  getOptionLabel={(subCategories) => subCategories.name}
-                  onChange={(event, value) => setSubCategory(value?.name || null)}
-                  sx={{ width: 150 }}
-                  renderInput={(params) => <TextField {...params} label="หมวดหมู่ย่อย" />}
-                />
                 <FormControl>
                   <RadioGroup
                     row
                     aria-labelledby="demo-row-radio-buttons-group-label"
                     name="row-radio-buttons-group"
+                    value={vat}
                   >
                     <FormControlLabel
                       value=""
                       control={<Radio />}
                       label="All"
-                      onChange={(e) => setVat("")}
+                      onChange={(e) => setVat(e.target.value)}
                     />
                     <FormControlLabel
                       value="1"
@@ -154,15 +156,30 @@ function DefectiveSearchPage() {
                     />
                   </RadioGroup>
                 </FormControl>
-                <Link to="/defective/export" className="export">
+                <Link onClick={() => multiExportHandle()} className="export">
                   เบิกออกสินค้าชำรุด
                 </Link>
               </div>
             </div>
             <div>
-              <Search filteredProduct={filteredProduct} />
+              <Search
+                productsData={filteredProduct}
+                refreshData={refreshData}
+                setRefreshData={setRefreshData}
+                setProductSelected={setProductSelected}
+                productSelected={productSelected}
+              />
             </div>
           </Card>
+          <MultiExportModal
+            open={openMultiExportModal}
+            setOpen={setOpenMultiexportModal}
+            productShow={productSelected}
+            refreshData={refreshData}
+            setRefreshData={setRefreshData}
+            setProductSelected={setProductSelected}
+            productSelected={productSelected}
+          />
         </>
       )}
     </section>

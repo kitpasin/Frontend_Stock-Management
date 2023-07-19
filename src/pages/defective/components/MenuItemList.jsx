@@ -12,6 +12,7 @@ import { ConnectingAirportsOutlined } from "@mui/icons-material";
 
 import ExportModal from "../../../components/product/modal/ExportModal";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 function MenuItemList({
   params,
@@ -237,30 +238,27 @@ function MenuItemList({
 
   const deleteHandle = (product_id) => {
     handleClose();
-    Swal.fire({
-      title: "Are you sure?",
-      text: "Do you want to delete this product?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        svDeleteProduct(product_id)
-          .then((res) => {
-            Swal.fire({
-              text: "Delete product success.",
-              icon: "success",
-              showConfirmButton: false,
-              timer: 1000,
-            }).then(() => {
-              setRefreshData(refreshData + 1);
-            });
-          })
-          .catch((err) => console.log(err));
-      }
-    });
+     Swal.fire({
+       title: "Are you sure?",
+       text: "Do you want to delete the data?",
+       icon: "warning",
+       showCancelButton: true,
+       confirmButtonColor: "#3085d6",
+       cancelButtonColor: "#d33",
+       confirmButtonText: "Yes, delete it!",
+     }).then((result) => {
+       if (result.isConfirmed) {
+         axios.delete(`product/defective/${product_id}`).then((res) => {
+           if (res.status) {
+             Swal.fire("Deleted!", "Product has been deleted successfully.", "success").then(() => {
+               setRefreshData(refreshData + 1);
+             });
+           } else {
+             alert("error");
+           }
+         });
+       }
+     });
   };
 
   const exportProductOne = (_id) => {

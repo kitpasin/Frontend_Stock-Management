@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 function StockDataGrid({ productsOutOfStock }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const webPath = useSelector((state) => state.app.webPath)
+  const webPath = useSelector((state) => state.app.webPath);
 
   function handleClick(event) {
     setAnchorEl(event.currentTarget);
@@ -52,7 +52,7 @@ function StockDataGrid({ productsOutOfStock }) {
       field: "quantityPerUnit",
       headerAlign: "center",
       align: "center",
-      width: 100,
+      width: 140,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -70,7 +70,13 @@ function StockDataGrid({ productsOutOfStock }) {
             style={{
               fontSize: "12px",
               lineHeight: "12.5px",
-              color: params.row.import_value <= 50 ? "#ff0000" : "#000",
+              color:
+                params.row.import_value -
+                  params.row.export_value -
+                  params.row.export_defective_value <=
+                50
+                  ? "#ff0000"
+                  : "#000",
             }}
           >
             {params.row.import_value - params.row.export_value - params.row.export_defective_value}
@@ -82,7 +88,7 @@ function StockDataGrid({ productsOutOfStock }) {
       field: "netweight",
       headerAlign: "center",
       align: "center",
-      width: 100,
+      width: 140,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -106,7 +112,7 @@ function StockDataGrid({ productsOutOfStock }) {
       field: "selling_price",
       headerAlign: "center",
       align: "center",
-      width: 100,
+      width: 140,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -126,116 +132,34 @@ function StockDataGrid({ productsOutOfStock }) {
       align: "center",
       width: 150,
       headerClassName: "table-columns",
-      renderCell: (params) => (
-        <div style={{ paddingLeft: ".5rem" }}>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>28/8/2023</p>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>12:25:25 AM</p>
-        </div>
-      ),
-    },
-    {
-      field: "action",
-      headerName: "จัดการสินค้า",
-      headerAlign: "center",
-      align: "center",
-      width: 120,
-      headerClassName: "table-columns",
-      renderCell: (params) => (
-        <div>
-          <Button
-            id="basic-button"
-            aria-controls={open ? "basic-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-            onClick={handleClick}
-          >
-            <img
-              style={{
-                background: "#3B336B",
-                width: "40px",
-                height: "40px",
-                padding: ".65rem",
-                borderRadius: "5px",
-              }}
-              src="/images/icons/management-icon.png"
-              alt=""
-            />
-          </Button>
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-              "aria-labelledby": "basic-button",
-            }}
-          >
-            <MenuItem
-              sx={{
-                display: "flex",
-                gap: "1rem",
-              }}
-              onClick={handleClose}
-            >
-              <img
-                style={{
-                  width: "18px",
-                  height: "18px",
-                  filter:
-                    "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
-                }}
-                src="/images/icons/supplier-icon.png"
-                alt=""
-              />
-              <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>ซัพพลาย</p>
-            </MenuItem>
-            <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={handleClose}>
-              <img
-                style={{ width: "18px", height: "18px" }}
-                src="/images/icons/export-icon.png"
-                alt=""
-              />
-              <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>เบิกสินค้า</p>
-            </MenuItem>
-            <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={handleClose}>
-              <img
-                style={{
-                  width: "18px",
-                  height: "18px",
-                  filter:
-                    "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
-                }}
-                src="/images/icons/edit-icon.png"
-                alt=""
-              />
-              <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>แก้ไขสินค้า</p>
-            </MenuItem>
-            <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={handleClose}>
-              <img
-                style={{
-                  width: "18px",
-                  height: "18px",
-                  filter:
-                    "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
-                }}
-                src="/images/icons/trash-icon.png"
-                alt=""
-              />
-              <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>ลบสินค้า</p>
-            </MenuItem>
-          </Menu>
-        </div>
-      ),
+      renderCell: (params) => {
+        const date = params.row.formatted_created_at.split(" ")[0];
+        const time = params.row.formatted_created_at.split(" ")[1];
+        return (
+          <div style={{ paddingLeft: ".5rem" }}>
+            <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{date}</p>
+            <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>{time}</p>
+          </div>
+        );
+      },
     },
   ];
 
   const rowsClassName = "table-rows";
+
+  // Remove duplicate products based on product_id
+  const uniqueProductsMap = new Map();
+  productsOutOfStock.forEach((item) => {
+    uniqueProductsMap.set(item.product_id, item);
+  });
+  const uniqueProductsData = Array.from(uniqueProductsMap.values());
+
   return (
     <>
       <DataGrid
         getRowClassName={() => rowsClassName}
         sx={{ fontSize: "12px", border: "none" }}
-        rows={productsOutOfStock}
+        rows={uniqueProductsData}
         disableRowSelectionOnClick
         columns={columns}
         initialState={{
@@ -243,7 +167,7 @@ function StockDataGrid({ productsOutOfStock }) {
             paginationModel: { page: 0, pageSize: 5 },
           },
         }}
-        pageSizeOptions={[5, 10, 50, 100]}
+        pageSizeOptions={[5, 10, 50, 140]}
       />
     </>
   );

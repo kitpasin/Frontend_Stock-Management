@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
-import BarChart from "./BarChart"
+import OutOfStock from "./graphs/OutOfStock";
+import AboutToExpire from "./graphs/AboutToExpire";
 import { useSelector } from "react-redux";
+import LatestImport from "./graphs/LatestImport";
+import LatestExport from "./graphs/LatestExport";
 
 const style = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 800,
+  width: 1024,
   bgcolor: "background.paper",
   borderRadius: "10px",
   boxShadow: 24,
@@ -19,11 +22,40 @@ const style = {
 
 function Summaries({
   mostExportedProduct,
+  productsExport,
   mostProductInStock,
+  mostProductImport,
+  productsImport,
   mostProductExpire,
+  productsAboutToExpire,
   mostProductOutOfStock,
+  productsOutOfStock,
 }) {
-  const [open, setOpen] = React.useState(false);
+  const [outOfStockOpen, setOutOfStockOpen] = React.useState(false);
+  const [aboutToExpireOpen, setAboutToExpireOpen] = React.useState(false);
+  const [latestImportOpen, setLatestImportOpen] = React.useState(false);
+  const [latestExportOpen, setLatestExportOpen] = React.useState(false)
+
+  const [outOfStockValue, setOutOfStockValue] = useState(
+    productsOutOfStock.map(
+      (item) => item.import_value - item.export_value - item.export_defective_value
+    )
+  );
+  const [aboutToExpireValue, setAboutToExpireValue] = useState(
+    productsAboutToExpire.map(
+      (item) => item.import_value - item.export_value - item.export_defective_value
+    )
+  );
+  const [importValue, setImportValue] = useState(
+    productsImport.map(
+      (item) => item.import_value
+    )
+  );
+  const [exportValue, setExportValue] = useState(
+    productsExport.map(
+      (item) => item.export_value
+    )
+  )
   const webPath = useSelector((state) => state.app.webPath);
 
   const startDate = new Date(mostProductExpire?.mfd_date);
@@ -31,37 +63,109 @@ function Summaries({
   const diffDateInMs = endDate - startDate;
   const diffDateInDays = diffDateInMs / (1000 * 60 * 60 * 24);
 
-  function toggleGraph() {
-    setOpen(!open);
+  function toggleOutOfStockGraph() {
+    setOutOfStockOpen(!outOfStockOpen);
+  }
+  function toggleAboutToExpireGraph() {
+    setAboutToExpireOpen(!aboutToExpireOpen);
+  }
+  function toggleLatestImportGraph() {
+    setLatestImportOpen(!latestImportOpen);
+  }
+  function toggleLatestExportGraph() {
+    setLatestExportOpen(!latestExportOpen);
   }
 
-  console.log(mostProductExpire);
+  const calculateStockSum = () => {
+    const sumOutOfStockValue = outOfStockValue.reduce(
+      (accumulator, currentValue) => accumulator + currentValue,
+      0
+    );
+    return sumOutOfStockValue;
+  };
+  const calculateExpireSum = () => {
+    const sumAboutToExpireValue = aboutToExpireValue.reduce(
+      (accumulator, currentValue) => accumulator + currentValue,
+      0
+    );
+    return sumAboutToExpireValue;
+  };
+  const calculateImportSum = () => {
+    const sumImportValue = importValue.reduce(
+      (accumulator, currentValue) => accumulator + currentValue,
+      0
+    );
+    return sumImportValue;
+  };
+  const calculateExportSum = () => {
+    const sumExportValue = exportValue.reduce(
+      (accumulator, currentValue) => accumulator + currentValue,
+      0
+    );
+    return sumExportValue;
+  }
+  const sumOutOfStockValue = calculateStockSum();
+  const sumAboutToExpireValue = calculateExpireSum();
+  const sumImportValue = calculateImportSum();
+  const sumExportValue = calculateExportSum();
 
   return (
     <>
       <Modal
-        open={open}
-        onClose={toggleGraph}
+        open={outOfStockOpen}
+        onClose={toggleOutOfStockGraph}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <BarChart />
+          <OutOfStock productsOutOfStock={productsOutOfStock} />
+        </Box>
+      </Modal>
+      <Modal
+        open={aboutToExpireOpen}
+        onClose={toggleAboutToExpireGraph}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <AboutToExpire productsAboutToExpire={productsAboutToExpire} />
+        </Box>
+      </Modal>
+      <Modal
+        open={latestImportOpen}
+        onClose={toggleLatestImportGraph}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <LatestImport productsImport={productsImport} />
+        </Box>
+      </Modal>
+      <Modal
+        open={latestExportOpen}
+        onClose={toggleLatestExportGraph}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <LatestExport productsExport={productsExport} />
         </Box>
       </Modal>
       <div className="grid-container-1fr-1fr-white">
         {/* summaries 1 */}
         <Card className="item">
-          <div className="content">
+          <div className="content" style={{ justifyContent: "flex-start" }}>
             <figure className="image">
               <img src="/images/icons/product-icon.png" alt="Product-icon" />
             </figure>
             <div className="text">
               <div className="text-title">
-                <p>รวมรายการ สินค้าไกล้หมด</p>
+                <p>รวมรายการสินค้าใกล้หมด/เดือน</p>
               </div>
               <div className="text-description">
-                <p>90,000 รายการ / 85,324 หน่วย</p>
+                <p>
+                  {productsOutOfStock.length} รายการ / {sumOutOfStockValue} หน่วย
+                </p>
               </div>
             </div>
           </div>
@@ -69,13 +173,18 @@ function Summaries({
           <div className="content">
             <div className="text">
               <div className="text-title">
-                <p>น้อยสุดคือ : อาหาร</p>
+                <p>น้อยสุดคือ : {mostProductOutOfStock.title}</p>
               </div>
               <div className="text-description">
-                <p>15 หน่วย</p>
+                <p>
+                  {mostProductOutOfStock.import_value -
+                    mostProductOutOfStock.export_value -
+                    mostProductOutOfStock.export_defective_value}{" "}
+                  หน่วย
+                </p>
               </div>
             </div>
-            <button onClick={toggleGraph} className="graph">
+            <button onClick={toggleOutOfStockGraph} className="graph">
               แสดงกราฟ
             </button>
           </div>
@@ -83,16 +192,18 @@ function Summaries({
 
         {/* summaries 2 */}
         <Card className="item">
-          <div className="content">
+          <div className="content" style={{ justifyContent: "flex-start" }}>
             <figure className="image">
               <img src="/images/icons/expirationTable-icon.png" alt="Expiration-icon" />
             </figure>
             <div className="text">
               <div className="text-title">
-                <p>รวมรายการ สินค้าใกล้หมดอายุ</p>
+                <p>รวมรายการสินค้าใกล้หมดอายุ/เดือน</p>
               </div>
               <div className="text-description">
-                <p>90,000 รายการ / 85,324 หน่วย</p>
+                <p>
+                  {productsAboutToExpire.length} รายการ / {sumAboutToExpireValue} หน่วย
+                </p>
               </div>
             </div>
           </div>
@@ -100,13 +211,13 @@ function Summaries({
           <div className="content">
             <div className="text">
               <div className="text-title">
-                <p>มากสุดคือ : เครื่องดื่ม</p>
+                <p>มากสุดคือ : {mostProductExpire.title}</p>
               </div>
               <div className="text-description">
-                <p>240 หน่วย</p>
+                <p>{diffDateInDays} วัน</p>
               </div>
             </div>
-            <button onClick={toggleGraph} className="graph">
+            <button onClick={toggleAboutToExpireGraph} className="graph">
               แสดงกราฟ
             </button>
           </div>
@@ -114,16 +225,18 @@ function Summaries({
 
         {/* summaries 3 */}
         <Card className="item">
-          <div className="content">
+          <div className="content" style={{ justifyContent: "flex-start" }}>
             <figure className="image">
-              <img src="/images/icons/export-icon.png" alt="Product-icon" />
+              <img src="/images/icons/import-icon.png" alt="Expire-icon" />
             </figure>
             <div className="text">
               <div className="text-title">
-                <p>รวมรายการ เบิกออกล่าสุด</p>
+                <p>รวมรายการนำเข้าล่าสุด</p>
               </div>
               <div className="text-description">
-                <p>25,000 รายการ / 10,542 หน่วย</p>
+                <p>
+                  {productsImport.length} รายการ / {sumImportValue} หน่วย
+                </p>
               </div>
             </div>
           </div>
@@ -131,13 +244,13 @@ function Summaries({
           <div className="content">
             <div className="text">
               <div className="text-title">
-                <p>มากสุดคือ : มาม่า</p>
+                <p>มากสุดคือ : {mostProductImport.title}</p>
               </div>
               <div className="text-description">
-                <p>550 หน่วย</p>
+                <p>{sumImportValue} หน่วย</p>
               </div>
             </div>
-            <button onClick={toggleGraph} className="graph">
+            <button onClick={toggleLatestImportGraph} className="graph">
               แสดงกราฟ
             </button>
           </div>
@@ -145,16 +258,18 @@ function Summaries({
 
         {/* summaries 4 */}
         <Card className="item">
-          <div className="content">
+          <div className="content" style={{ justifyContent: "flex-start" }}>
             <figure className="image">
-              <img src="/images/icons/import-icon.png" alt="Expire-icon" />
+              <img src="/images/icons/export-icon.png" alt="Product-icon" />
             </figure>
             <div className="text">
               <div className="text-title">
-                <p>รวมรายการ นำเข้าล่าสุด</p>
+                <p>รวมรายการเบิกออกล่าสุด</p>
               </div>
               <div className="text-description">
-                <p>25,000 รายการ / 10,542 หน่วย</p>
+                <p>
+                  {productsExport.length} รายการ / {sumExportValue} หน่วย
+                </p>
               </div>
             </div>
           </div>
@@ -162,13 +277,13 @@ function Summaries({
           <div className="content">
             <div className="text">
               <div className="text-title">
-                <p>มากสุดคือ : ขนม</p>
+                <p>มากสุดคือ : {mostExportedProduct.title}</p>
               </div>
               <div className="text-description">
-                <p>550 หน่วย</p>
+                <p>{sumExportValue} หน่วย</p>
               </div>
             </div>
-            <button onClick={toggleGraph} className="graph">
+            <button onClick={toggleLatestExportGraph} className="graph">
               แสดงกราฟ
             </button>
           </div>
@@ -179,7 +294,7 @@ function Summaries({
         <div className="grid-container-1fr-1fr-purple">
           {/* summaries 5 */}
           <Card className="item">
-            <p className="header">สินค้า เบิกออกมากสุด/เดือน</p>
+            <p className="header">สินค้าเบิกออกมากสุด/เดือน</p>
             <div className="content">
               <figure className="image">
                 <img src={`${webPath}${mostExportedProduct?.thumbnail_link}`} alt="" />
@@ -199,7 +314,7 @@ function Summaries({
                   </div>
                   <div className="description">
                     <p>วันเบิก</p>
-                    <p>28 sep 2023</p>
+                    <p>{mostExportedProduct?.formatted_created_at}</p>
                   </div>
                 </div>
               </div>
@@ -212,7 +327,7 @@ function Summaries({
 
           {/* summaries 6 */}
           <Card className="item">
-            <p className="header">สินค้า คงเหลือในสต็อกมากสุด/เดือน</p>
+            <p className="header">สินค้าคงเหลือในสต็อกมากสุด/เดือน</p>
             <div className="content">
               <figure className="image">
                 <img src={`${webPath}${mostProductInStock?.thumbnail_link}`} alt="" />
@@ -232,7 +347,7 @@ function Summaries({
                   </div>
                   <div className="description">
                     <p>วันเบิก</p>
-                    <p>28 sep 2023</p>
+                    <p>{mostProductInStock?.formatted_created_at}</p>
                   </div>
                 </div>
               </div>
@@ -252,7 +367,7 @@ function Summaries({
         <div className="grid-container-1fr-1fr-orange">
           {/* summaries 7 */}
           <Card className="item">
-            <p className="header">สินค้าไกลหมดอายุมากสุด</p>
+            <p className="header">สินค้าใกล้หมดอายุมากสุด</p>
             <div className="content">
               <figure className="image">
                 <img src={`${webPath}${mostProductExpire?.thumbnail_link}`} alt="" />
@@ -272,7 +387,7 @@ function Summaries({
                   </div>
                   <div className="description">
                     <p>วันเบิก</p>
-                    <p>28 sep 2023</p>
+                    <p>{mostProductExpire?.formatted_created_at}</p>
                   </div>
                 </div>
               </div>
@@ -285,7 +400,7 @@ function Summaries({
 
           {/* Summaries 8 */}
           <Card className="item">
-            <p className="header">สินค้าใกล้หมด สต็อก</p>
+            <p className="header">สินค้าใกล้หมดสต็อกมากสุด</p>
             <div className="content">
               <figure className="image">
                 <img src={`${webPath}${mostProductOutOfStock?.thumbnail_link}`} alt="" />
@@ -305,7 +420,7 @@ function Summaries({
                   </div>
                   <div className="description">
                     <p>วันเบิก</p>
-                    <p>28 sep 2023</p>
+                    <p>{mostProductOutOfStock?.formatted_created_at}</p>
                   </div>
                 </div>
               </div>

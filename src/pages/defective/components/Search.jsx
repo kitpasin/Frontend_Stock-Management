@@ -1,33 +1,17 @@
 /* eslint-disable */
-import { useState, useContext, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Avatar, Typography } from "@mui/material";
-import { Button } from "@mui/material";
-import { Menu } from "@mui/material";
-import { MenuItem } from "@mui/material";
-import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { ProductContext } from "../../../App.js";
 
-function Table({ filteredProduct }) {
-  const {productIds, setProductIds} = useContext(ProductContext)
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+function Table({ productsData, refreshData, setRefreshData, productSelected, setProductSelected }) {
   const webPath = useSelector((state) => state.app.webPath);
-  const [selectedProductIds, setSelectedProductIds] = useState([])
 
-  useEffect(() => {
-    setProductIds(selectedProductIds);
-    const arrayString = JSON.stringify(selectedProductIds);
-    localStorage.setItem("SelectedProductIds", arrayString);
-  }, [selectedProductIds])
+  const onRowsSelectionHandler = (ids) => {
+    const selectedRowsData = ids.map((id) => productsData.find((product) => product.id === id));
+    setProductSelected(selectedRowsData);
+  };
 
-  function handleClick(event) {
-    setAnchorEl(event.currentTarget);
-  }
-  function handleClose() {
-    setAnchorEl(null);
-  }
+  console.log(productsData);
 
   const columns = [
     {
@@ -61,7 +45,7 @@ function Table({ filteredProduct }) {
     },
     {
       field: "export_date",
-      width: 100,
+      width: 109,
       headerClassName: "table-columns",
       headerAlign: "center",
       align: "center",
@@ -88,7 +72,7 @@ function Table({ filteredProduct }) {
     },
     {
       field: "export_defective_value",
-      width: 100,
+      width: 109,
       headerClassName: "table-columns",
       headerAlign: "center",
       align: "center",
@@ -112,7 +96,7 @@ function Table({ filteredProduct }) {
     },
     {
       field: "import_value",
-      width: 100,
+      width: 109,
       headerClassName: "table-columns",
       headerAlign: "center",
       align: "center",
@@ -126,18 +110,25 @@ function Table({ filteredProduct }) {
           </Typography>
         </div>
       ),
+      renderCell: (params) => (
+        <div>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>
+            {params.row.import_value - params.row.export_value - params.row.export_defective_value}
+          </p>
+        </div>
+      ),
     },
     {
       field: "purchase_date",
       headerName: "วันที่ซื้อ",
-      width: 100,
+      width: 109,
       headerClassName: "table-columns",
       headerAlign: "center",
       align: "center",
     },
     {
       field: "MEDEXP",
-      width: 100,
+      width: 109,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -173,14 +164,14 @@ function Table({ filteredProduct }) {
       headerName: "หมวดหมู่",
       headerAlign: "center",
       align: "center",
-      width: 100,
+      width: 109,
       headerClassName: "table-columns",
     },
     {
       field: "volumnPerUnit",
       headerAlign: "center",
       align: "center",
-      width: 100,
+      width: 109,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -195,7 +186,7 @@ function Table({ filteredProduct }) {
     },
     {
       field: "oc_unit",
-      width: 100,
+      width: 109,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -214,7 +205,7 @@ function Table({ filteredProduct }) {
       field: "product_cost",
       headerAlign: "center",
       align: "center",
-      width: 100,
+      width: 109,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -229,7 +220,7 @@ function Table({ filteredProduct }) {
     },
     {
       field: "unit_price",
-      width: 100,
+      width: 109,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -247,14 +238,14 @@ function Table({ filteredProduct }) {
     {
       field: "set_profit",
       headerName: "กำไร (%)",
-      width: 100,
+      width: 109,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
     },
     {
       field: "selling_price",
-      width: 100,
+      width: 109,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -269,82 +260,32 @@ function Table({ filteredProduct }) {
         </div>
       ),
     },
-    {
-      field: "action",
-      headerName: "จัดการสินค้า",
-      headerAlign: "center",
-      align: "center",
-      width: 100,
-      headerClassName: "table-columns",
-      renderCell: (params) => (
-        <div>
-          <Button
-            id="basic-button"
-            aria-controls={open ? "basic-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-            onClick={handleClick}
-          >
-            <img
-              style={{
-                background: "#3B336B",
-                width: "40px",
-                height: "40px",
-                padding: ".65rem",
-                borderRadius: "5px",
-              }}
-              src="/images/icons/imports-icon.png"
-              alt=""
-            />
-          </Button>
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-              "aria-labelledby": "basic-button",
-            }}
-          >
-            <Link to="/defective/export">
-              <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={handleClose}>
-                <img
-                  style={{ width: "18px", height: "18px" }}
-                  src="/images/icons/export-icon.png"
-                  alt=""
-                />
-                <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>เบิกสินค้า</p>
-              </MenuItem>
-            </Link>
-          </Menu>
-        </div>
-      ),
-    },
   ];
 
   const rowsClassName = "table-rows";
+
+  // Remove duplicate products based on product_id
+  const uniqueProductsMap = new Map();
+  productsData.forEach((item) => {
+    uniqueProductsMap.set(item.product_id, item);
+  });
+  const uniqueProductsData = Array.from(uniqueProductsMap.values());
 
   return (
     <div>
       <DataGrid
         getRowClassName={() => rowsClassName}
         sx={{ fontSize: "12px", border: "none" }}
-        rows={filteredProduct}
+        rows={uniqueProductsData}
         columns={columns}
         initialState={{
           pagination: {
             paginationModel: { page: 0, pageSize: 5 },
           },
         }}
-        pageSizeOptions={[5, 10, 50, 100]}
+        pageSizeOptions={[5, 10, 50, 109]}
         checkboxSelection
-        onRowSelectionModelChange={(data) => {
-          const selectedProductIds = data.map((rowId) => {
-            const row = filteredProduct.find((item) => item.id === rowId);
-            return row.product_id;
-          });
-          setSelectedProductIds(selectedProductIds);
-        }}
+        onRowSelectionModelChange={(ids) => onRowsSelectionHandler(ids)}
       />
     </div>
   );
