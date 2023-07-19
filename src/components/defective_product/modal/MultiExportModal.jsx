@@ -6,7 +6,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import ProductsExportPage from "../products/ProductsExportPage";
+import DefectiveExportPage from "../export/DefectiveExportPage";
 import Typography from "@mui/material/Typography";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -52,12 +52,13 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-function ExportModal({
+function MultiExportModal({
   open,
   setOpen,
   productShow,
   refreshData,
   setRefreshData,
+  productSelected,
   setProductSelected,
 }) {
   const handleClickOpen = () => {
@@ -69,18 +70,8 @@ function ExportModal({
 
   return (
     <div>
-      {/* <Button variant="outlined" onClick={handleClickOpen}>
-            Open dialog
-          </Button> */}
-      <BootstrapDialog
-        onClose={handleClose}
-        aria-labelledby="customized-dialog-title"
-        open={open}
-      >
-        <BootstrapDialogTitle
-          id="customized-dialog-title"
-          onClose={handleClose}
-        >
+      <BootstrapDialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+        <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
           <div
             style={{
               display: "flex",
@@ -89,38 +80,31 @@ function ExportModal({
             }}
           >
             <figure style={{ width: "30px" }}>
-              <img src="/images/icons/importPage-icon.png" alt="" />
+              <img src="/images/icons/exportPage-icon.png" alt="" />
             </figure>
             <Typography>
-              <span
-                style={{ color: "#000", fontSize: "1.5rem", fontWeight: "400" }}
-              >
-                เบิกสินค้า
+              <span style={{ color: "#000", fontSize: "1.5rem", fontWeight: "400" }}>
+                เบิกตัดสินค้าชำรุด
               </span>{" "}
-              (Product ID : {productShow.product_id})
             </Typography>
             <Typography></Typography>
           </div>
         </BootstrapDialogTitle>
         <DialogContent dividers>
-          <ProductsExportPage
+          <DefectiveExportPage
             open={open}
             setOpen={setOpen}
-            exportOne={true}
+            exportOne={false}
+            multiExprot={true}
             productDatas={productShow}
             refreshData={refreshData}
             setRefreshData={setRefreshData}
             setProductSelected={setProductSelected}
           />
         </DialogContent>
-        {/* <DialogActions>
-              <Button autoFocus onClick={handleClose}>
-                Save changes
-              </Button>
-            </DialogActions> */}
       </BootstrapDialog>
     </div>
   );
 }
 
-export default ExportModal;
+export default MultiExportModal;

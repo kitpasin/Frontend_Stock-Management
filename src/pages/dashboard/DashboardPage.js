@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGamepad } from "@fortawesome/free-solid-svg-icons";
+import PulseLoader from "react-spinners/PulseLoader";
 
 import "./DashboardPage.scss";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
@@ -13,6 +14,9 @@ import axios from "axios";
 
 const DashboardPage = () => {
   const { t } = useTranslation(["dashboard-page"]);
+
+  const [loading, setLoading] = useState(true);
+
   const [mostExportedProduct, setMostExportedProduct] = useState([])
   const [mostProductInStock, setMostProductInStock] = useState([])
   const [mostProductExpire, setMostProductExpire] = useState([])
@@ -20,6 +24,8 @@ const DashboardPage = () => {
   const [productsOutOfStock, setProductsOutOfStock] = useState([])
   const [productsAboutToExpire, setProductsAboutToExpire] = useState([])
   const [productsImport, setProductsImport] = useState([])
+  const [mostProductImport, setMostProductImport] = useState([])
+  const [productsExport, setProductsExport] = useState([]);
 
   async function getProducts() {
     const response = await axios.get("product/dashboard");
@@ -62,31 +68,52 @@ const DashboardPage = () => {
     // สินค้าที่นำเข้าในวันนี้
     const pImport = response.data.pImport;
     setProductsImport(pImport);
+
+    // สินค้านำเข้ามากสุดในวันนี้
+    const mostImport = response.data.mostImport;
+    setMostProductImport(mostImport);
+
+    // สินค้าเบิกออกวันนี้
+    const pExport = response.data.pExport;
+    setProductsExport(pExport)
   }
 
   useEffect(() => {
-    getProducts()
+    getProducts().then(() => {
+      setLoading(false)
+    })
   }, []);
 
   return (
     <section id="dashboard-page">
-      <HeadPageComponent
-        h1={t("dashboardPage")}
-        icon={<FontAwesomeIcon icon={faGamepad} />}
-        breadcrums={[{ title: t("dashboardPage"), link: false }]}
-      />
-      <Summaries
-        mostExportedProduct={mostExportedProduct}
-        mostProductInStock={mostProductInStock}
-        mostProductExpire={mostProductExpire}
-        mostProductOutOfStock={mostProductOutOfStock}
-      />
-      <Tables
-        rows={rows}
-        productsOutOfStock={productsOutOfStock}
-        productsAboutToExpire={productsAboutToExpire}
-        productsImport={productsImport}
-      />
+      {loading ? (
+        <PulseLoader color="#3b326b" />
+      ) : (
+        <>
+          <HeadPageComponent
+            h1={t("dashboardPage")}
+            icon={<FontAwesomeIcon icon={faGamepad} />}
+            breadcrums={[{ title: t("dashboardPage"), link: false }]}
+          />
+          <Summaries
+            mostExportedProduct={mostExportedProduct}
+            productsExport={productsExport}
+            mostProductInStock={mostProductInStock}
+            mostProductImport={mostProductImport}
+            productsImport={productsImport}
+            mostProductExpire={mostProductExpire}
+            productsAboutToExpire={productsAboutToExpire}
+            mostProductOutOfStock={mostProductOutOfStock}
+            productsOutOfStock={productsOutOfStock}
+          />
+          <Tables
+            productsOutOfStock={productsOutOfStock}
+            productsAboutToExpire={productsAboutToExpire}
+            productsImport={productsImport}
+            productsExport={productsExport}
+          />
+        </>
+      )}
     </section>
   );
 };

@@ -1,51 +1,16 @@
-import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Avatar, Typography } from "@mui/material";
-import { Button } from "@mui/material";
-import { Menu } from "@mui/material";
-import { MenuItem } from "@mui/material";
 import { useSelector } from "react-redux";
-import axios from "axios";
-import Swal from "sweetalert2";
-import { Link } from "react-router-dom";
+import MenuItemList from "./MenuItemList";
 
-function Table({ filteredProduct, getDefectiveProducts }) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
+function Table({ productsData, refreshData, setRefreshData, productSelected, setProductSelected }) {
   const { displayName } = useSelector((state) => state.auth.profile);
   const webPath = useSelector((state) => state.app.webPath);
 
-  function handleClick(event) {
-    setAnchorEl(event.currentTarget);
-  }
-  function handleClose() {
-    setAnchorEl(null);
-  }
-
-  async function handleDeleteDefectiveProduct(params) {
-    handleClose();
-    Swal.fire({
-      title: "Are you sure?",
-      text: "Do you want to delete the data?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        axios.delete(`product/defective/${params.row.product_id}`).then((res) => {
-          if (res.status) {
-            Swal.fire("Deleted!", "Product has been deleted successfully.", "success").then(() => {
-              getDefectiveProducts();
-            });
-          } else {
-            alert("error");
-          }
-        });
-      }
-    });
-  }
+  const onRowsSelectionHandler = (ids) => {
+    const selectedRowsData = ids.map((id) => productsData.find((product) => product.id === id));
+    setProductSelected(selectedRowsData);
+  };
 
   const columns = [
     {
@@ -418,89 +383,12 @@ function Table({ filteredProduct, getDefectiveProducts }) {
       width: 90,
       headerClassName: "table-columns",
       renderCell: (params) => (
-        <div>
-          <Button
-            id="basic-button"
-            aria-controls={open ? "basic-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-            onClick={handleClick}
-          >
-            <img
-              style={{
-                background: "#3B336B",
-                width: "40px",
-                height: "40px",
-                padding: ".65rem",
-                borderRadius: "5px",
-              }}
-              src="/images/icons/management-icon.png"
-              alt=""
-            />
-          </Button>
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-              "aria-labelledby": "basic-button",
-            }}
-          >
-            <MenuItem>
-              <Link
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "1rem",
-                }}
-                onClick={handleClose}
-                to="/suppliers"
-              >
-                <img
-                  style={{
-                    width: "18px",
-                    height: "18px",
-                    filter:
-                      "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
-                  }}
-                  src="/images/icons/supplier-icon.png"
-                  alt=""
-                />
-                <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>ซัพพลาย</p>
-              </Link>
-            </MenuItem>
-            <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={handleClose}>
-              <img
-                style={{
-                  width: "18px",
-                  height: "18px",
-                  filter:
-                    "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
-                }}
-                src="/images/icons/edit-icon.png"
-                alt=""
-              />
-              <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>แก้ไขสินค้า</p>
-            </MenuItem>
-            <MenuItem
-              sx={{ display: "flex", gap: "1rem" }}
-              onClick={() => handleDeleteDefectiveProduct(params)}
-            >
-              <img
-                style={{
-                  width: "18px",
-                  height: "18px",
-                  filter:
-                    "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
-                }}
-                src="/images/icons/trash-icon.png"
-                alt=""
-              />
-              <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>ลบสินค้า</p>
-            </MenuItem>
-          </Menu>
-        </div>
+        <MenuItemList
+          params={params}
+          refreshData={refreshData}
+          setRefreshData={setRefreshData}
+          setProductSelected={setProductSelected}
+        />
       ),
     },
   ];
@@ -512,7 +400,7 @@ function Table({ filteredProduct, getDefectiveProducts }) {
       <DataGrid
         getRowClassName={() => rowsClassName}
         sx={{ fontSize: "12px", border: "none" }}
-        rows={filteredProduct}
+        rows={productsData}
         columns={columns}
         initialState={{
           pagination: {
@@ -520,6 +408,7 @@ function Table({ filteredProduct, getDefectiveProducts }) {
           },
         }}
         pageSizeOptions={[5, 10, 50, 100]}
+        onRowSelectionModelChange={(ids) => onRowsSelectionHandler(ids)}
       />
     </div>
   );

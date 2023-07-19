@@ -1,7 +1,6 @@
 /* eslint-disable */
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
 import { Button, TextField } from "@mui/material";
 import { Card } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -15,18 +14,13 @@ import PulseLoader from "react-spinners/PulseLoader";
 import "./ProductsPage.scss";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
 import Table from "./components/Table";
-import { rows } from "./data/TableData";
 import { Link } from "react-router-dom";
 import { svProductAll } from "../../services/product.service";
 import dayjs from "dayjs";
-import MultiExportModal from "../export/MultiExportModal";
-import { RestoreFromTrashRounded } from "@mui/icons-material";
+import MultiExportModal from "../../components/product/modal/MultiExportModal";
 import Swal from "sweetalert2";
 
 function ProductsPage() {
-  const [mainCatesData, setMainCatesData] = useState([]);
-  const [productSelected, setProductSelected] = useState([]);
-  const [openMultiExportModal, setOpenMultiexportModal] = useState(false);
   const { t } = useTranslation(["dashboard-page"]);
 
   const [loading, setLoading] = useState(true);
@@ -34,10 +28,14 @@ function ProductsPage() {
   const [productsAll, setProductsAll] = useState([]);
   const [productsData, setProductsData] = useState([]);
   const [mainCateId, setMainCateId] = useState(0);
+  const [mainCatesData, setMainCatesData] = useState([]);
   const [productTitle, setProductTitle] = useState("");
   const [vat, setVat] = useState("all");
+
   const [refreshData, setRefreshData] = useState(0);
-  const dispatch = useDispatch();
+  const [productSelected, setProductSelected] = useState([]);
+  const [openMultiExportModal, setOpenMultiexportModal] = useState(false);
+
   const current_date = dayjs().toISOString().substring(0, 10);
 
   const multiExportHandle = () => {
@@ -193,15 +191,6 @@ function ProductsPage() {
                     filterData(value ? value.id : 0, productTitle)
                   }
                 />
-                {/* <Autocomplete
-              disabled
-              size="small"
-              disablePortal
-              id="combo-box-demo"
-              options={rows.map((e) => e.category)}
-              sx={{ width: 150 }}
-              renderInput={(params) => <TextField {...params} label="หมวดหมู่ย่อย" />}
-            /> */}
                 <FormControl>
                   <RadioGroup
                     row
@@ -247,8 +236,7 @@ function ProductsPage() {
             </div>
             <div>
               <Table
-                rows={rows}
-                productsAll={productsAll}
+                productsData={productsAll}
                 refreshData={refreshData}
                 setRefreshData={setRefreshData}
                 setProductSelected={setProductSelected}

@@ -1,22 +1,15 @@
-import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Avatar, Typography } from "@mui/material";
-import { Button } from "@mui/material";
-import { Menu } from "@mui/material";
-import { MenuItem } from "@mui/material";
 import { useSelector } from "react-redux";
+import MenuItemList from "../components/MenuItemList";
 
-function Table({ filteredProduct }) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
+function Table({ productsData, refreshData, setRefreshData, productSelected, setProductSelected }) {
   const webPath = useSelector((state) => state.app.webPath);
 
-  function handleClick(event) {
-    setAnchorEl(event.currentTarget);
-  }
-  function handleClose() {
-    setAnchorEl(null);
-  }
+  const onRowsSelectionHandler = (ids) => {
+    const selectedRowsData = ids.map((id) => productsData.find((product) => product.id === id));
+    setProductSelected(selectedRowsData);
+  };
 
   const columns = [
     {
@@ -385,90 +378,12 @@ function Table({ filteredProduct }) {
       width: 100,
       headerClassName: "table-columns",
       renderCell: (params) => (
-        <div>
-          <Button
-            id="basic-button"
-            aria-controls={open ? "basic-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-            onClick={handleClick}
-          >
-            <img
-              style={{
-                background: "#3B336B",
-                width: "40px",
-                height: "40px",
-                padding: ".65rem",
-                borderRadius: "5px",
-              }}
-              src="/images/icons/management-icon.png"
-              alt=""
-            />
-          </Button>
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-              "aria-labelledby": "basic-button",
-            }}
-          >
-            <MenuItem
-              sx={{
-                display: "flex",
-                gap: "1rem",
-              }}
-              onClick={handleClose}
-            >
-              <img
-                style={{
-                  width: "18px",
-                  height: "18px",
-                  filter:
-                    "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
-                }}
-                src="/images/icons/supplier-icon.png"
-                alt=""
-              />
-              <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>ซัพพลาย</p>
-            </MenuItem>
-            <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={handleClose}>
-              <img
-                style={{ width: "18px", height: "18px" }}
-                src="/images/icons/export-icon.png"
-                alt=""
-              />
-              <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>เบิกสินค้า</p>
-            </MenuItem>
-            <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={handleClose}>
-              <img
-                style={{
-                  width: "18px",
-                  height: "18px",
-                  filter:
-                    "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
-                }}
-                src="/images/icons/edit-icon.png"
-                alt=""
-              />
-              <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>แก้ไขสินค้า</p>
-            </MenuItem>
-            <MenuItem sx={{ display: "flex", gap: "1rem" }} onClick={handleClose}>
-              <img
-                style={{
-                  width: "18px",
-                  height: "18px",
-                  filter:
-                    "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
-                }}
-                src="/images/icons/trash-icon.png"
-                alt=""
-              />
-              <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>ลบสินค้า</p>
-            </MenuItem>
-          </Menu>
-        </div>
+        <MenuItemList
+          params={params}
+          refreshData={refreshData}
+          setRefreshData={setRefreshData}
+          setProductSelected={setProductSelected}
+        />
       ),
     },
   ];
@@ -480,7 +395,7 @@ function Table({ filteredProduct }) {
       <DataGrid
         getRowClassName={() => rowsClassName}
         sx={{ fontSize: "12px", border: "none" }}
-        rows={filteredProduct}
+        rows={productsData}
         columns={columns}
         initialState={{
           pagination: {
@@ -489,6 +404,7 @@ function Table({ filteredProduct }) {
         }}
         pageSizeOptions={[5, 10, 50, 100]}
         checkboxSelection
+        onRowSelectionModelChange={(ids) => onRowsSelectionHandler(ids)}
       />
     </div>
   );

@@ -26,9 +26,8 @@ import MenuPage from './pages/menu/menu';
 import InboxPage from './pages/inbox/inbox';
 import ResetPasswordPage from './pages/resetpassword/resetpassword';
 import ProductsPage from './pages/products/ProductsPage';
-import ProductsImportPage from './pages/products/ProductsImportPage';
-import ProductsImportSearchPage from './pages/products/ProductsImportSearchPage'
-import ProductsExportPage from './pages/products/ProductsExportPage';
+import ProductsImportPage from './components/product/import/ProductsImportPage'
+import ProductsExportPage from "./components/product/export/ProductsExportPage";
 import ExpirationPage from './pages/expiration/ExpirationPage';
 import Suppliers from './pages/supplier/Suppliers';
 import ProductCategory from './pages/productCategory/ProductCategory';
@@ -39,8 +38,8 @@ import StockPage from './pages/stock/StockPage';
 import DefectivePage from './pages/defective/DefectivePage'
 import ImportPage from './pages/import/ImportPage';
 import ExportPage from './pages/export/ExportPage';
-import DefectiveSearchPage from './pages/defective/DefectiveSearchPage';
-import DefectiveExportPage from './pages/defective/DefectiveExportPage';
+import DefectiveSearchPage from './components/defective_product/search/DefectiveSearchPage';
+import DefectiveExportPage from './components/defective_product/export/DefectiveExportPage';
 import { createContext } from 'react';
 
 export const ProductContext = createContext();
@@ -67,9 +66,6 @@ function App() {
             {pagesAllow.products && <Route path="/products" element={<ProductsPage />} />}
             {pagesAllow.products && (
               <Route path="/products/import" element={<ProductsImportPage />} />
-            )}
-            {pagesAllow.products && (
-              <Route path="/products/import/search" element={<ProductsImportSearchPage />} />
             )}
             {pagesAllow.products && (
               <Route path="/products/export" element={<ProductsExportPage />} />

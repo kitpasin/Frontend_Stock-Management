@@ -14,7 +14,12 @@ import ExportDataGrid from "./ExportDataGrid";
 import ImportDataGrid from "./ImportDataGrid";
 import { Link } from "react-router-dom";
 
-function Tables({ rows, productsOutOfStock, productsAboutToExpire, productsImport }) {
+function Tables({
+  productsOutOfStock,
+  productsAboutToExpire,
+  productsImport,
+  productsExport,
+}) {
   useEffect(() => {}, []);
   return (
     <>
@@ -23,7 +28,7 @@ function Tables({ rows, productsOutOfStock, productsAboutToExpire, productsImpor
           <div className="header">
             <figure className="header-title">
               <img src="/images/icons/product-icon.png" alt="" />
-              <p>จำนวนสินค้าใกล้หมด</p>
+              <p>จำนวนสินค้าใกล้หมด/เดือน</p>
               <p style={{ color: "red" }}>{productsOutOfStock.length} รายการ</p>
             </figure>
             <div className="header-link">
@@ -37,7 +42,7 @@ function Tables({ rows, productsOutOfStock, productsAboutToExpire, productsImpor
           <div className="header">
             <figure className="header-title">
               <img src="/images/icons/expirationTable-icon.png" alt="" />
-              <p>จำนวนสินค้าใกล้หมดอายุ</p>
+              <p>จำนวนสินค้าใกล้หมดอายุ/เดือน</p>
               <p style={{ color: "red" }}>{productsAboutToExpire.length} รายการ</p>
             </figure>
             <div className="header-link">
@@ -55,11 +60,13 @@ function Tables({ rows, productsOutOfStock, productsAboutToExpire, productsImpor
           <div className="header">
             <figure className="header-title">
               <img src="/images/icons/import-icon.png" alt="" />
-              <p>สินค้านำเข้า</p>
+              <p>สินค้านำเข้าวันนี้</p>
               <p style={{ color: "red" }}>{productsImport.length} รายการ</p>
             </figure>
             <div className="header-link">
-              <button>ดูรายการเพิ่มเติม</button>
+              <button>
+                <Link to="/product">ดูรายการเพิ่มเติม</Link>
+              </button>
             </div>
           </div>
           <ImportDataGrid productsImport={productsImport} />
@@ -68,14 +75,16 @@ function Tables({ rows, productsOutOfStock, productsAboutToExpire, productsImpor
           <div className="header">
             <figure className="header-title">
               <img src="/images/icons/export-icon.png" alt="" />
-              <p>สินค้าเบิกออก</p>
+              <p>สินค้าเบิกออกวันนี้</p>
               <p style={{ color: "red" }}>5 รายการ</p>
             </figure>
             <div className="header-link">
-              <button>ดูรายการเพิ่มเติม</button>
+              <button>
+                <Link to="/export">ดูรายการเพิ่มเติม</Link>
+              </button>
             </div>
           </div>
-          <ExportDataGrid rows={rows} />
+          <ExportDataGrid productsExport={productsExport} />
         </Card>
       </div>
     </>

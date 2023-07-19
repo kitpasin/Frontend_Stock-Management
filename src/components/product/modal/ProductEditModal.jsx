@@ -1,13 +1,16 @@
 import * as React from "react";
 import PropTypes from "prop-types";
+import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import ProductsExportPage from "../products/ProductsExportPage";
 import Typography from "@mui/material/Typography";
+
+import ProductsImportPage from "../import/ProductsImportPage";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -52,15 +55,8 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-function MultiExportModal({
-  open,
-  setOpen,
-  productShow,
-  refreshData,
-  setRefreshData,
-  productSelected,
-  setProductSelected,
-}) {
+function ProductEditModal({ isEdit, isFetchImport, open, setOpen, productShow, refreshData, setRefreshData }) {
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -71,8 +67,8 @@ function MultiExportModal({
   return (
     <div>
       {/* <Button variant="outlined" onClick={handleClickOpen}>
-            Open dialog
-          </Button> */}
+        Open dialog
+      </Button> */}
       <BootstrapDialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
@@ -81,47 +77,22 @@ function MultiExportModal({
         <BootstrapDialogTitle
           id="customized-dialog-title"
           onClose={handleClose}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "1rem",
-            }}
-          >
-            <figure style={{ width: "30px" }}>
-              <img src="/images/icons/importPage-icon.png" alt="" />
-            </figure>
-            <Typography>
-              <span
-                style={{ color: "#000", fontSize: "1.5rem", fontWeight: "400" }}
-              >
-                เบิกสินค้า
-              </span>{" "}
-            </Typography>
-            <Typography></Typography>
-          </div>
+        > 
+          { isEdit ? `แก้ไขสินค้า (Product ID : ${productShow.product_id})` : "เพิ่มสินค้า"}
+          
+           
         </BootstrapDialogTitle>
         <DialogContent dividers>
-          <ProductsExportPage
-            open={open}
-            setOpen={setOpen}
-            exportOne={false}
-            multiExprot={true}
-            productDatas={productShow}
-            refreshData={refreshData}
-            setRefreshData={setRefreshData}
-            setProductSelected={setProductSelected}
-          />
+          <ProductsImportPage isEdit={isEdit} isFetchImport={isFetchImport} productShow={productShow} refreshData={refreshData} setRefreshData={setRefreshData} setOpenModalEdit={setOpen} />
         </DialogContent>
         {/* <DialogActions>
-              <Button autoFocus onClick={handleClose}>
-                Save changes
-              </Button>
-            </DialogActions> */}
+          <Button autoFocus onClick={handleClose}>
+            Save changes
+          </Button>
+        </DialogActions> */}
       </BootstrapDialog>
     </div>
   );
 }
 
-export default MultiExportModal;
+export default ProductEditModal;

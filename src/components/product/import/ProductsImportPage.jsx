@@ -20,13 +20,13 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
 import "./ProductsImportPage.scss";
-import HeadPageComponent from "../../components/layout/headpage/headpage";
+import HeadPageComponent from "../../layout/headpage/headpage";
 import { Link, useNavigate } from "react-router-dom";
 import { batch, useSelector } from "react-redux";
 import axios from "axios";
 import { PersonOffRounded } from "@mui/icons-material";
-import { svCreateProduct } from "../../services/product.service";
-import { svProductUpdate } from "../../services/product.service";
+import { svCreateProduct } from "../../../services/product.service";
+import { svProductUpdate } from "../../../services/product.service";
 
 const form = {
   title: "", state1: false, state2: false,
