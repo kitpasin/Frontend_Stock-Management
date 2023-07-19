@@ -37,22 +37,22 @@ function Summaries({
   const [latestExportOpen, setLatestExportOpen] = React.useState(false)
 
   const [outOfStockValue, setOutOfStockValue] = useState(
-    productsOutOfStock.map(
+    productsOutOfStock?.map(
       (item) => item.import_value - item.export_value - item.export_defective_value
     )
   );
   const [aboutToExpireValue, setAboutToExpireValue] = useState(
-    productsAboutToExpire.map(
+    productsAboutToExpire?.map(
       (item) => item.import_value - item.export_value - item.export_defective_value
     )
   );
   const [importValue, setImportValue] = useState(
-    productsImport.map(
+    productsImport?.map(
       (item) => item.import_value
     )
   );
   const [exportValue, setExportValue] = useState(
-    productsExport.map(
+    productsExport?.map(
       (item) => item.export_value
     )
   )
