@@ -77,28 +77,28 @@ function Summaries({
   }
 
   const calculateStockSum = () => {
-    const sumOutOfStockValue = outOfStockValue.reduce(
+    const sumOutOfStockValue = outOfStockValue?.reduce(
       (accumulator, currentValue) => accumulator + currentValue,
       0
     );
     return sumOutOfStockValue;
   };
   const calculateExpireSum = () => {
-    const sumAboutToExpireValue = aboutToExpireValue.reduce(
+    const sumAboutToExpireValue = aboutToExpireValue?.reduce(
       (accumulator, currentValue) => accumulator + currentValue,
       0
     );
     return sumAboutToExpireValue;
   };
   const calculateImportSum = () => {
-    const sumImportValue = importValue.reduce(
+    const sumImportValue = importValue?.reduce(
       (accumulator, currentValue) => accumulator + currentValue,
       0
     );
     return sumImportValue;
   };
   const calculateExportSum = () => {
-    const sumExportValue = exportValue.reduce(
+    const sumExportValue = exportValue?.reduce(
       (accumulator, currentValue) => accumulator + currentValue,
       0
     );
