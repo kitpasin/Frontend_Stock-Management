@@ -164,7 +164,7 @@ function Summaries({
               </div>
               <div className="text-description">
                 <p>
-                  {productsOutOfStock.length} รายการ / {sumOutOfStockValue} หน่วย
+                  {productsOutOfStock?.length} รายการ / {sumOutOfStockValue} หน่วย
                 </p>
               </div>
             </div>
@@ -173,13 +173,13 @@ function Summaries({
           <div className="content">
             <div className="text">
               <div className="text-title">
-                <p>น้อยสุดคือ : {mostProductOutOfStock.title}</p>
+                <p>น้อยสุดคือ : {mostProductOutOfStock?.title}</p>
               </div>
               <div className="text-description">
                 <p>
-                  {mostProductOutOfStock.import_value -
-                    mostProductOutOfStock.export_value -
-                    mostProductOutOfStock.export_defective_value}{" "}
+                  {mostProductOutOfStock?.import_value -
+                    mostProductOutOfStock?.export_value -
+                    mostProductOutOfStock?.export_defective_value}{" "}
                   หน่วย
                 </p>
               </div>
@@ -202,7 +202,7 @@ function Summaries({
               </div>
               <div className="text-description">
                 <p>
-                  {productsAboutToExpire.length} รายการ / {sumAboutToExpireValue} หน่วย
+                  {productsAboutToExpire?.length} รายการ / {sumAboutToExpireValue} หน่วย
                 </p>
               </div>
             </div>
@@ -211,7 +211,7 @@ function Summaries({
           <div className="content">
             <div className="text">
               <div className="text-title">
-                <p>มากสุดคือ : {mostProductExpire.title}</p>
+                <p>มากสุดคือ : {mostProductExpire?.title}</p>
               </div>
               <div className="text-description">
                 <p>{diffDateInDays} วัน</p>
@@ -235,7 +235,7 @@ function Summaries({
               </div>
               <div className="text-description">
                 <p>
-                  {productsImport.length} รายการ / {sumImportValue} หน่วย
+                  {productsImport?.length} รายการ / {sumImportValue} หน่วย
                 </p>
               </div>
             </div>
@@ -244,7 +244,7 @@ function Summaries({
           <div className="content">
             <div className="text">
               <div className="text-title">
-                <p>มากสุดคือ : {mostProductImport.title}</p>
+                <p>มากสุดคือ : {mostProductImport?.title}</p>
               </div>
               <div className="text-description">
                 <p>{sumImportValue} หน่วย</p>
@@ -268,7 +268,7 @@ function Summaries({
               </div>
               <div className="text-description">
                 <p>
-                  {productsExport.length} รายการ / {sumExportValue} หน่วย
+                  {productsExport?.length} รายการ / {sumExportValue} หน่วย
                 </p>
               </div>
             </div>
@@ -277,7 +277,7 @@ function Summaries({
           <div className="content">
             <div className="text">
               <div className="text-title">
-                <p>มากสุดคือ : {mostExportedProduct.title}</p>
+                <p>มากสุดคือ : {mostExportedProduct?.title}</p>
               </div>
               <div className="text-description">
                 <p>{sumExportValue} หน่วย</p>
