@@ -13,86 +13,17 @@ import "./createSupplier.scss";
 
 /* import Components */
 import HeadPageComponent from "../../../components/layout/headpage/headpage";
-import { Autocomplete, Checkbox, Select } from "@mui/material";
+import { svProductAll } from "../../../services/product.service";
+import { Autocomplete, Avatar, Checkbox, Select } from "@mui/material";
 import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-
-const columns = [
-  { field: "image", headerName: "ภาพ", width: 50, headerAlign: "center", align: "center" },
-  {
-    field: "nameList",
-    headerName: "ชื่อรายการ",
-    width: 150,
-    headerAlign: "center",
-    align: "center",
-  },
-  {
-    field: "ordered",
-    headerName: "จำนวนที่สั่งซื้อ",
-    width: 150,
-    headerAlign: "center",
-    align: "center",
-  },
-  {
-    field: "orderDate",
-    headerName: "วันที่ซื้อ",
-    width: 150,
-    headerAlign: "center",
-    align: "center",
-  },
-  {
-    field: "expDate",
-    headerName: "วันหมดอายุ",
-    width: 150,
-    headerAlign: "center",
-    align: "center",
-    // valueGetter: (params) =>
-    // `${params.row.firstName || ""} ${params.row.lastName || ""}`,
-  },
-  { field: "vat", headerName: "Vat", width: 50, headerAlign: "center", align: "center" },
-  {
-    field: "category",
-    headerName: "หมวดหมู่",
-    width: 100,
-    headerAlign: "center",
-    align: "center",
-  },
-  { field: "unit", headerName: "หน่วยนับ", width: 150, headerAlign: "center", align: "center" },
-  {
-    field: "netWeight",
-    headerName: "ปริมาณสุทธิต่อหน่วย",
-    width: 150,
-    headerAlign: "center",
-    align: "center",
-  },
-  {
-    field: "unitCost",
-    headerName: "ต้นทุนต่อหน่วย",
-    width: 150,
-    headerAlign: "center",
-    align: "center",
-  },
-  {
-    field: "unitPrice",
-    headerName: "ราคาต่อหน่วย",
-    width: 150,
-    headerAlign: "center",
-    align: "center",
-  },
-  {
-    field: "totalCost",
-    headerName: "รวมต้นทุนต่อหน่วย",
-    width: 150,
-    headerAlign: "center",
-    align: "center",
-  },
-];
+import { Result } from "postcss";
+import { useSelector } from "react-redux";
 
 function CreateSupplier() {
-  const [age, setAge] = useState("");
   const [mainCatesData, setMainCatesData] = useState([]);
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
@@ -101,10 +32,147 @@ function CreateSupplier() {
   const [email, setEmail] = useState("");
   const [lineId, setLineId] = useState("");
   const [mainCates, setMainCates] = useState([]);
+  const [productData, setProductData] = useState([]);
+  const [productAll, setProductAll] = useState([]);
+  const [supplier, setSupplier] = useState([]);
+  const webPath = useSelector((state) => state.app.webPath);
 
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
+  const columns = [
+    {
+      field: "thumbnail_link",
+      headerName: "ภาพ",
+      width: 50,
+      headerAlign: "center",
+      align: "center",
+      renderCell: (params) => (
+        <figure style={{ background: "#D0D0E2", borderRadius: "5px", padding: ".1rem" }}>
+          <Avatar alt="Thumbnail" src={`${webPath}${params.row.thumbnail_link}`} />
+        </figure>
+      ),
+    },
+    {
+      field: "title",
+      headerName: "ชื่อรายการ",
+      width: 150,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "supplier_name",
+      headerName: "ชื่อซัพพลายเออร์",
+      width: 150,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "import_value",
+      headerName: "จำนวนที่สั่งซื้อ",
+      width: 150,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "defective_product",
+      headerName: "จำนวนสินค้าผิดปกติ",
+      width: 150,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "purchase_date",
+      headerName: "วันที่ซื้อ",
+      width: 150,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "exp_date",
+      headerName: "วันหมดอายุ",
+      width: 150,
+      headerAlign: "center",
+      align: "center",
+      // valueGetter: (params) =>
+      // `${params.row.firstName || ""} ${params.row.lastName || ""}`,
+    },
+    {
+      field: "vat_name",
+      headerName: "Vat",
+      width: 50,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "supplier_cate_name",
+      headerName: "หมวดหมู่",
+      width: 100,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "amount_name",
+      headerName: "หน่วยนับ",
+      width: 150,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "netWeight",
+      headerName: "ปริมาณสุทธิต่อหน่วย",
+      width: 150,
+      headerAlign: "center",
+      align: "center",
+      renderCell: (params) => (
+        <p>{params.row.netweight} {params.row.net_name}</p>
+      ),
+    },
+    {
+      field: "cost_per_unit",
+      headerName: "ต้นทุนต่อหน่วย",
+      width: 150,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "pp_profit",
+      headerName: "ราคาต่อหน่วย",
+      width: 150,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "pp_vat",
+      headerName: "รวมต้นทุนต่อหน่วย",
+      width: 150,
+      headerAlign: "center",
+      align: "center",
+    },
+  ];
+
+  useEffect(() => {
+    getSuppliers()
+    svProductAll().then((res) => {
+      const result = res.data;
+      setProductData(result)
+      setProductAll(result);
+    });
+  }, []);
+
+  function filterData(_id) {
+    if (_id !== 0) {
+      const data = productData.filter(item => item.supplier_id === _id) 
+      setProductAll(data)
+    } else {
+      setProductAll(productData)
+    }
+  }
+
+  async function getSuppliers() {
+    const response = await axios.get("suppliers");
+    const data = response.data.suppliers;
+    setSupplier(data)
+    getMainCates();
+  }
+
   const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
   const checkedIcon = <CheckBoxIcon fontSize="small" />;
   const navigate = useNavigate();
@@ -116,7 +184,7 @@ function CreateSupplier() {
   }
 
   function handleClear() {
-    window.location.reload(false)
+    window.location.reload(false);
   }
 
   function handleCreateSupplier() {
@@ -129,14 +197,20 @@ function CreateSupplier() {
       line_id: lineId,
       main_cate_id: mainCates,
     };
-    console.log(data.main_cate_id)
-    if (Object.values(data).some((value) => value === "" || value.length === 0)) {
-      Swal.fire("Error!", "Please fill in all fields.", "error")
+    console.log(data.main_cate_id);
+    if (
+      Object.values(data).some((value) => value === "" || value.length === 0)
+    ) {
+      Swal.fire("Error!", "Please fill in all fields.", "error");
     } else {
       axios
         .post("supplier", data)
         .then(function (response) {
-          Swal.fire("Created!", "Your supplier has been created.", "success").then(() => {
+          Swal.fire(
+            "Created!",
+            "Your supplier has been created.",
+            "success"
+          ).then(() => {
             navigate("/suppliers");
           });
         })
@@ -144,12 +218,7 @@ function CreateSupplier() {
           console.error(error);
         });
     }
-    
   }
-
-  useEffect(() => {
-    getMainCates();
-  }, []);
 
   return (
     <section id="create-supplier-page">
@@ -225,7 +294,9 @@ function CreateSupplier() {
                   onChange={(e) => setLineId(e.target.value)}
                 />
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "1rem" }}
+              >
                 <Autocomplete
                   size="small"
                   multiple
@@ -270,7 +341,8 @@ function CreateSupplier() {
                     width: "200px",
                   }}
                 >
-                  <img src="images/icons/ic_round-plus.png" alt="" /> สร้างหมวดหมู่หลัก
+                  <img src="images/icons/ic_round-plus.png" alt="" />{" "}
+                  สร้างหมวดหมู่หลัก
                 </Link>
               </div>
             </div>
@@ -297,17 +369,38 @@ function CreateSupplier() {
                   }}
                 >
                   <img src="images/icons/ri_file-list-3-fill2222.png" alt="" />
-                  <p style={{ color: "#3B336B", fontSize: "18px", fontWeight: 400 }}>
+                  <p
+                    style={{
+                      color: "#3B336B",
+                      fontSize: "18px",
+                      fontWeight: 400,
+                    }}
+                  >
                     ประวัติสั่งสินค้า
                   </p>
                 </div>
                 <div className="action">
-                  <p>2500 จำนวนที่เคยสั่งซื้อ</p>
-                  <p>500 รายการ</p>
+                  {/* <p>2500 จำนวนที่เคยสั่งซื้อ</p> */}
+                  <p>{productAll.length} รายการ</p>
                 </div>
               </div>
 
-              <div className="search-input">
+              <Autocomplete
+                  size="small"
+                  disablePortal
+                  id="combo-box-demo"
+                  options={supplier}
+                  getOptionLabel={(option) => option.name || ""}
+                  sx={{ width: 180 }}
+                  renderInput={(params) => (
+                    <TextField {...params} label="ซัพพลายเออร์" />
+                  )}
+                  onChange={(e, value) => {
+                    filterData(value?value.id:0)
+                  }}
+                  
+                />
+              {/* <div className="search-input">
                 <TextField
                   sx={{ width: "150px" }}
                   id="standard-basic"
@@ -316,7 +409,9 @@ function CreateSupplier() {
                   size="small"
                 />
                 <FormControl sx={{ width: 150 }} size="small">
-                  <InputLabel id="demo-select-small-label">หมวดหมู่หลัก</InputLabel>
+                  <InputLabel id="demo-select-small-label">
+                    หมวดหมู่หลัก
+                  </InputLabel>
                   <Select
                     labelId="demo-select-small-label"
                     id="demo-select-small"
@@ -333,7 +428,9 @@ function CreateSupplier() {
                   </Select>
                 </FormControl>
                 <FormControl sx={{ width: 150 }} size="small">
-                  <InputLabel id="demo-select-small-label">หมวดหมู่ย่อย</InputLabel>
+                  <InputLabel id="demo-select-small-label">
+                    หมวดหมู่ย่อย
+                  </InputLabel>
                   <Select
                     labelId="demo-select-small-label"
                     id="demo-select-small"
@@ -349,17 +446,18 @@ function CreateSupplier() {
                     <MenuItem value={30}>Thirty</MenuItem>
                   </Select>
                 </FormControl>
-              </div>
+              </div> */}
+
             </div>
             <div className="table">
               <DataGrid
                 checkboxSelection={false}
                 sx={{ border: "none" }}
-                rows={[]}
+                rows={productAll}
                 columns={columns}
                 initialState={{
                   pagination: {
-                    paginationModel: { page: 0, pageSize: 5 },
+                    paginationModel: { page: 0, pageSize: 10 },
                   },
                 }}
                 pageSizeOptions={[5, 10, 50, 100]}
