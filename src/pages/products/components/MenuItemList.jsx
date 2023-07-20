@@ -5,6 +5,7 @@ import { Button } from "@mui/material";
 import Swal from "sweetalert2";
 
 import ProductEditModal from "../../../components/product/modal/ProductEditModal";
+import BarcodeModal from "./BarcodeModal";
 import { svProductAll } from "../../../services/product.service";
 import { svProductOne } from "../../../services/product.service";
 import { svDeleteProduct } from "../../../services/product.service";
@@ -12,6 +13,8 @@ import { ConnectingAirportsOutlined } from "@mui/icons-material";
 
 import ExportModal from "../../../components/product/modal/ExportModal";
 import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBarcode } from "@fortawesome/free-solid-svg-icons";
 
 function MenuItemList({
   params,
@@ -24,7 +27,8 @@ function MenuItemList({
   const [btnId, setbtnId] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [openExportModal, setOpenExportModal] = useState(false);
-  const [openFetchImportModal, setOpenFetchImportModal] = useState(false);
+  const [openBarcodeModal, setOpenBarcodeModal] = useState(false);
+  const [openBarcode, setBarcode] = useState(false);
   const [productShow, setProductShow] = useState([]);
   const [productData, setProductData] = useState([]);
   const [modal, setModal] = useState({
@@ -100,7 +104,9 @@ function MenuItemList({
         os_price: dd.selling_price,
         selling_price: "",
       };
-      setModal((prev) => { return { ...prev, isEdit: false, isFetchImport: true } })
+      setModal((prev) => {
+        return { ...prev, isEdit: false, isFetchImport: true };
+      });
       setProductShow(result);
       setOpenModal(true);
       handleClose();
@@ -163,7 +169,9 @@ function MenuItemList({
         os_price: dd.os_price,
         selling_price: dd.selling_price,
       };
-      setModal((prev) => { return { ...prev, isEdit: true, isFetchImport: false } })
+      setModal((prev) => {
+        return { ...prev, isEdit: true, isFetchImport: false };
+      });
       setProductShow(result);
       setOpenModal(true);
       handleClose();
@@ -294,6 +302,15 @@ function MenuItemList({
     setOpenMenu(false);
   }
 
+  function barcodeHandle(product_id) {
+    const data = productData.filter(
+      (item) => item.product_id === item.product_id
+    );
+    setProductShow(data[0]);
+    setOpenBarcodeModal(true);
+    console.log(data[0]);
+  }
+
   return (
     <div>
       <Button
@@ -329,20 +346,18 @@ function MenuItemList({
             display: "flex",
             gap: "1rem",
           }}
-          onClick={handleClose}
+          onClick={() => barcodeHandle(params.row.product_id)}
         >
-          <img
+          <figure
             style={{
               width: "18px",
               height: "18px",
-              filter:
-                "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
             }}
-            src="/images/icons/supplier-icon.png"
-            alt=""
-          />
+          >
+            <FontAwesomeIcon icon={faBarcode} style={{ color: "#3b326b" }} />
+          </figure>
           <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>
-            ซัพพลาย
+            ปริ้นบาร์โค้ด
           </p>
         </MenuItem>
         <MenuItem
@@ -432,6 +447,11 @@ function MenuItemList({
         productShow={productShow}
         refreshData={refreshData}
         setRefreshData={setRefreshData}
+      />
+      <BarcodeModal
+        open={openBarcodeModal}
+        setOpen={setOpenBarcodeModal}
+        productShow={productShow}
       />
     </div>
   );

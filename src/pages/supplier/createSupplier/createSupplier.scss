@@ -110,7 +110,7 @@
                 width: 100%;
 
                 .content-head {
-                    @apply flex items-center justify-between;
+                    @apply flex items-center gap-4;
                     width: 100%;
 
                     .title {
