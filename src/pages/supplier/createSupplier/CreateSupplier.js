@@ -22,8 +22,11 @@ import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { Result } from "postcss";
 import { useSelector } from "react-redux";
+import PulseLoader from "react-spinners/PulseLoader";
 
 function CreateSupplier() {
+  const [loading, setLoading] = useState(true);
+
   const [mainCatesData, setMainCatesData] = useState([]);
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
@@ -122,7 +125,9 @@ function CreateSupplier() {
       headerAlign: "center",
       align: "center",
       renderCell: (params) => (
-        <p>{params.row.netweight} {params.row.net_name}</p>
+        <p>
+          {params.row.netweight} {params.row.net_name}
+        </p>
       ),
     },
     {
@@ -149,27 +154,31 @@ function CreateSupplier() {
   ];
 
   useEffect(() => {
-    getSuppliers()
-    svProductAll().then((res) => {
-      const result = res.data;
-      setProductData(result)
-      setProductAll(result);
-    });
+    getSuppliers();
+    svProductAll()
+      .then((res) => {
+        const result = res.data;
+        setProductData(result);
+        setProductAll(result);
+      })
+      .then(() => {
+        setLoading(false);
+      });
   }, []);
 
   function filterData(_id) {
     if (_id !== 0) {
-      const data = productData.filter(item => item.supplier_id === _id) 
-      setProductAll(data)
+      const data = productData.filter((item) => item.supplier_id === _id);
+      setProductAll(data);
     } else {
-      setProductAll(productData)
+      setProductAll(productData);
     }
   }
 
   async function getSuppliers() {
     const response = await axios.get("suppliers");
     const data = response.data.suppliers;
-    setSupplier(data)
+    setSupplier(data);
     getMainCates();
   }
 
@@ -198,19 +207,13 @@ function CreateSupplier() {
       main_cate_id: mainCates,
     };
     console.log(data.main_cate_id);
-    if (
-      Object.values(data).some((value) => value === "" || value.length === 0)
-    ) {
+    if (Object.values(data).some((value) => value === "" || value.length === 0)) {
       Swal.fire("Error!", "Please fill in all fields.", "error");
     } else {
       axios
         .post("supplier", data)
         .then(function (response) {
-          Swal.fire(
-            "Created!",
-            "Your supplier has been created.",
-            "success"
-          ).then(() => {
+          Swal.fire("Created!", "Your supplier has been created.", "success").then(() => {
             navigate("/suppliers");
           });
         })
@@ -222,185 +225,183 @@ function CreateSupplier() {
 
   return (
     <section id="create-supplier-page">
-      <HeadPageComponent
-        h1={"Create New Supplier"}
-        icon={<FontAwesomeIcon icon={faStore} />}
-        breadcrums={[{ title: "Create New Supplier", link: false }]}
-      />
-      <div className="main-content">
-        <div className="top-content">
-          <div className="head"></div>
-          <div className="content">
-            <div className="content-head">
-              <div className="title">
-                <img src="images/icons/entypo_shop (22222).png" alt="" />
-                <p>ชื่อซัพพลายเออร์</p>
-              </div>
-              <div className="action">
-                <button onClick={handleClear}>ล้างข้อมูล</button>
-                <button onClick={handleCreateSupplier}>บันทึกข้อมูล</button>
+      {loading ? (
+        <PulseLoader color="#3b326b" />
+      ) : (
+        <>
+          <HeadPageComponent
+            h1={"Create New Supplier"}
+            icon={<FontAwesomeIcon icon={faStore} />}
+            breadcrums={[{ title: "Create New Supplier", link: false }]}
+          />
+          <div className="main-content">
+            <div className="top-content">
+              <div className="head"></div>
+              <div className="content">
+                <div className="content-head">
+                  <div className="title">
+                    <img src="images/icons/entypo_shop (22222).png" alt="" />
+                    <p>ชื่อซัพพลายเออร์</p>
+                  </div>
+                  <div className="action">
+                    <button onClick={handleClear}>ล้างข้อมูล</button>
+                    <button onClick={handleCreateSupplier}>บันทึกข้อมูล</button>
+                  </div>
+                </div>
+                <div className="input-form">
+                  <div className="form form-1">
+                    <TextField
+                      sx={{ width: "50%" }}
+                      id="standard-basic"
+                      label="ชื่อบริษัท"
+                      variant="outlined"
+                      size="small"
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                    <TextField
+                      sx={{ width: "50%" }}
+                      id="standard-basic"
+                      label="ที่อยู่"
+                      variant="outlined"
+                      size="small"
+                      onChange={(e) => setAddress(e.target.value)}
+                    />
+                  </div>
+                  <div className="form form-2">
+                    <TextField
+                      sx={{ width: "25%" }}
+                      id="standard-basic"
+                      label="ชื่อผู้ติดต่อ"
+                      variant="outlined"
+                      size="small"
+                      onChange={(e) => setAgent(e.target.value)}
+                    />
+                    <TextField
+                      sx={{ width: "25%" }}
+                      id="standard-basic"
+                      label="เบอร์โทร"
+                      variant="outlined"
+                      size="small"
+                      onChange={(e) => setTel(e.target.value)}
+                    />
+                    <TextField
+                      sx={{ width: "25%" }}
+                      id="standard-basic"
+                      label="อีเมล"
+                      variant="outlined"
+                      size="small"
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <TextField
+                      sx={{ width: "25%" }}
+                      id="standard-basic"
+                      label="ไลน์ ไอดี"
+                      variant="outlined"
+                      size="small"
+                      onChange={(e) => setLineId(e.target.value)}
+                    />
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                    <Autocomplete
+                      size="small"
+                      multiple
+                      id="checkboxes-tags-demo"
+                      options={mainCatesData}
+                      disableCloseOnSelect
+                      getOptionLabel={(option) => option.name}
+                      onChange={(event, value) => {
+                        const selectedValues = value.map((option) => option.id); // Extract the selected option IDs
+                        const mainCateIdsString = selectedValues.join(", "); // Convert the array to a comma-separated string
+                        setMainCates(mainCateIdsString); // Set the state as the comma-separated string
+                      }}
+                      renderOption={(props, option, { selected }) => (
+                        <li {...props}>
+                          <Checkbox
+                            icon={icon}
+                            checkedIcon={checkedIcon}
+                            style={{ marginRight: 8 }}
+                            checked={selected}
+                            value={option.id}
+                          />
+                          {option.name}
+                        </li>
+                      )}
+                      style={{ width: "100%", maxWidth: "776px" }}
+                      renderInput={(params) => (
+                        <TextField size="small" {...params} label="หมวดหมู่หลัก" />
+                      )}
+                    />
+                    <Link
+                      to="/productcate"
+                      style={{
+                        fontWeight: 400,
+                        fontSize: "16px",
+                        display: "flex",
+                        alignItems: "center",
+                        background: "#3b326b",
+                        padding: ".5rem 1rem",
+                        color: "#fff",
+                        gap: ".5rem",
+                        borderRadius: "5px",
+                        width: "200px",
+                      }}
+                    >
+                      <img src="images/icons/ic_round-plus.png" alt="" /> สร้างหมวดหมู่หลัก
+                    </Link>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="input-form">
-              <div className="form form-1">
-                <TextField
-                  sx={{ width: "50%" }}
-                  id="standard-basic"
-                  label="ชื่อบริษัท"
-                  variant="outlined"
-                  size="small"
-                  onChange={(e) => setName(e.target.value)}
-                />
-                <TextField
-                  sx={{ width: "50%" }}
-                  id="standard-basic"
-                  label="ที่อยู่"
-                  variant="outlined"
-                  size="small"
-                  onChange={(e) => setAddress(e.target.value)}
-                />
-              </div>
-              <div className="form form-2">
-                <TextField
-                  sx={{ width: "25%" }}
-                  id="standard-basic"
-                  label="ชื่อผู้ติดต่อ"
-                  variant="outlined"
-                  size="small"
-                  onChange={(e) => setAgent(e.target.value)}
-                />
-                <TextField
-                  sx={{ width: "25%" }}
-                  id="standard-basic"
-                  label="เบอร์โทร"
-                  variant="outlined"
-                  size="small"
-                  onChange={(e) => setTel(e.target.value)}
-                />
-                <TextField
-                  sx={{ width: "25%" }}
-                  id="standard-basic"
-                  label="อีเมล"
-                  variant="outlined"
-                  size="small"
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                <TextField
-                  sx={{ width: "25%" }}
-                  id="standard-basic"
-                  label="ไลน์ ไอดี"
-                  variant="outlined"
-                  size="small"
-                  onChange={(e) => setLineId(e.target.value)}
-                />
-              </div>
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "1rem" }}
-              >
-                <Autocomplete
-                  size="small"
-                  multiple
-                  id="checkboxes-tags-demo"
-                  options={mainCatesData}
-                  disableCloseOnSelect
-                  getOptionLabel={(option) => option.name}
-                  onChange={(event, value) => {
-                    const selectedValues = value.map((option) => option.id); // Extract the selected option IDs
-                    const mainCateIdsString = selectedValues.join(", "); // Convert the array to a comma-separated string
-                    setMainCates(mainCateIdsString); // Set the state as the comma-separated string
-                  }}
-                  renderOption={(props, option, { selected }) => (
-                    <li {...props}>
-                      <Checkbox
-                        icon={icon}
-                        checkedIcon={checkedIcon}
-                        style={{ marginRight: 8 }}
-                        checked={selected}
-                        value={option.id}
-                      />
-                      {option.name}
-                    </li>
-                  )}
-                  style={{ width: "100%", maxWidth: "776px" }}
-                  renderInput={(params) => (
-                    <TextField size="small" {...params} label="หมวดหมู่หลัก" />
-                  )}
-                />
-                <Link
-                  to="/productcate"
-                  style={{
-                    fontWeight: 400,
-                    fontSize: "16px",
-                    display: "flex",
-                    alignItems: "center",
-                    background: "#3b326b",
-                    padding: ".5rem 1rem",
-                    color: "#fff",
-                    gap: ".5rem",
-                    borderRadius: "5px",
-                    width: "200px",
-                  }}
-                >
-                  <img src="images/icons/ic_round-plus.png" alt="" />{" "}
-                  สร้างหมวดหมู่หลัก
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="bottom-content">
-          <div className="head"></div>
-          <div className="content">
-            <div className="content-head">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-start",
-                  alignItems: "center",
-                  gap: "1rem",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-start",
-                    alignItems: "center",
-                    gap: "1rem",
-                  }}
-                >
-                  <img src="images/icons/ri_file-list-3-fill2222.png" alt="" />
-                  <p
+            <div className="bottom-content">
+              <div className="head"></div>
+              <div className="content">
+                <div className="content-head">
+                  <div
                     style={{
-                      color: "#3B336B",
-                      fontSize: "18px",
-                      fontWeight: 400,
+                      display: "flex",
+                      justifyContent: "flex-start",
+                      alignItems: "center",
+                      gap: "1rem",
                     }}
                   >
-                    ประวัติสั่งสินค้า
-                  </p>
-                </div>
-                <div className="action">
-                  {/* <p>2500 จำนวนที่เคยสั่งซื้อ</p> */}
-                  <p>{productAll.length} รายการ</p>
-                </div>
-              </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        alignItems: "center",
+                        gap: "1rem",
+                      }}
+                    >
+                      <img src="images/icons/ri_file-list-3-fill2222.png" alt="" />
+                      <p
+                        style={{
+                          color: "#3B336B",
+                          fontSize: "18px",
+                          fontWeight: 400,
+                        }}
+                      >
+                        ประวัติสั่งสินค้า
+                      </p>
+                    </div>
+                    <div className="action">
+                      {/* <p>2500 จำนวนที่เคยสั่งซื้อ</p> */}
+                      <p>{productAll.length} รายการ</p>
+                    </div>
+                  </div>
 
-              <Autocomplete
-                  size="small"
-                  disablePortal
-                  id="combo-box-demo"
-                  options={supplier}
-                  getOptionLabel={(option) => option.name || ""}
-                  sx={{ width: 180 }}
-                  renderInput={(params) => (
-                    <TextField {...params} label="ซัพพลายเออร์" />
-                  )}
-                  onChange={(e, value) => {
-                    filterData(value?value.id:0)
-                  }}
-                  
-                />
-              {/* <div className="search-input">
+                  <Autocomplete
+                    size="small"
+                    disablePortal
+                    id="combo-box-demo"
+                    options={supplier}
+                    getOptionLabel={(option) => option.name || ""}
+                    sx={{ width: 180 }}
+                    renderInput={(params) => <TextField {...params} label="ซัพพลายเออร์" />}
+                    onChange={(e, value) => {
+                      filterData(value ? value.id : 0);
+                    }}
+                  />
+                  {/* <div className="search-input">
                 <TextField
                   sx={{ width: "150px" }}
                   id="standard-basic"
@@ -447,25 +448,26 @@ function CreateSupplier() {
                   </Select>
                 </FormControl>
               </div> */}
-
-            </div>
-            <div className="table">
-              <DataGrid
-                checkboxSelection={false}
-                sx={{ border: "none" }}
-                rows={productAll}
-                columns={columns}
-                initialState={{
-                  pagination: {
-                    paginationModel: { page: 0, pageSize: 10 },
-                  },
-                }}
-                pageSizeOptions={[5, 10, 50, 100]}
-              />
+                </div>
+                <div className="table">
+                  <DataGrid
+                    checkboxSelection={false}
+                    sx={{ border: "none" }}
+                    rows={productAll}
+                    columns={columns}
+                    initialState={{
+                      pagination: {
+                        paginationModel: { page: 0, pageSize: 10 },
+                      },
+                    }}
+                    pageSizeOptions={[5, 10, 50, 100]}
+                  />
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </section>
   );
 }
