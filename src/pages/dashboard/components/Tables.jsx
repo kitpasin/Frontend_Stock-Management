@@ -21,6 +21,14 @@ function Tables({
   productsExport,
 }) {
   useEffect(() => {}, []);
+
+  // Remove duplicate products based on product_id
+  const uniqueProductsMap = new Map();
+  productsOutOfStock.forEach((item) => {
+    uniqueProductsMap.set(item.product_id, item);
+  });
+  const uniqueProductsData = Array.from(uniqueProductsMap.values());
+
   return (
     <>
       <div className="grid-container-1fr-1fr-table">
@@ -29,13 +37,13 @@ function Tables({
             <figure className="header-title">
               <img src="/images/icons/product-icon.png" alt="" />
               <p>จำนวนสินค้าใกล้หมด/เดือน</p>
-              <p style={{ color: "red" }}>{productsOutOfStock?.length} รายการ</p>
+              <p style={{ color: "red" }}>{uniqueProductsData?.length} รายการ</p>
             </figure>
             <div className="header-link">
               <Link to="/stock">ดูรายการเพิ่มเติม</Link>
             </div>
           </div>
-          <StockDataGrid productsOutOfStock={productsOutOfStock} />
+          <StockDataGrid uniqueProductsData={uniqueProductsData} />
         </Card>
 
         <Card className="item">

@@ -1,22 +1,9 @@
-import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Avatar, Typography } from "@mui/material";
-import { Button } from "@mui/material";
-import { Menu } from "@mui/material";
-import { MenuItem } from "@mui/material";
 import { useSelector } from "react-redux";
 
-function StockDataGrid({ productsOutOfStock }) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
+function StockDataGrid({ uniqueProductsData }) {
   const webPath = useSelector((state) => state.app.webPath);
-
-  function handleClick(event) {
-    setAnchorEl(event.currentTarget);
-  }
-  function handleClose() {
-    setAnchorEl(null);
-  }
 
   const columns = [
     {
@@ -146,13 +133,6 @@ function StockDataGrid({ productsOutOfStock }) {
   ];
 
   const rowsClassName = "table-rows";
-
-  // Remove duplicate products based on product_id
-  const uniqueProductsMap = new Map();
-  productsOutOfStock.forEach((item) => {
-    uniqueProductsMap.set(item.product_id, item);
-  });
-  const uniqueProductsData = Array.from(uniqueProductsMap.values());
 
   return (
     <>
