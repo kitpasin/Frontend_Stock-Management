@@ -26,6 +26,7 @@ const DashboardPage = () => {
   const [productsImport, setProductsImport] = useState([])
   const [mostProductImport, setMostProductImport] = useState([])
   const [productsExport, setProductsExport] = useState([]);
+  const [latestExport, setLatestExport] = useState([])
 
   async function getProducts() {
     const response = await axios.get("product/dashboard");
@@ -76,7 +77,10 @@ const DashboardPage = () => {
     // สินค้าเบิกออกวันนี้
     const pExport = response.data.pExport;
     setProductsExport(pExport)
-  }
+
+    const latestExport = response.data.latestExport;
+    setLatestExport(latestExport)
+  } 
 
   useEffect(() => {
     getProducts().then(() => {
@@ -105,6 +109,7 @@ const DashboardPage = () => {
             productsAboutToExpire={productsAboutToExpire}
             mostProductOutOfStock={mostProductOutOfStock}
             productsOutOfStock={productsOutOfStock}
+            latestExport={latestExport}
           />
           <Tables
             productsOutOfStock={productsOutOfStock}

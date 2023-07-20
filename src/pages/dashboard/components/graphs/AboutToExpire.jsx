@@ -9,17 +9,17 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { ChartData } from "../../data/ChartData";
+import { formatDistanceToNow } from "date-fns";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 function AboutToExpire({ productsAboutToExpire }) {
   const title = productsAboutToExpire.map((data) => data.title);
   const days = productsAboutToExpire.map((data) => {
-    const expDate = new Date(data.exp_date);
-    const mfdDate = new Date(data.mfd_date);
-    const timeDiff = expDate.getTime() - mfdDate.getTime();
-    const daysDiff = timeDiff / (1000 * 3600 * 24);
-    return daysDiff;
+    const endDate = new Date(data.exp_date);
+    const remainingTime = formatDistanceToNow(endDate);
+    const remainingDays = parseInt(remainingTime.split(" ")[0], 10);
+    return remainingDays;
   });
 
   const data = {

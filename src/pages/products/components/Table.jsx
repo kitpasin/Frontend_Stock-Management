@@ -443,6 +443,8 @@ function Table({
 
   const rowsClassName = "table-rows";
 
+  console.log(productsData)
+
   // Remove duplicate products based on product_id
   const uniqueProductsMap = new Map();
   productsData.forEach((item) => {
