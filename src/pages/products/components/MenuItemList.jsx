@@ -304,11 +304,11 @@ function MenuItemList({
 
   function barcodeHandle(product_id) {
     const data = productData.filter(
-      (item) => item.product_id === item.product_id
+      (item) => item.product_id === product_id
     );
     setProductShow(data[0]);
     setOpenBarcodeModal(true);
-    console.log(data[0]);
+    handleClose()
   }
 
   return (
