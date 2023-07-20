@@ -2,6 +2,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { Avatar, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import MenuItemList from "../components/MenuItemList";
+import dayjs from "dayjs";
 
 function Table({ productsData, refreshData, setRefreshData, productSelected, setProductSelected }) {
   const webPath = useSelector((state) => state.app.webPath);
@@ -155,20 +156,19 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
         </div>
       ),
       renderCell: (params) => {
-        const startDate = new Date(params.row.mfd_date);
-        const endDate = new Date(params.row.exp_date);
-        const diffDateInMs = endDate - startDate;
-        const diffDateInDays = diffDateInMs / (1000 * 60 * 60 * 24);
+        const endDate = dayjs(params.row.exp_date);
+        const today = dayjs();
+        const remainingDays = endDate.diff(today, "day");
         return (
           <div>
             <p
               style={{
                 fontSize: "12px",
                 lineHeight: "12.5px",
-                color: diffDateInDays <= 30 ? "#FF0000" : "#000",
+                color: remainingDays <= 30 ? "#FF0000" : "#000",
               }}
             >
-              {diffDateInDays} วัน
+              {remainingDays} วัน
             </p>
           </div>
         );

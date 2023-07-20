@@ -1,7 +1,7 @@
 import { DataGrid } from "@mui/x-data-grid";
 import { Avatar, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
-import { formatDistanceToNow } from "date-fns";
+import dayjs from "dayjs";
 
 function ExpireDataGrid({ productsAboutToExpire }) {
   const webPath = useSelector((state) => state.app.webPath);
@@ -50,9 +50,9 @@ function ExpireDataGrid({ productsAboutToExpire }) {
         </div>
       ),
       renderCell: (params) => {
-        const endDate = new Date(params.row.exp_date);
-        const remainingTime = formatDistanceToNow(endDate);
-        const remainingDays = parseInt(remainingTime.split(" ")[0], 10);
+        const endDate = dayjs(params.row.exp_date);
+        const today = dayjs();
+        const remainingDays = endDate.diff(today, "day");
         return (
           <div>
             <p
