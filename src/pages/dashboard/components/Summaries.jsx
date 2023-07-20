@@ -7,6 +7,7 @@ import AboutToExpire from "./graphs/AboutToExpire";
 import { useSelector } from "react-redux";
 import LatestImport from "./graphs/LatestImport";
 import LatestExport from "./graphs/LatestExport";
+import { formatDistanceToNow } from "date-fns";
 
 const style = {
   position: "absolute",
@@ -30,11 +31,12 @@ function Summaries({
   productsAboutToExpire,
   mostProductOutOfStock,
   productsOutOfStock,
+  latestExport,
 }) {
   const [outOfStockOpen, setOutOfStockOpen] = React.useState(false);
   const [aboutToExpireOpen, setAboutToExpireOpen] = React.useState(false);
   const [latestImportOpen, setLatestImportOpen] = React.useState(false);
-  const [latestExportOpen, setLatestExportOpen] = React.useState(false)
+  const [latestExportOpen, setLatestExportOpen] = React.useState(false);
 
   const [outOfStockValue, setOutOfStockValue] = useState(
     productsOutOfStock?.map(
@@ -46,22 +48,13 @@ function Summaries({
       (item) => item.import_value - item.export_value - item.export_defective_value
     )
   );
-  const [importValue, setImportValue] = useState(
-    productsImport?.map(
-      (item) => item.import_value
-    )
-  );
-  const [exportValue, setExportValue] = useState(
-    productsExport?.map(
-      (item) => item.export_value
-    )
-  )
+  const [importValue, setImportValue] = useState(productsImport?.map((item) => item.import_value));
+  const [exportValue, setExportValue] = useState(productsExport?.map((item) => item.export_value));
   const webPath = useSelector((state) => state.app.webPath);
 
-  const startDate = new Date(mostProductExpire?.mfd_date);
   const endDate = new Date(mostProductExpire?.exp_date);
-  const diffDateInMs = endDate - startDate;
-  const diffDateInDays = diffDateInMs / (1000 * 60 * 60 * 24);
+  const remainingTime = formatDistanceToNow(endDate);
+  const remainingDays = parseInt(remainingTime.split(" ")[0], 10);
 
   function toggleOutOfStockGraph() {
     setOutOfStockOpen(!outOfStockOpen);
@@ -103,11 +96,20 @@ function Summaries({
       0
     );
     return sumExportValue;
-  }
+  };
   const sumOutOfStockValue = calculateStockSum();
   const sumAboutToExpireValue = calculateExpireSum();
   const sumImportValue = calculateImportSum();
   const sumExportValue = calculateExportSum();
+
+  // Remove duplicate products based on product_id
+  const uniqueProductsMap = new Map();
+  productsOutOfStock.forEach((item) => {
+    uniqueProductsMap.set(item.product_id, item);
+  });
+  const uniqueProductsData = Array.from(uniqueProductsMap.values());
+
+  console.log(mostProductOutOfStock);
 
   return (
     <>
@@ -118,7 +120,7 @@ function Summaries({
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <OutOfStock productsOutOfStock={productsOutOfStock} />
+          <OutOfStock uniqueProductsData={uniqueProductsData} />
         </Box>
       </Modal>
       <Modal
@@ -164,7 +166,7 @@ function Summaries({
               </div>
               <div className="text-description">
                 <p>
-                  {productsOutOfStock?.length} รายการ / {sumOutOfStockValue} หน่วย
+                  {uniqueProductsData?.length} รายการ / {sumOutOfStockValue} หน่วย
                 </p>
               </div>
             </div>
@@ -214,7 +216,7 @@ function Summaries({
                 <p>มากสุดคือ : {mostProductExpire?.title}</p>
               </div>
               <div className="text-description">
-                <p>{diffDateInDays} วัน</p>
+                <p>{remainingDays} วัน</p>
               </div>
             </div>
             <button onClick={toggleAboutToExpireGraph} className="graph">
@@ -231,7 +233,7 @@ function Summaries({
             </figure>
             <div className="text">
               <div className="text-title">
-                <p>รวมรายการนำเข้าล่าสุด</p>
+                <p>รวมรายการนำเข้าล่าสุด/วัน</p>
               </div>
               <div className="text-description">
                 <p>
@@ -264,7 +266,7 @@ function Summaries({
             </figure>
             <div className="text">
               <div className="text-title">
-                <p>รวมรายการเบิกออกล่าสุด</p>
+                <p>รวมรายการเบิกออกล่าสุด/วัน</p>
               </div>
               <div className="text-description">
                 <p>
@@ -277,10 +279,10 @@ function Summaries({
           <div className="content">
             <div className="text">
               <div className="text-title">
-                <p>มากสุดคือ : {mostExportedProduct?.title}</p>
+                <p>มากสุดคือ : {latestExport?.title}</p>
               </div>
               <div className="text-description">
-                <p>{sumExportValue} หน่วย</p>
+                <p>{latestExport.export_value} หน่วย</p>
               </div>
             </div>
             <button onClick={toggleLatestExportGraph} className="graph">
@@ -394,7 +396,7 @@ function Summaries({
             </div>
             <div className="summary">
               <p>วันที่เหลือ</p>
-              <p>{diffDateInDays} วัน</p>
+              <p>{remainingDays} วัน</p>
             </div>
           </Card>
 

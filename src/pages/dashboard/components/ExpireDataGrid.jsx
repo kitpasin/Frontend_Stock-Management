@@ -1,22 +1,10 @@
-import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Avatar, Typography } from "@mui/material";
-import { Button } from "@mui/material";
-import { Menu } from "@mui/material";
-import { MenuItem } from "@mui/material";
 import { useSelector } from "react-redux";
+import { formatDistanceToNow } from "date-fns";
 
 function ExpireDataGrid({ productsAboutToExpire }) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
   const webPath = useSelector((state) => state.app.webPath);
-
-  function handleClick(event) {
-    setAnchorEl(event.currentTarget);
-  }
-  function handleClose() {
-    setAnchorEl(null);
-  }
 
   const columns = [
     {
@@ -37,7 +25,7 @@ function ExpireDataGrid({ productsAboutToExpire }) {
       headerName: "ชื่อรายการ",
       headerAlign: "center",
       align: "center",
-      width: 150,
+      width: 145,
       headerClassName: "table-columns",
       renderCell: (params) => (
         <div style={{ paddingLeft: "1rem" }}>
@@ -52,33 +40,29 @@ function ExpireDataGrid({ productsAboutToExpire }) {
       field: "dateEXP",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 100,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
           <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
-            จำนวนวัน
-          </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
-            EXP
+            จำนวนวัน EXP
           </Typography>
         </div>
       ),
       renderCell: (params) => {
-        const startDate = new Date(params.row.mfd_date);
         const endDate = new Date(params.row.exp_date);
-        const diffDateInMs = endDate - startDate;
-        const diffDateInDays = diffDateInMs / (1000 * 3600 * 24);
+        const remainingTime = formatDistanceToNow(endDate);
+        const remainingDays = parseInt(remainingTime.split(" ")[0], 10);
         return (
           <div>
             <p
               style={{
                 fontSize: "12px",
                 lineHeight: "12.5px",
-                color: diffDateInDays <= 30 ? "#FF0000" : "#000",
+                color: remainingDays <= 30 ? "#FF0000" : "#000",
               }}
             >
-              {diffDateInDays} วัน
+              {remainingDays} วัน
             </p>
           </div>
         );
@@ -89,7 +73,7 @@ function ExpireDataGrid({ productsAboutToExpire }) {
       headerName: "หน่วยนับ",
       headerAlign: "center",
       align: "center",
-      width: 125,
+      width: 100,
       headerClassName: "table-columns",
     },
     {
@@ -161,6 +145,9 @@ function ExpireDataGrid({ productsAboutToExpire }) {
   ];
 
   const rowsClassName = "table-rows";
+
+  console.log(productsAboutToExpire)
+
   return (
     <>
       <DataGrid

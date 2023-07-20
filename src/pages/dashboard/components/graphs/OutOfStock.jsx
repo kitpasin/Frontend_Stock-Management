@@ -12,9 +12,9 @@ import { ChartData } from "../../data/ChartData"
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-function OutOfStock({ productsOutOfStock }) {
-  const title = productsOutOfStock.map((data) => data.title);
-  const quantity = productsOutOfStock.map((data) => data.import_value - data.export_value - data.export_defective_value);
+function OutOfStock({ uniqueProductsData }) {
+  const title = uniqueProductsData.map((data) => data.title);
+  const quantity = uniqueProductsData.map((data) => data.import_value - data.export_value - data.export_defective_value);
 
   const data = {
     labels: title,
