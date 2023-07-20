@@ -271,17 +271,7 @@ function MenuItemList({
       setOpenExportModal(true);
       handleClose();
     }
-
-    // svProductOne(_id)
-    //   .then((res) => {
-    //     const result = res.data;
-    //     setProductShow(result);
-    //   })
-    //   .then(() => {
-    //     setOpenExportModal(true);
-    //     handleClose();
-    //   })
-    //   .catch((err) => console.log(err));
+   
   };
 
   function handleClick(event) {
@@ -324,7 +314,7 @@ function MenuItemList({
           "aria-labelledby": `${btnId}`,
         }}
       >
-        <MenuItem
+        {/* <MenuItem
           sx={{
             display: "flex",
             gap: "1rem",
@@ -344,7 +334,7 @@ function MenuItemList({
           <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>
             ซัพพลาย
           </p>
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem
           sx={{
             display: "flex",

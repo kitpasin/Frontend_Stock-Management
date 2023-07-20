@@ -9,9 +9,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBarcode } from "@fortawesome/free-solid-svg-icons";
-import TextField from "@mui/material/TextField";
 import Barcode from "react-barcode";
-import { Input } from "@mui/material";
+import { useState } from "react";
+import ReactToPrint from "react-to-print";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -24,6 +24,9 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     width: "100%",
     height: "500px",
     maxWidth: "500px",
+  },
+  "& .MuiDialogContent-root": {
+    overflow: "hidden",
   },
 }));
 
@@ -92,16 +95,46 @@ const buttonStyle = {
   fontSize: "18px",
 };
 
+const printStyle = {
+  marginTop: "1rem",
+  width: "auto",
+  display: "grid",
+  gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr",
+  gap: "1rem",
+};
+
 function BarcodeModal({
   open,
   setOpen,
   productShow,
   refreshData,
   setRefreshData,
-  setProductSelected,
 }) {
+  const [value, setValue] = useState(0);
+  const [barcodeData, setBarcodeData] = useState([]);
+  const [disabled, setDisabled] = useState(true);
+  const inputRef = React.useRef();
+  const barcodeRef = React.useRef();
   const handleClose = () => {
+    setDisabled(true)
     setOpen(false);
+    setValue(0);
+    setBarcodeData([]);
+  };
+
+  const setBarcode = (e) => {
+    if (e.target.value <= 0) {
+      inputRef.current.focus();
+      setBarcodeData([]);
+      setDisabled(true)
+      return false;
+    }
+    const barcodeArr = [];
+    for (let i = 0; i < e.target.value; i++) {
+      barcodeArr.push(productShow.barcode_number);
+    }
+    setBarcodeData(barcodeArr);
+    setDisabled(false)
   };
 
   return (
@@ -146,7 +179,7 @@ function BarcodeModal({
             }}
           >
             <figure style={barcodeStyle}>
-              <Barcode value={productShow.barcode_number} />
+              <Barcode value={productShow.barcode_number || ""} />
             </figure>
           </div>
           <div
@@ -163,8 +196,36 @@ function BarcodeModal({
             <Typography variant="h4" gutterBottom>
               กรอกจำนวน
             </Typography>
-            <input style={inputStyle} />
-            <button style={buttonStyle}>Print</button>
+            <input
+              ref={inputRef}
+              style={inputStyle}
+              value={value}
+              onChange={(e) => {
+                setValue(
+                  !isNaN(parseInt(e.target.value)) &&
+                    parseInt(e.target.value) <= 100
+                    ? parseInt(e.target.value)
+                    : 0
+                );
+                if (e.target.value <= 100) setBarcode(e);
+              }}
+            />
+            <ReactToPrint
+              trigger={() => <button disabled={disabled} style={buttonStyle}>Print</button>}
+              content={() => barcodeRef.current}
+            />
+          </div>
+          <div ref={barcodeRef} style={printStyle}>
+            {barcodeData?.map((item, ind) => (
+              <Barcode
+                key={ind}
+                value={String(item)}
+                width={1}
+                height={40}
+                displayValue={true}
+                fontSize={12}
+              />
+            ))}
           </div>
         </DialogContent>
       </BootstrapDialog>
