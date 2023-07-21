@@ -130,7 +130,12 @@ function Table({
             style={{
               fontSize: "12px",
               lineHeight: "12.5px",
-              color: params.row.import_value <= 50 ? "#ff0000" : "#000",
+              color:
+                params.row.import_value -
+                  (params.row.export_value + params.row.export_defective_value) <=
+                50
+                  ? "#ff0000"
+                  : "#000",
             }}
           >
             {params.row.import_value -
@@ -201,9 +206,7 @@ function Table({
         const today = dayjs();
         const remainingDays = endDate.diff(today, "day");
         return (
-          <p style={{ color: remainingDays <= 30 ? "#ff0000" : "#000" }}>
-            {remainingDays} วัน
-          </p>
+          <p style={{ color: remainingDays <= 30 ? "#ff0000" : "#000" }}>{remainingDays} วัน</p>
         );
       },
     },

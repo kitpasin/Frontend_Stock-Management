@@ -109,8 +109,6 @@ function Summaries({
   });
   const uniqueProductsData = Array.from(uniqueProductsMap.values());
 
-  console.log(mostProductOutOfStock);
-
   return (
     <>
       <Modal
@@ -162,7 +160,7 @@ function Summaries({
             </figure>
             <div className="text">
               <div className="text-title">
-                <p>รวมรายการสินค้าใกล้หมด/เดือน</p>
+                <p>รายการสินค้าใกล้หมด/เดือน</p>
               </div>
               <div className="text-description">
                 <p>
@@ -175,7 +173,7 @@ function Summaries({
           <div className="content">
             <div className="text">
               <div className="text-title">
-                <p>น้อยสุดคือ : {mostProductOutOfStock?.title}</p>
+                <p>ใกล้สุด : {mostProductOutOfStock?.title}</p>
               </div>
               <div className="text-description">
                 <p>
@@ -200,7 +198,7 @@ function Summaries({
             </figure>
             <div className="text">
               <div className="text-title">
-                <p>รวมรายการสินค้าใกล้หมดอายุ/เดือน</p>
+                <p>รายการสินค้าใกล้หมดอายุ/เดือน</p>
               </div>
               <div className="text-description">
                 <p>
@@ -213,7 +211,7 @@ function Summaries({
           <div className="content">
             <div className="text">
               <div className="text-title">
-                <p>มากสุดคือ : {mostProductExpire?.title}</p>
+                <p>ใกล้สุด : {mostProductExpire?.title}</p>
               </div>
               <div className="text-description">
                 <p>{remainingDays} วัน</p>
@@ -233,7 +231,7 @@ function Summaries({
             </figure>
             <div className="text">
               <div className="text-title">
-                <p>รวมรายการนำเข้าล่าสุด/วัน</p>
+                <p>รายการนำเข้าล่าสุด/วัน</p>
               </div>
               <div className="text-description">
                 <p>
@@ -246,13 +244,16 @@ function Summaries({
           <div className="content">
             <div className="text">
               <div className="text-title">
-                <p>มากสุดคือ : {mostProductImport?.title}</p>
+                <p>ล่าสุด : {mostProductImport?.title}</p>
               </div>
               <div className="text-description">
                 <p>{sumImportValue} หน่วย</p>
               </div>
             </div>
-            <button onClick={toggleLatestImportGraph} className="graph">
+            <button
+              onClick={toggleLatestImportGraph}
+              className="graph"
+            >
               แสดงกราฟ
             </button>
           </div>
@@ -266,7 +267,7 @@ function Summaries({
             </figure>
             <div className="text">
               <div className="text-title">
-                <p>รวมรายการเบิกออกล่าสุด/วัน</p>
+                <p>รายการเบิกออกล่าสุด/วัน</p>
               </div>
               <div className="text-description">
                 <p>
@@ -279,13 +280,16 @@ function Summaries({
           <div className="content">
             <div className="text">
               <div className="text-title">
-                <p>มากสุดคือ : {latestExport?.title}</p>
+                <p>ล่าสุด : {latestExport?.title}</p>
               </div>
               <div className="text-description">
                 <p>{latestExport?.export_value} หน่วย</p>
               </div>
             </div>
-            <button onClick={toggleLatestExportGraph} className="graph">
+            <button
+              onClick={toggleLatestExportGraph}
+              className="graph"
+            >
               แสดงกราฟ
             </button>
           </div>
@@ -315,7 +319,7 @@ function Summaries({
                     <p>{mostExportedProduct?.selling_price} THB</p>
                   </div>
                   <div className="description">
-                    <p>วันเบิก</p>
+                    <p>เบิกออกล่าสุด</p>
                     <p>{mostExportedProduct?.formatted_created_at}</p>
                   </div>
                 </div>
@@ -338,7 +342,7 @@ function Summaries({
                 <p className="title">{mostProductInStock?.title}</p>
                 <div>
                   <div className="description">
-                    <p>ปริมาณสุทธิ</p>
+                    <p>ปริมาตรสุทธิ</p>
                     <p>
                       {mostProductInStock?.netweight} {mostProductInStock?.unit_name}
                     </p>
@@ -348,7 +352,7 @@ function Summaries({
                     <p>{mostProductInStock?.selling_price} THB</p>
                   </div>
                   <div className="description">
-                    <p>วันเบิก</p>
+                    <p>เบิกออกล่าสุด</p>
                     <p>{mostProductInStock?.formatted_created_at}</p>
                   </div>
                 </div>
@@ -378,7 +382,7 @@ function Summaries({
                 <p className="title">{mostProductExpire?.title}</p>
                 <div>
                   <div className="description">
-                    <p>ปริมาณสุทธิ</p>
+                    <p>ปริมาตรสุทธิ</p>
                     <p>
                       {mostProductExpire?.netweight} {mostProductExpire?.unit_name}
                     </p>
@@ -388,7 +392,7 @@ function Summaries({
                     <p>{mostProductExpire?.selling_price} THB</p>
                   </div>
                   <div className="description">
-                    <p>วันเบิก</p>
+                    <p>เบิกออกล่าสุด</p>
                     <p>{mostProductExpire?.formatted_created_at}</p>
                   </div>
                 </div>
@@ -411,7 +415,7 @@ function Summaries({
                 <p className="title">{mostProductOutOfStock?.title}</p>
                 <div>
                   <div className="description">
-                    <p>ปริมาณสุทธิ</p>
+                    <p>ปริมาตรสุทธิ</p>
                     <p>
                       {mostProductOutOfStock?.netweight} {mostProductOutOfStock?.unit_name}
                     </p>
@@ -421,7 +425,7 @@ function Summaries({
                     <p>{mostProductOutOfStock?.selling_price} THB</p>
                   </div>
                   <div className="description">
-                    <p>วันเบิก</p>
+                    <p>เบิกออกล่าสุด</p>
                     <p>{mostProductOutOfStock?.formatted_created_at}</p>
                   </div>
                 </div>

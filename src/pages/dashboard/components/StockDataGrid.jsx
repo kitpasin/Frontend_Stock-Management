@@ -72,6 +72,14 @@ function StockDataGrid({ uniqueProductsData }) {
       ),
     },
     {
+      field: "counting_unit_name",
+      headerName: "หน่วยนับ",
+      headerAlign: "center",
+      align: "center",
+      width: 150,
+      headerClassName: "table-columns",
+    },
+    {
       field: "netweight",
       headerAlign: "center",
       align: "center",
@@ -111,24 +119,6 @@ function StockDataGrid({ uniqueProductsData }) {
           </Typography>
         </div>
       ),
-    },
-    {
-      field: "exportDate",
-      headerName: "วันเบิกสินค้า",
-      headerAlign: "center",
-      align: "center",
-      width: 150,
-      headerClassName: "table-columns",
-      renderCell: (params) => {
-        const date = params.row.formatted_created_at.split(" ")[0];
-        const time = params.row.formatted_created_at.split(" ")[1];
-        return (
-          <div style={{ paddingLeft: ".5rem" }}>
-            <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{date}</p>
-            <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>{time}</p>
-          </div>
-        );
-      },
     },
   ];
 
