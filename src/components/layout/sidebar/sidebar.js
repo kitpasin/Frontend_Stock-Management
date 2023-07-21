@@ -642,14 +642,14 @@ const SidebarComponent = (props) => {
         <hr className="line-section gap" />
       </nav>
       <ul className="nav-menu mini-bar" style={{ marginTop: "auto", paddingRight: ".5rem" }}>
-        <li className="menu-link footerLink">
+        {/* <li className="menu-link footerLink">
           <a href={webPath} target="_blank" className="navlink pink-btn " title={t("GoToWebSite")}>
             <figure className="faIcon">
               <FontAwesomeIcon icon={faHome} />
             </figure>
             <span className="menu-title">{t("GoToWebSite")}</span>
           </a>
-        </li>
+        </li> */}
       </ul>
       <p className="powerBy">Backoffice v. 1 </p>
     </aside>
