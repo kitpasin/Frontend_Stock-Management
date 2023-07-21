@@ -10,15 +10,16 @@ import {
 import { Bar } from "react-chartjs-2";
 import { ChartData } from "../../data/ChartData";
 import { formatDistanceToNow } from "date-fns";
+import dayjs from "dayjs";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 function AboutToExpire({ productsAboutToExpire }) {
   const title = productsAboutToExpire.map((data) => data.title);
   const days = productsAboutToExpire.map((data) => {
-    const endDate = new Date(data.exp_date);
-    const remainingTime = formatDistanceToNow(endDate);
-    const remainingDays = parseInt(remainingTime.split(" ")[0], 10);
+    const endDate = dayjs(data.exp_date);
+    const today = dayjs();
+    const remainingDays = endDate.diff(today, "day");
     return remainingDays;
   });
 

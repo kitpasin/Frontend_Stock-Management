@@ -7,7 +7,6 @@ import AboutToExpire from "./graphs/AboutToExpire";
 import { useSelector } from "react-redux";
 import LatestImport from "./graphs/LatestImport";
 import LatestExport from "./graphs/LatestExport";
-import { formatDistanceToNow } from "date-fns";
 import dayjs from "dayjs";
 
 const style = {
