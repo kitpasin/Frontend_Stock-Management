@@ -3,6 +3,7 @@ import { Avatar, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 
 import MenuItemList from "./MenuItemList";
+import dayjs from "dayjs";
 
 function Table({
   productsData,
@@ -195,11 +196,16 @@ function Table({
           </Typography>
         </div>
       ),
-      renderCell: (param) => (
-        <p style={{ color: param.row.diff_date <= 30 ? "#ff0000" : "#000" }}>
-          {param.row.diff_date} วัน
-        </p>
-      ),
+      renderCell: (param) => {
+        const endDate = dayjs(param.row.exp_date);
+        const today = dayjs();
+        const remainingDays = endDate.diff(today, "day");
+        return (
+          <p style={{ color: remainingDays <= 30 ? "#ff0000" : "#000" }}>
+            {remainingDays} วัน
+          </p>
+        );
+      },
     },
     {
       field: "vat_name",
