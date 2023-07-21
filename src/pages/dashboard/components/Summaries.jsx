@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import LatestImport from "./graphs/LatestImport";
 import LatestExport from "./graphs/LatestExport";
 import { formatDistanceToNow } from "date-fns";
+import dayjs from "dayjs";
 
 const style = {
   position: "absolute",
@@ -52,9 +53,9 @@ function Summaries({
   const [exportValue, setExportValue] = useState(productsExport?.map((item) => item.export_value));
   const webPath = useSelector((state) => state.app.webPath);
 
-  const endDate = new Date(mostProductExpire?.exp_date);
-  const remainingTime = formatDistanceToNow(endDate);
-  const remainingDays = parseInt(remainingTime.split(" ")[0], 10);
+  const endDate = dayjs(mostProductExpire?.exp_date);
+  const today = dayjs();
+  const remainingDays = endDate.diff(today, "day");
 
   function toggleOutOfStockGraph() {
     setOutOfStockOpen(!outOfStockOpen);
@@ -282,7 +283,7 @@ function Summaries({
                 <p>มากสุดคือ : {latestExport?.title}</p>
               </div>
               <div className="text-description">
-                <p>{latestExport.export_value} หน่วย</p>
+                <p>{latestExport?.export_value} หน่วย</p>
               </div>
             </div>
             <button onClick={toggleLatestExportGraph} className="graph">
