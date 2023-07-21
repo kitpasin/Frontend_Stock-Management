@@ -197,7 +197,7 @@ function Table({
       ),
       renderCell: (param) => (
         <p style={{ color: param.row.diff_date <= 30 ? "#ff0000" : "#000" }}>
-          {param.row.diff_date} วัน
+          {param.row.diff_date > 0 ? param.row.diff_date + "วัน" : "หมดอายุแล้ว"}
         </p>
       ),
     },
