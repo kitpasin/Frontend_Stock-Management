@@ -24,7 +24,7 @@ import HeadPageComponent from "../../layout/headpage/headpage";
 import { Link, useNavigate } from "react-router-dom";
 import { batch, useSelector } from "react-redux";
 import axios from "axios";
-import { PersonOffRounded } from "@mui/icons-material";
+import { PersonOffRounded, ResetTvRounded } from "@mui/icons-material";
 import { svCreateProduct } from "../../../services/product.service";
 import { svProductUpdate } from "../../../services/product.service";
 
@@ -211,8 +211,17 @@ function ProductsImportPage({ isEdit, isFetchImport, productShow, setOpenModalEd
     const randomNumber = Math.floor(Math.random() * 1000);
     const barcodeNumber = Math.floor(Date.now() / 1000) + "" + randomNumber.toString().padStart(3, '0');
     setGeneratedNumber(barcodeNumber);
-    setProductData(() => { return { ...productData, new_barcode: barcodeNumber, barcode: "" } })
+    setProductData(() => { return { ...productData, new_barcode: barcodeNumber } })
     inputRef.current.focus();
+  }
+
+  function digitBarcode(e) {
+    const dataLength = e.target.value.length;
+    if (dataLength <=13) {
+      setProductData((prev) => {
+        return { ...prev, barcode: e.target.value }
+      })
+    }
   }
 
   const convertImagePreview = (file) => {
@@ -255,8 +264,6 @@ function ProductsImportPage({ isEdit, isFetchImport, productShow, setOpenModalEd
 
   const saveProducthandle = (event) => {
     event.preventDefault();
-    const barcode = productData.barcode || productData.new_barcode;
-
     const errorArr = []
     if (productData.purchase_date === "" ||  productData.mfd_date === "" || productData.exp_date === "") {
       errorArr.push("โปรดเลือกวันสั่งซื้อ วันผลิต และ วันหมดอายุ")
@@ -301,7 +308,8 @@ function ProductsImportPage({ isEdit, isFetchImport, productShow, setOpenModalEd
       formData.append('purchase_date', productData.purchase_date)
       formData.append('mfd_date', productData.mfd_date)
       formData.append('exp_date', productData.exp_date)
-      formData.append('barcode', barcode)
+      formData.append('product_barcode', productData.barcode)
+      formData.append('barcode', productData.new_barcode)
       formData.append('defective', productData.defective)
       /* product_expense */
       formData.append('import_fee', productData.import_fee)
@@ -652,9 +660,7 @@ function ProductsImportPage({ isEdit, isFetchImport, productShow, setOpenModalEd
                   <div style={{ display: "flex", gap: "1rem", width: "50%" }}>
                     <TextField
                       value={productData.barcode}
-                      onChange={(e) => setProductData(() => {
-                        return { ...productData, barcode: e.target.value, new_barcode: "" }
-                      })}
+                      onChange={(e) => digitBarcode(e)}
                       id="outlined-basic"
                       label="เลขบาร์โค้ดเดิม"
                       variant="outlined"

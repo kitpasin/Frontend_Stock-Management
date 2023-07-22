@@ -41,7 +41,7 @@ function Table({
       headerName: "ชื่อรายการ",
       headerAlign: "center",
       align: "center",
-      width: 150,
+      width: 120,
       headerClassName: "table-columns",
       renderCell: (params) => (
         <div style={{ paddingLeft: "1.2rem" }}>
@@ -56,7 +56,7 @@ function Table({
       field: "import_value",
       headerAlign: "center",
       align: "center",
-      width: 50,
+      width: 55,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -73,7 +73,7 @@ function Table({
       field: "defective_product",
       headerAlign: "center",
       align: "center",
-      width: 50,
+      width: 55,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -90,7 +90,7 @@ function Table({
       field: "export_value",
       headerAlign: "center",
       align: "center",
-      width: 50,
+      width: 55,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -112,7 +112,7 @@ function Table({
       field: "quantityPerUnit",
       headerAlign: "center",
       align: "center",
-      width: 50,
+      width: 55,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -144,21 +144,21 @@ function Table({
       headerName: "วันที่ซื้อ",
       headerAlign: "center",
       align: "center",
-      width: 90,
+      width: 85,
       headerClassName: "table-columns",
     },
     {
       field: "mfd_date",
-      width: 90,
+      width: 80,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography style={{ fontSize: "10px", fontWeight: 500, lineHeight: "12.5px" }}>
             MFD
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography style={{ fontSize: "10px", fontWeight: 500, lineHeight: "12.5px" }}>
             EXP
           </Typography>
         </div>
@@ -212,7 +212,7 @@ function Table({
       headerName: "Vat",
       headerAlign: "center",
       align: "center",
-      width: 50,
+      width: 40,
       headerClassName: "table-columns",
     },
     {
@@ -228,7 +228,7 @@ function Table({
       headerName: "หน่วยนับ",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 60,
       headerClassName: "table-columns",
     },
     {
@@ -252,7 +252,7 @@ function Table({
       field: "px_total",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 90,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -267,14 +267,14 @@ function Table({
     },
     {
       field: "oc_unit",
-      width: 50,
+      width: 80,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
           <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
-            ดำเนินการ
+            ค่าดำเนินการ
           </Typography>
           <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
             /หน่วย
@@ -290,7 +290,7 @@ function Table({
       headerName: "ราคาดิบ (THB)",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 60,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -307,7 +307,7 @@ function Table({
       field: "cost_per_unit",
       headerAlign: "center",
       align: "center",
-      width: 50,
+      width: 60,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -363,7 +363,7 @@ function Table({
     },
     {
       field: "total_cost",
-      width: 50,
+      width: 60,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -399,7 +399,7 @@ function Table({
       field: "pp_vat",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 60,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -414,7 +414,7 @@ function Table({
     },
     {
       field: "selling_price",
-      width: 70,
+      width: 80,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -434,7 +434,7 @@ function Table({
       headerName: "จัดการสินค้า",
       headerAlign: "center",
       align: "center",
-      width: 90,
+      width: 80,
       headerClassName: "table-columns",
       renderCell: (params) => (
         <MenuItemList
@@ -448,8 +448,6 @@ function Table({
   ];
 
   const rowsClassName = "table-rows";
-
-  console.log(productsData)
 
   // Remove duplicate products based on product_id
   const uniqueProductsMap = new Map();

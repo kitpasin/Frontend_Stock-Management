@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Autocomplete, Card, TextField } from "@mui/material";
 import Barcode from "react-barcode";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 import "./ProductsExportPage.scss";
 import HeadPageComponent from "../../layout/headpage/headpage";
@@ -36,6 +37,7 @@ function ProductsExportPage({
   const [exportValue, setExportValue] = useState(0);
   const [id, setId] = useState(0);
   const inputRef = useRef();
+  const navigate = useNavigate();
   const { t } = useTranslation(["dashboard-page"]);
 
   useEffect(() => {
@@ -75,7 +77,6 @@ function ProductsExportPage({
     setExportValue(0)
   }
 
-  console.log(productShow)
 
   const onExportProduct = (_id) => {
     const formExport = {
@@ -119,6 +120,7 @@ function ProductsExportPage({
                   });
                 } else {
                   setOpen(false)
+                  navigate("/export")
                 }
               });
             })
@@ -199,18 +201,29 @@ function ProductsExportPage({
             <p>ชื่อสินค้า</p>
             <span>{productShow.title}</span>
           </div>
-          <p style={{ width: "3.33%", textAlign: "center" }}>|</p>
+          <p style={{ width: "2%", textAlign: "center" }}>|</p>
           <div className="product-number">
             <p>รหัสสินค้า</p>
             <span>{productShow.product_id}</span>
           </div>
-          <p style={{ width: "3.33%", textAlign: "center" }}>|</p>
+          <p style={{ width: "2%", textAlign: "center" }}>|</p>
           <div className="barcode-number">
-            <p>รหัสบาร์โค้ด</p>
+            <p>รหัสบาร์โค้ดจากสินค้า</p>
+            <span>{productShow.product_barcode}</span>
+          </div>
+          <p style={{ width: "2%", textAlign: "center" }}>|</p>
+          <div className="barcode-number">
+            <p>รหัสบาร์โค้ดใหม่</p>
             <span>{productShow.barcode_number}</span>
           </div>
-          <p style={{ width: "3.33%", textAlign: "center" }}>|</p>
+          <p style={{ width: "2%", textAlign: "center" }}>|</p>
           <figure className="barcode-image">
+            <p style={{ color: "#000" }}>บาร์โค้ดจากสินค้า</p>
+            <Barcode value={productShow.product_barcode} />
+          </figure>
+          <p style={{ width: "2%", textAlign: "center" }}>|</p>
+          <figure className="barcode-image">
+            <p style={{ color: "#000" }}>บาร์โค้ดใหม่</p>
             <Barcode value={productShow.barcode_number} />
           </figure>
         </div>

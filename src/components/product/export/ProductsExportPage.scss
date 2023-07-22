@@ -15,7 +15,7 @@
             }
         }
         .product-name {
-            width: 30%;
+            width: 18%;
             padding-left: 1.75rem;
             p {
                 color: #969a99;
@@ -43,12 +43,12 @@
             border-radius: 10px;
             width: 20%;
             height: 100px;
-            max-width: 245px;
+            max-width: 190px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 0.5rem;
+            // gap: 0.5rem;
             margin-inline: 2.5rem;
         }
         .supplier-title {
