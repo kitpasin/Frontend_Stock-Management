@@ -125,7 +125,8 @@ function DefectiveExportPage({
                     return [newProductData[0]];
                   });
                 } else {
-                  setOpen(false);
+                  setOpen(false)
+                  window.location.href = "/defective"
                 }
               });
             })

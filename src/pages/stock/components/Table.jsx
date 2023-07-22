@@ -46,7 +46,7 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       field: "import_value",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 75.35,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -63,7 +63,7 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       field: "defective_product",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 75.35,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -80,7 +80,7 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       field: "",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 75.35,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -143,7 +143,7 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       field: "dateEXP",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 75.35,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -187,7 +187,7 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       headerName: "หมวดหมู่",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 75.35,
       headerClassName: "table-columns",
     },
     {
@@ -195,14 +195,14 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       headerName: "หน่วยนับ",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 75.35,
       headerClassName: "table-columns",
     },
     {
       field: "netweight",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 75.35,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -219,7 +219,7 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       field: "total",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 75.35,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -257,7 +257,7 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       headerName: "ราคาดิบ (THB)",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 75.35,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -295,7 +295,7 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       headerName: "ต้นทุน (THB)",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 75.35,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -355,7 +355,7 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
     },
     {
       field: "selling_price",
-      width: 70,
+      width: 75.35,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -375,7 +375,7 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       headerName: "จัดการสินค้า",
       headerAlign: "center",
       align: "center",
-      width: 100,
+      width: 90,
       headerClassName: "table-columns",
       renderCell: (params) => (
         <MenuItemList
@@ -399,11 +399,10 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
         columns={columns}
         initialState={{
           pagination: {
-            paginationModel: { page: 0, pageSize: 5 },
+            paginationModel: { page: 0, pageSize: 10 },
           },
         }}
         pageSizeOptions={[5, 10, 50, 100]}
-        checkboxSelection
         onRowSelectionModelChange={(ids) => onRowsSelectionHandler(ids)}
       />
     </div>

@@ -314,27 +314,6 @@ function MenuItemList({
           "aria-labelledby": `${btnId}`,
         }}
       >
-        {/* <MenuItem
-          sx={{
-            display: "flex",
-            gap: "1rem",
-          }}
-          onClick={handleClose}
-        >
-          <img
-            style={{
-              width: "18px",
-              height: "18px",
-              filter:
-                "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
-            }}
-            src="/images/icons/supplier-icon.png"
-            alt=""
-          />
-          <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>
-            ซัพพลาย
-          </p>
-        </MenuItem> */}
         <MenuItem
           sx={{
             display: "flex",
@@ -353,56 +332,7 @@ function MenuItemList({
             alt=""
           />
           <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>
-            ดึงข้อมูล
-          </p>
-        </MenuItem>
-        <MenuItem
-          sx={{ display: "flex", gap: "1rem" }}
-          onClick={() => exportProductOne(params.row.id)}
-        >
-          <img
-            style={{ width: "18px", height: "18px" }}
-            src="/images/icons/export-icon.png"
-            alt=""
-          />
-          <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>
-            เบิกสินค้า
-          </p>
-        </MenuItem>
-        <MenuItem
-          sx={{ display: "flex", gap: "1rem" }}
-          onClick={() => editHandle(params.row)}
-        >
-          <img
-            style={{
-              width: "18px",
-              height: "18px",
-              filter:
-                "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
-            }}
-            src="/images/icons/edit-icon.png"
-            alt=""
-          />
-          <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>
-            แก้ไขสินค้า
-          </p>
-        </MenuItem>
-        <MenuItem
-          sx={{ display: "flex", gap: "1rem" }}
-          onClick={() => deleteHandle(params.row.product_id)}
-        >
-          <img
-            style={{
-              width: "18px",
-              height: "18px",
-              filter:
-                "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
-            }}
-            src="/images/icons/trash-icon.png"
-            alt=""
-          />
-          <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>
-            ลบสินค้า
+            เพิ่มสินค้า
           </p>
         </MenuItem>
       </Menu>
