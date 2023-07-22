@@ -24,7 +24,7 @@ import { Result } from "postcss";
 import { useSelector } from "react-redux";
 import PulseLoader from "react-spinners/PulseLoader";
 
-function CreateSupplier() {
+function CreateSupplier({ isEdit }) {
   const [loading, setLoading] = useState(true);
 
   const [mainCatesData, setMainCatesData] = useState([]);
@@ -352,18 +352,11 @@ function CreateSupplier() {
                 </div>
               </div>
             </div>
-            <div className="bottom-content">
-              <div className="head"></div>
-              <div className="content">
-                <div className="content-head">
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "flex-start",
-                      alignItems: "center",
-                      gap: "1rem",
-                    }}
-                  >
+            { false &&
+              <div className="bottom-content">
+                <div className="head"></div>
+                <div className="content">
+                  <div className="content-head">
                     <div
                       style={{
                         display: "flex",
@@ -372,99 +365,108 @@ function CreateSupplier() {
                         gap: "1rem",
                       }}
                     >
-                      <img src="images/icons/ri_file-list-3-fill2222.png" alt="" />
-                      <p
+                      <div
                         style={{
-                          color: "#3B336B",
-                          fontSize: "18px",
-                          fontWeight: 400,
+                          display: "flex",
+                          justifyContent: "flex-start",
+                          alignItems: "center",
+                          gap: "1rem",
                         }}
                       >
-                        ประวัติสั่งสินค้า
-                      </p>
+                        <img src="images/icons/ri_file-list-3-fill2222.png" alt="" />
+                        <p
+                          style={{
+                            color: "#3B336B",
+                            fontSize: "18px",
+                            fontWeight: 400,
+                          }}
+                        >
+                          ประวัติสั่งสินค้า
+                        </p>
+                      </div>
+                      <div className="action">
+                        {/* <p>2500 จำนวนที่เคยสั่งซื้อ</p> */}
+                        <p>{productAll.length} รายการ</p>
+                      </div>
                     </div>
-                    <div className="action">
-                      {/* <p>2500 จำนวนที่เคยสั่งซื้อ</p> */}
-                      <p>{productAll.length} รายการ</p>
-                    </div>
-                  </div>
 
-                  <Autocomplete
+                    <Autocomplete
+                      size="small"
+                      disablePortal
+                      id="combo-box-demo"
+                      options={supplier}
+                      getOptionLabel={(option) => option.name || ""}
+                      sx={{ width: 180 }}
+                      renderInput={(params) => <TextField {...params} label="ซัพพลายเออร์" />}
+                      onChange={(e, value) => {
+                        filterData(value ? value.id : 0);
+                      }}
+                    />
+                    {/* <div className="search-input">
+                  <TextField
+                    sx={{ width: "150px" }}
+                    id="standard-basic"
+                    label="ชื่อ"
+                    variant="outlined"
                     size="small"
-                    disablePortal
-                    id="combo-box-demo"
-                    options={supplier}
-                    getOptionLabel={(option) => option.name || ""}
-                    sx={{ width: 180 }}
-                    renderInput={(params) => <TextField {...params} label="ซัพพลายเออร์" />}
-                    onChange={(e, value) => {
-                      filterData(value ? value.id : 0);
-                    }}
                   />
-                  {/* <div className="search-input">
-                <TextField
-                  sx={{ width: "150px" }}
-                  id="standard-basic"
-                  label="ชื่อ"
-                  variant="outlined"
-                  size="small"
-                />
-                <FormControl sx={{ width: 150 }} size="small">
-                  <InputLabel id="demo-select-small-label">
-                    หมวดหมู่หลัก
-                  </InputLabel>
-                  <Select
-                    labelId="demo-select-small-label"
-                    id="demo-select-small"
-                    value={age}
-                    label="Age"
-                    onChange={handleChange}
-                  >
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
-                  </Select>
-                </FormControl>
-                <FormControl sx={{ width: 150 }} size="small">
-                  <InputLabel id="demo-select-small-label">
-                    หมวดหมู่ย่อย
-                  </InputLabel>
-                  <Select
-                    labelId="demo-select-small-label"
-                    id="demo-select-small"
-                    value={age}
-                    label="Age"
-                    onChange={handleChange}
-                  >
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
-                  </Select>
-                </FormControl>
-              </div> */}
-                </div>
-                <div className="table">
-                  <DataGrid
-                    checkboxSelection={false}
-                    sx={{ border: "none" }}
-                    rows={productAll}
-                    columns={columns}
-                    initialState={{
-                      pagination: {
-                        paginationModel: { page: 0, pageSize: 10 },
-                      },
-                    }}
-                    pageSizeOptions={[5, 10, 50, 100]}
-                  />
+                  <FormControl sx={{ width: 150 }} size="small">
+                    <InputLabel id="demo-select-small-label">
+                      หมวดหมู่หลัก
+                    </InputLabel>
+                    <Select
+                      labelId="demo-select-small-label"
+                      id="demo-select-small"
+                      value={age}
+                      label="Age"
+                      onChange={handleChange}
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value={10}>Ten</MenuItem>
+                      <MenuItem value={20}>Twenty</MenuItem>
+                      <MenuItem value={30}>Thirty</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl sx={{ width: 150 }} size="small">
+                    <InputLabel id="demo-select-small-label">
+                      หมวดหมู่ย่อย
+                    </InputLabel>
+                    <Select
+                      labelId="demo-select-small-label"
+                      id="demo-select-small"
+                      value={age}
+                      label="Age"
+                      onChange={handleChange}
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value={10}>Ten</MenuItem>
+                      <MenuItem value={20}>Twenty</MenuItem>
+                      <MenuItem value={30}>Thirty</MenuItem>
+                    </Select>
+                  </FormControl>
+                </div> */}
+                  </div>
+                  <div className="table">
+                    <DataGrid
+                      checkboxSelection={false}
+                      sx={{ border: "none" }}
+                      rows={productAll}
+                      columns={columns}
+                      initialState={{
+                        pagination: {
+                          paginationModel: { page: 0, pageSize: 10 },
+                        },
+                      }}
+                      pageSizeOptions={[5, 10, 50, 100]}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
+            }
           </div>
         </>
       )}
