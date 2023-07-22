@@ -146,8 +146,6 @@ function ExpireDataGrid({ productsAboutToExpire }) {
 
   const rowsClassName = "table-rows";
 
-  console.log(productsAboutToExpire)
-
   return (
     <>
       <DataGrid

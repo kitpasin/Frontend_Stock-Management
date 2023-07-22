@@ -36,7 +36,7 @@ function Tables({
           <div className="header">
             <figure className="header-title">
               <img src="/images/icons/product-icon.png" alt="" />
-              <p>จำนวนสินค้าใกล้หมด/เดือน</p>
+              <p>จำนวนสินค้าใกล้หมดสต๊อก/เดือน</p>
               <p style={{ color: "red" }}>{uniqueProductsData?.length} รายการ</p>
             </figure>
             <div className="header-link">
@@ -73,7 +73,7 @@ function Tables({
             </figure>
             <div className="header-link">
               <button>
-                <Link to="/product">ดูรายการเพิ่มเติม</Link>
+                <Link to="/products">ดูรายการเพิ่มเติม</Link>
               </button>
             </div>
           </div>
