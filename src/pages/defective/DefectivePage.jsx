@@ -24,6 +24,7 @@ function DefectivePage() {
   const [defectiveProducts, setDefectiveProducts] = useState([]);
   const [mainCategories, setMainCategories] = useState([]);
   const [title, setTitle] = useState("");
+  const [productId, setProductId] = useState("")
   const [mainCategory, setMainCategory] = useState("");
   const [vat, setVat] = useState("");
 
@@ -33,10 +34,17 @@ function DefectivePage() {
 
   const filteredProduct = defectiveProducts.filter((product) => {
     const matchesTitle = title ? product.title === title : true;
+    const matchProductId = productId ? product.product_id === productId : true;
     const matchesMainCategory = mainCategory ? product.main_cate_name === mainCategory : true;
-    const matchesVat = vat ? product.vat_id == vat : true;
+    let matchesVat = true;
 
-    return matchesTitle && matchesMainCategory && matchesVat;
+    if (vat === "1") {
+      matchesVat = product.vat_id !== 0;
+    } else if (vat === "0") {
+      matchesVat = product.vat_id == 0;
+    }
+
+    return matchesTitle && matchProductId && matchesMainCategory && matchesVat;
   });
 
   async function getDefectiveProducts() {
@@ -56,6 +64,18 @@ function DefectivePage() {
     getDefectiveProducts();
     getMainCategories();
   }, [refreshData]);
+
+  const titleOptions = defectiveProducts
+    .map((product) => product.title)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  const productIdOptions = defectiveProducts
+    .map((product) => product.product_id)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  const mainCategoryOptions = mainCategories
+    .map((category) => category.name)
+    .filter((value, index, self) => self.indexOf(value) === index);
 
   return (
     <section id="defective-page">
@@ -96,21 +116,30 @@ function DefectivePage() {
                 <Autocomplete
                   size="small"
                   disablePortal
-                  id="combo-box-demo"
-                  options={defectiveProducts}
-                  getOptionLabel={(defectiveProducts) => defectiveProducts.title || ""}
-                  onChange={(event, value) => setTitle(value?.title || null)}
-                  sx={{ width: 150 }}
+                  id="combo-box-title"
+                  options={titleOptions}
+                  onChange={(event, value) => setTitle(value || "")}
+                  sx={{ width: 200 }}
                   renderInput={(params) => <TextField {...params} label="ชื่อ" />}
                 />
                 <Autocomplete
                   size="small"
                   disablePortal
-                  id="combo-box-demo"
-                  options={mainCategories}
-                  getOptionLabel={(mainCategories) => mainCategories.name || ""}
-                  onChange={(event, value) => setMainCategory(value?.name || null)}
-                  sx={{ width: 150 }}
+                  id="combo-box-product-id"
+                  options={productIdOptions}
+                  onChange={(event, value) => setProductId(value || "")}
+                  sx={{ width: 200 }}
+                  renderInput={(params) => (
+                    <TextField type="number" {...params} label="รหัสสินค้า" />
+                  )}
+                />
+                <Autocomplete
+                  size="small"
+                  disablePortal
+                  id="combo-box-main-category"
+                  options={mainCategoryOptions}
+                  onChange={(event, value) => setMainCategory(value || "")}
+                  sx={{ width: 200 }}
                   renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
                 />
                 <FormControl>

@@ -1,7 +1,6 @@
 import { DataGrid } from "@mui/x-data-grid";
 import { Avatar, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
-import MenuItemList from "./MenuItemList";
 import dayjs from "dayjs";
 
 function Table({
@@ -52,7 +51,7 @@ function Table({
       field: "",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 81.5,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -82,7 +81,7 @@ function Table({
       field: "defective_product",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 81.5,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -132,7 +131,7 @@ function Table({
       field: "dateEXP",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 81.5,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -184,14 +183,14 @@ function Table({
       headerName: "หน่วยนับ",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 81.5,
       headerClassName: "table-columns",
     },
     {
       field: "netweight",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 81.5,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -208,7 +207,7 @@ function Table({
       field: "total",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 81.5,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -223,7 +222,7 @@ function Table({
     },
     {
       field: "oc_unit",
-      width: 70,
+      width: 81.5,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -243,7 +242,7 @@ function Table({
       headerName: "ราคาดิบ (THB)",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 81.5,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -260,7 +259,7 @@ function Table({
       field: "cost_per_unit",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 81.5,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -278,7 +277,7 @@ function Table({
       headerName: "ต้นทุน (THB)",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 81.5,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -293,7 +292,7 @@ function Table({
     },
     {
       field: "total_cost",
-      width: 70,
+      width: 81.5,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -335,7 +334,7 @@ function Table({
     },
     {
       field: "selling_price",
-      width: 70,
+      width: 81.5,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -348,22 +347,6 @@ function Table({
             (THB)
           </Typography>
         </div>
-      ),
-    },
-    {
-      field: "action",
-      headerName: "จัดการสินค้า",
-      headerAlign: "center",
-      align: "center",
-      width: 90,
-      headerClassName: "table-columns",
-      renderCell: (params) => (
-        <MenuItemList
-          params={params}
-          refreshData={refreshData}
-          setRefreshData={setRefreshData}
-          setProductSelected={setProductSelected}
-        />
       ),
     },
   ];
@@ -379,12 +362,11 @@ function Table({
         columns={columns}
         initialState={{
           pagination: {
-            paginationModel: { page: 0, pageSize: 5 },
+            paginationModel: { page: 0, pageSize: 10 },
           },
         }}
         pageSizeOptions={[5, 10, 50, 100]}
-        checkboxSelection
-        onRowSelectionModelChange={(ids) => onRowsSelectionHandler(ids)}
+        disableRowSelectionOnClick
       />
     </div>
   );

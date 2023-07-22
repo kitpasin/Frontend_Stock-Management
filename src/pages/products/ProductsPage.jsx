@@ -26,15 +26,30 @@ function ProductsPage() {
   const [loading, setLoading] = useState(true);
 
   const [productsAll, setProductsAll] = useState([]);
-  const [productsData, setProductsData] = useState([]);
-  const [mainCateId, setMainCateId] = useState(0);
-  const [mainCatesData, setMainCatesData] = useState([]);
-  const [productTitle, setProductTitle] = useState("");
-  const [vat, setVat] = useState("all");
+  const [mainCategories, setMainCategories] = useState([]);
+  const [title, setTitle] = useState("");
+  const [productId, setProductId] = useState("");
+  const [mainCategory, setMainCategory] = useState("");
+  const [vat, setVat] = useState("");
 
   const [refreshData, setRefreshData] = useState(0);
   const [productSelected, setProductSelected] = useState([]);
   const [openMultiExportModal, setOpenMultiexportModal] = useState(false);
+
+  const filteredProduct = productsAll.filter((product) => {
+    const matchesTitle = title ? product.title === title : true;
+    const matchProductId = productId ? product.product_id === productId : true;
+    const matchesMainCategory = mainCategory ? product.main_cate_name === mainCategory : true;
+    let matchesVat = true;
+
+    if (vat === "1") {
+      matchesVat = product.vat_id !== 0;
+    } else if (vat === "0") {
+      matchesVat = product.vat_id == 0;
+    }
+
+    return matchesTitle && matchProductId && matchesMainCategory && matchesVat;
+  });
 
   const current_date = dayjs().toISOString().substring(0, 10);
 
@@ -52,80 +67,35 @@ function ProductsPage() {
     }
   };
 
-  async function getMainCates() {
-    const response = await axios.get("maincates");
-    const data = response.data.mainCates;
-    setMainCatesData(data);
-  }
-
-  async function filterData(cate_id = 0, _title = "") {
-    setProductTitle(_title);
-    setMainCateId(cate_id);
-    const hasVat = vat === "vat" ? true : false;
-    if (cate_id === 0 && _title === "" && vat === "all") {
-      setProductsAll(productsData);
-    } else if (cate_id === 0 && _title === "" && vat !== "all") {
-      const result = productsData;
-      const dd = result?.filter((item) =>
-        hasVat ? item.vat_id !== 0 : item.vat_id === 0
-      );
-      setProductsAll(dd);
-    } else if (
-      (cate_id === 0 && _title !== "") ||
-      (cate_id !== 0 && _title === "")
-    ) {
-      const result = productsData;
-      const data = result?.filter(
-        (item) => item.main_cate_id === cate_id || item.title === _title
-      );
-      if (vat === "all") {
-        setProductsAll(data);
-      } else {
-        const dd = data?.filter((item) =>
-          hasVat ? item.vat_id !== 0 : item.vat_id === 0
-        );
-        setProductsAll(dd);
-      }
-    } else {
-      const result = productsData;
-      const data = result?.filter(
-        (item) => item.main_cate_id === cate_id && item.title === _title
-      );
-      if (vat === "all") {
-        setProductsAll(data);
-      } else {
-        const dd = data?.filter((item) =>
-          hasVat ? item.vat_id !== 0 : item.vat_id === 0
-        );
-        setProductsAll(dd);
-      }
-    }
-  }
-
-  async function fetchService() {
-    const data = await svProductAll().then((res) => res.data);
-    const result = await data.map((item) => {
-      const duration = dayjs(item.exp_date).diff(current_date, "day");
-      return { ...item, diff_date: duration };
-    });
-    return result;
-  }
-
-  async function fetchProduct() {
-    const result = await fetchService();
-    setProductsData(result);
-    setProductsAll(result);
+  async function getProducts() {
+    const response = await axios.get("productAll");
+    const data = response.data.data;
+    setProductsAll(data);
     setLoading(false);
   }
 
-  useEffect(() => {
-    getMainCates();
-    fetchProduct();
-  }, [refreshData]);
+  async function getMainCategories() {
+    const response = await axios.get("maincates");
+    const data = response.data.mainCates;
+    setMainCategories(data);
+  }
 
-  useEffect(() => {
-    filterData(mainCateId, productTitle);
-  }, [vat]);
+ useEffect(() => {
+   getProducts();
+   getMainCategories();
+ }, [refreshData]);
+
+ const titleOptions = productsAll
+   .map((product) => product.title)
+   .filter((value, index, self) => self.indexOf(value) === index);
+
+ const productIdOptions = productsAll
+   .map((product) => product.product_id)
+   .filter((value, index, self) => self.indexOf(value) === index);
+
+ const mainCategoryOptions = mainCategories
+   .map((category) => category.name)
+   .filter((value, index, self) => self.indexOf(value) === index);
 
   return (
     <section id="products-page">
@@ -166,30 +136,31 @@ function ProductsPage() {
                 <Autocomplete
                   size="small"
                   disablePortal
-                  id="combo-box-demo"
-                  options={productsAll}
-                  getOptionLabel={(option) => option.title || ""}
-                  sx={{ width: 150 }}
-                  renderInput={(params) => (
-                    <TextField {...params} label="ชื่อ" />
-                  )}
-                  onChange={(e, value) =>
-                    filterData(mainCateId, value ? value.title : "")
-                  }
+                  id="combo-box-title"
+                  options={titleOptions}
+                  onChange={(event, value) => setTitle(value || "")}
+                  sx={{ width: 200 }}
+                  renderInput={(params) => <TextField {...params} label="ชื่อ" />}
                 />
                 <Autocomplete
                   size="small"
                   disablePortal
-                  id="combo-box-demo"
-                  options={mainCatesData}
-                  getOptionLabel={(option) => option.name || ""}
-                  sx={{ width: 150 }}
+                  id="combo-box-product-id"
+                  options={productIdOptions}
+                  onChange={(event, value) => setProductId(value || "")}
+                  sx={{ width: 200 }}
                   renderInput={(params) => (
-                    <TextField {...params} label="หมวดหมู่" />
+                    <TextField type="number" {...params} label="รหัสสินค้า" />
                   )}
-                  onChange={(e, value) =>
-                    filterData(value ? value.id : 0, productTitle)
-                  }
+                />
+                <Autocomplete
+                  size="small"
+                  disablePortal
+                  id="combo-box-main-category"
+                  options={mainCategoryOptions}
+                  onChange={(event, value) => setMainCategory(value || "")}
+                  sx={{ width: 200 }}
+                  renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
                 />
                 <FormControl>
                   <RadioGroup
@@ -199,32 +170,25 @@ function ProductsPage() {
                     value={vat}
                   >
                     <FormControlLabel
-                      value="all"
+                      value=""
                       control={<Radio />}
                       label="All"
-                      onChange={() => setVat("all")}
+                      onChange={(e) => setVat(e.target.value)}
                     />
                     <FormControlLabel
-                      value="vat"
+                      value="1"
                       control={<Radio />}
                       label="Vat"
-                      onChange={() => setVat("vat")}
+                      onChange={(e) => setVat(e.target.value)}
                     />
                     <FormControlLabel
-                      value="noVat"
+                      value="0"
                       control={<Radio />}
                       label="No Vat"
-                      onChange={() => setVat("noVat")}
+                      onChange={(e) => setVat(e.target.value)}
                     />
                   </RadioGroup>
                 </FormControl>
-                <Link
-                  style={{ fontSize: "16px" }}
-                  to="/products/import"
-                  className="create"
-                >
-                  เพิ่มสินค้า
-                </Link>
                 <Button
                   style={{ fontSize: "16px" }}
                   className="export"
@@ -236,7 +200,7 @@ function ProductsPage() {
             </div>
             <div>
               <Table
-                productsData={productsAll}
+                productsData={filteredProduct}
                 refreshData={refreshData}
                 setRefreshData={setRefreshData}
                 setProductSelected={setProductSelected}

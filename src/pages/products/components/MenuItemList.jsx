@@ -378,20 +378,7 @@ function MenuItemList({
             alt=""
           />
           <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>
-            ดึงข้อมูล
-          </p>
-        </MenuItem>
-        <MenuItem
-          sx={{ display: "flex", gap: "1rem" }}
-          onClick={() => exportProductOne(params.row.id)}
-        >
-          <img
-            style={{ width: "18px", height: "18px" }}
-            src="/images/icons/export-icon.png"
-            alt=""
-          />
-          <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>
-            เบิกสินค้า
+            เพิ่มสินค้า
           </p>
         </MenuItem>
         <MenuItem

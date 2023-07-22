@@ -11,8 +11,6 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
     setProductSelected(selectedRowsData);
   };
 
-  console.log(productsData);
-
   const columns = [
     {
       field: "thumbnail_link",
@@ -280,10 +278,10 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
         columns={columns}
         initialState={{
           pagination: {
-            paginationModel: { page: 0, pageSize: 5 },
+            paginationModel: { page: 0, pageSize: 10 },
           },
         }}
-        pageSizeOptions={[5, 10, 50, 109]}
+        pageSizeOptions={[5, 10, 50, 100]}
         checkboxSelection
         onRowSelectionModelChange={(ids) => onRowsSelectionHandler(ids)}
       />

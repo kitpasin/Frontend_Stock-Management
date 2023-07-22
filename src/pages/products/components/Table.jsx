@@ -41,10 +41,10 @@ function Table({
       headerName: "ชื่อรายการ",
       headerAlign: "center",
       align: "center",
-      width: 120,
+      width: 105,
       headerClassName: "table-columns",
       renderCell: (params) => (
-        <div style={{ paddingLeft: "1.2rem" }}>
+        <div style={{paddingLeft: ".5rem"}}>
           <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{`${params.row.title}`}</p>
           <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>
             {params.row.product_id}
@@ -326,24 +326,6 @@ function Table({
         </div>
       ),
     },
-    // {
-    //   field: "cost",
-    //   headerName: "ต้นทุน (THB)",
-    //   headerAlign: "center",
-    //   align: "center",
-    //   width: 70,
-    //   headerClassName: "table-columns",
-    //   renderHeader: () => (
-    //     <div>
-    //       <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
-    //         ต้นทุน
-    //       </Typography>
-    //       <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
-    //         (THB)
-    //       </Typography>
-    //     </div>
-    //   ),
-    // },
     {
       field: "unit_price",
       width: 50,
@@ -437,7 +419,7 @@ function Table({
       headerName: "จัดการสินค้า",
       headerAlign: "center",
       align: "center",
-      width: 80,
+      width: 90,
       headerClassName: "table-columns",
       renderCell: (params) => (
         <MenuItemList
