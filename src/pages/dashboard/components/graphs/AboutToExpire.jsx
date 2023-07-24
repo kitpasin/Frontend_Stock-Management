@@ -20,7 +20,7 @@ function AboutToExpire({ productsAboutToExpire }) {
     const endDate = dayjs(data.exp_date);
     const today = dayjs();
     const remainingDays = endDate.diff(today, "day");
-    return remainingDays;
+    return remainingDays+1;
   });
 
   const data = {
