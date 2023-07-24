@@ -3,18 +3,25 @@ import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import EditSupplier from "./editSupplier/EditSupplier";
+import { Autocomplete, TextField } from "@mui/material";
 
 import "./suppliers.scss";
+import { svProductAll } from "../../services/product.service";
 
 /* import Components */
 import HeadPageComponent from "../../components/layout/headpage/headpage";
 import axios from "axios";
 import Swal from "sweetalert2";
 import PulseLoader from "react-spinners/PulseLoader";
+import ProductSupplier from "./ProductSupplier";
+import { useSelector } from "react-redux";
 
 function Suppliers() {
   const [loading, setLoading] = useState(true);
 
+  const [productData, setProductData] = useState([]);
+  const [productAll, setProductAll] = useState([]);
+  const [supplier, setSupplier] = useState([]);
   const [suppliersData, setSuppliersData] = useState([]);
   const [mainCatesData, setMainCatesData] = useState([]);
   const [mainCates, setMainCates] = useState([]);
@@ -30,6 +37,7 @@ function Suppliers() {
     const response = await axios.get("suppliers");
     const data = response.data;
     setSuppliersData(data.suppliers);
+    setSupplier(data.suppliers);
     setLoading(false);
   }
   async function getMainCates() {
@@ -38,12 +46,40 @@ function Suppliers() {
     setMainCatesData(data);
   }
 
+  function filterData(_id) {
+    if (_id !== 0) {
+      const data = productData.filter((item) => item.supplier_id === _id);
+      const supplier = suppliersData.filter((item) => item.id === _id);
+      setProductAll(data);
+      setSupplier(supplier)
+    } else {
+      setProductAll(productData);
+      setSupplier(suppliersData)
+    }
+  }
+  
+  function filterTel(_tel) {
+    if (_tel !== 0) {
+      const supplier = suppliersData.filter((item) => item.tel === _tel)
+      const data = productData.filter((item) => item.supplier_id === supplier[0].id)
+      
+      setProductAll(data);
+      setSupplier(supplier)
+    } else {
+      setProductAll(productData);
+      setSupplier(suppliersData)
+    }
+  }
+
   useEffect(() => {
     getSuppliers();
     getMainCates();
+    svProductAll().then((res) => {
+      const result = res.data;
+      setProductData(result);
+      setProductAll(result);
+    });
   }, []);
-
-  console.log(suppliersData);
 
   function handleDeleteSupplier(cellValue) {
     Swal.fire({
@@ -57,9 +93,11 @@ function Suppliers() {
     }).then((result) => {
       if (result.isConfirmed) {
         axios.delete(`supplier/${cellValue.row.id}`).then(() => {
-          Swal.fire("Deleted!", "Your Data has been deleted.", "success").then(() => {
-            getSuppliers();
-          });
+          Swal.fire("Deleted!", "Your Data has been deleted.", "success").then(
+            () => {
+              getSuppliers();
+            }
+          );
         });
       }
     });
@@ -87,8 +125,18 @@ function Suppliers() {
       width: 240,
       headerClassName: "table-columns",
     },
-    { field: "address", headerName: "ที่อยู่", width: 240, headerClassName: "table-columns" },
-    { field: "agent", headerName: "ชื่อผู้ติดต่อ", width: 240, headerClassName: "table-columns" },
+    {
+      field: "address",
+      headerName: "ที่อยู่",
+      width: 240,
+      headerClassName: "table-columns",
+    },
+    {
+      field: "agent",
+      headerName: "ชื่อผู้ติดต่อ",
+      width: 240,
+      headerClassName: "table-columns",
+    },
     {
       field: "tel",
       headerName: "เบอร์โทร",
@@ -151,7 +199,10 @@ function Suppliers() {
       align: "center",
       renderCell: (cellValue) => {
         return (
-          <button style={buttonStyle} onClick={() => handleDeleteSupplier(cellValue)}>
+          <button
+            style={buttonStyle}
+            onClick={() => handleDeleteSupplier(cellValue)}
+          >
             {" "}
             <img src="images/icons/trash-icon.png" alt="" />{" "}
           </button>
@@ -183,8 +234,38 @@ function Suppliers() {
                   <p>ซัพพลายเออร์</p>
                   <span>{suppliersData.length} รายการ</span>
                 </div>
+                <div className="select">
+                    <Autocomplete
+                      size="small"
+                      disablePortal
+                      id="combo-box-demo"
+                      options={supplier}
+                      getOptionLabel={(option) => option.name || ""}
+                      sx={{ width: 180 }}
+                      renderInput={(params) => (
+                        <TextField {...params} label="ซัพพลายเออร์" />
+                      )}
+                      onChange={(e, value) => {
+                        filterData(value ? value.id : 0);
+                      }}
+                    />
+                    <Autocomplete
+                      size="small"
+                      disablePortal
+                      id="combo-box-demo"
+                      options={supplier}
+                      getOptionLabel={(option) => option.tel || ""}
+                      sx={{ width: 180 }}
+                      renderInput={(params) => (
+                        <TextField {...params} label="เบอร์โทรศัพท์" />
+                      )}
+                      onChange={(e, value) => {
+                        filterTel(value ? value.tel : 0);
+                      }}
+                    />
                 <div className="action">
                   <button onClick={handleLink}>เพิ่มซัพพลายเออร์</button>
+                </div>
                 </div>
               </div>
               <div className="table">
@@ -192,7 +273,7 @@ function Suppliers() {
                   getRowClassName={() => rowsClassName}
                   sx={{ fontSize: "12px", border: "none" }}
                   checkboxSelection={false}
-                  rows={suppliersData}
+                  rows={supplier}
                   columns={columns}
                   initialState={{
                     pagination: {
@@ -213,6 +294,7 @@ function Suppliers() {
               />
             </div>
           </div>
+          <ProductSupplier productAll={productAll} />
         </>
       )}
     </section>

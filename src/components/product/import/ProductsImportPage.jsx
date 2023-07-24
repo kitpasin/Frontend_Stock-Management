@@ -116,19 +116,11 @@ function ProductsImportPage({ isEdit, isFetchImport, productShow, setOpenModalEd
     setSupplierCates(data)
   }
 
-
-
   async function getSubCates(main_cate_id = productData.main_cate_id) {
+    setProductData(() => { return { ...productData, state1: !productData.state1 } })
     const response = await axios.get(`subcate/bymain?mainid=${main_cate_id}`);
     const data = response.data.subCates;
     setSubCatesData(data)
-    if ((isEdit || isFetchImport) && !refreshSubCate) {
-      setProductData(() => { return { ...productData, main_cate_id: main_cate_id } })
-      setRefreshSubCate(true)
-    } else {
-      setProductData(() => { return { ...productData, sub_cate_id: 0, main_cate_id: main_cate_id, sub_cate: "", state1: !productData.state1 } })
-    }
-
   }
 
   async function getVats() {
@@ -149,7 +141,6 @@ function ProductsImportPage({ isEdit, isFetchImport, productShow, setOpenModalEd
     getMainCates();
     getVats();
     getSuppliers();
-    // getSubCates();
     getMainCatesBySupplier(productData.supplier_id)
   }, [])
 
@@ -618,7 +609,11 @@ function ProductsImportPage({ isEdit, isFetchImport, productShow, setOpenModalEd
                       // value={productData.main_cate_id}
                       key={productData.reset}
                       defaultValue={{ name: productData.main_cate_name || "" }}
-                      onChange={(e, value) => getSubCates(value? value.id : 0)}
+                      onChange={(e, value) => setProductData(() => {
+                        const cate_id = value ? value.id : 0
+                        getSubCates(cate_id)
+                        return { ...productData, sub_cate_id: 0, main_cate_id: cate_id, sub_cate: "", state1: !productData.state1 }
+                      })}
                       disabled={false}
                       id="combo-box-demo"
                       options={mainCatesData}
