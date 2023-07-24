@@ -14,7 +14,7 @@ ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 function LatestExport({ productsExport }) {
   const title = productsExport.map((data) => data.title);
-  const quantity = productsExport.map((data) => data.export_value);
+  const quantity = productsExport.map((data) => data.export_quantity);
 
   const data = {
     labels: title,

@@ -44,7 +44,7 @@ function Table({
       width: 105,
       headerClassName: "table-columns",
       renderCell: (params) => (
-        <div style={{paddingLeft: ".5rem"}}>
+        <div style={{ paddingLeft: ".5rem" }}>
           <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{`${params.row.title}`}</p>
           <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>
             {params.row.product_id}
@@ -201,12 +201,22 @@ function Table({
           </Typography>
         </div>
       ),
-      renderCell: (param) => {
-        const endDate = dayjs(param.row.exp_date);
+      renderCell: (params) => {
+        const endDate = dayjs(params.row.exp_date);
         const today = dayjs();
         const remainingDays = endDate.diff(today, "day");
         return (
-          <p style={{ color: remainingDays <= 30 ? "#ff0000" : "#000" }}>{remainingDays} วัน</p>
+          <div>
+            <p
+              style={{
+                fontSize: "12px",
+                lineHeight: "12.5px",
+                color: remainingDays + 1 <= 30 ? "#FF0000" : "#000",
+              }}
+            >
+              {remainingDays + 1 === 0 ? "หมดอายุ" : remainingDays + 1 + " วัน"}
+            </p>
+          </div>
         );
       },
     },
@@ -217,6 +227,11 @@ function Table({
       align: "center",
       width: 40,
       headerClassName: "table-columns",
+      renderCell: (params) => (
+        <div>
+          <p>{params.row.vat_name === null ? "0%" : params.row.vat_name}</p>
+        </div>
+      ),
     },
     {
       field: "main_cate_name",

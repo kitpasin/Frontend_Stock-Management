@@ -68,12 +68,12 @@ function ExportDataGrid({ productsExport }) {
       },
     },
     {
-      field: "export_value",
+      field: "export_quantity",
       headerAlign: "center",
       align: "center",
       width: 120,
       headerClassName: "table-columns",
-      renderHeader: (params) => (
+      renderHeader: () => (
         <div>
           <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
             จำนวนเบิกออก
@@ -90,7 +90,7 @@ function ExportDataGrid({ productsExport }) {
       align: "center",
       width: 120,
       headerClassName: "table-columns",
-      renderHeader: (params) => (
+      renderHeader: () => (
         <div>
           <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
             คงเหลือ
@@ -160,6 +160,11 @@ function ExportDataGrid({ productsExport }) {
       align: "center",
       width: 50,
       headerClassName: "table-columns",
+      renderCell: (params) => (
+        <div>
+          <p>{params.row.vat_name === null ? "0%" : params.row.vat_name}</p>
+        </div>
+      )
     },
     {
       field: "main_cate_name",

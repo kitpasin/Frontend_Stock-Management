@@ -49,7 +49,7 @@ function Summaries({
     )
   );
   const [importValue, setImportValue] = useState(productsImport?.map((item) => item.import_value));
-  const [exportValue, setExportValue] = useState(productsExport?.map((item) => item.export_value));
+  const [exportValue, setExportValue] = useState(productsExport?.map((item) => item.export_quantity));
   const webPath = useSelector((state) => state.app.webPath);
 
   const endDate = dayjs(mostProductExpire?.exp_date);
@@ -160,7 +160,7 @@ function Summaries({
             </figure>
             <div className="text">
               <div className="text-title">
-                <p>รายการสินค้าใกล้หมด/เดือน</p>
+                <p>รายการสินค้าใกล้หมดสต๊อก/เดือน</p>
               </div>
               <div className="text-description">
                 <p>
@@ -247,13 +247,10 @@ function Summaries({
                 <p>ล่าสุด : {mostProductImport?.title}</p>
               </div>
               <div className="text-description">
-                <p>{sumImportValue} หน่วย</p>
+                <p>{mostProductImport?.import_value} หน่วย</p>
               </div>
             </div>
-            <button
-              onClick={toggleLatestImportGraph}
-              className="graph"
-            >
+            <button onClick={toggleLatestImportGraph} className="graph">
               แสดงกราฟ
             </button>
           </div>
@@ -283,13 +280,10 @@ function Summaries({
                 <p>ล่าสุด : {latestExport?.title}</p>
               </div>
               <div className="text-description">
-                <p>{latestExport?.export_value} หน่วย</p>
+                <p>{latestExport?.export_quantity} หน่วย</p>
               </div>
             </div>
-            <button
-              onClick={toggleLatestExportGraph}
-              className="graph"
-            >
+            <button onClick={toggleLatestExportGraph} className="graph">
               แสดงกราฟ
             </button>
           </div>
@@ -303,31 +297,54 @@ function Summaries({
             <p className="header">สินค้าเบิกออกมากสุด/เดือน</p>
             <div className="content">
               <figure className="image">
-                <img src={`${webPath}${mostExportedProduct?.thumbnail_link}`} alt="" />
+                {mostExportedProduct?.export_value + mostExportedProduct?.export_defective_value !==
+                0 ? (
+                  <img src={`${webPath}${mostExportedProduct?.thumbnail_link}`} alt="" />
+                ) : (
+                  <img
+                    src="/images/mock/pre-product.png"
+                    style={{ width: "100px", height: "100px", paddingBlock: ".5rem" }}
+                  />
+                )}
               </figure>
               <div className="wrapper">
-                <p className="title">{mostExportedProduct?.title}</p>
+                <p className="title">
+                  {mostExportedProduct?.export_value +
+                    mostExportedProduct?.export_defective_value !==
+                  0
+                    ? mostExportedProduct?.title
+                    : ""}
+                </p>
                 <div>
                   <div className="description">
                     <p>ปริมาตรสุทธิ</p>
                     <p>
-                      {mostExportedProduct?.netweight} {mostExportedProduct?.unit_name}
+                      {mostExportedProduct?.export_value +
+                        mostExportedProduct?.export_defective_value !==
+                      0
+                        ? `${mostExportedProduct?.netweight} ${mostExportedProduct?.unit_name}`
+                        : 0}
                     </p>
                   </div>
                   <div className="description">
                     <p>ราคาขาย</p>
-                    <p>{mostExportedProduct?.selling_price} THB</p>
-                  </div>
-                  <div className="description">
-                    <p>เบิกออกล่าสุด</p>
-                    <p>{mostExportedProduct?.formatted_created_at}</p>
+                    <p>
+                      {mostExportedProduct?.export_value +
+                        mostExportedProduct?.export_defective_value !==
+                      0
+                        ? `${mostExportedProduct?.selling_price} THB`
+                        : 0}
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
             <div className="summary">
               <p>จำนวนเบิกออก</p>
-              <p>{mostExportedProduct?.export_value} หน่วย</p>
+              <p>
+                {mostExportedProduct?.export_value + mostExportedProduct?.export_defective_value}{" "}
+                หน่วย
+              </p>
             </div>
           </Card>
 
@@ -350,10 +367,6 @@ function Summaries({
                   <div className="description">
                     <p>ราคาขาย</p>
                     <p>{mostProductInStock?.selling_price} THB</p>
-                  </div>
-                  <div className="description">
-                    <p>เบิกออกล่าสุด</p>
-                    <p>{mostProductInStock?.formatted_created_at}</p>
                   </div>
                 </div>
               </div>
@@ -391,10 +404,6 @@ function Summaries({
                     <p>ราคาขาย</p>
                     <p>{mostProductExpire?.selling_price} THB</p>
                   </div>
-                  <div className="description">
-                    <p>เบิกออกล่าสุด</p>
-                    <p>{mostProductExpire?.formatted_created_at}</p>
-                  </div>
                 </div>
               </div>
             </div>
@@ -423,10 +432,6 @@ function Summaries({
                   <div className="description">
                     <p>ราคาขาย</p>
                     <p>{mostProductOutOfStock?.selling_price} THB</p>
-                  </div>
-                  <div className="description">
-                    <p>เบิกออกล่าสุด</p>
-                    <p>{mostProductOutOfStock?.formatted_created_at}</p>
                   </div>
                 </div>
               </div>

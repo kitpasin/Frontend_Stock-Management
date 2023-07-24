@@ -75,7 +75,6 @@ function ExportPage() {
     setMainCategories(data);
   }
 
-
   useEffect(() => {
     getExportedProduct();
     getMainCategories();

@@ -156,6 +156,11 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       align: "center",
       width: 50,
       headerClassName: "table-columns",
+      renderCell: (params) => (
+        <div>
+          <p>{params.row.vat_name === null ? "0%" : params.row.vat_name}</p>
+        </div>
+      )
     },
     {
       field: "main_cate_name",
@@ -268,6 +273,8 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
     uniqueProductsMap.set(item.product_id, item);
   });
   const uniqueProductsData = Array.from(uniqueProductsMap.values());
+
+  console.log(uniqueProductsData)
 
   return (
     <div>
