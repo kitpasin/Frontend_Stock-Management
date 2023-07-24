@@ -219,12 +219,16 @@ function ProductsExportPage({
           <p style={{ width: "2%", textAlign: "center" }}>|</p>
           <figure className="barcode-image">
             <p style={{ color: "#000" }}>บาร์โค้ดจากสินค้า</p>
-            <Barcode value={productShow.product_barcode} />
+            { productShow.product_barcode !== null && 
+              <Barcode value={productShow.product_barcode || ""} />
+            }
           </figure>
           <p style={{ width: "2%", textAlign: "center" }}>|</p>
           <figure className="barcode-image">
             <p style={{ color: "#000" }}>บาร์โค้ดใหม่</p>
-            <Barcode value={productShow.barcode_number} />
+            { productShow.barcode_number !== null &&
+            <Barcode value={productShow.barcode_number || ""} />
+            }
           </figure>
         </div>
       </Card>
