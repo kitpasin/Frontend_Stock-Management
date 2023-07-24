@@ -165,10 +165,10 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
               style={{
                 fontSize: "12px",
                 lineHeight: "12.5px",
-                color: remainingDays <= 30 ? "#FF0000" : "#000",
+                color: remainingDays + 1 <= 30 ? "#FF0000" : "#000",
               }}
             >
-              {remainingDays} วัน
+              {remainingDays + 1 === 0 ? "หมดอายุ" : remainingDays + 1 + " วัน"}
             </p>
           </div>
         );
@@ -181,6 +181,11 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       align: "center",
       width: 50,
       headerClassName: "table-columns",
+      renderCell: (params) => (
+        <div>
+          <p>{params.row.vat_name === null ? "0%" : params.row.vat_name}</p>
+        </div>
+      ),
     },
     {
       field: "main_cate_name",

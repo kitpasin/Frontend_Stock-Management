@@ -1,23 +1,11 @@
 import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Avatar, Typography } from "@mui/material";
-import { Button } from "@mui/material";
-import { Menu } from "@mui/material";
-import { MenuItem } from "@mui/material";
 import { useSelector } from "react-redux";
 
 function ImportDataGrid({ productsImport }) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
   const webPath = useSelector((state) => state.app.webPath);
   const { displayName } = useSelector((state) => state.auth.profile);
-
-  function handleClick(event) {
-    setAnchorEl(event.currentTarget);
-  }
-  function handleClose() {
-    setAnchorEl(null);
-  }
 
   const columns = [
     {
@@ -173,6 +161,13 @@ function ImportDataGrid({ productsImport }) {
       align: "center",
       width: 50,
       headerClassName: "table-columns",
+      renderCell: (params) => (
+        <div>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>
+            {params.row.vat_name === null ? "0%" : params.row.vat_name}
+          </p>
+        </div>
+      ),
     },
     {
       field: "main_cate_name",

@@ -32,7 +32,7 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       headerName: "ชื่อรายการ",
       headerAlign: "center",
       align: "left",
-      width: 140,
+      width: 150,
       headerClassName: "table-columns",
       renderCell: (params) => (
         <div style={{ paddingLeft: "1.5rem" }}>
@@ -48,7 +48,7 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       headerName: "ผู้ใช้งาน",
       headerAlign: "center",
       align: "center",
-      width: 120,
+      width: 70,
       headerClassName: "table-columns",
       renderCell: () => (
         <div>
@@ -60,22 +60,29 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       field: "export_quantity",
       headerAlign: "center",
       align: "center",
-      width: 50,
+      width: 70,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", lineHeight: "12.5px" }}>ชำรุด</Typography>
-          <Typography style={{ fontSize: "12px", lineHeight: "12.5px" }}>/หน่วย</Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: "500", lineHeight: "12.5px" }}>เบิกออก</Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: "500", lineHeight: "12.5px" }}>/หน่วย</Typography>
         </div>
       ),
     },
     {
-      field: "purchase_date",
-      headerName: "วันที่ซื้อ",
+      field: "left",
+      headerName: "คงเหลือ",
       headerAlign: "center",
       align: "center",
-      width: 90,
+      width: 70,
       headerClassName: "table-columns",
+      renderCell: (params) => (
+        <div>
+          <p>
+            {params.row.import_value - params.row.export_value - params.row.export_defective_value}
+          </p>
+        </div>
+      ),
     },
     {
       field: "export_date",
@@ -155,10 +162,10 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
               style={{
                 fontSize: "12px",
                 lineHeight: "12.5px",
-                color: remainingDays <= 30 ? "#FF0000" : "#000",
+                color: remainingDays + 1 <= 30 ? "#FF0000" : "#000",
               }}
             >
-              {remainingDays} วัน
+              {remainingDays + 1 === 0 ? "หมดอายุ" : remainingDays + 1 + " วัน"}
             </p>
           </div>
         );
@@ -171,6 +178,11 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       align: "center",
       width: 50,
       headerClassName: "table-columns",
+      renderCell: (params) => (
+        <div>
+          <p>{params.row.vat_name === null ? "0%" : params.row.vat_name}</p>
+        </div>
+      ),
     },
     {
       field: "main_cate_name",
@@ -192,7 +204,7 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       field: "netweight",
       headerAlign: "center",
       align: "center",
-      width: 90,
+      width: 70,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -231,7 +243,7 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
     },
     {
       field: "oc_unit",
-      width: 50,
+      width: 70,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -271,7 +283,7 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       field: "cost_per_unit",
       headerAlign: "center",
       align: "center",
-      width: 50,
+      width: 70,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -289,7 +301,7 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
     },
     {
       field: "unit_price",
-      width: 50,
+      width: 70,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -309,7 +321,7 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
     },
     {
       field: "total_cost",
-      width: 50,
+      width: 70,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -345,7 +357,7 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       field: "pp_vat",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 50,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>

@@ -2,6 +2,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { Avatar, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import dayjs from "dayjs";
+import MenuItemList from "./MenuItemList";
 
 function Table({
   productsData,
@@ -10,6 +11,7 @@ function Table({
   productSelected,
   setProductSelected,
 }) {
+  const { displayName } = useSelector((state) => state.auth.profile);
   const webPath = useSelector((state) => state.app.webPath);
 
   const onRowsSelectionHandler = (ids) => {
@@ -48,59 +50,76 @@ function Table({
       ),
     },
     {
-      field: "",
+      field: "user",
+      headerName: "ผู้ใช้งาน",
       headerAlign: "center",
       align: "center",
-      width: 81.5,
+      width: 70,
+      headerClassName: "table-columns",
+      renderCell: () => (
+        <div>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{displayName}</p>
+        </div>
+      ),
+    },
+    {
+      field: "export_quantity",
+      headerAlign: "center",
+      align: "center",
+      width: 70,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
           <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
-            คงเหลือ
+            เบิกออก
           </Typography>
           <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
             /หน่วย
           </Typography>
         </div>
       ),
+    },
+    {
+      field: "left",
+      headerName: "คงเหลือ",
+      headerAlign: "center",
+      align: "center",
+      width: 70,
+      headerClassName: "table-columns",
       renderCell: (params) => (
         <div>
-          <p
-            style={{
-              fontSize: "12px",
-              lineHeight: "12.5px",
-              color: params.row.import_value <= 50 ? "#ff0000" : "#000",
-            }}
-          >
+          <p>
             {params.row.import_value - params.row.export_value - params.row.export_defective_value}
           </p>
         </div>
       ),
     },
     {
-      field: "defective_product",
-      headerAlign: "center",
-      align: "center",
-      width: 81.5,
-      headerClassName: "table-columns",
-      renderHeader: () => (
-        <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
-            สินค้า
-          </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
-            มีปัญหา
-          </Typography>
-        </div>
-      ),
-    },
-    {
-      field: "purchase_date",
-      headerName: "วันที่ซื้อ",
+      field: "formatted_created_at",
       headerAlign: "center",
       align: "center",
       width: 90,
       headerClassName: "table-columns",
+      renderHeader: () => (
+        <div>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            วันเวลา
+          </Typography>
+          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+            เบิกชำรุด
+          </Typography>
+        </div>
+      ),
+      renderCell: (params) => {
+        const date = params.row.formatted_created_at.split(" ")[0];
+        const time = params.row.formatted_created_at.split(" ")[1];
+        return (
+          <div>
+            <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{date}</p>
+            <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>{time}</p>
+          </div>
+        );
+      },
     },
     {
       field: "MEDEXP",
@@ -131,7 +150,7 @@ function Table({
       field: "dateEXP",
       headerAlign: "center",
       align: "center",
-      width: 81.5,
+      width: 70,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -146,17 +165,17 @@ function Table({
       renderCell: (params) => {
         const endDate = dayjs(params.row.exp_date);
         const today = dayjs();
-        const remainingDays = endDate.diff(today, "day"); 
+        const remainingDays = endDate.diff(today, "day");
         return (
           <div>
             <p
               style={{
                 fontSize: "12px",
                 lineHeight: "12.5px",
-                color: remainingDays <= 30 ? "#FF0000" : "#000",
+                color: remainingDays + 1 <= 30 ? "#FF0000" : "#000",
               }}
             >
-              {remainingDays} วัน
+              {remainingDays + 1 === 0 ? "หมดอายุ" : remainingDays + 1 + " วัน"}
             </p>
           </div>
         );
@@ -169,13 +188,18 @@ function Table({
       align: "center",
       width: 50,
       headerClassName: "table-columns",
+      renderCell: (params) => (
+        <div>
+          <p>{params.row.vat_name === null ? "0%" : params.row.vat_name}</p>
+        </div>
+      ),
     },
     {
       field: "main_cate_name",
       headerName: "หมวดหมู่",
       headerAlign: "center",
       align: "center",
-      width: 90,
+      width: 70,
       headerClassName: "table-columns",
     },
     {
@@ -183,14 +207,14 @@ function Table({
       headerName: "หน่วยนับ",
       headerAlign: "center",
       align: "center",
-      width: 81.5,
+      width: 70,
       headerClassName: "table-columns",
     },
     {
       field: "netweight",
       headerAlign: "center",
       align: "center",
-      width: 81.5,
+      width: 70,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -207,7 +231,7 @@ function Table({
       field: "total",
       headerAlign: "center",
       align: "center",
-      width: 81.5,
+      width: 70,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -222,7 +246,7 @@ function Table({
     },
     {
       field: "oc_unit",
-      width: 81.5,
+      width: 70,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -242,7 +266,7 @@ function Table({
       headerName: "ราคาดิบ (THB)",
       headerAlign: "center",
       align: "center",
-      width: 81.5,
+      width: 70,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -259,7 +283,7 @@ function Table({
       field: "cost_per_unit",
       headerAlign: "center",
       align: "center",
-      width: 81.5,
+      width: 70,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -277,7 +301,7 @@ function Table({
       headerName: "ต้นทุน (THB)",
       headerAlign: "center",
       align: "center",
-      width: 81.5,
+      width: 70,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -292,7 +316,7 @@ function Table({
     },
     {
       field: "total_cost",
-      width: 81.5,
+      width: 70,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -334,7 +358,7 @@ function Table({
     },
     {
       field: "selling_price",
-      width: 81.5,
+      width: 70,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -347,6 +371,22 @@ function Table({
             (THB)
           </Typography>
         </div>
+      ),
+    },
+    {
+      field: "action",
+      headerName: "จัดการสินค้า",
+      headerAlign: "center",
+      align: "center",
+      width: 90,
+      headerClassName: "table-columns",
+      renderCell: (params) => (
+        <MenuItemList
+          params={params}
+          refreshData={refreshData}
+          setRefreshData={setRefreshData}
+          setProductSelected={setProductSelected}
+        />
       ),
     },
   ];
