@@ -42,10 +42,10 @@ const NavbarComponent = (props) => {
               </Badge>
             </figure> */}
             <figure className='fig-menu-icon user-profile'>
-                <img className='fig-badge btn-profile' src={profileImage} onError={(e) => (e.target.setAttribute("src", "/images/default-user.png")) } />
+                <img className='fig-badge btn-profile' src={profileImage || "/images/default-user.png"} onError={(e) => (e.target.setAttribute("src", "/images/default-user.png")) } />
                 <div className='card-profile'>
                   <figure className="fig-profile">
-                    <img src={profileImage} onError={(e) => (e.target.setAttribute("src", "/images/default-user.png")) } />
+                    <img src={profileImage || "/images/default-user.png"} onError={(e) => (e.target.setAttribute("src", "/images/default-user.png")) } />
                     <div className='details'>
                       <p className='display'>{displayName} - <span>{userRoleName}</span></p>
                       <p className='email'>{email}</p>
