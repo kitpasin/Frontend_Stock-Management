@@ -49,8 +49,6 @@ function ExpirationPage() {
     return matchesTitle && matchProductId && matchesMainCategory && matchesVat;
   });
 
-  console.log(vat)
-
   const multiExportHandle = () => {
     if (productSelected.length === 0) {
       Swal.fire({
@@ -60,7 +58,6 @@ function ExpirationPage() {
         return false;
       });
     } else {
-      console.log(productSelected);
       setOpenMultiexportModal(true);
     }
   };

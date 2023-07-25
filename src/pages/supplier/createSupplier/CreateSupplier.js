@@ -206,7 +206,6 @@ function CreateSupplier({ isEdit }) {
       line_id: lineId,
       main_cate_id: mainCates,
     };
-    console.log(data.main_cate_id);
     if (Object.values(data).some((value) => value === "" || value.length === 0)) {
       Swal.fire("Error!", "Please fill in all fields.", "error");
     } else {

@@ -60,7 +60,6 @@ function StockPage() {
         return false;
       });
     } else {
-      console.log(productSelected);
       setOpenMultiexportModal(true);
     }
   };

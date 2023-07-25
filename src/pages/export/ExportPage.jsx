@@ -57,7 +57,6 @@ function ExportPage() {
         return false;
       });
     } else {
-      console.log(productSelected);
       setOpenMultiexportModal(true);
     }
   };
