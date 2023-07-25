@@ -106,7 +106,7 @@ function Table({
             วันเวลา
           </Typography>
           <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
-            เบิกชำรุด
+            เบิก
           </Typography>
         </div>
       ),
