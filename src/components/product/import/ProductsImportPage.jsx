@@ -657,7 +657,7 @@ function ProductsImportPage({ isEdit, isFetchImport, productShow, setOpenModalEd
                       value={productData.barcode}
                       onChange={(e) => digitBarcode(e)}
                       id="outlined-basic"
-                      label="เลขบาร์โค้ดเดิม"
+                      label="เลขบาร์โค้ดจากสินค้า"
                       variant="outlined"
                       size="small"
                       sx={{ width: "33.33%" }}
