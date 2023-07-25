@@ -299,11 +299,15 @@ function Summaries({
               <figure className="image">
                 {mostExportedProduct?.export_value + mostExportedProduct?.export_defective_value !==
                 0 ? (
-                  <img src={`${webPath}${mostExportedProduct?.thumbnail_link}`} alt="" />
+                  <img
+                    style={{ width: "100px", height: "100px", paddingBlock: ".5rem" }}
+                    src={`${webPath}${mostExportedProduct?.thumbnail_link}`}
+                    alt=""
+                  />
                 ) : (
                   <img
-                    src="/images/mock/pre-product.png"
                     style={{ width: "100px", height: "100px", paddingBlock: ".5rem" }}
+                    src="/images/mock/pre-product.png"
                   />
                 )}
               </figure>
@@ -342,8 +346,13 @@ function Summaries({
             <div className="summary">
               <p>จำนวนเบิกออก</p>
               <p>
-                {mostExportedProduct?.export_value + mostExportedProduct?.export_defective_value}{" "}
-                หน่วย
+                {mostExportedProduct?.export_value + mostExportedProduct?.export_defective_value !==
+                0
+                  ? `${
+                      mostExportedProduct?.export_value +
+                      mostExportedProduct?.export_defective_value
+                    } หน่วย`
+                  : 0}
               </p>
             </div>
           </Card>
@@ -353,20 +362,47 @@ function Summaries({
             <p className="header">สินค้าคงเหลือในสต็อกมากสุด/เดือน</p>
             <div className="content">
               <figure className="image">
-                <img src={`${webPath}${mostProductInStock?.thumbnail_link}`} alt="" />
+                {mostProductInStock?.export_value + mostProductInStock?.export_defective_value !==
+                0 ? (
+                  <img
+                    style={{ width: "100px", height: "100px", paddingBlock: ".5rem" }}
+                    src={`${webPath}${mostProductInStock?.thumbnail_link}`}
+                    alt=""
+                  />
+                ) : (
+                  <img
+                    style={{ width: "100px", height: "100px", paddingBlock: ".5rem" }}
+                    src="/images/mock/pre-product.png"
+                  />
+                )}
               </figure>
               <div className="wrapper">
-                <p className="title">{mostProductInStock?.title}</p>
+                <p className="title">
+                  {mostProductInStock?.export_value + mostProductInStock?.export_defective_value !==
+                  0
+                    ? mostProductInStock?.title
+                    : ""}
+                </p>
                 <div>
                   <div className="description">
                     <p>ปริมาตรสุทธิ</p>
                     <p>
-                      {mostProductInStock?.netweight} {mostProductInStock?.unit_name}
+                      {mostProductInStock?.export_value +
+                        mostProductInStock?.export_defective_value !==
+                      0
+                        ? `${mostProductInStock?.netweight} ${mostProductInStock?.unit_name}`
+                        : 0}
                     </p>
                   </div>
                   <div className="description">
                     <p>ราคาขาย</p>
-                    <p>{mostProductInStock?.selling_price} THB</p>
+                    <p>
+                      {mostProductInStock?.export_value +
+                        mostProductInStock?.export_defective_value !==
+                      0
+                        ? `${mostProductInStock?.selling_price} THB`
+                        : 0}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -374,10 +410,13 @@ function Summaries({
             <div className="summary">
               <p>คงเหลือ</p>
               <p>
-                {mostProductInStock?.import_value -
-                  mostProductInStock?.export_value -
-                  mostProductInStock?.export_defective_value}{" "}
-                หน่วย
+                {mostProductInStock?.export_value + mostProductInStock?.export_defective_value !== 0
+                  ? `${
+                      mostProductInStock?.import_value -
+                      mostProductInStock?.export_value +
+                      mostProductInStock?.export_defective_value
+                    } หน่วย`
+                  : 0}
               </p>
             </div>
           </Card>
@@ -389,27 +428,57 @@ function Summaries({
             <p className="header">สินค้าใกล้หมดอายุมากสุด</p>
             <div className="content">
               <figure className="image">
-                <img src={`${webPath}${mostProductExpire?.thumbnail_link}`} alt="" />
+                {mostProductExpire?.export_value + mostProductExpire?.export_defective_value !==
+                0 ? (
+                  <img
+                    style={{ width: "100px", height: "100px", paddingBlock: ".5rem" }}
+                    src={`${webPath}${mostProductExpire?.thumbnail_link}`}
+                    alt=""
+                  />
+                ) : (
+                  <img
+                    style={{ width: "100px", height: "100px", paddingBlock: ".5rem" }}
+                    src="/images/mock/pre-product.png"
+                  />
+                )}
               </figure>
               <div className="wrapper">
-                <p className="title">{mostProductExpire?.title}</p>
+                <p className="title">
+                  {mostProductExpire?.export_value + mostProductExpire?.export_defective_value !== 0
+                    ? mostProductExpire?.title
+                    : ""}
+                </p>
                 <div>
                   <div className="description">
                     <p>ปริมาตรสุทธิ</p>
                     <p>
-                      {mostProductExpire?.netweight} {mostProductExpire?.unit_name}
+                      {mostProductExpire?.export_value +
+                        mostProductExpire?.export_defective_value !==
+                      0
+                        ? `${mostProductExpire?.netweight} ${mostProductExpire?.unit_name}`
+                        : 0}
                     </p>
                   </div>
                   <div className="description">
                     <p>ราคาขาย</p>
-                    <p>{mostProductExpire?.selling_price} THB</p>
+                    <p>
+                      {mostProductExpire?.export_value +
+                        mostProductExpire?.export_defective_value !==
+                      0
+                        ? `${mostProductExpire?.selling_price} THB`
+                        : 0}
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
             <div className="summary">
               <p>วันที่เหลือ</p>
-              <p>{remainingDays + 1 <= 0 ? "หมดอายุ" : remainingDays + 1 + " วัน"}</p>
+              <p>
+                {mostProductExpire?.export_value + mostProductExpire?.export_defective_value !== 0
+                  ? `${remainingDays + 1 <= 0 ? "หมดอายุ" : remainingDays + 1 + " วัน"}`
+                  : 0}
+              </p>
             </div>
           </Card>
 
@@ -418,20 +487,49 @@ function Summaries({
             <p className="header">สินค้าใกล้หมดสต็อกมากสุด</p>
             <div className="content">
               <figure className="image">
-                <img src={`${webPath}${mostProductOutOfStock?.thumbnail_link}`} alt="" />
+                {mostProductOutOfStock?.export_value +
+                  mostProductOutOfStock?.export_defective_value !==
+                0 ? (
+                  <img
+                    style={{ width: "100px", height: "100px", paddingBlock: ".5rem" }}
+                    src={`${webPath}${mostProductOutOfStock?.thumbnail_link}`}
+                    alt=""
+                  />
+                ) : (
+                  <img
+                    style={{ width: "100px", height: "100px", paddingBlock: ".5rem" }}
+                    src="/images/mock/pre-product.png"
+                  />
+                )}
               </figure>
               <div className="wrapper">
-                <p className="title">{mostProductOutOfStock?.title}</p>
+                <p className="title">
+                  {mostProductOutOfStock?.export_value +
+                    mostProductOutOfStock?.export_defective_value !==
+                  0
+                    ? mostProductOutOfStock?.title
+                    : ""}
+                </p>
                 <div>
                   <div className="description">
                     <p>ปริมาตรสุทธิ</p>
                     <p>
-                      {mostProductOutOfStock?.netweight} {mostProductOutOfStock?.unit_name}
+                      {mostProductOutOfStock?.export_value +
+                        mostProductOutOfStock?.export_defective_value !==
+                      0
+                        ? `${mostProductOutOfStock?.netweight} ${mostProductOutOfStock?.unit_name}`
+                        : 0}
                     </p>
                   </div>
                   <div className="description">
                     <p>ราคาขาย</p>
-                    <p>{mostProductOutOfStock?.selling_price} THB</p>
+                    <p>
+                      {mostProductOutOfStock?.export_value +
+                        mostProductOutOfStock?.export_defective_value !==
+                      0
+                        ? `${mostProductOutOfStock?.selling_price} THB`
+                        : 0}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -439,10 +537,13 @@ function Summaries({
             <div className="summary">
               <p>คงเหลือ</p>
               <p>
-                {mostProductOutOfStock?.import_value -
-                  mostProductOutOfStock?.export_value -
-                  mostProductOutOfStock?.export_defective_value}{" "}
-                หน่วย
+                {mostProductOutOfStock?.export_value + mostProductOutOfStock?.export_defective_value !== 0
+                  ? `${
+                      mostProductOutOfStock?.import_value -
+                      mostProductOutOfStock?.export_value +
+                      mostProductOutOfStock?.export_defective_value
+                    } หน่วย`
+                  : 0}
               </p>
             </div>
           </Card>
