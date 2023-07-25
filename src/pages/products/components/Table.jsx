@@ -149,7 +149,7 @@ function Table({
       headerName: "วันที่ซื้อ",
       headerAlign: "center",
       align: "center",
-      width: 85,
+      width: 90,
       headerClassName: "table-columns",
     },
     {
@@ -214,7 +214,7 @@ function Table({
                 color: remainingDays + 1 <= 30 ? "#FF0000" : "#000",
               }}
             >
-              {remainingDays + 1 === 0 ? "หมดอายุ" : remainingDays + 1 + " วัน"}
+              {remainingDays + 1 <= 0 ? "หมดอายุ" : remainingDays + 1 + " วัน"}
             </p>
           </div>
         );

@@ -165,7 +165,7 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
                 color: remainingDays + 1 <= 30 ? "#FF0000" : "#000",
               }}
             >
-              {remainingDays + 1 === 0 ? "หมดอายุ" : remainingDays + 1 + " วัน"}
+              {remainingDays + 1 <= 0 ? "หมดอายุ" : remainingDays + 1 + " วัน"}
             </p>
           </div>
         );

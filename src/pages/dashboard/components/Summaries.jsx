@@ -214,7 +214,7 @@ function Summaries({
                 <p>ใกล้สุด : {mostProductExpire?.title}</p>
               </div>
               <div className="text-description">
-                <p>{remainingDays + 1 !== 0 ? remainingDays + 1 + " วัน" : "หมดอายุ"}</p>
+                <p>{remainingDays + 1 <= 0 ? "หมดอายุ" : remainingDays + 1 + " วัน"}</p>
               </div>
             </div>
             <button onClick={toggleAboutToExpireGraph} className="graph">
@@ -409,7 +409,7 @@ function Summaries({
             </div>
             <div className="summary">
               <p>วันที่เหลือ</p>
-              <p>{remainingDays + 1 !== 0 ? remainingDays + 1 + " วัน" : "หมดอายุ"}</p>
+              <p>{remainingDays + 1 <= 0 ? "หมดอายุ" : remainingDays + 1 + " วัน"}</p>
             </div>
           </Card>
 

@@ -124,9 +124,10 @@ function DetailDataGrid({ selectedProduct, productShow, productShowArr, stock })
         const diffDateInDays = diffDateInMs / (1000 * 60 * 60 * 24);
 
         const duration = dayjs(params.row.exp_date).diff(current_date, "day");
+        const duration2 = parseInt(duration) - 1;
         return (
           <div>
-            <p>{duration} วัน</p>
+            <p style={{ color: duration2 <= 30 ? "red" : "" }} >{duration2 > 0 ? duration2 + "วัน" : "หมดอายุ"}</p>
           </div>
         );
       },
