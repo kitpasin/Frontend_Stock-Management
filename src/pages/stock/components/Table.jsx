@@ -98,7 +98,7 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
             style={{
               fontSize: "12px",
               lineHeight: "12.5px",
-              color: params.row.import_value <= 50 ? "#ff0000" : "#000",
+              color: params.row.import_value - params.row.export_value - params.row.export_defective_value <= 50 ? "#ff0000" : "#000",
             }}
           >
             {params.row.import_value - params.row.export_value - params.row.export_defective_value}

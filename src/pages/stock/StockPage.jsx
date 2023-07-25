@@ -35,6 +35,7 @@ function StockPage() {
   const [openMultiExportModal, setOpenMultiexportModal] = useState(false);
 
   const filteredProduct = productsStock.filter((product) => {
+
     const matchesTitle = title ? product.title === title : true;
     const matchProductId = productId ? product.product_id === productId : true;
     const matchesMainCategory = mainCategory ? product.main_cate_name === mainCategory : true;
@@ -48,6 +49,7 @@ function StockPage() {
 
     return matchesTitle && matchProductId && matchesMainCategory && matchesVat;
   });
+
 
   const multiExportHandle = () => {
     if (productSelected.length === 0) {
