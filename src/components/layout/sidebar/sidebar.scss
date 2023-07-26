@@ -35,7 +35,7 @@
    
     nav {
         overflow-y: auto;
-        height: calc(100vh - 90px);
+        height: calc(100vh - 58px);
         &::-webkit-scrollbar {
             width: 6px;
         }
@@ -105,11 +105,12 @@
             transition-duration: .2s;
             margin: 1.25rem;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             user-select: none;
             .figure-image {
-                max-width: 40px;
-                max-height: 40px;
+                max-width: 120px;
+                max-height: 120px;
                 margin: auto;
                 .website-logo {
                     width: 100%;
@@ -118,8 +119,8 @@
             }
             .website-powerby {
                 line-height: 1.15rem;
-                font-size: 1rem;
-                margin-left: .75rem;
+                font-size: 16px;
+                margin-left: auto;
                 font-weight: 400;
                 margin-right: auto;
                 margin-top: auto;

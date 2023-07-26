@@ -164,8 +164,6 @@ function MenuItemList({
     handleClose()
   }
 
-  console.log(params)
-
   return (
     <div>
       <Button

@@ -188,7 +188,7 @@ body {
     background-size: cover;
     border-top-right-radius: 40px;
     border-bottom-right-radius: 40px;
-    background-position: inherit;
+    background-position: bottom !important;
     z-index: 20;
     @media screen and (min-width: $xl) {
       background-position: bottom;
@@ -227,6 +227,10 @@ body {
     img {
       width: 100%;
       height: 100%;
+    }
+
+    @media screen and (min-width: $xxl) {
+      display: none;
     }
   }
   .guest-presenter {

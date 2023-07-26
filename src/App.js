@@ -108,7 +108,7 @@ function App() {
             <Route path="forgetpassword" element={<ForgetPasswordPage />} />
             <Route path="resetpassword/:token" element={<ResetPasswordPage />} />
           </Route>
-          <Route path="*" element={<DashboardPage />} />
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </ProductContext.Provider>
     </Suspense>

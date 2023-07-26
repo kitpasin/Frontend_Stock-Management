@@ -41,7 +41,7 @@ function Table({
       headerName: "ชื่อรายการ",
       headerAlign: "center",
       align: "center",
-      width: 105,
+      width: 110,
       headerClassName: "table-columns",
       renderCell: (params) => (
         <div style={{ paddingLeft: ".5rem" }}>

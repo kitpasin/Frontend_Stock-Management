@@ -85,8 +85,6 @@ function MenuItemList({
     setOpenMenu(false);
   }
 
-  console.log(params)
-
   return (
     <div>
       <Button

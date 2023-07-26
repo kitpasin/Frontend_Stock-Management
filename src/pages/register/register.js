@@ -222,12 +222,12 @@ const RegisterPage = () => {
     <form id="register-page" className="guest-form">
       <figure className="fig-logo">
         <img
-          src={`${uploadPath}images/Logo-Wynnsoft-Management.png`}
+          src={`https://manami-delivery.com/img/home/mainlogogroup.png`}
           className="logo"
         />
       </figure>
-      <h1 className="login-title">Login To Your Account</h1>
-      <p className="login-desc">Welcome Back To Wynnsoft Solution Manager</p>
+      <h1 className="login-title">Register To Your Account</h1>
+      <p className="login-desc">Welcome Back To Manami-Stock Management</p>
 
       <div className="input-group">
         <figure className="login-icon">

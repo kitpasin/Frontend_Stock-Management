@@ -68,16 +68,15 @@ const SidebarComponent = (props) => {
         <Link className="sidenav-header" to="/">
           <figure className="figure-image">
             <img
-              src="https://berdedd.com/backend/images/Logo-Wynnsoft-Management.png"
+              src="https://manami-delivery.com/img/home/mainlogogroup.png"
               className="website-logo"
             />
           </figure>
           <div className="website-powerby">
-            <p>Wynnsoft Solution</p>
-            <p className="sub-website">{t("Managements")}</p>
+            <p>Manami-Stock management</p>
+            {/* <p className="sub-website">{t("Managements")}</p> */}
           </div>
         </Link>
-
         <hr className="line-section" />
         <div className="title-section">{t("Languages")}</div>
         <div className="language-selection">

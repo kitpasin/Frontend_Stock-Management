@@ -53,34 +53,37 @@ const appConfigDEV = {
 }
 const appConfigPROD = {
     isDevMode: false,
-    language: "fr",
+    language: "th",
     timeZone: "Europe/Paris",
-    languageAvailable: ["fr","en"],  
-    apiPath:"https://thaigeneralconcrete.co.th/api/backoffice/v1/",
-    uploadPath:"https://thaigeneralconcrete.co.th/",
-    webPath:"https://thaigeneralconcrete.co.th/",
+    languageAvailable: ["th","en"],  
+    apiPath:"https://stockapi.manamiplus.com/api/backoffice/v1/",
+    uploadPath:"https://stockapi.manamiplus.com/",
+    webPath:"https://stockapi.manamiplus.com/",
     pages: {
         dashboard: true,
         messages: false,
         inbox: false,
         subscribe: false,
-        productcate: false,
-        products: false,
+        productcate: true,
+        products: true,
         members: false,
         slides: true,
         menu: false,
         category: true,
         posts: true,
         reports: false,
-        webinfo: true,
-        languages: true,
+        webinfo: false,
+        languages: false,
         admins: true,
-        configs: true,
-        profile: true,
+        configs: false,
+        profile: false,
+        suppliers: true,
+        amount: true,
+        vat: true,
         groups: {
             notify: true,
             article: true,
-            product: false,
+            product: true,
             report: false,
             system: true,
         }
@@ -99,8 +102,8 @@ const appConfigPROD = {
     }
 }
 
-export default appConfigDEV;
-// export default appConfigPROD;
+// export default appConfigDEV;
+export default appConfigPROD;
 
 
 
