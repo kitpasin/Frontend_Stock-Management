@@ -362,7 +362,9 @@ function Summaries({
             <p className="header">สินค้าคงเหลือในสต็อกมากสุด/เดือน</p>
             <div className="content">
               <figure className="image">
-                {mostProductInStock?.export_value + mostProductInStock?.export_defective_value !==
+                {mostProductInStock?.import_value -
+                  mostProductInStock?.export_value -
+                  mostProductInStock?.export_defective_value !==
                 0 ? (
                   <img
                     style={{ width: "100px", height: "100px", paddingBlock: ".5rem" }}
@@ -378,7 +380,9 @@ function Summaries({
               </figure>
               <div className="wrapper">
                 <p className="title">
-                  {mostProductInStock?.export_value + mostProductInStock?.export_defective_value !==
+                  {mostProductInStock?.import_value -
+                    mostProductInStock?.export_value -
+                    mostProductInStock?.export_defective_value !==
                   0
                     ? mostProductInStock?.title
                     : ""}
@@ -387,7 +391,8 @@ function Summaries({
                   <div className="description">
                     <p>ปริมาตรสุทธิ</p>
                     <p>
-                      {mostProductInStock?.export_value +
+                      {mostProductInStock?.import_value -
+                        mostProductInStock?.export_value -
                         mostProductInStock?.export_defective_value !==
                       0
                         ? `${mostProductInStock?.netweight} ${mostProductInStock?.unit_name}`
@@ -397,7 +402,8 @@ function Summaries({
                   <div className="description">
                     <p>ราคาขาย</p>
                     <p>
-                      {mostProductInStock?.export_value +
+                      {mostProductInStock?.import_value -
+                        mostProductInStock?.export_value -
                         mostProductInStock?.export_defective_value !==
                       0
                         ? `${mostProductInStock?.selling_price} THB`
@@ -410,7 +416,10 @@ function Summaries({
             <div className="summary">
               <p>คงเหลือ</p>
               <p>
-                {mostProductInStock?.export_value + mostProductInStock?.export_defective_value !== 0
+                {mostProductInStock?.import_value -
+                  mostProductInStock?.export_value -
+                  mostProductInStock?.export_defective_value !==
+                0
                   ? `${
                       mostProductInStock?.import_value -
                       mostProductInStock?.export_value +
@@ -428,7 +437,9 @@ function Summaries({
             <p className="header">สินค้าใกล้หมดอายุมากสุด</p>
             <div className="content">
               <figure className="image">
-                {mostProductExpire?.export_value + mostProductExpire?.export_defective_value !==
+                {mostProductExpire?.import_value -
+                  mostProductExpire?.export_value -
+                  mostProductExpire?.export_defective_value !==
                 0 ? (
                   <img
                     style={{ width: "100px", height: "100px", paddingBlock: ".5rem" }}
@@ -444,7 +455,10 @@ function Summaries({
               </figure>
               <div className="wrapper">
                 <p className="title">
-                  {mostProductExpire?.export_value + mostProductExpire?.export_defective_value !== 0
+                  {mostProductExpire?.import_value -
+                    mostProductExpire?.export_value -
+                    mostProductExpire?.export_defective_value !==
+                  0
                     ? mostProductExpire?.title
                     : ""}
                 </p>
@@ -452,7 +466,8 @@ function Summaries({
                   <div className="description">
                     <p>ปริมาตรสุทธิ</p>
                     <p>
-                      {mostProductExpire?.export_value +
+                      {mostProductExpire?.import_value -
+                        mostProductExpire?.export_value -
                         mostProductExpire?.export_defective_value !==
                       0
                         ? `${mostProductExpire?.netweight} ${mostProductExpire?.unit_name}`
@@ -462,7 +477,8 @@ function Summaries({
                   <div className="description">
                     <p>ราคาขาย</p>
                     <p>
-                      {mostProductExpire?.export_value +
+                      {mostProductExpire?.import_value -
+                        mostProductExpire?.export_value -
                         mostProductExpire?.export_defective_value !==
                       0
                         ? `${mostProductExpire?.selling_price} THB`
@@ -475,7 +491,10 @@ function Summaries({
             <div className="summary">
               <p>วันที่เหลือ</p>
               <p>
-                {mostProductExpire?.export_value + mostProductExpire?.export_defective_value !== 0
+                {mostProductExpire?.import_value -
+                  mostProductExpire?.export_value -
+                  mostProductExpire?.export_defective_value !==
+                0
                   ? `${remainingDays + 1 <= 0 ? "หมดอายุ" : remainingDays + 1 + " วัน"}`
                   : 0}
               </p>
@@ -487,7 +506,8 @@ function Summaries({
             <p className="header">สินค้าใกล้หมดสต็อกมากสุด</p>
             <div className="content">
               <figure className="image">
-                {mostProductOutOfStock?.export_value +
+                {mostProductOutOfStock?.import_value -
+                  mostProductOutOfStock?.export_value -
                   mostProductOutOfStock?.export_defective_value !==
                 0 ? (
                   <img
@@ -504,7 +524,8 @@ function Summaries({
               </figure>
               <div className="wrapper">
                 <p className="title">
-                  {mostProductOutOfStock?.export_value +
+                  {mostProductOutOfStock?.import_value -
+                    mostProductOutOfStock?.export_value -
                     mostProductOutOfStock?.export_defective_value !==
                   0
                     ? mostProductOutOfStock?.title
@@ -514,7 +535,8 @@ function Summaries({
                   <div className="description">
                     <p>ปริมาตรสุทธิ</p>
                     <p>
-                      {mostProductOutOfStock?.export_value +
+                      {mostProductOutOfStock?.import_value -
+                        mostProductOutOfStock?.export_value -
                         mostProductOutOfStock?.export_defective_value !==
                       0
                         ? `${mostProductOutOfStock?.netweight} ${mostProductOutOfStock?.unit_name}`
@@ -524,7 +546,8 @@ function Summaries({
                   <div className="description">
                     <p>ราคาขาย</p>
                     <p>
-                      {mostProductOutOfStock?.export_value +
+                      {mostProductOutOfStock?.import_value -
+                        mostProductOutOfStock?.export_value -
                         mostProductOutOfStock?.export_defective_value !==
                       0
                         ? `${mostProductOutOfStock?.selling_price} THB`
@@ -537,7 +560,10 @@ function Summaries({
             <div className="summary">
               <p>คงเหลือ</p>
               <p>
-                {mostProductOutOfStock?.export_value + mostProductOutOfStock?.export_defective_value !== 0
+                {mostProductOutOfStock?.import_value -
+                  mostProductOutOfStock?.export_value -
+                  mostProductOutOfStock?.export_defective_value !==
+                0
                   ? `${
                       mostProductOutOfStock?.import_value -
                       mostProductOutOfStock?.export_value +

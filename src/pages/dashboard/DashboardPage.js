@@ -88,6 +88,8 @@ const DashboardPage = () => {
     })
   }, []);
 
+  console.log(mostProductInStock);
+
   return (
     <section id="dashboard-page">
       {loading ? (
