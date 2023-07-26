@@ -44,9 +44,10 @@ function MenuItemList({
     });
   }
 
-  const deleteHandle = (product_id, export_quantity) => {
+  const deleteHandle = (product_id, export_quantity, export_date) => {
     const data = {
-      quantity: export_quantity
+      quantity: export_quantity,
+      date: export_date
     }
     handleClose();
      Swal.fire({
@@ -84,6 +85,8 @@ function MenuItemList({
     setOpenMenu(false);
   }
 
+  console.log(params)
+
   return (
     <div>
       <Button
@@ -116,7 +119,7 @@ function MenuItemList({
       >
         <MenuItem
           sx={{ display: "flex", gap: "1rem" }}
-          onClick={() => deleteHandle(params.row.product_id, params.row.export_quantity)}
+          onClick={() => deleteHandle(params.row.product_id, params.row.export_quantity, params.row.export_date)}
         >
           <img
             style={{

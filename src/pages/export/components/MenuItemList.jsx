@@ -113,9 +113,10 @@ function MenuItemList({
     }
   };
 
-  const deleteHandle = (product_id, export_quantity) => {
+  const deleteHandle = (product_id, export_quantity, export_date) => {
     const data = {
       quantity: export_quantity,
+      date: export_date
     };
     handleClose();
     Swal.fire({
@@ -163,6 +164,8 @@ function MenuItemList({
     handleClose()
   }
 
+  console.log(params)
+
   return (
     <div>
       <Button
@@ -208,13 +211,17 @@ function MenuItemList({
           >
             <FontAwesomeIcon icon={faBarcode} style={{ color: "#3b326b" }} />
           </figure>
-          <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>
-            ปริ้นบาร์โค้ด
-          </p>
+          <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>ปริ้นบาร์โค้ด</p>
         </MenuItem>
         <MenuItem
           sx={{ display: "flex", gap: "1rem" }}
-          onClick={() => deleteHandle(params.row.product_id, params.row.export_quantity)}
+          onClick={() =>
+            deleteHandle(
+              params.row.product_id,
+              params.row.export_quantity,
+              params.row.formatted_created_at
+            )
+          }
         >
           <img
             style={{
@@ -226,9 +233,7 @@ function MenuItemList({
             src="/images/icons/trash-icon.png"
             alt=""
           />
-          <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>
-            คืนสินค้า
-          </p>
+          <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>คืนสินค้า</p>
         </MenuItem>
       </Menu>
       <ProductEditModal

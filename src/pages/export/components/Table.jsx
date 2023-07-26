@@ -88,7 +88,7 @@ function Table({
       headerClassName: "table-columns",
       renderCell: (params) => (
         <div>
-          <p>
+          <p style={{color: params.row.import_value - params.row.export_value - params.row.export_defective_value <= 50 ? "#fe0000" : "#000"}}>
             {params.row.import_value - params.row.export_value - params.row.export_defective_value}
           </p>
         </div>

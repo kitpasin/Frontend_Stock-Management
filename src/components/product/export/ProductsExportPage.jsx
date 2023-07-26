@@ -41,6 +41,8 @@ function ProductsExportPage({
   const navigate = useNavigate();
   const { t } = useTranslation(["dashboard-page"]);
 
+  console.log(productDatas)
+
   useEffect(() => {
     if (multiExprot && !exportOne) {
       setProductShowArr((prev) => {

@@ -18,6 +18,7 @@ import { rows } from "../../../pages/products/data/TableData";
 import { svExportProduct } from "../../../services/product.service";
 import dayjs from "dayjs";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function DefectiveExportPage({
   exportOne,
@@ -29,6 +30,7 @@ function DefectiveExportPage({
   setOpen,
   setProductSelected,
 }) {
+  const navigate = useNavigate();
   const [stock, setStock] = useState(0);
   const webPath = useSelector((state) => state.app.webPath);
   const [productShowArr, setProductShowArr] = useState([]);
@@ -138,7 +140,7 @@ function DefectiveExportPage({
                   setTogleReset(!togleReset)
                 } else {
                   setOpen(false);
-                  window.location.href = "/defective";
+                  navigate("/defective")
                 }
               });
             })
