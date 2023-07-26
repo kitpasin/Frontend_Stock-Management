@@ -27,7 +27,7 @@ function ProductsExportPage({
   setRefreshData,
   open,
   setOpen,
-  setProductSelected
+  setProductSelected,
 }) {
   const [stock, setStock] = useState(0);
   const webPath = useSelector((state) => state.app.webPath);
@@ -35,6 +35,7 @@ function ProductsExportPage({
   const [productData, setProductData] = useState(productDatas);
   const [productShow, setProductShow] = useState([]);
   const [exportValue, setExportValue] = useState(0);
+  const [togleReset, setTogleReset] = useState(false);
   const [id, setId] = useState(0);
   const inputRef = useRef();
   const navigate = useNavigate();
@@ -45,38 +46,48 @@ function ProductsExportPage({
       setProductShowArr((prev) => {
         return [...prev, productData[0]];
       });
-      setProductShow(productData[0])
-      setStock(productData[0].import_value - (productData[0].export_value + productData[0].export_defective_value))
+      setProductShow(productData[0]);
+      setStock(
+        productData[0].import_value -
+          (productData[0].export_value + productData[0].export_defective_value)
+      );
       setId(productDatas[0].id);
-      
     } else {
-      setProductShow(productData)
+      setProductShow(productData);
       setProductShowArr((prev) => {
         return [productData];
       });
-      setStock(productData.import_value - (productData.export_value + productData.export_defective_value))
+      setStock(
+        productData.import_value -
+          (productData.export_value + productData.export_defective_value)
+      );
     }
   }, []);
 
   function onSelectProductHandle(_id) {
-    setId(_id)
+    setId(_id);
     if (_id === 0) {
-      setProductShow(productData[0])
-      setStock(productData[0].import_value - (productData[0].export_value + productData[0].export_defective_value))
+      setProductShow(productData[0]);
+      setStock(
+        productData[0].import_value -
+          (productData[0].export_value + productData[0].export_defective_value)
+      );
       setProductShowArr((prev) => {
         return [productData[0]];
       });
       return;
-    } 
-    const result = productData.filter(item => item.id === _id)
-    setProductShow(result[0])
+    }
+    const result = productData.filter((item) => item.id === _id);
+    setProductShow(result[0]);
     setProductShowArr((prev) => {
       return [result[0]];
     });
-    setStock(result[0].import_value - (result[0].export_value + result[0].export_defective_value))
-    setExportValue(0)
+    setStock(
+      result[0].import_value -
+        (result[0].export_value + result[0].export_defective_value)
+    );
+    setExportValue(0);
   }
-
 
   const onExportProduct = (_id) => {
     const formExport = {
@@ -109,18 +120,25 @@ function ProductsExportPage({
               }).then(() => {
                 setRefreshData(refreshData + 1);
                 if (multiExprot && !exportOne && productData.length > 1) {
-                  const newProductData = productData.filter(item => item.id !== id)
-                  setProductData(newProductData)
-                  setProductShow(newProductData[0])
-                  setId(newProductData[0].id)
-                  setStock(newProductData[0].import_value - (newProductData[0].export_value + newProductData[0].export_defective_value))
-                  setExportValue(0)
+                  const newProductData = productData.filter(
+                    (item) => item.id !== id
+                  );
+                  setProductData(newProductData);
+                  setProductShow(newProductData[0]);
+                  setId(newProductData[0].id);
+                  setStock(
+                    newProductData[0].import_value -
+                      (newProductData[0].export_value +
+                        newProductData[0].export_defective_value)
+                  );
+                  setExportValue(0);
                   setProductShowArr((prev) => {
                     return [newProductData[0]];
                   });
+                  setTogleReset(!togleReset)
                 } else {
-                  setOpen(false)
-                  navigate("/export")
+                  setOpen(false);
+                  navigate("/export");
                 }
               });
             })
@@ -132,7 +150,6 @@ function ProductsExportPage({
     }
   };
 
-  
   return (
     <section id="products-export-page">
       {!exportOne && false && (
@@ -172,6 +189,7 @@ function ProductsExportPage({
           </div>
           {!exportOne && (
             <Autocomplete
+              key={togleReset}
               defaultValue={{ title: productData[0].title }}
               size="small"
               disablePortal
@@ -182,7 +200,9 @@ function ProductsExportPage({
               renderInput={(params) => (
                 <TextField {...params} label="เลือกสินค้า" />
               )}
-              onChange={(e, value) => onSelectProductHandle(value?value.id:0)}
+              onChange={(e, value) =>
+                onSelectProductHandle(value ? value.id : 0)
+              }
             />
           )}
         </div>
@@ -219,16 +239,16 @@ function ProductsExportPage({
           <p style={{ width: "2%", textAlign: "center" }}>|</p>
           <figure className="barcode-image">
             <p style={{ color: "#000" }}>บาร์โค้ดจากสินค้า</p>
-            { productShow.product_barcode !== null && 
-              <Barcode value={productShow.product_barcode || ""} />
-            }
+            {productShow.product_barcode && (
+              <Barcode value={productShow.product_barcode} />
+            )}
           </figure>
           <p style={{ width: "2%", textAlign: "center" }}>|</p>
           <figure className="barcode-image">
             <p style={{ color: "#000" }}>บาร์โค้ดใหม่</p>
-            { productShow.barcode_number !== null &&
-            <Barcode value={productShow.barcode_number || ""} />
-            }
+            {productShow.barcode_number && (
+              <Barcode value={productShow.barcode_number} />
+            )}
           </figure>
         </div>
       </Card>

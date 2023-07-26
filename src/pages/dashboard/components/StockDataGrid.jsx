@@ -5,8 +5,6 @@ import { useSelector } from "react-redux";
 function StockDataGrid({ uniqueProductsData }) {
   const webPath = useSelector((state) => state.app.webPath);
 
-  console.log(uniqueProductsData)
-
   const columns = [
     {
       field: "thumbnail_link",

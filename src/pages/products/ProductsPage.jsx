@@ -62,7 +62,6 @@ function ProductsPage() {
         return false;
       });
     } else {
-      console.log(productSelected);
       setOpenMultiexportModal(true);
     }
   };

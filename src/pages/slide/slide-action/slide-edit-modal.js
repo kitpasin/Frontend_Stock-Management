@@ -101,7 +101,6 @@ const SlideModalEdit = (props) => {
   const editValidators = () => {
     let isValid = true;
 
-    console.log(editData.image)
     if((previews.file === undefined || previews.file === null) && editData.image === "" ) {
       setIsError({...isError, thumbnail: true})
       isValid = false;

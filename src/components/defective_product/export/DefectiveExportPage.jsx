@@ -9,7 +9,10 @@ import Swal from "sweetalert2";
 import "./DefectiveExportPage.scss";
 import HeadPageComponent from "../../layout/headpage/headpage";
 import DetailDataGrid from "../../datagrid/DetailDataGrid";
-import { defectiveDetail, defectiveSupplier } from "../../../pages/defective/data/TableData";
+import {
+  defectiveDetail,
+  defectiveSupplier,
+} from "../../../pages/defective/data/TableData";
 import SupplierDataGrid from "../../datagrid/SupplierDataGrid";
 import { rows } from "../../../pages/products/data/TableData";
 import { svExportProduct } from "../../../services/product.service";
@@ -32,6 +35,7 @@ function DefectiveExportPage({
   const [productData, setProductData] = useState(productDatas);
   const [productShow, setProductShow] = useState([]);
   const [exportValue, setExportValue] = useState(0);
+  const [togleReset, setTogleReset] = useState(false);
   const [id, setId] = useState(0);
   const inputRef = useRef();
   const { t } = useTranslation(["dashboard-page"]);
@@ -53,7 +57,8 @@ function DefectiveExportPage({
         return [productData];
       });
       setStock(
-        productData.import_value - (productData.export_value + productData.export_defective_value)
+        productData.import_value -
+          (productData.export_value + productData.export_defective_value)
       );
     }
   }, []);
@@ -76,7 +81,10 @@ function DefectiveExportPage({
     setProductShowArr((prev) => {
       return [result[0]];
     });
-    setStock(result[0].import_value - (result[0].export_value + result[0].export_defective_value));
+    setStock(
+      result[0].import_value -
+        (result[0].export_value + result[0].export_defective_value)
+    );
     setExportValue(0);
   }
 
@@ -112,21 +120,25 @@ function DefectiveExportPage({
               }).then(() => {
                 setRefreshData(refreshData + 1);
                 if (multiExprot && !exportOne && productData.length > 1) {
-                  const newProductData = productData.filter((item) => item.id !== id);
+                  const newProductData = productData.filter(
+                    (item) => item.id !== id
+                  );
                   setProductData(newProductData);
                   setProductShow(newProductData[0]);
                   setId(newProductData[0].id);
                   setStock(
                     newProductData[0].import_value -
-                      (newProductData[0].export_value + newProductData[0].export_defective_value)
+                      (newProductData[0].export_value +
+                        newProductData[0].export_defective_value)
                   );
                   setExportValue(0);
                   setProductShowArr((prev) => {
                     return [newProductData[0]];
                   });
+                  setTogleReset(!togleReset)
                 } else {
-                  setOpen(false)
-                  window.location.href = "/defective"
+                  setOpen(false);
+                  window.location.href = "/defective";
                 }
               });
             })
@@ -177,6 +189,7 @@ function DefectiveExportPage({
           </div>
           {!exportOne && (
             <Autocomplete
+              key={togleReset}
               defaultValue={{ title: productData[0].title }}
               size="small"
               disablePortal
@@ -184,8 +197,12 @@ function DefectiveExportPage({
               options={productData}
               getOptionLabel={(rows) => rows.title || ""}
               sx={{ width: "200px" }}
-              renderInput={(params) => <TextField {...params} label="เลือกสินค้า" />}
-              onChange={(e, value) => onSelectProductHandle(value ? value.id : 0)}
+              renderInput={(params) => (
+                <TextField {...params} label="เลือกสินค้า" />
+              )}
+              onChange={(e, value) =>
+                onSelectProductHandle(value ? value.id : 0)
+              }
             />
           )}
         </div>
@@ -204,19 +221,29 @@ function DefectiveExportPage({
             <p>ชื่อสินค้า</p>
             <span>{productShow.title}</span>
           </div>
-          <p style={{ width: "3.33%", textAlign: "center" }}>|</p>
-          <div className="product-number">
-            <p>รหัสสินค้า</p>
-            <span>{productShow.product_id}</span>
-          </div>
-          <p style={{ width: "3.33%", textAlign: "center" }}>|</p>
+          <p style={{ width: "2%", textAlign: "center" }}>|</p>
           <div className="barcode-number">
-            <p>รหัสบาร์โค้ด</p>
+            <p>รหัสบาร์โค้ดจากสินค้า</p>
+            <span>{productShow.product_barcode}</span>
+          </div>
+          <p style={{ width: "2%", textAlign: "center" }}>|</p>
+          <div className="barcode-number">
+            <p>รหัสบาร์โค้ดใหม่</p>
             <span>{productShow.barcode_number}</span>
           </div>
-          <p style={{ width: "3.33%", textAlign: "center" }}>|</p>
+          <p style={{ width: "2%", textAlign: "center" }}>|</p>
           <figure className="barcode-image">
-            <Barcode value={productShow.barcode_number} />
+            <p style={{ color: "#000" }}>บาร์โค้ดจากสินค้า</p>
+            {productShow.product_barcode && (
+              <Barcode value={productShow.product_barcode} />
+            )}
+          </figure>
+          <p style={{ width: "2%", textAlign: "center" }}>|</p>
+          <figure className="barcode-image">
+            <p style={{ color: "#000" }}>บาร์โค้ดใหม่</p>
+            {productShow.barcode_number && (
+              <Barcode value={productShow.barcode_number} />
+            )}
           </figure>
         </div>
       </Card>
@@ -232,7 +259,10 @@ function DefectiveExportPage({
           <img src="/images/icons/supplierTable-icon.png" alt="" />
           <p>ซัพพลายเออร์</p>
         </figure>
-        <SupplierDataGrid defectiveSupplier={defectiveSupplier} productShowArr={productShowArr} />
+        <SupplierDataGrid
+          defectiveSupplier={defectiveSupplier}
+          productShowArr={productShowArr}
+        />
       </Card>
       <div className="flex-container-center">
         <Card className="quantity-left">
@@ -249,14 +279,18 @@ function DefectiveExportPage({
             value={exportValue}
             onChange={(e) =>
               setExportValue(
-                !isNaN(parseInt(e.target.value)) && parseInt(e.target.value) <= stock
+                !isNaN(parseInt(e.target.value)) &&
+                  parseInt(e.target.value) <= stock
                   ? parseInt(e.target.value)
                   : 0
               )
             }
           />
         </Card>
-        <button className="submit" onClick={() => onExportProduct(productShow.id)}>
+        <button
+          className="submit"
+          onClick={() => onExportProduct(productShow.id)}
+        >
           <img src="/images/icons/importBig-icon.png" alt="" />
           <p>ตัดสินค้าชำรุด</p>
         </button>

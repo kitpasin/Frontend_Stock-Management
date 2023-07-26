@@ -274,8 +274,6 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
   });
   const uniqueProductsData = Array.from(uniqueProductsMap.values());
 
-  console.log(uniqueProductsData)
-
   return (
     <div>
       <DataGrid
