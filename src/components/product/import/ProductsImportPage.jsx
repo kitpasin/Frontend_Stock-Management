@@ -47,7 +47,7 @@ const form = {
   os_price: 0, selling_price: "",
 };
 
-function ProductsImportPage({ isEdit, isFetchImport, productShow, setOpenModalEdit, refreshData, setRefreshData }) {
+function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow, setOpenModalEdit, refreshData, setRefreshData }) {
   const formPreview = {
     src: "",
     file: "",
@@ -407,7 +407,7 @@ function ProductsImportPage({ isEdit, isFetchImport, productShow, setOpenModalEd
                 <p>ข้อมูลสินค้า</p>
                 { !isEdit && !isFetchImport &&
                   <Link
-                    to="/products"
+                    to="/products?slug=fromimport"
                     style={{ marginLeft: "5.7rem" }}
                   >
                     <img src="/images/icons/search-icon.png" alt="" />

@@ -14,17 +14,21 @@ import PulseLoader from "react-spinners/PulseLoader";
 import "./ProductsPage.scss";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
 import Table from "./components/Table";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { svProductAll } from "../../services/product.service";
 import dayjs from "dayjs";
 import MultiExportModal from "../../components/product/modal/MultiExportModal";
 import Swal from "sweetalert2";
 
 function ProductsPage() {
+  // Get individual query parameters
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const slug = searchParams.get("slug");
+  const hasSlug = slug === "fromimport" ? true : false;
+
   const { t } = useTranslation(["dashboard-page"]);
-
   const [loading, setLoading] = useState(true);
-
   const [productsAll, setProductsAll] = useState([]);
   const [mainCategories, setMainCategories] = useState([]);
   const [title, setTitle] = useState("");
@@ -35,11 +39,14 @@ function ProductsPage() {
   const [refreshData, setRefreshData] = useState(0);
   const [productSelected, setProductSelected] = useState([]);
   const [openMultiExportModal, setOpenMultiexportModal] = useState(false);
+  const [openMultiImportModal, setOpenMultiImportModal] = useState(false);
 
   const filteredProduct = productsAll.filter((product) => {
     const matchesTitle = title ? product.title === title : true;
     const matchProductId = productId ? product.product_id === productId : true;
-    const matchesMainCategory = mainCategory ? product.main_cate_name === mainCategory : true;
+    const matchesMainCategory = mainCategory
+      ? product.main_cate_name === mainCategory
+      : true;
     let matchesVat = true;
 
     if (vat === "1") {
@@ -66,6 +73,19 @@ function ProductsPage() {
     }
   };
 
+  const multiImportHandle = () => {
+    if (productSelected.length === 0) {
+      Swal.fire({
+        text: "เลือกสินค้าที่ต้องการเพิ่ม",
+        icon: "info",
+      }).then(() => {
+        return false;
+      });
+    } else {
+      setOpenMultiImportModal(true);
+    }
+  };
+
   async function getProducts() {
     const response = await axios.get("productAll");
     const data = response.data.data;
@@ -79,22 +99,22 @@ function ProductsPage() {
     setMainCategories(data);
   }
 
- useEffect(() => {
-   getProducts();
-   getMainCategories();
- }, [refreshData]);
+  useEffect(() => {
+    getProducts();
+    getMainCategories();
+  }, [refreshData]);
 
- const titleOptions = productsAll
-   .map((product) => product.title)
-   .filter((value, index, self) => self.indexOf(value) === index);
+  const titleOptions = productsAll
+    .map((product) => product.title)
+    .filter((value, index, self) => self.indexOf(value) === index);
 
- const productIdOptions = productsAll
-   .map((product) => product.product_id)
-   .filter((value, index, self) => self.indexOf(value) === index);
+  const productIdOptions = productsAll
+    .map((product) => product.product_id)
+    .filter((value, index, self) => self.indexOf(value) === index);
 
- const mainCategoryOptions = mainCategories
-   .map((category) => category.name)
-   .filter((value, index, self) => self.indexOf(value) === index);
+  const mainCategoryOptions = mainCategories
+    .map((category) => category.name)
+    .filter((value, index, self) => self.indexOf(value) === index);
 
   return (
     <section id="products-page">
@@ -139,7 +159,9 @@ function ProductsPage() {
                   options={titleOptions}
                   onChange={(event, value) => setTitle(value || "")}
                   sx={{ width: 200 }}
-                  renderInput={(params) => <TextField {...params} label="ชื่อ" />}
+                  renderInput={(params) => (
+                    <TextField {...params} label="ชื่อ" />
+                  )}
                 />
                 <Autocomplete
                   size="small"
@@ -159,7 +181,9 @@ function ProductsPage() {
                   options={mainCategoryOptions}
                   onChange={(event, value) => setMainCategory(value || "")}
                   sx={{ width: 200 }}
-                  renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
+                  renderInput={(params) => (
+                    <TextField {...params} label="หมวดหมู่หลัก" />
+                  )}
                 />
                 <FormControl>
                   <RadioGroup
@@ -188,6 +212,15 @@ function ProductsPage() {
                     />
                   </RadioGroup>
                 </FormControl>
+                {hasSlug && (
+                  <Button
+                    style={{ fontSize: "16px" }}
+                    className="export"
+                    onClick={() => multiImportHandle()}
+                  >
+                    เพิ่มสินค้า
+                  </Button>
+                )}
                 <Button
                   style={{ fontSize: "16px" }}
                   className="export"

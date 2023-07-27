@@ -34,6 +34,7 @@ function MenuItemList({
   const [modal, setModal] = useState({
     isEdit: false,
     isFetchImport: false,
+    isMultiImport: false,
   });
   const open = Boolean(anchorEl);
 
@@ -344,6 +345,7 @@ function MenuItemList({
         </MenuItem>
       </Menu>
       <ProductEditModal
+        isMultiImport={false}
         isFetchImport={modal.isFetchImport}
         isEdit={modal.isEdit}
         open={openModal}
