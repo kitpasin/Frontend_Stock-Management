@@ -13,7 +13,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import AddIcon from "@mui/icons-material/Add";
 import Swal from "sweetalert2";
@@ -24,43 +24,82 @@ import HeadPageComponent from "../../layout/headpage/headpage";
 import { Link, useNavigate } from "react-router-dom";
 import { batch, useSelector } from "react-redux";
 import axios from "axios";
-import { PersonOffRounded, ResetTvRounded } from "@mui/icons-material";
+import {
+  CoPresentOutlined,
+  PersonOffRounded,
+  ResetTvRounded,
+} from "@mui/icons-material";
 import { svCreateProduct } from "../../../services/product.service";
 import { svProductUpdate } from "../../../services/product.service";
 
 const form = {
-  title: "", state1: false, state2: false,
-  state3: false, reset: 0, unit: "", netweight: "",
-  counting_unit: "", purchase_date: "", mfd_date: "",
-  exp_date: "", barcode: "", new_barcode: "",
-  main_cate_id: "", sub_cate_id: "", sub_cate: "",
-  supplier_id: "", supplier_cate: "", import_value: "",
+  title: "",
+  state1: false,
+  state2: false,
+  state3: false,
+  reset: 0,
+  unit: "",
+  netweight: "",
+  counting_unit: "",
+  purchase_date: "",
+  mfd_date: "",
+  exp_date: "",
+  barcode: "",
+  new_barcode: "",
+  main_cate_id: "",
+  sub_cate_id: "",
+  sub_cate: "",
+  supplier_id: "",
+  supplier_cate: "",
+  import_value: "",
   defective: 0,
 
-  import_fee: "", fuel_cost: "", other_exp: "",
-  total: 0, op_unit: "", total_product: "",
+  import_fee: "",
+  fuel_cost: "",
+  other_exp: "",
+  total: 0,
+  op_unit: "",
+  total_product: "",
 
-  oc_unit: "", unit_price: "", product_cost: "",
-  units: "", cost_per_unit: "", total_cost: "",
-  set_profit: "", vat_id: 0, vat: 0,
-  profit_per_unit: "", pp_profit: "", pp_vat: "",
-  os_price: 0, selling_price: "",
+  oc_unit: "",
+  unit_price: "",
+  product_cost: "",
+  units: "",
+  cost_per_unit: "",
+  total_cost: "",
+  set_profit: "",
+  vat_id: 0,
+  vat: 0,
+  profit_per_unit: "",
+  pp_profit: "",
+  pp_vat: "",
+  os_price: 0,
+  selling_price: "",
 };
 
-function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow, setOpenModalEdit, refreshData, setRefreshData }) {
+function ProductsImportPage({
+  isEdit,
+  isFetchImport,
+  isMultiImport,
+  productShow,
+  setOpenModalEdit,
+  refreshData,
+  setRefreshData,
+  productDatas,
+}) {
   const formPreview = {
     src: "",
     file: "",
     remove: false,
-    isError: (isEdit || isFetchImport) ? false : true,
+    isError: isEdit || isFetchImport ? false : true,
   };
 
   const formVat = {
-    checked: (isEdit || isFetchImport) && productShow.vat_id === 0 ? true : false,
+    checked:
+      (isEdit || isFetchImport) && productShow.vat_id === 0 ? true : false,
     disRadio: false,
     disSelect: false,
-  
-  }
+  };
   const modalSwal = withReactContent(Swal);
   const navigate = useNavigate();
   const { t } = useTranslation(["dashboard-page"]);
@@ -68,29 +107,34 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
   const [selectedMFDTime, setSelectedMFDTime] = useState(null);
   const [selectedEXPTime, setSelectedEXPTime] = useState(null);
   const [generatedNumber, setGeneratedNumber] = useState("");
-  const [productData, setProductData] = useState((isEdit || isFetchImport) ? productShow : form);
+  const [productAll, setProductAll] = useState(productDatas);
+  const [productData, setProductData] = useState(
+    isEdit || isFetchImport ? productShow : form
+  );
   const [preview, setPreview] = useState(formPreview);
   const [vat, setVat] = useState(formVat);
-  const [netsData, setNetsData] = useState([])
-  const [amountsData, setAmountsData] = useState([])
+  const [netsData, setNetsData] = useState([]);
+  const [amountsData, setAmountsData] = useState([]);
   const [mainCatesData, setMainCatesData] = useState([]);
   const [subCatesData, setSubCatesData] = useState([]);
   const [vatsData, setVatsData] = useState([]);
   const [suppliersData, setSuppliersData] = useState([]);
   const [supplierCates, setSupplierCates] = useState([]);
-  const [refreshSubCate, setRefreshSubCate] = useState(false);
+  const [togleReset, setTogleReset] = useState(false);
+  const [id, setId] = useState(productAll ? productAll[0].id : 0);
   const inputRef = useRef(null);
   const formInputRef = useRef(null);
   const webPath = useSelector((state) => state.app.webPath);
   const imgError = "/images/mock/pre-product.png";
+  console.log(productData);
 
   async function getNets() {
     const netsArr = [];
     const response = await axios.get("nets");
     const data = response.data.nets;
-    data?.map(item => {
-      netsArr.push(item.name)
-    })
+    data?.map((item) => {
+      netsArr.push(item.name);
+    });
     setNetsData(data);
   }
 
@@ -98,35 +142,37 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
     const amountsArr = [];
     const response = await axios.get("amounts");
     const data = response.data.amounts;
-    data?.map(item => amountsArr.push(item.name))
+    data?.map((item) => amountsArr.push(item.name));
     setAmountsData(data);
   }
 
   async function getMainCates() {
-    const mainCatesArr = []
+    const mainCatesArr = [];
     const response = await axios.get("maincates");
     const data = response.data.mainCates;
-    data?.map(item => mainCatesArr.push(item.name))
+    data?.map((item) => mainCatesArr.push(item.name));
     setMainCatesData(data);
   }
 
   async function getMainCatesBySupplier(_supid) {
     const response = await axios.get(`maincates?supid=${_supid}`);
     const data = response.data.supplier_cate;
-    setSupplierCates(data)
+    setSupplierCates(data);
   }
 
   async function getSubCates(main_cate_id = productData.main_cate_id) {
-    setProductData(() => { return { ...productData, state1: !productData.state1 } })
+    setProductData(() => {
+      return { ...productData, state1: !productData.state1 };
+    });
     const response = await axios.get(`subcate/bymain?mainid=${main_cate_id}`);
     const data = response.data.subCates;
-    setSubCatesData(data)
+    setSubCatesData(data);
   }
 
   async function getVats() {
-    const response = await axios.get("vats")
-    const data = response.data.vats
-    setVatsData(data)
+    const response = await axios.get("vats");
+    const data = response.data.vats;
+    setVatsData(data);
   }
 
   async function getSuppliers() {
@@ -135,48 +181,80 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
     setSuppliersData(data.suppliers);
   }
 
+  function onSelectProductHandle(_id) {
+    setId(_id);
+    if (_id === 0) {
+      setProductData(productShow);
+      return;
+    }
+    const data = productAll.filter((item) => item.id === _id);
+    if (data[0].vat_id === 0) {
+      setVat((prev) => {
+        return { ...prev, checked: true };
+      });
+    } else {
+      setVat((prev) => {
+        return { ...prev, checked: false };
+      });
+    }
+    setProductData(data[0]);
+  }
+
   useEffect(() => {
     getNets();
     getAmounts();
     getMainCates();
     getVats();
     getSuppliers();
-    getMainCatesBySupplier(productData.supplier_id)
-  }, [])
+    getMainCatesBySupplier(productData.supplier_id);
+  }, []);
 
   /* Price details */
   useEffect(() => {
-    const import_fee = parseFloat(productData.import_fee) || 0
-    const fuel_cost = parseFloat(productData.fuel_cost) || 0
-    const other_exp = parseFloat(productData.other_exp) || 0
-    const product_cost = parseFloat(productData.product_cost) || 0
-    const units = parseFloat(productData.units) || 1
-    const set_profit = parseFloat(productData.set_profit) || 0
-    const vat = parseFloat(productData.vat) || 0
-    
-    const totalAll = import_fee + fuel_cost + other_exp;
-    const total_product = parseInt(productData.total_product) || 1
-    
-    const op_unit = (totalAll / total_product).toFixed(2)
-    const cost_per_unit = (product_cost / units).toFixed(2)
-    const unit_price = parseFloat(cost_per_unit) + parseFloat(op_unit)
-    const total_cost = (parseFloat(cost_per_unit) + parseFloat(op_unit)) * units
-    const profit_per_unit = (parseFloat(cost_per_unit) + parseFloat(op_unit)) * set_profit / 100
-    const pp_profit = parseFloat((profit_per_unit + unit_price).toFixed(2))
-    const pp_vat = parseFloat(vat * (pp_profit) / 100) + parseFloat(pp_profit)
+    const import_fee = parseFloat(productData.import_fee) || 0;
+    const fuel_cost = parseFloat(productData.fuel_cost) || 0;
+    const other_exp = parseFloat(productData.other_exp) || 0;
+    const product_cost = parseFloat(productData.product_cost) || 0;
+    const units = parseFloat(productData.units) || 1;
+    const set_profit = parseFloat(productData.set_profit) || 0;
+    const vat = parseFloat(productData.vat) || 0;
 
-    setProductData(() => { return { ...productData, 
-                                    total: totalAll, 
-                                    op_unit: parseFloat(op_unit), 
-                                    cost_per_unit: parseFloat(cost_per_unit),
-                                    unit_price: unit_price,
-                                    total_cost: total_cost,
-                                    profit_per_unit: parseFloat(profit_per_unit.toFixed(2)),
-                                    pp_profit: pp_profit,
-                                    pp_vat: parseFloat(pp_vat.toFixed(2)),
-                                  }
-                         })
-  }, [productData.import_fee, productData.fuel_cost, productData.other_exp, productData.total_product, productData.product_cost, productData.units, productData.set_profit, productData.vat])
+    const totalAll = import_fee + fuel_cost + other_exp;
+    const total_product = parseInt(productData.total_product) || 1;
+
+    const op_unit = (totalAll / total_product).toFixed(2);
+    const cost_per_unit = (product_cost / units).toFixed(2);
+    const unit_price = parseFloat(cost_per_unit) + parseFloat(op_unit);
+    const total_cost =
+      (parseFloat(cost_per_unit) + parseFloat(op_unit)) * units;
+    const profit_per_unit =
+      ((parseFloat(cost_per_unit) + parseFloat(op_unit)) * set_profit) / 100;
+    const pp_profit = parseFloat((profit_per_unit + unit_price).toFixed(2));
+    const pp_vat = parseFloat((vat * pp_profit) / 100) + parseFloat(pp_profit);
+
+    setProductData(() => {
+      return {
+        ...productData,
+        total: totalAll,
+        op_unit: parseFloat(op_unit),
+        cost_per_unit: parseFloat(cost_per_unit),
+        unit_price: unit_price,
+        total_cost: total_cost,
+        profit_per_unit: parseFloat(profit_per_unit.toFixed(2)),
+        pp_profit: pp_profit,
+        pp_vat: parseFloat(pp_vat.toFixed(2)),
+      };
+    });
+  }, [
+    productData.import_fee,
+    productData.fuel_cost,
+    productData.other_exp,
+    productData.total_product,
+    productData.product_cost,
+    productData.units,
+    productData.set_profit,
+    productData.vat,
+  ]);
   /* Price details */
 
   const imageError = (e) => {
@@ -191,27 +269,36 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
   };
 
   const selectNoVat = () => {
-    setVat(() => { return { ...vat, checked:true } })
-    setProductData(() => { return { ...productData, vat_id: 0, vat: 0, state3: !productData.state3 } })
-  }
+    setVat(() => {
+      return { ...vat, checked: true };
+    });
+    setProductData(() => {
+      return { ...productData, vat_id: 0, vat: 0, state3: !productData.state3 };
+    });
+  };
 
   function generateBarcode() {
     const randomNum = Math.floor(Math.random() * 1000000000);
     const formattedNum = String(randomNum).padStart(9, "0");
 
     const randomNumber = Math.floor(Math.random() * 1000);
-    const barcodeNumber = Math.floor(Date.now() / 1000) + "" + randomNumber.toString().padStart(3, '0');
+    const barcodeNumber =
+      Math.floor(Date.now() / 1000) +
+      "" +
+      randomNumber.toString().padStart(3, "0");
     setGeneratedNumber(barcodeNumber);
-    setProductData(() => { return { ...productData, new_barcode: barcodeNumber } })
+    setProductData(() => {
+      return { ...productData, new_barcode: barcodeNumber };
+    });
     inputRef.current.focus();
   }
 
   function digitBarcode(e) {
     const dataLength = e.target.value.length;
-    if (dataLength <=13) {
+    if (dataLength <= 13) {
       setProductData((prev) => {
-        return { ...prev, barcode: e.target.value }
-      })
+        return { ...prev, barcode: e.target.value };
+      });
     }
   }
 
@@ -231,16 +318,24 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
       src: image,
       file: value,
       remove: true,
-      isError: (isEdit || isFetchImport) ? true : false,
+      isError: isEdit || isFetchImport ? true : false,
     });
   };
 
   const resetDataHandle = () => {
-    setProductData(form)
+    setProductData(form);
     setProductData((prev) => {
-      return { ...prev, reset: productData.reset + 1, state1: !productData.state1, state2: !productData.state2, state3: !productData.state3, vat: "", vat_id: "" }
-    })
-    formInputRef.current.value = ""
+      return {
+        ...prev,
+        reset: productData.reset + 1,
+        state1: !productData.state1,
+        state2: !productData.state2,
+        state3: !productData.state3,
+        vat: "",
+        vat_id: "",
+      };
+    });
+    formInputRef.current.value = "";
     setPreview({
       src: undefined,
       file: undefined,
@@ -248,90 +343,90 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
       isError: true,
     });
     setVat((prev) => {
-      return { ...prev, checked: false }
-    })
-    setGeneratedNumber("")
-  }
+      return { ...prev, checked: false };
+    });
+    setGeneratedNumber("");
+  };
 
   const saveProducthandle = (event) => {
     event.preventDefault();
-    const errorArr = []
-    if (productData.purchase_date === "" ||  productData.mfd_date === "" || productData.exp_date === "") {
-      errorArr.push("โปรดเลือกวันสั่งซื้อ วันผลิต และ วันหมดอายุ")
-      
+    const errorArr = [];
+    if (
+      productData.purchase_date === "" ||
+      productData.mfd_date === "" ||
+      productData.exp_date === ""
+    ) {
+      errorArr.push("โปรดเลือกวันสั่งซื้อ วันผลิต และ วันหมดอายุ");
     }
 
     if (productData.barcode === "" && productData.new_barcode === "") {
-      errorArr.push("โปรดสร้างบาร์โค้ด")
+      errorArr.push("โปรดสร้างบาร์โค้ด");
     }
-    
+
     if (productData.vat_id === "" || productData.vat_id === null) {
-      errorArr.push("โปรดเลือก Vat")
-      
+      errorArr.push("โปรดเลือก Vat");
     }
 
     if (errorArr.length > 0) {
       modalSwal.fire({
         width: 400,
         text: errorArr[0],
-        icon: 'info'
-      })
+        icon: "info",
+      });
       return false;
     } else {
       const formData = new FormData();
       /* product */
       if (isEdit) {
-        formData.append('id', productData.id)
-        formData.append('product_id', productData.product_id)
-
+        formData.append("id", productData.id);
+        formData.append("product_id", productData.product_id);
       }
-      formData.append('image', preview.file)
-      formData.append('image_path', productData.image_path)
-      formData.append('title', productData.title)
-      formData.append('main_cate_id', productData.main_cate_id)
-      formData.append('sub_cate_id', productData.sub_cate_id)
-      formData.append('supplier_id', productData.supplier_id)
-      formData.append('supplier_cate_id', productData.supplier_cate)
-      formData.append('import_value', productData.import_value)
-      formData.append('unit_id', productData.unit)
-      formData.append('netweight', productData.netweight)
-      formData.append('counting_unit_id', productData.counting_unit)
-      formData.append('purchase_date', productData.purchase_date)
-      formData.append('mfd_date', productData.mfd_date)
-      formData.append('exp_date', productData.exp_date)
-      formData.append('product_barcode', productData.barcode)
-      formData.append('barcode', productData.new_barcode)
-      formData.append('defective', productData.defective)
+      formData.append("image", preview.file);
+      formData.append("image_path", productData.image_path);
+      formData.append("title", productData.title);
+      formData.append("main_cate_id", productData.main_cate_id);
+      formData.append("sub_cate_id", productData.sub_cate_id);
+      formData.append("supplier_id", productData.supplier_id);
+      formData.append("supplier_cate_id", productData.supplier_cate);
+      formData.append("import_value", productData.import_value);
+      formData.append("unit_id", productData.unit);
+      formData.append("netweight", productData.netweight);
+      formData.append("counting_unit_id", productData.counting_unit);
+      formData.append("purchase_date", productData.purchase_date);
+      formData.append("mfd_date", productData.mfd_date);
+      formData.append("exp_date", productData.exp_date);
+      formData.append("product_barcode", productData.barcode || "");
+      formData.append("barcode", productData.new_barcode || "");
+      formData.append("defective", productData.defective);
       /* product_expense */
-      formData.append('import_fee', productData.import_fee)
-      formData.append('fuel_cost', productData.fuel_cost)
-      formData.append('other_exp', productData.other_exp)
-      formData.append('total', productData.total)
-      formData.append('op_unit', productData.op_unit)
-      formData.append('total_product', productData.total_product)
+      formData.append("import_fee", productData.import_fee);
+      formData.append("fuel_cost", productData.fuel_cost);
+      formData.append("other_exp", productData.other_exp);
+      formData.append("total", productData.total);
+      formData.append("op_unit", productData.op_unit);
+      formData.append("total_product", productData.total_product);
       /* product_price_infos */
-      formData.append('oc_unit', productData.op_unit)
-      formData.append('unit_price', productData.unit_price)
-      formData.append('product_cost', productData.product_cost)
-      formData.append('units', productData.units)
-      formData.append('cost_per_unit', productData.cost_per_unit)
-      formData.append('total_cost', productData.total_cost)
-      formData.append('set_profit', productData.set_profit)
-      formData.append('vat_id', productData.vat_id)
-      formData.append('profit_per_unit', productData.profit_per_unit)
-      formData.append('pp_profit', productData.pp_profit)
-      formData.append('pp_vat', productData.pp_vat)
-      formData.append('os_price', productData.os_price)
-      formData.append('selling_price', productData.selling_price)
+      formData.append("oc_unit", productData.op_unit);
+      formData.append("unit_price", productData.unit_price);
+      formData.append("product_cost", productData.product_cost);
+      formData.append("units", productData.units);
+      formData.append("cost_per_unit", productData.cost_per_unit);
+      formData.append("total_cost", productData.total_cost);
+      formData.append("set_profit", productData.set_profit);
+      formData.append("vat_id", productData.vat_id);
+      formData.append("profit_per_unit", productData.profit_per_unit);
+      formData.append("pp_profit", productData.pp_profit);
+      formData.append("pp_vat", productData.pp_vat);
+      formData.append("os_price", productData.os_price);
+      formData.append("selling_price", productData.selling_price);
 
-      onSaveProduct(formData)
+      onSaveProduct(formData);
     }
-    
-  }
+  };
 
   function onSaveProduct(_form) {
     if (isEdit && !isFetchImport) {
-      svProductUpdate(productData.id, _form).then(res => {
+      svProductUpdate(productData.id, _form).then((res) => {
         setOpenModalEdit(false);
         Swal.fire({
           text: "Product has been updated successfully.",
@@ -339,9 +434,9 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
           showConfirmButton: false,
           timer: 1000,
         }).then(() => {
-          setRefreshData(refreshData + 1)
-        })
-      })
+          setRefreshData(refreshData + 1);
+        });
+      });
     } else {
       Swal.fire({
         title: "Are you sure?",
@@ -355,19 +450,42 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
         if (result.isConfirmed) {
           svCreateProduct(_form).then((res) => {
             if (res.status) {
-              Swal.fire("Created!", "Product has been created successfully.", "success").then(() => {
-                if (isFetchImport) {
-                  setRefreshData(refreshData + 1)
-                  setOpenModalEdit(false)
-
+              Swal.fire(
+                "Created!",
+                "Product has been created successfully.",
+                "success"
+              ).then(() => {
+                if ((isMultiImport || isFetchImport) && productAll.length > 1) {
+                  const newProductAll = productAll.filter(
+                    (item) => item.id !== id
+                  );
+                  console.log(newProductAll);
+                  setProductAll(newProductAll);
+                  setProductData(newProductAll[0]);
+                  setId(newProductAll[0].id);
+                  setTogleReset(!togleReset);
+                  if (newProductAll[0].vat_id === 0) {
+                    setVat((prev) => {
+                      return { ...prev, checked: true };
+                    });
+                  } else {
+                    setVat((prev) => {
+                      return { ...prev, checked: false };
+                    });
+                  }
                 } else {
-                  resetDataHandle()
+                  if (isFetchImport || isMultiImport) {
+                    setOpenModalEdit(false);
+                  } else {
+                    resetDataHandle();
+                  }
                 }
-              })
+                setRefreshData(refreshData + 1);
+              });
             } else {
-              console.log(res)
+              console.log(res);
             }
-          })
+          });
         }
       });
     }
@@ -375,7 +493,7 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
 
   return (
     <section id="products-import-page">
-      { !isEdit && !isFetchImport &&
+      {!isEdit && !isFetchImport && (
         <div
           style={{
             display: "flex",
@@ -394,18 +512,22 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
             />
           </div>
         </div>
-      }
+      )}
       <form onSubmit={saveProducthandle}>
         <div>
           <Card
             className="flex-container-column"
-            sx={{ borderRadius: "10px", marginTop: "-1rem", marginBottom: "1rem" }}
+            sx={{
+              borderRadius: "10px",
+              marginTop: "-1rem",
+              marginBottom: "1rem",
+            }}
           >
             <div className="header">
               <figure className="header-title">
                 <img src="/images/icons/import-icon.png" alt="" />
                 <p>ข้อมูลสินค้า</p>
-                { !isEdit && !isFetchImport &&
+                {!isEdit && !isFetchImport && (
                   <Link
                     to="/products?slug=fromimport"
                     style={{ marginLeft: "5.7rem" }}
@@ -413,7 +535,27 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                     <img src="/images/icons/search-icon.png" alt="" />
                     ค้นหาสินค้าที่มีอยู่
                   </Link>
-                }
+                )}
+                {isMultiImport && !isEdit && (
+                  <div className="select-product">
+                    <Autocomplete
+                      key={togleReset}
+                      defaultValue={{ title: productAll[0].title }}
+                      size="small"
+                      disablePortal
+                      id="combo-box-demo"
+                      options={productAll}
+                      getOptionLabel={(rows) => rows.title || ""}
+                      sx={{ width: "200px" }}
+                      renderInput={(params) => (
+                        <TextField {...params} label="เลือกสินค้า" />
+                      )}
+                      onChange={(e, value) =>
+                        onSelectProductHandle(value ? value.id : 0)
+                      }
+                    />
+                  </div>
+                )}
               </figure>
               <div
                 style={{
@@ -423,12 +565,21 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                   marginRight: "1.1rem",
                 }}
               >
-              { !isEdit &&
-                <button type="button" style={{ display: "flex", justifyContent: "center" }} onClick={resetDataHandle}>
-                  ล้างข้อมูล
-                </button>
-              }
-                <button style={{ display: "flex", justifyContent: "center" }} type="submit">
+                {!isEdit && !isMultiImport && (
+                  <button
+                    className="btn"
+                    type="button"
+                    style={{ display: "flex", justifyContent: "center" }}
+                    onClick={resetDataHandle}
+                  >
+                    ล้างข้อมูล
+                  </button>
+                )}
+                <button
+                  className="btn"
+                  style={{ display: "flex", justifyContent: "center" }}
+                  type="submit"
+                >
                   บันทึกข้อมูล
                 </button>
               </div>
@@ -436,7 +587,7 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
             <div className="content">
               <div className="content-left" style={{ position: "relative" }}>
                 <figure style={{ cursor: "pointer" }}>
-                  <div className="input-file" >
+                  <div className="input-file">
                     <input
                       type="file"
                       accept="image/*"
@@ -444,7 +595,7 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                       ref={formInputRef}
                     />
                   </div>
-                  { (isEdit || isFetchImport) ? 
+                  {isEdit || isFetchImport ? (
                     <img
                       src={
                         !preview.isError
@@ -453,7 +604,7 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                       }
                       alt={""}
                     />
-                    :
+                  ) : (
                     <img
                       src={
                         !preview.isError
@@ -462,8 +613,15 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                       }
                       alt={""}
                     />
-                  }
-                  <p style={{ display: preview.isError && (!isEdit && !isFetchImport) ? "block" : "none" }}>
+                  )}
+                  <p
+                    style={{
+                      display:
+                        preview.isError && !isEdit && !isFetchImport
+                          ? "block"
+                          : "none",
+                    }}
+                  >
                     ขนาดไฟล์ภาพไม่เกิน 10 Gb
                   </p>
                 </figure>
@@ -532,42 +690,84 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                         label="วันสั่งซื้อ"
                         inputFormat="YYYY-MM-DD"
                         renderInput={(params) => (
-                          <TextField {...params} size="small" inputProps={{...params.inputProps, readOnly: true}} required />
+                          <TextField
+                            {...params}
+                            size="small"
+                            inputProps={{
+                              ...params.inputProps,
+                              readOnly: true,
+                            }}
+                            required
+                          />
                         )}
                         value={productData.purchase_date || null}
                         onChange={(value) => {
                           setSelectedPurchaseTime(value);
                           setProductData(() => {
-                            return { ...productData, purchase_date: dayjs(value).add(1, "day").toISOString().substring(0, 10) }
-                          })
+                            return {
+                              ...productData,
+                              purchase_date: dayjs(value)
+                                .add(1, "day")
+                                .toISOString()
+                                .substring(0, 10),
+                            };
+                          });
                         }}
                       />
                       <DatePicker
                         label="วันผลิต MFD"
                         inputFormat="YYYY-MM-DD"
                         renderInput={(params) => (
-                          <TextField {...params} size="small" inputProps={{...params.inputProps, readOnly: true}} required />
+                          <TextField
+                            {...params}
+                            size="small"
+                            inputProps={{
+                              ...params.inputProps,
+                              readOnly: true,
+                            }}
+                            required
+                          />
                         )}
                         value={productData.mfd_date || null}
                         onChange={(value) => {
                           setSelectedMFDTime(value);
                           setProductData(() => {
-                            return { ...productData, mfd_date: dayjs(value).add(1, "day").toISOString().substring(0, 10) }
-                          })
+                            return {
+                              ...productData,
+                              mfd_date: dayjs(value)
+                                .add(1, "day")
+                                .toISOString()
+                                .substring(0, 10),
+                            };
+                          });
                         }}
                       />
                       <DatePicker
                         label="วันหมดอายุ EXP"
                         inputFormat="YYYY-MM-DD"
                         renderInput={(params) => (
-                          <TextField {...params} size="small" inputProps={{...params.inputProps, readOnly: true}} required />
+                          <TextField
+                            {...params}
+                            size="small"
+                            inputProps={{
+                              ...params.inputProps,
+                              readOnly: true,
+                            }}
+                            required
+                          />
                         )}
                         value={productData.exp_date || null}
                         onChange={(value) => {
                           setSelectedEXPTime(value);
                           setProductData(() => {
-                            return { ...productData, exp_date: dayjs(value).add(1, "day").toISOString().substring(0, 10) }
-                          })
+                            return {
+                              ...productData,
+                              exp_date: dayjs(value)
+                                .add(1, "day")
+                                .toISOString()
+                                .substring(0, 10),
+                            };
+                          });
                         }}
                       />
                     </LocalizationProvider>
@@ -576,9 +776,16 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                     <TextField
                       required
                       value={productData.import_value}
-                      onChange={(e) => setProductData(() => {
-                        return { ...productData, import_value: !isNaN(parseInt(e.target.value))? parseInt(e.target.value):"" }
-                      })}
+                      onChange={(e) =>
+                        setProductData(() => {
+                          return {
+                            ...productData,
+                            import_value: !isNaN(parseInt(e.target.value))
+                              ? parseInt(e.target.value)
+                              : "",
+                          };
+                        })
+                      }
                       id="outlined-basic"
                       label="จำนวน (นำเข้า)"
                       variant="outlined"
@@ -588,17 +795,29 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                     <Autocomplete
                       // value={productData.counting_unit}
                       key={productData.reset}
-                      defaultValue={{ name: productData.counting_unit_name || "" }}
-                      onChange={(e, value) => setProductData(() => {
-                        return { ...productData, counting_unit: value ? value.id : 0 }
-                      })}
+                      defaultValue={{
+                        name: productData.counting_unit_name || "",
+                      }}
+                      onChange={(e, value) =>
+                        setProductData(() => {
+                          return {
+                            ...productData,
+                            counting_unit: value ? value.id : 0,
+                          };
+                        })
+                      }
                       disablePortal
                       id="combo-box-demo"
                       options={amountsData}
                       getOptionLabel={(option) => option.name || ""}
                       sx={{ width: "32.5%" }}
                       renderInput={(params) => (
-                        <TextField {...params} label="หน่วยนับ" size="small" required />
+                        <TextField
+                          {...params}
+                          label="หน่วยนับ"
+                          size="small"
+                          required
+                        />
                       )}
                     />
                   </div>
@@ -609,11 +828,19 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                       // value={productData.main_cate_id}
                       key={productData.reset}
                       defaultValue={{ name: productData.main_cate_name || "" }}
-                      onChange={(e, value) => setProductData(() => {
-                        const cate_id = value ? value.id : 0
-                        getSubCates(cate_id)
-                        return { ...productData, sub_cate_id: 0, main_cate_id: cate_id, sub_cate: "", state1: !productData.state1 }
-                      })}
+                      onChange={(e, value) =>
+                        setProductData(() => {
+                          const cate_id = value ? value.id : 0;
+                          getSubCates(cate_id);
+                          return {
+                            ...productData,
+                            sub_cate_id: 0,
+                            main_cate_id: cate_id,
+                            sub_cate: "",
+                            state1: !productData.state1,
+                          };
+                        })
+                      }
                       disabled={false}
                       id="combo-box-demo"
                       options={mainCatesData}
@@ -629,13 +856,17 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                       )}
                     />
                     <Autocomplete
-                      // label={productData.sub_cate}
-                      // value={productData.sub_cate}
                       key={productData.state1}
                       defaultValue={{ name: productData.sub_cate || "" }}
-                      onChange={(e, value) => setProductData(() => {
-                        return { ...productData, sub_cate_id: value? value.id : 0, sub_cate: value ? value.name : "" }
-                      })}
+                      onChange={(e, value) =>
+                        setProductData(() => {
+                          return {
+                            ...productData,
+                            sub_cate_id: value ? value.id : 0,
+                            sub_cate: value ? value.name : "",
+                          };
+                        })
+                      }
                       disabled={false}
                       id="combo-box-demo"
                       options={subCatesData}
@@ -647,14 +878,13 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                           label="หมวดหมู่ย่อย"
                           size="small"
                           required={subCatesData.length > 0 ? true : false}
-                        
                         />
                       )}
                     />
                   </div>
                   <div style={{ display: "flex", gap: "1rem", width: "50%" }}>
                     <TextField
-                      value={productData.barcode}
+                      value={productData.barcode || ""}
                       onChange={(e) => digitBarcode(e)}
                       id="outlined-basic"
                       label="เลขบาร์โค้ดจากสินค้า"
@@ -667,7 +897,9 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                       label="สร้างบาร์โค้ดใหม่"
                       variant="outlined"
                       value={productData.new_barcode}
-                      onChange={(event) => setGeneratedNumber(event.target.value)}
+                      onChange={(event) =>
+                        setGeneratedNumber(event.target.value)
+                      }
                       size="small"
                       sx={{ width: "33.33%" }}
                       inputRef={inputRef}
@@ -685,9 +917,16 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                     />
                     <TextField
                       value={productData.defective}
-                      onChange={(e) => setProductData(() => {
-                        return { ...productData, defective: !isNaN(parseInt(e.target.value))?parseInt(e.target.value):0 }
-                      })}
+                      onChange={(e) =>
+                        setProductData(() => {
+                          return {
+                            ...productData,
+                            defective: !isNaN(parseInt(e.target.value))
+                              ? parseInt(e.target.value)
+                              : 0,
+                          };
+                        })
+                      }
                       id="outlined-basic"
                       label="จำนวนสินค้าที่มีปัญหา"
                       variant="outlined"
@@ -698,8 +937,6 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                 </div>
               </div>
             </div>
-
-
           </Card>
         </div>
         <Grid container spacing={2}>
@@ -712,11 +949,17 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                 >
                   <div className="header">
                     <figure className="header-title">
-                      <img width={25} src="/images/icons/truck-icon.png" alt="" />
+                      <img
+                        width={25}
+                        src="/images/icons/truck-icon.png"
+                        alt=""
+                      />
                       <p>ข้อมูลค่าใช้จ่ายและจำนวนสินค้าทั้งหมด</p>
                     </figure>
                   </div>
-                  <div style={{ display: "flex", gap: "2rem", padding: "1rem" }}>
+                  <div
+                    style={{ display: "flex", gap: "2rem", padding: "1rem" }}
+                  >
                     <div
                       style={{
                         display: "flex",
@@ -732,9 +975,16 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                           required
                           type="number"
                           value={productData.import_fee}
-                          onChange={(e) => setProductData(() => {
-                            return { ...productData, import_fee: !isNaN(parseFloat(e.target.value))?parseFloat(e.target.value):null}
-                          })}
+                          onChange={(e) =>
+                            setProductData(() => {
+                              return {
+                                ...productData,
+                                import_fee: !isNaN(parseFloat(e.target.value))
+                                  ? parseFloat(e.target.value)
+                                  : null,
+                              };
+                            })
+                          }
                           id="outlined-basic"
                           label="ค่านำเข้า"
                           variant="outlined"
@@ -745,9 +995,16 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                           required
                           type="number"
                           value={productData.fuel_cost}
-                          onChange={(e) => setProductData(() => {
-                            return { ...productData, fuel_cost: !isNaN(parseFloat(e.target.value))?parseFloat(e.target.value):null}
-                          })}
+                          onChange={(e) =>
+                            setProductData(() => {
+                              return {
+                                ...productData,
+                                fuel_cost: !isNaN(parseFloat(e.target.value))
+                                  ? parseFloat(e.target.value)
+                                  : null,
+                              };
+                            })
+                          }
                           id="outlined-basic"
                           label="ค่าน้ำมัน"
                           variant="outlined"
@@ -758,9 +1015,16 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                           required
                           type="number"
                           value={productData.other_exp}
-                          onChange={(e) => setProductData(() => {
-                            return { ...productData, other_exp: !isNaN(parseFloat(e.target.value))?parseFloat(e.target.value):null}
-                          })}
+                          onChange={(e) =>
+                            setProductData(() => {
+                              return {
+                                ...productData,
+                                other_exp: !isNaN(parseFloat(e.target.value))
+                                  ? parseFloat(e.target.value)
+                                  : null,
+                              };
+                            })
+                          }
                           id="outlined-basic"
                           label="ค่าใช้จ่ายอื่น ๆ"
                           variant="outlined"
@@ -773,11 +1037,20 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                           required
                           type="number"
                           value={productData.total_product}
-                          onChange={(e) => setProductData(() => {
-                            return { ...productData, total_product: !isNaN(parseFloat(e.target.value))?parseFloat(e.target.value):null}
-                          })}
+                          onChange={(e) =>
+                            setProductData(() => {
+                              return {
+                                ...productData,
+                                total_product: !isNaN(
+                                  parseFloat(e.target.value)
+                                )
+                                  ? parseFloat(e.target.value)
+                                  : null,
+                              };
+                            })
+                          }
                           id="outlined-basic"
-                          label="จำนวนสินค้าทั่งหมด"
+                          label="จำนวนสินค้าทั้งหมด"
                           variant="outlined"
                           size="small"
                           sx={{ width: "100%" }}
@@ -795,9 +1068,16 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                       <TextField
                         disabled
                         value={productData.total}
-                        onChange={(e) => setProductData(() => {
-                            return { ...productData, total: !isNaN(parseFloat(e.target.value))?parseFloat(e.target.value):null}
-                          })}
+                        onChange={(e) =>
+                          setProductData(() => {
+                            return {
+                              ...productData,
+                              total: !isNaN(parseFloat(e.target.value))
+                                ? parseFloat(e.target.value)
+                                : null,
+                            };
+                          })
+                        }
                         id="outlined-basic"
                         label="รวมค่าดำเนินการทั้งหมด"
                         variant="outlined"
@@ -807,9 +1087,16 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                       <TextField
                         disabled
                         value={productData.op_unit}
-                        onChange={(e) => setProductData(() => {
-                            return { ...productData, op_unit: !isNaN(parseFloat(e.target.value))?parseFloat(e.target.value):null}
-                          })}
+                        onChange={(e) =>
+                          setProductData(() => {
+                            return {
+                              ...productData,
+                              op_unit: !isNaN(parseFloat(e.target.value))
+                                ? parseFloat(e.target.value)
+                                : null,
+                            };
+                          })
+                        }
                         id="outlined-basic"
                         label="ค่าดำเนินการ/หน่วย"
                         variant="outlined"
@@ -847,11 +1134,19 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                       // value={productData.supplier_id}
                       key={productData.reset}
                       defaultValue={{ name: productData.supplier_name || "" }}
-                      onChange={(e, value) => setProductData(() => {
-                        const sup_id = value?value.id: 0;
-                        getMainCatesBySupplier(sup_id)
-                        return { ...productData, supplier_id: value ? value.id : 0, supplier_cate: 0, supplier_cate_name: "", state2: !productData.state2 }
-                      })}
+                      onChange={(e, value) =>
+                        setProductData(() => {
+                          const sup_id = value ? value.id : 0;
+                          getMainCatesBySupplier(sup_id);
+                          return {
+                            ...productData,
+                            supplier_id: value ? value.id : 0,
+                            supplier_cate: 0,
+                            supplier_cate_name: "",
+                            state2: !productData.state2,
+                          };
+                        })
+                      }
                       id="combo-box-demo"
                       options={suppliersData}
                       getOptionLabel={(option) => option.name || ""}
@@ -867,10 +1162,17 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                     />
                     <Autocomplete
                       key={productData.state2}
-                      defaultValue={{ name: productData.supplier_cate_name || "" }}
-                      onChange={(e, value) => setProductData(() => {
-                        return { ...productData, supplier_cate: value ? value.id : 0 }
-                      })}
+                      defaultValue={{
+                        name: productData.supplier_cate_name || "",
+                      }}
+                      onChange={(e, value) =>
+                        setProductData(() => {
+                          return {
+                            ...productData,
+                            supplier_cate: value ? value.id : 0,
+                          };
+                        })
+                      }
                       id="combo-box-demo"
                       options={supplierCates}
                       getOptionLabel={(option) => option.name || ""}
@@ -885,7 +1187,11 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                       )}
                     />
                   </div>
-                  <button className="add-supplier" style={{ fontSize: "16px" }} onClick={() => navigate("/createsupplier")}>
+                  <button
+                    className="add-supplier"
+                    style={{ fontSize: "16px" }}
+                    onClick={() => navigate("/createsupplier")}
+                  >
                     <AddIcon />
                     สร้างข้อมูลซัพพลายเออร์ใหม่
                   </button>
@@ -894,10 +1200,17 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
             </Grid>
           </Grid>
           <Grid item xs={6}>
-            <Card className="flex-container-column" sx={{ borderRadius: "10px" }}>
+            <Card
+              className="flex-container-column"
+              sx={{ borderRadius: "10px" }}
+            >
               <div className="header">
                 <figure className="header-title">
-                  <img width={25} src="/images/icons/currency-icon.png" alt="" />
+                  <img
+                    width={25}
+                    src="/images/icons/currency-icon.png"
+                    alt=""
+                  />
                   <p>ข้อมูลราคา</p>
                 </figure>
               </div>
@@ -915,9 +1228,16 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                       disabled
                       type="number"
                       value={productData.op_unit}
-                      onChange={(e) => setProductData(() => {
-                        return { ...productData, oc_unit: !isNaN(parseFloat(e.target.value))?parseFloat(e.target.value):null}
-                      })}
+                      onChange={(e) =>
+                        setProductData(() => {
+                          return {
+                            ...productData,
+                            oc_unit: !isNaN(parseFloat(e.target.value))
+                              ? parseFloat(e.target.value)
+                              : null,
+                          };
+                        })
+                      }
                       id="outlined-basic"
                       label="ค่าดำเนินการ/หน่วย"
                       variant="outlined"
@@ -930,9 +1250,16 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                       disabled
                       type="number"
                       value={productData.unit_price}
-                      onChange={(e) => setProductData(() => {
-                        return { ...productData, unit_price: !isNaN(parseFloat(e.target.value))?parseFloat(e.target.value):null}
-                      })}
+                      onChange={(e) =>
+                        setProductData(() => {
+                          return {
+                            ...productData,
+                            unit_price: !isNaN(parseFloat(e.target.value))
+                              ? parseFloat(e.target.value)
+                              : null,
+                          };
+                        })
+                      }
                       id="outlined-basic"
                       label="ราคา/หน่วย (บาท)"
                       variant="outlined"
@@ -954,9 +1281,16 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                       required
                       type="number"
                       value={productData.product_cost}
-                      onChange={(e) => setProductData(() => {
-                        return { ...productData, product_cost: !isNaN(parseFloat(e.target.value))?parseFloat(e.target.value):null}
-                      })}
+                      onChange={(e) =>
+                        setProductData(() => {
+                          return {
+                            ...productData,
+                            product_cost: !isNaN(parseFloat(e.target.value))
+                              ? parseFloat(e.target.value)
+                              : null,
+                          };
+                        })
+                      }
                       id="outlined-basic"
                       label="ต้นทุนสินค้า(ราคาดิบ)"
                       variant="outlined"
@@ -967,9 +1301,16 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                       required
                       type="number"
                       value={productData.units}
-                      onChange={(e) => setProductData(() => {
-                        return { ...productData, units: !isNaN(parseFloat(e.target.value))?parseFloat(e.target.value):null}
-                      })}
+                      onChange={(e) =>
+                        setProductData(() => {
+                          return {
+                            ...productData,
+                            units: !isNaN(parseFloat(e.target.value))
+                              ? parseFloat(e.target.value)
+                              : null,
+                          };
+                        })
+                      }
                       id="outlined-basic"
                       label="จำนวนหน่วย"
                       variant="outlined"
@@ -980,9 +1321,16 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                       disabled
                       type="number"
                       value={productData.cost_per_unit}
-                      onChange={(e) => setProductData(() => {
-                        return { ...productData, cost_per_unit: !isNaN(parseFloat(e.target.value))?parseFloat(e.target.value):null}
-                      })}
+                      onChange={(e) =>
+                        setProductData(() => {
+                          return {
+                            ...productData,
+                            cost_per_unit: !isNaN(parseFloat(e.target.value))
+                              ? parseFloat(e.target.value)
+                              : null,
+                          };
+                        })
+                      }
                       id="outlined-basic"
                       label="ต้นทุนสินค้า/หน่วย"
                       variant="outlined"
@@ -995,9 +1343,16 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                       disabled
                       type="number"
                       value={productData.total_cost}
-                      onChange={(e) => setProductData(() => {
-                        return { ...productData, total_cost: !isNaN(parseFloat(e.target.value))?parseFloat(e.target.value):null}
-                      })}
+                      onChange={(e) =>
+                        setProductData(() => {
+                          return {
+                            ...productData,
+                            total_cost: !isNaN(parseFloat(e.target.value))
+                              ? parseFloat(e.target.value)
+                              : null,
+                          };
+                        })
+                      }
                       id="outlined-basic"
                       label="Total (รวมต้นทุนสินค้าทั้งหมด)"
                       variant="outlined"
@@ -1022,9 +1377,16 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                       required
                       type="number"
                       value={productData.set_profit}
-                      onChange={(e) => setProductData(() => {
-                        return { ...productData, set_profit: !isNaN(parseFloat(e.target.value))?parseFloat(e.target.value):""}
-                      })}
+                      onChange={(e) =>
+                        setProductData(() => {
+                          return {
+                            ...productData,
+                            set_profit: !isNaN(parseFloat(e.target.value))
+                              ? parseFloat(e.target.value)
+                              : "",
+                          };
+                        })
+                      }
                       id="outlined-basic"
                       label="กำไรที่ต้องการ %"
                       variant="outlined"
@@ -1033,15 +1395,29 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                     />
                   </div>
                   <div
-                    style={{ display: "flex", alignItems: "center", gap: "1rem" }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "1rem",
+                    }}
                   >
                     <Autocomplete
                       key={productData.state3}
-                      defaultValue={{ name: productData.vat_id !== 0 ? productData.vat : "" }}
-                      onChange={(e, value) => setProductData(() => {
-                        setVat(() => { return { ...vat, checked:false } })
-                        return { ...productData, vat_id: value ? value.id : 0, vat: value ? value.percent : 0 }
-                      })}
+                      value={{
+                        name: productData.vat_id !== 0 ? productData.vat : "",
+                      }}
+                      onChange={(e, value) => {
+                        setProductData(() => {
+                          return {
+                            ...productData,
+                            vat_id: value ? value.id : 0,
+                            vat: value ? value.name : "",
+                          };
+                        });
+                        setVat(() => {
+                          return { ...vat, checked: false };
+                        });
+                      }}
                       id="combo-box-demo"
                       options={vatsData}
                       getOptionLabel={(option) => option.name || ""}
@@ -1056,7 +1432,9 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                     />
                     <FormControlLabel
                       value="female"
-                      control={<Radio checked={vat.checked} onChange={selectNoVat} />}
+                      control={
+                        <Radio checked={vat.checked} onChange={selectNoVat} />
+                      }
                       label="No Vat"
                     />
                   </div>
@@ -1074,9 +1452,16 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                       disabled
                       type="number"
                       value={productData.profit_per_unit}
-                      onChange={(e) => setProductData(() => {
-                        return { ...productData, profit_per_unit: !isNaN(parseFloat(e.target.value))?parseFloat(e.target.value):null}
-                      })}
+                      onChange={(e) =>
+                        setProductData(() => {
+                          return {
+                            ...productData,
+                            profit_per_unit: !isNaN(parseFloat(e.target.value))
+                              ? parseFloat(e.target.value)
+                              : null,
+                          };
+                        })
+                      }
                       id="outlined-basic"
                       label="กำไรต่อหน่วยเป็นบาท"
                       variant="outlined"
@@ -1087,9 +1472,16 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                       disabled
                       type="number"
                       value={productData.pp_profit}
-                      onChange={(e) => setProductData(() => {
-                        return { ...productData, pp_profit: !isNaN(parseFloat(e.target.value))?parseFloat(e.target.value):null}
-                      })}
+                      onChange={(e) =>
+                        setProductData(() => {
+                          return {
+                            ...productData,
+                            pp_profit: !isNaN(parseFloat(e.target.value))
+                              ? parseFloat(e.target.value)
+                              : null,
+                          };
+                        })
+                      }
                       id="outlined-basic"
                       label="ราคาสินค้ารวมกำไร"
                       variant="outlined"
@@ -1115,9 +1507,16 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                         disabled
                         type="number"
                         value={productData.pp_vat}
-                        onChange={(e) => setProductData(() => {
-                          return { ...productData, pp_vat: !isNaN(parseFloat(e.target.value))?parseFloat(e.target.value):null}
-                        })}
+                        onChange={(e) =>
+                          setProductData(() => {
+                            return {
+                              ...productData,
+                              pp_vat: !isNaN(parseFloat(e.target.value))
+                                ? parseFloat(e.target.value)
+                                : null,
+                            };
+                          })
+                        }
                         id="outlined-basic"
                         label="ราคาสินค้ารวมVat (ราคาขาย)"
                         variant="outlined"
@@ -1128,9 +1527,16 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                         disabled
                         type="number"
                         value={productData.os_price}
-                        onChange={(e) => setProductData(() => {
-                          return { ...productData, os_price: !isNaN(parseFloat(e.target.value))?parseFloat(e.target.value):null}
-                        })}
+                        onChange={(e) =>
+                          setProductData(() => {
+                            return {
+                              ...productData,
+                              os_price: !isNaN(parseFloat(e.target.value))
+                                ? parseFloat(e.target.value)
+                                : null,
+                            };
+                          })
+                        }
                         id="outlined-basic"
                         label="ราคาขายเดิม"
                         variant="outlined"
@@ -1142,9 +1548,16 @@ function ProductsImportPage({ isEdit, isFetchImport, isMultiImport, productShow,
                       required
                       type="number"
                       value={productData.selling_price}
-                      onChange={(e) => setProductData(() => {
-                        return { ...productData, selling_price: !isNaN(parseFloat(e.target.value))?parseFloat(e.target.value):null}
-                      })}
+                      onChange={(e) =>
+                        setProductData(() => {
+                          return {
+                            ...productData,
+                            selling_price: !isNaN(parseFloat(e.target.value))
+                              ? parseFloat(e.target.value)
+                              : null,
+                          };
+                        })
+                      }
                       id="outlined-basic"
                       label="ราคาขายจริง"
                       variant="outlined"

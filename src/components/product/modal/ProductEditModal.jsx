@@ -64,6 +64,7 @@ function ProductEditModal({
   productShow,
   refreshData,
   setRefreshData,
+  productDatas,
 }) {
   const handleClickOpen = () => {
     setOpen(true);
@@ -99,6 +100,7 @@ function ProductEditModal({
             refreshData={refreshData}
             setRefreshData={setRefreshData}
             setOpenModalEdit={setOpen}
+            productDatas={productDatas}
           />
         </DialogContent>
         {/* <DialogActions>

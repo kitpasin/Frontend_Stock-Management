@@ -18,6 +18,7 @@ import { Link, useLocation } from "react-router-dom";
 import { svProductAll } from "../../services/product.service";
 import dayjs from "dayjs";
 import MultiExportModal from "../../components/product/modal/MultiExportModal";
+import ProductEditModal from "../../components/product/modal/ProductEditModal";
 import Swal from "sweetalert2";
 
 function ProductsPage() {
@@ -36,8 +37,10 @@ function ProductsPage() {
   const [mainCategory, setMainCategory] = useState("");
   const [vat, setVat] = useState("");
 
+  const [productShow, setProductShow] = useState([]);
   const [refreshData, setRefreshData] = useState(0);
   const [productSelected, setProductSelected] = useState([]);
+  const [selectFrom, setSelectFrom] = useState([]);
   const [openMultiExportModal, setOpenMultiexportModal] = useState(false);
   const [openMultiImportModal, setOpenMultiImportModal] = useState(false);
 
@@ -61,6 +64,7 @@ function ProductsPage() {
   const current_date = dayjs().toISOString().substring(0, 10);
 
   const multiExportHandle = () => {
+    console.log(productSelected)
     if (productSelected.length === 0) {
       Swal.fire({
         text: "เลือกสินค้าที่ต้องการเบิก",
@@ -74,6 +78,7 @@ function ProductsPage() {
   };
 
   const multiImportHandle = () => {
+    console.log(productSelected)
     if (productSelected.length === 0) {
       Swal.fire({
         text: "เลือกสินค้าที่ต้องการเพิ่ม",
@@ -82,6 +87,62 @@ function ProductsPage() {
         return false;
       });
     } else {
+      const result = productSelected.map((dd) => {
+        return {
+          id: dd.id,
+          product_id: dd.product_id,
+          title: dd.title,
+          state1: false,
+          state2: false,
+          state3: false,
+          reset: 0,
+          unit: dd.unit_id,
+          unit_name: dd.net_name,
+          netweight: dd.netweight,
+          counting_unit: dd.counting_unit_id,
+          counting_unit_name: dd.amount_name,
+          purchase_date: "",
+          mfd_date: "",
+          exp_date: "",
+          barcode: dd.product_barcode,
+          new_barcode: dd.barcode_number,
+          main_cate_id: dd.main_cate_id,
+          main_cate_name: dd.main_cate_name,
+          sub_cate_id: dd.sub_cate_id,
+          sub_cate: dd.sub_cate_name,
+          supplier_id: dd.supplier_id,
+          supplier_cate: dd.supplier_cate_id,
+          supplier_name: dd.supplier_name,
+          supplier_cate_name: dd.supplier_cate_name,
+          import_value: "",
+          defective: dd.defective_product,
+          image_path: dd.thumbnail_link,
+
+          import_fee: "",
+          fuel_cost: "",
+          other_exp: "",
+          total: "",
+          op_unit: "",
+          total_product: "",
+
+          oc_unit: dd.op_unit,
+          unit_price: dd.unit_price,
+          product_cost: "",
+          units: "",
+          cost_per_unit: dd.cost_per_unit,
+          total_cost: "",
+          set_profit: dd.set_profit,
+          vat_id: dd.vat_id,
+          vat: dd.vat_name,
+          profit_per_unit: dd.profit_per_unit,
+          pp_profit: dd.pp_profit,
+          pp_vat: dd.pp_vat,
+          os_price: dd.selling_price,
+          selling_price: "",
+        };
+      });
+      setProductShow(result[0]);
+      setSelectFrom(result)
       setOpenMultiImportModal(true);
     }
   };
@@ -248,6 +309,17 @@ function ProductsPage() {
             setRefreshData={setRefreshData}
             setProductSelected={setProductSelected}
             productSelected={productSelected}
+          />
+          <ProductEditModal
+            isMultiImport={true}
+            isFetchImport={true}
+            isEdit={false}
+            open={openMultiImportModal}
+            setOpen={setOpenMultiImportModal}
+            productShow={productShow}
+            productDatas={selectFrom}
+            refreshData={refreshData}
+            setRefreshData={setRefreshData}
           />
         </>
       )}
