@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 function ImportDataGrid({ productsImport }) {
   const webPath = useSelector((state) => state.app.webPath);
   const { displayName } = useSelector((state) => state.auth.profile);
+  const [isHovered, setIsHovered] = React.useState(false);
 
   const columns = [
     {
@@ -16,8 +17,17 @@ function ImportDataGrid({ productsImport }) {
       headerAlign: "center",
       align: "center",
       renderCell: (params) => (
-        <figure style={{ background: "#D0D0E2", borderRadius: "5px", padding: ".1rem" }}>
-          <Avatar alt="Thumbnail" src={`${webPath}${params.row.thumbnail_link}`} />
+        <figure
+          style={{
+            background: "#D0D0E2",
+            borderRadius: "5px",
+            padding: ".1rem",
+          }}
+        >
+          <Avatar
+            alt="Thumbnail"
+            src={`${webPath}${params.row.thumbnail_link}`}
+          />
         </figure>
       ),
     },
@@ -25,13 +35,21 @@ function ImportDataGrid({ productsImport }) {
       field: "name",
       headerName: "ชื่อรายการ",
       headerAlign: "center",
-      align: "center",
-      width: 140,
+      align: "left",
+      width: isHovered ? 290 : 140,
       headerClassName: "table-columns",
       renderCell: (params) => (
-        <div style={{ paddingLeft: "1rem" }}>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{params.row.title}</p>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>
+        <div
+          style={{ paddingLeft: "0" }}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>
+            {params.row.title}
+          </p>
+          <p
+            style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}
+          >
             {params.row.product_id}
           </p>
         </div>
@@ -46,7 +64,9 @@ function ImportDataGrid({ productsImport }) {
       headerClassName: "table-columns",
       renderCell: () => (
         <div>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{displayName}</p>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>
+            {displayName}
+          </p>
         </div>
       ),
     },
@@ -63,7 +83,15 @@ function ImportDataGrid({ productsImport }) {
         return (
           <div>
             <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{date}</p>
-            <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>{time}</p>
+            <p
+              style={{
+                fontSize: "12px",
+                lineHeight: "12.5px",
+                color: "#9993B4",
+              }}
+            >
+              {time}
+            </p>
           </div>
         );
       },
@@ -76,10 +104,14 @@ function ImportDataGrid({ productsImport }) {
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             จำนวนนำเข้า
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             /หน่วย
           </Typography>
         </div>
@@ -93,10 +125,14 @@ function ImportDataGrid({ productsImport }) {
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             คงเหลือ
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             /หน่วย
           </Typography>
         </div>
@@ -116,7 +152,9 @@ function ImportDataGrid({ productsImport }) {
                   : "#000",
             }}
           >
-            {params.row.import_value - params.row.export_value - params.row.export_defective_value}
+            {params.row.import_value -
+              params.row.export_value -
+              params.row.export_defective_value}
           </p>
         </div>
       ),
@@ -137,18 +175,26 @@ function ImportDataGrid({ productsImport }) {
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             MFD
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             EXP
           </Typography>
         </div>
       ),
       renderCell: (params) => (
         <div>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{params.row.mfd_date}</p>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>
+            {params.row.mfd_date}
+          </p>
+          <p
+            style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}
+          >
             {params.row.exp_date}
           </p>
         </div>
@@ -185,10 +231,14 @@ function ImportDataGrid({ productsImport }) {
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ปริมาตรสุทธิ
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             /หน่วย
           </Typography>
         </div>
@@ -209,10 +259,14 @@ function ImportDataGrid({ productsImport }) {
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ต้นทุน
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             /หน่วย (THB)
           </Typography>
         </div>
@@ -234,10 +288,14 @@ function ImportDataGrid({ productsImport }) {
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ราคาขายจริง
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             (THB)
           </Typography>
         </div>
