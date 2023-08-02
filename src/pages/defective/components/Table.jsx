@@ -35,7 +35,7 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       width: 150,
       headerClassName: "table-columns",
       renderCell: (params) => (
-        <div style={{ paddingLeft: "1.5rem" }}>
+        <div style={{ paddingLeft: "0" }}>
           <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{params.row.title}</p>
           <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>
             {params.row.product_id}
@@ -59,8 +59,8 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
     {
       field: "export_quantity",
       headerAlign: "center",
-      align: "center",
-      width: 60,
+      align: "left",
+      width: 55,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -73,8 +73,8 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       field: "note",
       headerName: "หมายเหตุ",
       headerAlign: "center",
-      align: "center",
-      width: 70,
+      align: "left",
+      width: 90,
       headerClassName: "table-columns",
     },
     {
