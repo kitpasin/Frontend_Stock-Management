@@ -3,13 +3,23 @@ import { Avatar, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import MenuItemList from "./MenuItemList";
 import dayjs from "dayjs";
+import { useState } from "react";
 
-function Table({ productsData, refreshData, setRefreshData, productSelected, setProductSelected }) {
+function Table({
+  productsData,
+  refreshData,
+  setRefreshData,
+  productSelected,
+  setProductSelected,
+}) {
   const { displayName } = useSelector((state) => state.auth.profile);
   const webPath = useSelector((state) => state.app.webPath);
+  const [isHovered, setIsHovered] = useState(false);
 
   const onRowsSelectionHandler = (ids) => {
-    const selectedRowsData = ids.map((id) => productsData.find((product) => product.id === id));
+    const selectedRowsData = ids.map((id) =>
+      productsData.find((product) => product.id === id)
+    );
     setProductSelected(selectedRowsData);
   };
 
@@ -22,8 +32,17 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       headerAlign: "center",
       align: "center",
       renderCell: (params) => (
-        <figure style={{ background: "#D0D0E2", borderRadius: "5px", padding: ".1rem" }}>
-          <Avatar alt="Thumbnail" src={`${webPath}${params.row.thumbnail_link}`} />
+        <figure
+          style={{
+            background: "#D0D0E2",
+            borderRadius: "5px",
+            padding: ".1rem",
+          }}
+        >
+          <Avatar
+            alt="Thumbnail"
+            src={`${webPath}${params.row.thumbnail_link}`}
+          />
         </figure>
       ),
     },
@@ -32,12 +51,20 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       headerName: "ชื่อรายการ",
       headerAlign: "center",
       align: "left",
-      width: 150,
+      width: isHovered ? 290 : 150,
       headerClassName: "table-columns",
       renderCell: (params) => (
-        <div style={{ paddingLeft: "0" }}>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{params.row.title}</p>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>
+        <div
+          style={{ paddingLeft: "0" }}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>
+            {params.row.title}
+          </p>
+          <p
+            style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}
+          >
             {params.row.product_id}
           </p>
         </div>
@@ -52,7 +79,9 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       headerClassName: "table-columns",
       renderCell: () => (
         <div>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{displayName}</p>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>
+            {displayName}
+          </p>
         </div>
       ),
     },
@@ -64,8 +93,24 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: "500", lineHeight: "12.5px" }}>เบิกออก</Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: "500", lineHeight: "12.5px" }}>/หน่วย</Typography>
+          <Typography
+            style={{
+              fontSize: "12px",
+              fontWeight: "500",
+              lineHeight: "12.5px",
+            }}
+          >
+            เบิกออก
+          </Typography>
+          <Typography
+            style={{
+              fontSize: "12px",
+              fontWeight: "500",
+              lineHeight: "12.5px",
+            }}
+          >
+            /หน่วย
+          </Typography>
         </div>
       ),
     },
@@ -87,7 +132,9 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       renderCell: (params) => (
         <div>
           <p>
-            {params.row.import_value - params.row.export_value - params.row.export_defective_value}
+            {params.row.import_value -
+              params.row.export_value -
+              params.row.export_defective_value}
           </p>
         </div>
       ),
@@ -100,10 +147,14 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             วันเวลา
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             เบิกชำรุด
           </Typography>
         </div>
@@ -114,7 +165,15 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
         return (
           <div>
             <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{date}</p>
-            <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>{time}</p>
+            <p
+              style={{
+                fontSize: "12px",
+                lineHeight: "12.5px",
+                color: "#9993B4",
+              }}
+            >
+              {time}
+            </p>
           </div>
         );
       },
@@ -127,18 +186,26 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             MFD
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             EXP
           </Typography>
         </div>
       ),
       renderCell: (params) => (
         <div>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{params.row.mfd_date}</p>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>
+            {params.row.mfd_date}
+          </p>
+          <p
+            style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}
+          >
             {params.row.exp_date}
           </p>
         </div>
@@ -152,10 +219,14 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             จำนวนวัน
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             EXP
           </Typography>
         </div>
@@ -216,10 +287,14 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ปริมาตรสุทธิ
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             /หน่วย
           </Typography>
         </div>
@@ -240,10 +315,14 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ค่าดำเนินการ
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             (THB)
           </Typography>
         </div>
@@ -257,13 +336,19 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ดำเนินการ
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             /หน่วย
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             (THB)
           </Typography>
         </div>
@@ -278,10 +363,14 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ราคาดิบ
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             (THB)
           </Typography>
         </div>
@@ -295,13 +384,19 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ราคาดิบ
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             /หน่วย
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             (THB)
           </Typography>
         </div>
@@ -315,13 +410,19 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ต้นทุน
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             /หน่วย
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             (THB)
           </Typography>
         </div>
@@ -335,10 +436,14 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             Total
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             (THB)
           </Typography>
         </div>
@@ -352,10 +457,14 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             กำไร
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             (%)
           </Typography>
         </div>
@@ -369,10 +478,14 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ราคาขาย
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             (THB)
           </Typography>
         </div>
@@ -386,10 +499,14 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ราคาขายจริง
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             (THB)
           </Typography>
         </div>
