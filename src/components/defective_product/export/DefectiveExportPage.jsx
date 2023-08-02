@@ -37,9 +37,11 @@ function DefectiveExportPage({
   const [productData, setProductData] = useState(productDatas);
   const [productShow, setProductShow] = useState([]);
   const [exportValue, setExportValue] = useState(0);
+  const [note, setNote] = useState("");
   const [togleReset, setTogleReset] = useState(false);
   const [id, setId] = useState(0);
   const inputRef = useRef();
+  const inputNoteRef = useRef();
   const { t } = useTranslation(["dashboard-page"]);
 
   useEffect(() => {
@@ -94,62 +96,70 @@ function DefectiveExportPage({
     const formExport = {
       product_id: productShow.product_id,
       quantity: exportValue,
+      note: note,
     };
+
     if (exportValue <= 0) {
       inputRef.current.focus();
-    } else {
-      Swal.fire({
-        title: "ยืนยันการเบิกสินค้า",
-        html:
-          `<p>รหัสสินค้า : ${productShow.product_id}</p>` +
-          `<p>ชื่อสินค้า : ${productShow.title}</p>` +
-          `<p>จำนวนที่ต้องการเบิก : ${exportValue}</p>`,
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "ยืนยัน",
-        cancelButtonText: "ยกเลิก",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          axios
-            .post("product/defective/create", formExport)
-            .then((res) => {
-              Swal.fire({
-                title: "เบิกสินค้าสำเร็จ",
-                icon: "success",
-                showConfirmButton: false,
-                timer: 1500,
-              }).then(() => {
-                setRefreshData(refreshData + 1);
-                if (multiExprot && !exportOne && productData.length > 1) {
-                  const newProductData = productData.filter(
-                    (item) => item.id !== id
-                  );
-                  setProductData(newProductData);
-                  setProductShow(newProductData[0]);
-                  setId(newProductData[0].id);
-                  setStock(
-                    newProductData[0].import_value -
-                      (newProductData[0].export_value +
-                        newProductData[0].export_defective_value)
-                  );
-                  setExportValue(0);
-                  setProductShowArr((prev) => {
-                    return [newProductData[0]];
-                  });
-                  setTogleReset(!togleReset)
-                } else {
-                  setOpen(false);
-                  navigate("/defective")
-                }
-              });
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        }
-      });
+      return false;
+    } 
+
+    if (!note || note.trim() === "") {
+      inputNoteRef.current.focus();
+      return false;
     }
+
+    Swal.fire({
+      title: "ยืนยันการเบิกสินค้า",
+      html:
+        `<p>รหัสสินค้า : ${productShow.product_id}</p>` +
+        `<p>ชื่อสินค้า : ${productShow.title}</p>` +
+        `<p>จำนวนที่ต้องการเบิก : ${exportValue}</p>`,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ยืนยัน",
+      cancelButtonText: "ยกเลิก",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .post("product/defective/create", formExport)
+          .then((res) => {
+            Swal.fire({
+              title: "เบิกสินค้าสำเร็จ",
+              icon: "success",
+              showConfirmButton: false,
+              timer: 1500,
+            }).then(() => {
+              setRefreshData(refreshData + 1);
+              if (multiExprot && !exportOne && productData.length > 1) {
+                const newProductData = productData.filter(
+                  (item) => item.id !== id
+                );
+                setProductData(newProductData);
+                setProductShow(newProductData[0]);
+                setId(newProductData[0].id);
+                setStock(
+                  newProductData[0].import_value -
+                    (newProductData[0].export_value +
+                      newProductData[0].export_defective_value)
+                );
+                setExportValue(0);
+                setProductShowArr((prev) => {
+                  return [newProductData[0]];
+                });
+                setTogleReset(!togleReset)
+              } else {
+                setOpen(false);
+                navigate("/defective")
+              }
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    });
   };
 
   return (
@@ -287,6 +297,15 @@ function DefectiveExportPage({
                   : 0
               )
             }
+          />
+        </Card>
+        <Card className="quantity-export">
+          <p>หมายเหตุ :</p>
+          <input
+            ref={inputNoteRef}
+            placeholder="กรอกรายละเอียดการชำรุด"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
           />
         </Card>
         <button

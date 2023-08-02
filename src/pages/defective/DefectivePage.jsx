@@ -63,6 +63,7 @@ function DefectivePage() {
   useEffect(() => {
     getDefectiveProducts();
     getMainCategories();
+    console.log(defectiveProducts)
   }, [refreshData]);
 
   const titleOptions = defectiveProducts

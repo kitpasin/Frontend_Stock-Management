@@ -22,6 +22,19 @@
         @media screen and (min-width: $sm) {
             padding: 1.5rem!important;
         }
+
+        & .MuiDataGrid-columnHeader {
+            transition-duration: .5s;
+        }
+        
+        & .MuiDataGrid-cell {
+            transition-duration: .5s;
+    
+            .hover {
+                max-width: 100% !important;
+                width: 290px !important;
+            }
+        }
     }
     
 }

@@ -33,7 +33,7 @@ function ProductSupplier({ productAll }) {
       headerName: "ชื่อรายการ",
       width: 150,
       headerAlign: "center",
-      align: "center",
+      align: "left",
     },
     {
       field: "supplier_name",

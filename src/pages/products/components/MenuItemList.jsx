@@ -286,27 +286,29 @@ function MenuItemList({
             ปริ้นบาร์โค้ด
           </p>
         </MenuItem>
-        <MenuItem
-          sx={{
-            display: "flex",
-            gap: "1rem",
-          }}
-          onClick={() => fetchImportHandle(params.row)}
-        >
-          <img
-            style={{
-              width: "18px",
-              height: "18px",
-              filter:
-                "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
+        { false &&
+          <MenuItem
+            sx={{
+              display: "flex",
+              gap: "1rem",
             }}
-            src="/images/icons/imports-icon.png"
-            alt=""
-          />
-          <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>
-            เพิ่มสินค้า
-          </p>
-        </MenuItem>
+            onClick={() => fetchImportHandle(params.row)}
+          >
+            <img
+              style={{
+                width: "18px",
+                height: "18px",
+                filter:
+                  "invert(85%) sepia(25%) saturate(2350%) hue-rotate(217deg) brightness(95%) contrast(88%)",
+              }}
+              src="/images/icons/imports-icon.png"
+              alt=""
+            />
+            <p style={{ fontSize: "18px", fontWeight: 400, color: "#3B336B" }}>
+              เพิ่มสินค้า
+            </p>
+          </MenuItem>
+        }
         <MenuItem
           sx={{ display: "flex", gap: "1rem" }}
           onClick={() => editHandle(params.row)}

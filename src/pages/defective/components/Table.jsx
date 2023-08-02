@@ -60,7 +60,7 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
       field: "export_quantity",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 60,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -68,6 +68,14 @@ function Table({ productsData, refreshData, setRefreshData, productSelected, set
           <Typography style={{ fontSize: "12px", fontWeight: "500", lineHeight: "12.5px" }}>/หน่วย</Typography>
         </div>
       ),
+    },
+    {
+      field: "note",
+      headerName: "หมายเหตุ",
+      headerAlign: "center",
+      align: "center",
+      width: 70,
+      headerClassName: "table-columns",
     },
     {
       field: "left",

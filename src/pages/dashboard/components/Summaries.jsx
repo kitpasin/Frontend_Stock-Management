@@ -40,16 +40,22 @@ function Summaries({
 
   const [outOfStockValue, setOutOfStockValue] = useState(
     productsOutOfStock?.map(
-      (item) => item.import_value - item.export_value - item.export_defective_value
+      (item) =>
+        item.import_value - item.export_value - item.export_defective_value
     )
   );
   const [aboutToExpireValue, setAboutToExpireValue] = useState(
     productsAboutToExpire?.map(
-      (item) => item.import_value - item.export_value - item.export_defective_value
+      (item) =>
+        item.import_value - item.export_value - item.export_defective_value
     )
   );
-  const [importValue, setImportValue] = useState(productsImport?.map((item) => item.import_value));
-  const [exportValue, setExportValue] = useState(productsExport?.map((item) => item.export_quantity));
+  const [importValue, setImportValue] = useState(
+    productsImport?.map((item) => item.import_value)
+  );
+  const [exportValue, setExportValue] = useState(
+    productsExport?.map((item) => item.export_quantity)
+  );
   const webPath = useSelector((state) => state.app.webPath);
 
   const endDate = dayjs(mostProductExpire?.exp_date);
@@ -164,7 +170,8 @@ function Summaries({
               </div>
               <div className="text-description">
                 <p>
-                  {uniqueProductsData?.length} รายการ / {sumOutOfStockValue} หน่วย
+                  {uniqueProductsData?.length} รายการ / {sumOutOfStockValue}{" "}
+                  หน่วย
                 </p>
               </div>
             </div>
@@ -194,7 +201,10 @@ function Summaries({
         <Card className="item">
           <div className="content" style={{ justifyContent: "flex-start" }}>
             <figure className="image">
-              <img src="/images/icons/expirationTable-icon.png" alt="Expiration-icon" />
+              <img
+                src="/images/icons/expirationTable-icon.png"
+                alt="Expiration-icon"
+              />
             </figure>
             <div className="text">
               <div className="text-title">
@@ -202,7 +212,8 @@ function Summaries({
               </div>
               <div className="text-description">
                 <p>
-                  {productsAboutToExpire?.length} รายการ / {sumAboutToExpireValue} หน่วย
+                  {productsAboutToExpire?.length} รายการ /{" "}
+                  {sumAboutToExpireValue} หน่วย
                 </p>
               </div>
             </div>
@@ -214,7 +225,11 @@ function Summaries({
                 <p>ใกล้สุด : {mostProductExpire?.title}</p>
               </div>
               <div className="text-description">
-                <p>{remainingDays + 1 <= 0 ? "หมดอายุ" : remainingDays + 1 + " วัน"}</p>
+                <p>
+                  {remainingDays + 1 <= 0
+                    ? "หมดอายุ"
+                    : remainingDays + 1 + " วัน"}
+                </p>
               </div>
             </div>
             <button onClick={toggleAboutToExpireGraph} className="graph">
@@ -297,16 +312,25 @@ function Summaries({
             <p className="header">สินค้าเบิกออกมากสุด/เดือน</p>
             <div className="content">
               <figure className="image">
-                {mostExportedProduct?.export_value + mostExportedProduct?.export_defective_value !==
-                0 ? (
+                {mostExportedProduct?.export_value +
+                  mostExportedProduct?.export_defective_value !==
+                  0 && mostExportedProduct !== null ? (
                   <img
-                    style={{ width: "100px", height: "100px", paddingBlock: ".5rem" }}
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      paddingBlock: ".5rem",
+                    }}
                     src={`${webPath}${mostExportedProduct?.thumbnail_link}`}
                     alt=""
                   />
                 ) : (
                   <img
-                    style={{ width: "100px", height: "100px", paddingBlock: ".5rem" }}
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      paddingBlock: ".5rem",
+                    }}
                     src="/images/mock/pre-product.png"
                   />
                 )}
@@ -315,7 +339,7 @@ function Summaries({
                 <p className="title">
                   {mostExportedProduct?.export_value +
                     mostExportedProduct?.export_defective_value !==
-                  0
+                    0 && mostExportedProduct !== null
                     ? mostExportedProduct?.title
                     : ""}
                 </p>
@@ -325,7 +349,7 @@ function Summaries({
                     <p>
                       {mostExportedProduct?.export_value +
                         mostExportedProduct?.export_defective_value !==
-                      0
+                        0 && mostExportedProduct !== null
                         ? `${mostExportedProduct?.netweight} ${mostExportedProduct?.unit_name}`
                         : 0}
                     </p>
@@ -335,7 +359,7 @@ function Summaries({
                     <p>
                       {mostExportedProduct?.export_value +
                         mostExportedProduct?.export_defective_value !==
-                      0
+                        0 && mostExportedProduct !== null
                         ? `${mostExportedProduct?.selling_price} THB`
                         : 0}
                     </p>
@@ -346,8 +370,9 @@ function Summaries({
             <div className="summary">
               <p>จำนวนเบิกออก</p>
               <p>
-                {mostExportedProduct?.export_value + mostExportedProduct?.export_defective_value !==
-                0
+                {mostExportedProduct?.export_value +
+                  mostExportedProduct?.export_defective_value !==
+                  0 && mostExportedProduct !== null
                   ? `${
                       mostExportedProduct?.export_value +
                       mostExportedProduct?.export_defective_value
@@ -365,15 +390,23 @@ function Summaries({
                 {mostProductInStock?.import_value -
                   mostProductInStock?.export_value -
                   mostProductInStock?.export_defective_value !==
-                0 ? (
+                  0 && mostProductInStock !== null ? (
                   <img
-                    style={{ width: "100px", height: "100px", paddingBlock: ".5rem" }}
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      paddingBlock: ".5rem",
+                    }}
                     src={`${webPath}${mostProductInStock?.thumbnail_link}`}
                     alt=""
                   />
                 ) : (
                   <img
-                    style={{ width: "100px", height: "100px", paddingBlock: ".5rem" }}
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      paddingBlock: ".5rem",
+                    }}
                     src="/images/mock/pre-product.png"
                   />
                 )}
@@ -383,7 +416,7 @@ function Summaries({
                   {mostProductInStock?.import_value -
                     mostProductInStock?.export_value -
                     mostProductInStock?.export_defective_value !==
-                  0
+                    0 && mostProductInStock !== null
                     ? mostProductInStock?.title
                     : ""}
                 </p>
@@ -394,7 +427,7 @@ function Summaries({
                       {mostProductInStock?.import_value -
                         mostProductInStock?.export_value -
                         mostProductInStock?.export_defective_value !==
-                      0
+                        0 && mostProductInStock !== null
                         ? `${mostProductInStock?.netweight} ${mostProductInStock?.unit_name}`
                         : 0}
                     </p>
@@ -405,7 +438,7 @@ function Summaries({
                       {mostProductInStock?.import_value -
                         mostProductInStock?.export_value -
                         mostProductInStock?.export_defective_value !==
-                      0
+                        0 && mostProductInStock !== null
                         ? `${mostProductInStock?.selling_price} THB`
                         : 0}
                     </p>
@@ -419,13 +452,13 @@ function Summaries({
                 {mostProductInStock?.import_value -
                   mostProductInStock?.export_value -
                   mostProductInStock?.export_defective_value !==
-                0
-                  ? `${
-                      mostProductInStock?.import_value -
-                      mostProductInStock?.export_value +
-                      mostProductInStock?.export_defective_value
-                    } หน่วย`
-                  : 0}
+                  0 && mostProductInStock !== null
+                  ? mostProductInStock?.import_value -
+                    (mostProductInStock?.export_value +
+                      mostProductInStock?.export_defective_value) +
+                    " "
+                  : 0 + " "}
+                หน่วย
               </p>
             </div>
           </Card>
@@ -442,13 +475,21 @@ function Summaries({
                   mostProductExpire?.export_defective_value !==
                 0 ? (
                   <img
-                    style={{ width: "100px", height: "100px", paddingBlock: ".5rem" }}
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      paddingBlock: ".5rem",
+                    }}
                     src={`${webPath}${mostProductExpire?.thumbnail_link}`}
                     alt=""
                   />
                 ) : (
                   <img
-                    style={{ width: "100px", height: "100px", paddingBlock: ".5rem" }}
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      paddingBlock: ".5rem",
+                    }}
                     src="/images/mock/pre-product.png"
                   />
                 )}
@@ -495,7 +536,11 @@ function Summaries({
                   mostProductExpire?.export_value -
                   mostProductExpire?.export_defective_value !==
                 0
-                  ? `${remainingDays + 1 <= 0 ? "หมดอายุ" : remainingDays + 1 + " วัน"}`
+                  ? `${
+                      remainingDays + 1 <= 0
+                        ? "หมดอายุ"
+                        : remainingDays + 1 + " วัน"
+                    }`
                   : 0}
               </p>
             </div>
@@ -511,13 +556,21 @@ function Summaries({
                   mostProductOutOfStock?.export_defective_value !==
                 0 ? (
                   <img
-                    style={{ width: "100px", height: "100px", paddingBlock: ".5rem" }}
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      paddingBlock: ".5rem",
+                    }}
                     src={`${webPath}${mostProductOutOfStock?.thumbnail_link}`}
                     alt=""
                   />
                 ) : (
                   <img
-                    style={{ width: "100px", height: "100px", paddingBlock: ".5rem" }}
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      paddingBlock: ".5rem",
+                    }}
                     src="/images/mock/pre-product.png"
                   />
                 )}
@@ -564,12 +617,11 @@ function Summaries({
                   mostProductOutOfStock?.export_value -
                   mostProductOutOfStock?.export_defective_value !==
                 0
-                  ? `${
-                      mostProductOutOfStock?.import_value -
-                      mostProductOutOfStock?.export_value +
-                      mostProductOutOfStock?.export_defective_value
-                    } หน่วย`
-                  : 0}
+                  ? mostProductOutOfStock?.import_value -
+                    (mostProductOutOfStock?.export_value +
+                    mostProductOutOfStock?.export_defective_value) + " "
+                  : 0 + " "}
+                  หน่วย
               </p>
             </div>
           </Card>

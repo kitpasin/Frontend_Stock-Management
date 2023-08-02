@@ -89,6 +89,7 @@
                 line-height: 60px;
             }
         }
+
         .quantity-export {
             padding-inline: 4.5rem;
             width: 400px;
@@ -105,16 +106,17 @@
                 font-size: 12px;
             }
             input {
-                border: #C4C4C4 1px solid;
+                border: #c4c4c4 1px solid;
                 border-radius: 5px;
                 padding-left: 1rem;
-                padding-block: .25rem;
+                padding-block: 0.25rem;
                 font-size: 18px;
                 font-weight: 400;
                 color: #3b326b;
-                margin-bottom: .5rem;
+                margin-bottom: 0.5rem;
             }
         }
+
         .submit {
             width: 400px;
             height: 128px;

@@ -78,7 +78,6 @@ function ProductsPage() {
   };
 
   const multiImportHandle = () => {
-    console.log(productSelected)
     if (productSelected.length === 0) {
       Swal.fire({
         text: "เลือกสินค้าที่ต้องการเพิ่ม",

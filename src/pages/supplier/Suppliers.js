@@ -26,6 +26,7 @@ function Suppliers() {
   const [mainCatesData, setMainCatesData] = useState([]);
   const [mainCates, setMainCates] = useState([]);
   const [cellData, setCellData] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
   const [open, setOpen] = useState(false);
 
   function handleOpen(cellValue) {
@@ -51,25 +52,60 @@ function Suppliers() {
       const data = productData.filter((item) => item.supplier_id === _id);
       const supplier = suppliersData.filter((item) => item.id === _id);
       setProductAll(data);
-      setSupplier(supplier)
+      setSupplier(supplier);
     } else {
       setProductAll(productData);
-      setSupplier(suppliersData)
+      setSupplier(suppliersData);
     }
   }
-  
+
   function filterTel(_tel) {
     if (_tel !== 0) {
-      const supplier = suppliersData.filter((item) => item.tel === _tel)
-      const data = productData.filter((item) => item.supplier_id === supplier[0].id)
-      
+      const supplier = suppliersData.filter((item) => item.tel === _tel);
+      const data = productData.filter(
+        (item) => item.supplier_id === supplier[0].id
+      );
+
       setProductAll(data);
-      setSupplier(supplier)
+      setSupplier(supplier);
     } else {
       setProductAll(productData);
-      setSupplier(suppliersData)
+      setSupplier(suppliersData);
     }
   }
+
+  const searchSupplier = (e) => {
+    const text = e.target.value.toLowerCase();
+    const pp = [];
+    if (!text || text.trim() === "") {
+      setProductAll(productData);
+      setSupplier(suppliersData);
+    } else {
+      const supplier = suppliersData?.filter(
+        (item) =>
+          item.name.includes(text) ||
+          item.address.includes(text) ||
+          item.agent.includes(text) ||
+          item.tel.includes(text) ||
+          item.line_id.includes(text) ||
+          item.email.includes(text)
+      );
+      if (supplier.length > 0) {
+        supplier?.map(item => {
+          productData?.map(product => {
+            if (product.supplier_id === item.id) {
+              pp.push(product)
+            }
+          })
+        })
+        setProductAll(pp)
+      } else {
+        setProductAll([])
+      }
+      setSupplier(supplier);
+    }
+
+  };
 
   useEffect(() => {
     getSuppliers();
@@ -235,21 +271,21 @@ function Suppliers() {
                   <span>{suppliersData.length} รายการ</span>
                 </div>
                 <div className="select">
-                    <Autocomplete
-                      size="small"
-                      disablePortal
-                      id="combo-box-demo"
-                      options={supplier}
-                      getOptionLabel={(option) => option.name || ""}
-                      sx={{ width: 180 }}
-                      renderInput={(params) => (
-                        <TextField {...params} label="ซัพพลายเออร์" />
-                      )}
-                      onChange={(e, value) => {
-                        filterData(value ? value.id : 0);
-                      }}
-                    />
-                    <Autocomplete
+                  <Autocomplete
+                    size="small"
+                    disablePortal
+                    id="combo-box-demo"
+                    options={supplier}
+                    getOptionLabel={(option) => option.name || ""}
+                    sx={{ width: 180 }}
+                    renderInput={(params) => (
+                      <TextField {...params} label="ซัพพลายเออร์" />
+                    )}
+                    onChange={(e, value) => {
+                      filterData(value ? value.id : 0);
+                    }}
+                  />
+                  {/* <Autocomplete
                       size="small"
                       disablePortal
                       id="combo-box-demo"
@@ -262,10 +298,17 @@ function Suppliers() {
                       onChange={(e, value) => {
                         filterTel(value ? value.tel : 0);
                       }}
-                    />
-                <div className="action">
-                  <button onClick={handleLink}>เพิ่มซัพพลายเออร์</button>
-                </div>
+                    /> */}
+                  <TextField
+                    label="ค้นหาซัพพลายเออร์"
+                    id="outlined-size-small"
+                    // value={searchInput}
+                    size="small"
+                    onChange={(e) => searchSupplier(e)}
+                  />
+                  <div className="action">
+                    <button onClick={handleLink}>เพิ่มซัพพลายเออร์</button>
+                  </div>
                 </div>
               </div>
               <div className="table">

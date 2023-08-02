@@ -1,3 +1,4 @@
+import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Avatar, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
@@ -13,9 +14,12 @@ function Table({
   setProductSelected,
 }) {
   const webPath = useSelector((state) => state.app.webPath);
+  const [isHovered, setIsHovered] = React.useState(false);
 
   const onRowsSelectionHandler = (ids) => {
-    const selectedRowsData = ids.map((id) => productsData.find((product) => product.id === id));
+    const selectedRowsData = ids.map((id) =>
+      productsData.find((product) => product.id === id)
+    );
     setProductSelected(selectedRowsData);
   };
 
@@ -40,17 +44,31 @@ function Table({
       field: "title",
       headerName: "ชื่อรายการ",
       headerAlign: "center",
-      align: "center",
-      width: 110,
+      align: "left",
+      width: isHovered ? 290 : 115,
       headerClassName: "table-columns",
-      renderCell: (params) => (
-        <div style={{ paddingLeft: ".5rem" }}>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>{`${params.row.title}`}</p>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}>
-            {params.row.product_id}
-          </p>
-        </div>
-      ),
+      renderCell: (params) => {
+        return (
+          <div
+            style={{ paddingLeft: "0" }}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            <p
+              style={{ fontSize: "12px", lineHeight: "12.5px" }}
+            >{`${params.row.title}`}</p>
+            <p
+              style={{
+                fontSize: "12px",
+                lineHeight: "12.5px",
+                color: "#9993B4",
+              }}
+            >
+              {params.row.product_id}
+            </p>
+          </div>
+        );
+      },
     },
     {
       field: "import_value",
@@ -60,10 +78,14 @@ function Table({
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             นำเข้า
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             /หน่วย
           </Typography>
         </div>
@@ -77,10 +99,14 @@ function Table({
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             สินค้า
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             มีปัญหา
           </Typography>
         </div>
@@ -94,10 +120,14 @@ function Table({
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             เบิกแล้ว
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             /หน่วย
           </Typography>
         </div>
@@ -116,10 +146,14 @@ function Table({
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             คงเหลือ
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             /หน่วย
           </Typography>
         </div>
@@ -132,7 +166,8 @@ function Table({
               lineHeight: "12.5px",
               color:
                 params.row.import_value -
-                  (params.row.export_value + params.row.export_defective_value) <=
+                  (params.row.export_value +
+                    params.row.export_defective_value) <=
                 50
                   ? "#ff0000"
                   : "#000",
@@ -160,10 +195,14 @@ function Table({
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "10px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "10px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             MFD
           </Typography>
-          <Typography style={{ fontSize: "10px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "10px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             EXP
           </Typography>
         </div>
@@ -193,10 +232,14 @@ function Table({
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             จำนวนวัน
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             EXP
           </Typography>
         </div>
@@ -257,10 +300,14 @@ function Table({
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ปริมาตรสุทธิ
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             /หน่วย
           </Typography>
         </div>
@@ -274,10 +321,14 @@ function Table({
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ค่าดำเนินการ
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             (THB)
           </Typography>
         </div>
@@ -291,13 +342,19 @@ function Table({
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ค่าดำเนินการ
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             /หน่วย
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             (THB)
           </Typography>
         </div>
@@ -312,10 +369,14 @@ function Table({
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ราคาดิบ
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             (THB)
           </Typography>
         </div>
@@ -329,13 +390,19 @@ function Table({
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ราคาดิบ
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             /หน่วย
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             (THB)
           </Typography>
         </div>
@@ -349,13 +416,19 @@ function Table({
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ต้นทุน
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             /หน่วย
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             (THB)
           </Typography>
         </div>
@@ -369,10 +442,14 @@ function Table({
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             Total
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             (THB)
           </Typography>
         </div>
@@ -386,10 +463,14 @@ function Table({
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             กำไร
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             (%)
           </Typography>
         </div>
@@ -403,10 +484,14 @@ function Table({
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ราคาขาย
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             (THB)
           </Typography>
         </div>
@@ -420,10 +505,14 @@ function Table({
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             ราคาขายจริง
           </Typography>
-          <Typography style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
             (THB)
           </Typography>
         </div>
