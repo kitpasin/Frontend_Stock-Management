@@ -32,6 +32,7 @@ function ExpirationPage() {
 
   const [refreshData, setRefreshData] = useState(0);
   const [productSelected, setProductSelected] = useState([]);
+  const [productData, setProductData] = useState([]);
   const [openMultiExportModal, setOpenMultiexportModal] = useState(false);
 
   const filteredProduct = productsExpiration.filter((product) => {
@@ -91,6 +92,8 @@ function ExpirationPage() {
   const mainCategoryOptions = mainCategories
     .map((category) => category.name)
     .filter((value, index, self) => self.indexOf(value) === index);
+
+  console.log(productsExpiration)
 
   return (
     <section id="expiration-page">

@@ -43,6 +43,13 @@ function ProductSupplier({ productAll }) {
       align: "center",
     },
     {
+      field: "supplier_barcode",
+      headerName: "ซัพพลายเออร์บาร์โค้ด",
+      width: 150,
+      headerAlign: "center",
+      align: "left",
+    },
+    {
       field: "import_value",
       headerName: "จำนวนที่สั่งซื้อ",
       width: 150,

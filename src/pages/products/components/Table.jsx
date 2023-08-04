@@ -168,7 +168,7 @@ function Table({
                 params.row.import_value -
                   (params.row.export_value +
                     params.row.export_defective_value) <=
-                50
+                params.row.alert_stock
                   ? "#ff0000"
                   : "#000",
             }}
@@ -254,7 +254,7 @@ function Table({
               style={{
                 fontSize: "12px",
                 lineHeight: "12.5px",
-                color: remainingDays + 1 <= 30 ? "#FF0000" : "#000",
+                color: remainingDays + 1 <= params.row.alert_date ? "#FF0000" : "#000",
               }}
             >
               {remainingDays + 1 <= 0 ? "หมดอายุ" : remainingDays + 1 + " วัน"}
