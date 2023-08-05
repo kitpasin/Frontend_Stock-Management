@@ -300,6 +300,22 @@ const SidebarComponent = (props) => {
                   </NavLink>
                 </li>
               </ul>
+              <ul className="nav-menu">
+                <li>
+                  <NavLink
+                    onClick={closeSidebarhandler}
+                    to="/report"
+                    className={`navlink `}
+                    title={t("ReportPage")}
+                    liClass="menu-link"
+                  >
+                    <figure className="faIcon">
+                      <FontAwesomeIcon icon={faFileCsv} />
+                    </figure>
+                    <div className="menu-title">{t("ReportPage")}</div>
+                  </NavLink>
+                  </li>
+              </ul>
 
               {/* <ul className="nav-menu">
                 <div className="title-section">{t("ManageSystem")}</div>
@@ -461,7 +477,7 @@ const SidebarComponent = (props) => {
                 {pagesAllow.reports && (
                   <NavLink
                     onClick={closeSidebarhandler}
-                    to="/reports"
+                    to="/report"
                     className={`navlink `}
                     title={t("ReportPage")}
                     liClass="menu-link"

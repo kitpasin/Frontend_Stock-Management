@@ -9,6 +9,9 @@
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
     margin-top: -1rem;
+    @media screen and (max-width: 1550px) {
+        grid-template-columns: 1fr;
+    }
     .item {
         display: flex;
         justify-content: space-between;
@@ -17,11 +20,15 @@
         border-radius: 10px;
         box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.05);
         .content {
-            width: 40%;
+            width: 47.5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 1rem;
+            button {
+                width: 125px;
+                flex: none;
+            }
             .image {
                 background: #eff3f9;
                 padding: 0.5rem;
@@ -64,6 +71,9 @@
         grid-template-columns: 1fr 1fr;
         gap: 1rem;
         width: 50%;
+        @media screen and (max-width: 1550px) {
+            grid-template-columns: 1fr;
+        }
         .item {
             display: flex;
             flex-direction: column;
@@ -136,6 +146,9 @@
         grid-template-columns: 1fr 1fr;
         gap: 1rem;
         width: 50%;
+        @media screen and (max-width: 1550px) {
+            grid-template-columns: 1fr;
+        }
         .item {
             display: flex;
             flex-direction: column;

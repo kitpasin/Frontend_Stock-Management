@@ -40,6 +40,7 @@ import ImportPage from './pages/import/ImportPage';
 import ExportPage from './pages/export/ExportPage';
 import DefectiveSearchPage from './components/defective_product/search/DefectiveSearchPage';
 import DefectiveExportPage from './components/defective_product/export/DefectiveExportPage';
+import ReportPage from './pages/report/ReportPage';
 import { createContext } from 'react';
 
 export const ProductContext = createContext();
@@ -58,6 +59,7 @@ function App() {
         <Routes>
           <Route element={<PrivateRoutes />}>
             {<Route path="/" element={<Navigate to="/dashboard" />} />}
+            {pagesAllow.products && <Route path="/report" element={<ReportPage />} />}
             {pagesAllow.dashboard && <Route path="/dashboard" element={<DashboardPage />} />}
             {pagesAllow.inbox && <Route path="inbox" element={<InboxPage />} />}
             {/* {pagesAllow.messages && <Route path="messages" element={<DashboardPage />} /> } */}
