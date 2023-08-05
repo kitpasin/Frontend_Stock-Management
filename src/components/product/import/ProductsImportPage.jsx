@@ -651,7 +651,7 @@ function ProductsImportPage({
                     label="ชื่อสินค้า"
                     variant="outlined"
                     size="small"
-                    sx={{ width: "51%" }}
+                    sx={{ width: "49.5%" }}
                   />
                   <TextField
                     required
@@ -669,7 +669,7 @@ function ProductsImportPage({
                     label="ปริมาตรสุทธิ"
                     variant="outlined"
                     size="small"
-                    sx={{ width: "33.75%" }}
+                    sx={{ width: "150px" }}
                   />
                   <Autocomplete
                     key={productData.reset}
@@ -683,11 +683,58 @@ function ProductsImportPage({
                     id="combo-box-demo"
                     options={netsData}
                     getOptionLabel={(option) => option.name || ""}
-                    sx={{ width: "16.25%" }}
+                    sx={{ width: "13.25%" }}
                     renderInput={(params) => (
                       <TextField
                         {...params}
                         label="หน่วยปริมาตรสุทธิ"
+                        size="small"
+                        required
+                      />
+                    )}
+                  />
+                  <TextField
+                    required
+                    value={productData.import_value}
+                    onChange={(e) =>
+                      setProductData(() => {
+                        return {
+                          ...productData,
+                          import_value: !isNaN(parseInt(e.target.value))
+                            ? parseInt(e.target.value)
+                            : "",
+                        };
+                      })
+                    }
+                    id="outlined-basic"
+                    label="จำนวน(นำเข้า)"
+                    variant="outlined"
+                    size="small"
+                    sx={{ width: "10.67%" }}
+                  />
+                  <Autocomplete
+                    // value={productData.counting_unit}
+                    key={productData.reset}
+                    defaultValue={{
+                      name: productData.counting_unit_name || "",
+                    }}
+                    onChange={(e, value) =>
+                      setProductData(() => {
+                        return {
+                          ...productData,
+                          counting_unit: value ? value.id : 0,
+                        };
+                      })
+                    }
+                    disablePortal
+                    id="combo-box-demo"
+                    options={amountsData}
+                    getOptionLabel={(option) => option.name || ""}
+                    sx={{ width: "10.87%" }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="หน่วยนับ"
                         size="small"
                         required
                       />
@@ -805,53 +852,6 @@ function ProductsImportPage({
                     />
                     <TextField
                       required
-                      value={productData.import_value}
-                      onChange={(e) =>
-                        setProductData(() => {
-                          return {
-                            ...productData,
-                            import_value: !isNaN(parseInt(e.target.value))
-                              ? parseInt(e.target.value)
-                              : "",
-                          };
-                        })
-                      }
-                      id="outlined-basic"
-                      label="จำนวน(นำเข้า)"
-                      variant="outlined"
-                      size="small"
-                      sx={{ width: "16.67%" }}
-                    />
-                    <Autocomplete
-                      // value={productData.counting_unit}
-                      key={productData.reset}
-                      defaultValue={{
-                        name: productData.counting_unit_name || "",
-                      }}
-                      onChange={(e, value) =>
-                        setProductData(() => {
-                          return {
-                            ...productData,
-                            counting_unit: value ? value.id : 0,
-                          };
-                        })
-                      }
-                      disablePortal
-                      id="combo-box-demo"
-                      options={amountsData}
-                      getOptionLabel={(option) => option.name || ""}
-                      sx={{ width: "23.67%" }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="หน่วยนับ"
-                          size="small"
-                          required
-                        />
-                      )}
-                    />
-                    <TextField
-                      required
                       value={productData.alert_stock}
                       onChange={(e) =>
                         setProductData((prev) => {
@@ -867,7 +867,25 @@ function ProductsImportPage({
                       label="จำนวนเตือนสินค้าใกล้หมด"
                       variant="outlined"
                       size="small"
-                      sx={{ width: "26%" }}
+                      sx={{ width: "33.33%" }}
+                    />
+                    <TextField
+                      value={productData.defective}
+                      onChange={(e) =>
+                        setProductData(() => {
+                          return {
+                            ...productData,
+                            defective: !isNaN(parseInt(e.target.value))
+                              ? parseInt(e.target.value)
+                              : 0,
+                          };
+                        })
+                      }
+                      id="outlined-basic"
+                      label="จำนวนสินค้าที่มีปัญหา"
+                      variant="outlined"
+                      size="small"
+                      sx={{ width: "33.33%" }}
                     />
                   </div>
                 </div>
@@ -965,19 +983,11 @@ function ProductsImportPage({
                       }}
                     />
                     <TextField
-                      value={productData.defective}
-                      onChange={(e) =>
-                        setProductData(() => {
-                          return {
-                            ...productData,
-                            defective: !isNaN(parseInt(e.target.value))
-                              ? parseInt(e.target.value)
-                              : 0,
-                          };
-                        })
-                      }
-                      id="outlined-basic"
-                      label="จำนวนสินค้าที่มีปัญหา"
+                      required
+                      value={productData.supplier_barcode || ""}
+                      onChange={(e) => digitBarcode(e)}
+                      id="supplier-barcode"
+                      label="เลขบาร์โค้ดจากซัพพลายเออร์"
                       variant="outlined"
                       size="small"
                       sx={{ width: "33.33%" }}
@@ -1199,7 +1209,7 @@ function ProductsImportPage({
                       id="combo-box-demo"
                       options={suppliersData}
                       getOptionLabel={(option) => option.name || ""}
-                      sx={{ width: "33.33%" }}
+                      sx={{ width: "50%" }}
                       renderInput={(params) => (
                         <TextField
                           {...params}
@@ -1225,7 +1235,7 @@ function ProductsImportPage({
                       id="combo-box-demo"
                       options={supplierCates}
                       getOptionLabel={(option) => option.name || ""}
-                      sx={{ width: "33.33%" }}
+                      sx={{ width: "50%" }}
                       renderInput={(params) => (
                         <TextField
                           {...params}
@@ -1234,16 +1244,6 @@ function ProductsImportPage({
                           required
                         />
                       )}
-                    />
-                    <TextField
-                      required
-                      value={productData.supplier_barcode || ""}
-                      onChange={(e) => digitBarcode(e)}
-                      id="supplier-barcode"
-                      label="เลขบาร์โค้ดจากซัพพลายเออร์"
-                      variant="outlined"
-                      size="small"
-                      sx={{ width: "33.33%" }}
                     />
                   </div>
                   <button
@@ -1356,7 +1356,6 @@ function ProductsImportPage({
                   }}
                 >
                   <div style={{ display: "flex", gap: "1rem", width: "100%" }}>
-                    
                     <TextField
                       required
                       type="number"
