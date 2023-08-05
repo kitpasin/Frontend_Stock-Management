@@ -44,8 +44,11 @@ const form = {
   purchase_date: "",
   mfd_date: "",
   exp_date: "",
+  alert_date: "",
+  alert_stock: "",
   barcode: "",
   new_barcode: "",
+  supplier_barcode: "",
   main_cate_id: "",
   sub_cate_id: "",
   sub_cate: "",
@@ -126,7 +129,6 @@ function ProductsImportPage({
   const formInputRef = useRef(null);
   const webPath = useSelector((state) => state.app.webPath);
   const imgError = "/images/mock/pre-product.png";
-  console.log(productData);
 
   async function getNets() {
     const netsArr = [];
@@ -238,8 +240,8 @@ function ProductsImportPage({
         total: totalAll,
         op_unit: parseFloat(op_unit),
         cost_per_unit: parseFloat(cost_per_unit),
-        unit_price: unit_price,
-        total_cost: total_cost,
+        unit_price: parseFloat(unit_price.toFixed(2)),
+        total_cost: parseFloat(total_cost.toFixed(2)),
         profit_per_unit: parseFloat(profit_per_unit.toFixed(2)),
         pp_profit: pp_profit,
         pp_vat: parseFloat(pp_vat.toFixed(2)),
@@ -255,7 +257,7 @@ function ProductsImportPage({
     productData.set_profit,
     productData.vat,
   ]);
-  /* Price details */
+  /* End price details */
 
   const imageError = (e) => {
     if (preview.file !== "" || preview.src !== "") {
@@ -296,9 +298,15 @@ function ProductsImportPage({
   function digitBarcode(e) {
     const dataLength = e.target.value.length;
     if (dataLength <= 13) {
-      setProductData((prev) => {
-        return { ...prev, barcode: e.target.value };
-      });
+      if (e.target.id === "supplier-barcode") {
+        setProductData((prev) => {
+          return { ...prev, supplier_barcode: e.target.value };
+        });
+      } else {
+        setProductData((prev) => {
+          return { ...prev, barcode: e.target.value };
+        });
+      }
     }
   }
 
@@ -395,8 +403,11 @@ function ProductsImportPage({
       formData.append("purchase_date", productData.purchase_date);
       formData.append("mfd_date", productData.mfd_date);
       formData.append("exp_date", productData.exp_date);
+      formData.append("alert_date", productData.alert_date);
+      formData.append("alert_stock", productData.alert_stock);
       formData.append("product_barcode", productData.barcode || "");
       formData.append("barcode", productData.new_barcode || "");
+      formData.append("supplier_barcode", productData.supplier_barcode || "");
       formData.append("defective", productData.defective);
       /* product_expense */
       formData.append("import_fee", productData.import_fee);
@@ -772,7 +783,26 @@ function ProductsImportPage({
                       />
                     </LocalizationProvider>
                   </div>
-                  <div style={{ display: "flex", gap: "1rem", width: "50%" }}>
+                  <div style={{ display: "flex", gap: ".5rem", width: "50%" }}>
+                    <TextField
+                      required
+                      value={productData.alert_date}
+                      onChange={(e) =>
+                        setProductData(() => {
+                          return {
+                            ...productData,
+                            alert_date: !isNaN(parseInt(e.target.value))
+                              ? parseInt(e.target.value)
+                              : "",
+                          };
+                        })
+                      }
+                      id="outlined-basic"
+                      label="จำนวนวันเตือนใกล้หมดอายุ"
+                      variant="outlined"
+                      size="small"
+                      sx={{ width: "33.33%" }}
+                    />
                     <TextField
                       required
                       value={productData.import_value}
@@ -787,10 +817,10 @@ function ProductsImportPage({
                         })
                       }
                       id="outlined-basic"
-                      label="จำนวน (นำเข้า)"
+                      label="จำนวน(นำเข้า)"
                       variant="outlined"
                       size="small"
-                      sx={{ width: "67.5%" }}
+                      sx={{ width: "16.67%" }}
                     />
                     <Autocomplete
                       // value={productData.counting_unit}
@@ -810,7 +840,7 @@ function ProductsImportPage({
                       id="combo-box-demo"
                       options={amountsData}
                       getOptionLabel={(option) => option.name || ""}
-                      sx={{ width: "32.5%" }}
+                      sx={{ width: "23.67%" }}
                       renderInput={(params) => (
                         <TextField
                           {...params}
@@ -819,6 +849,25 @@ function ProductsImportPage({
                           required
                         />
                       )}
+                    />
+                    <TextField
+                      required
+                      value={productData.alert_stock}
+                      onChange={(e) =>
+                        setProductData((prev) => {
+                          return {
+                            ...productData,
+                            alert_stock: !isNaN(parseInt(e.target.value))
+                              ? parseInt(e.target.value)
+                              : "",
+                          };
+                        })
+                      }
+                      id="outlined-basic"
+                      label="จำนวนเตือนสินค้าใกล้หมด"
+                      variant="outlined"
+                      size="small"
+                      sx={{ width: "26%" }}
                     />
                   </div>
                 </div>
@@ -882,7 +931,7 @@ function ProductsImportPage({
                       )}
                     />
                   </div>
-                  <div style={{ display: "flex", gap: "1rem", width: "50%" }}>
+                  <div style={{ display: "flex", gap: ".5rem", width: "50%" }}>
                     <TextField
                       value={productData.barcode || ""}
                       onChange={(e) => digitBarcode(e)}
@@ -1101,7 +1150,7 @@ function ProductsImportPage({
                         label="ค่าดำเนินการ/หน่วย"
                         variant="outlined"
                         size="small"
-                        sx={{ width: "50%" }}
+                        sx={{ width: "33.33%" }}
                       />
                     </div>
                   </div>
@@ -1127,7 +1176,7 @@ function ProductsImportPage({
                       padding: "1rem",
                       display: "flex",
                       justifyContent: "space-between",
-                      gap: "2rem",
+                      gap: "1rem",
                     }}
                   >
                     <Autocomplete
@@ -1150,7 +1199,7 @@ function ProductsImportPage({
                       id="combo-box-demo"
                       options={suppliersData}
                       getOptionLabel={(option) => option.name || ""}
-                      sx={{ width: "50%" }}
+                      sx={{ width: "33.33%" }}
                       renderInput={(params) => (
                         <TextField
                           {...params}
@@ -1176,7 +1225,7 @@ function ProductsImportPage({
                       id="combo-box-demo"
                       options={supplierCates}
                       getOptionLabel={(option) => option.name || ""}
-                      sx={{ width: "50%" }}
+                      sx={{ width: "33.33%" }}
                       renderInput={(params) => (
                         <TextField
                           {...params}
@@ -1185,6 +1234,16 @@ function ProductsImportPage({
                           required
                         />
                       )}
+                    />
+                    <TextField
+                      required
+                      value={productData.supplier_barcode || ""}
+                      onChange={(e) => digitBarcode(e)}
+                      id="supplier-barcode"
+                      label="เลขบาร์โค้ดจากซัพพลายเออร์"
+                      variant="outlined"
+                      size="small"
+                      sx={{ width: "33.33%" }}
                     />
                   </div>
                   <button
@@ -1242,7 +1301,27 @@ function ProductsImportPage({
                       label="ค่าดำเนินการ/หน่วย"
                       variant="outlined"
                       size="small"
-                      sx={{ width: "100%" }}
+                      sx={{ width: "50%" }}
+                    />
+                    <TextField
+                      required
+                      type="number"
+                      value={productData.product_cost}
+                      onChange={(e) =>
+                        setProductData(() => {
+                          return {
+                            ...productData,
+                            product_cost: !isNaN(parseFloat(e.target.value))
+                              ? parseFloat(e.target.value)
+                              : null,
+                          };
+                        })
+                      }
+                      id="outlined-basic"
+                      label="ต้นทุนสินค้า(ราคาดิบ)"
+                      variant="outlined"
+                      size="small"
+                      sx={{ width: "50%" }}
                     />
                   </div>
                   <div>
@@ -1277,26 +1356,7 @@ function ProductsImportPage({
                   }}
                 >
                   <div style={{ display: "flex", gap: "1rem", width: "100%" }}>
-                    <TextField
-                      required
-                      type="number"
-                      value={productData.product_cost}
-                      onChange={(e) =>
-                        setProductData(() => {
-                          return {
-                            ...productData,
-                            product_cost: !isNaN(parseFloat(e.target.value))
-                              ? parseFloat(e.target.value)
-                              : null,
-                          };
-                        })
-                      }
-                      id="outlined-basic"
-                      label="ต้นทุนสินค้า(ราคาดิบ)"
-                      variant="outlined"
-                      size="small"
-                      sx={{ width: "50%" }}
-                    />
+                    
                     <TextField
                       required
                       type="number"

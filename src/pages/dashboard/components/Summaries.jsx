@@ -614,14 +614,10 @@ function Summaries({
               <p>คงเหลือ</p>
               <p>
                 {mostProductOutOfStock?.import_value -
-                  mostProductOutOfStock?.export_value -
-                  mostProductOutOfStock?.export_defective_value !==
-                0
-                  ? mostProductOutOfStock?.import_value -
-                    (mostProductOutOfStock?.export_value +
-                    mostProductOutOfStock?.export_defective_value) + " "
-                  : 0 + " "}
-                  หน่วย
+                  (mostProductOutOfStock?.export_value +
+                    mostProductOutOfStock?.export_defective_value) +
+                  " "}
+                หน่วย
               </p>
             </div>
           </Card>
