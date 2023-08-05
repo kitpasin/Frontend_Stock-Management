@@ -212,22 +212,24 @@ function ProductsPage() {
                   <p>{productsAll.length} รายการ</p>
                 </div>
               </div>
-              {hasSlug && (
+              <div style={{ display: "flex", gap: "1rem" }}>
+                {hasSlug && (
+                    <Button
+                      style={{ fontSize: "16px" }}
+                      className="export"
+                      onClick={() => multiImportHandle()}
+                    >
+                      เพิ่มสินค้า
+                    </Button>
+                  )}
                   <Button
                     style={{ fontSize: "16px" }}
                     className="export"
-                    onClick={() => multiImportHandle()}
+                    onClick={() => multiExportHandle()}
                   >
-                    เพิ่มสินค้า
+                    เบิกสินค้า
                   </Button>
-                )}
-                <Button
-                  style={{ fontSize: "16px" }}
-                  className="export"
-                  onClick={() => multiExportHandle()}
-                >
-                  เบิกสินค้า
-                </Button>
+              </div>
             </div>
             <div style={{display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center", gap: "1rem"}}>
                 <Autocomplete
