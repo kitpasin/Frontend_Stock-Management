@@ -46,8 +46,6 @@ function ReportPage() {
   const day4 = String(formattedStart.getDate()).padStart(2, '0');
   const selectedFormattedStart = `${year4}-${month4}-${day4}`;
 
-  console.log(selectedFormattedStart.replace(/-/g, ""))
-
   const [selectedEnd, setSelectedEnd] = useState(null)
   const formattedEnd = new Date(selectedEnd)
   const year5 = formattedEnd.getFullYear();
@@ -55,15 +53,11 @@ function ReportPage() {
   const day5 = String(formattedEnd.getDate()).padStart(2, '0');
   const selectedFormattedEnd = `${year5}-${month5}-${day5}`;
 
-  console.log(selectedFormattedEnd.replace(/-/g, ""))
-
   const [products, setProducts] = useState([])
   const [selectedProduct, setSelectedProduct] = useState([]);
 
-  const [mainCategories, setMainCategories] = useState([])
   const [selectedMainCate, setSelectedMainCate] = useState(null)
 
-  const [suppliers, setSuppliers] = useState([])
   const [selectedSupplier, setSelectedSupplier] = useState(null)
 
   const [sumProductLeft, setSumProductLeft] = useState(0)
@@ -87,7 +81,7 @@ function ReportPage() {
     }
     if (selectedStart !== null && selectedEnd !== null) {
       const matchesBetween = selectedFormattedStart.replace(/-/g, "") <= product.purchase_date.replace(/-/g, "")
-      && selectedFormattedEnd.replace(/-/g, "") >= product.purchase_date.replace(/-/g, "")
+        && selectedFormattedEnd.replace(/-/g, "") >= product.purchase_date.replace(/-/g, "")
       return matchesCate && matchesSupplier && matchesBetween
     }
     return matchesCate && matchesSupplier
@@ -96,7 +90,7 @@ function ReportPage() {
   // Remove duplicate products based on product_id
   const uniqueProductsMap = new Map();
   filteredProduct.forEach((item) => {
-      uniqueProductsMap.set(item.product_id, item);
+    uniqueProductsMap.set(item.product_id, item);
   });
   const uniqueProductsData = Array.from(uniqueProductsMap.values());
 
@@ -151,41 +145,23 @@ function ReportPage() {
     setLoading(false)
   }
 
-  async function getMainCategories() {
-    const response = await axios.get("maincates");
-    const data = response.data.mainCates;
-    setMainCategories(data);
-  }
-
-  async function getSuppliers() {
-    const response = await axios.get("suppliers");
-    const data = response.data.suppliers;
-    setSuppliers(data)
-  }
-
   useEffect(() => {
     getProducts()
-    getMainCategories()
-    getSuppliers()
   }, [selectedReport])
 
   useEffect(() => {
-    setSumProductLeft(selectedReport === "สินค้าเบิกออก" ? 
-    filteredProduct.reduce((sum, product) => sum + (product.import_value - product.export_value - product.export_defective_value), 0).toFixed(2)
-    : 
-    uniqueProductsData.reduce((sum, product) => sum + (product.import_value - product.export_value - product.export_defective_value), 0).toFixed(2)
-    )
-    setSumProductCost(selectedReport === "สินค้าเบิกออก" ? 
-    filteredProduct.reduce((sum, product) => sum + (product.unit_price), 0).toFixed(2)
-    :
-    uniqueProductsData.reduce((sum, product) => sum + (product.unit_price), 0).toFixed(2)
-    )
-    setSumProductProfit(selectedReport === "สินค้าเบิกออก" ? 
-    filteredProduct.reduce((sum, product) => sum + (product.selling_price - product.unit_price), 0).toFixed(2)
-    :
-    uniqueProductsData.reduce((sum, product) => sum + (product.selling_price - product.unit_price), 0).toFixed(2)
-    )
+    setSumProductLeft(uniqueProductsData.reduce((sum, product) => sum + (product.import_value - product.export_value - product.export_defective_value), 0).toFixed(2))
+    setSumProductCost(uniqueProductsData.reduce((sum, product) => sum + (product.unit_price), 0).toFixed(2))
+    setSumProductProfit(uniqueProductsData.reduce((sum, product) => sum + (product.selling_price - product.unit_price), 0).toFixed(2))
   }, [filteredProduct])
+
+  const mainCategoryOptions = products
+  .map((product) => product.main_cate_name)
+  .filter((value, index, self) => self.indexOf(value) === index);
+
+  const supplierOptions = products
+    .map((supplier) => supplier.supplier_name)
+    .filter((value, index, self) => self.indexOf(value) === index);
 
   // Export to Excel
   const handleExport = () => {
@@ -218,35 +194,19 @@ function ReportPage() {
     headerRow.font = { bold: true };
 
     // Add data to the worksheet
-    {selectedReport === "สินค้าเบิกออก" ? (
-      filteredProduct.forEach((product) => {
-        worksheet.addRow([
-          "" + product.product_id,
-          product.title,
-          product.import_value - product.export_value - product.export_defective_value,
-          product.purchase_date,
-          product.oc_unit,
-          product.unit_price,
-          product.set_profit,
-          product.pp_vat,
-          product.selling_price,
-        ]);
-      })
-    ) : (
-      uniqueProductsData.forEach((product) => {
-        worksheet.addRow([
-          "" + product.product_id,
-          product.title,
-          product.import_value - product.export_value - product.export_defective_value,
-          product.purchase_date,
-          product.oc_unit,
-          product.unit_price,
-          product.set_profit,
-          product.pp_vat,
-          product.selling_price,
-        ]);
-      })
-    )}
+    uniqueProductsData.forEach((product) => {
+      worksheet.addRow([
+        "" + product.product_id,
+        product.title,
+        product.import_value - product.export_value - product.export_defective_value,
+        product.purchase_date,
+        product.oc_unit,
+        product.unit_price,
+        product.set_profit,
+        product.pp_vat,
+        product.selling_price,
+      ]);
+    })
 
     // Auto-fit columns
     worksheet.columns.forEach((column) => {
@@ -318,21 +278,21 @@ function ReportPage() {
                     <div style={{ display: "flex", width: "100%", gap: "1rem" }}>
                       <Autocomplete
                         value={selectedMainCate}
-                        onChange={(e, newValue) => setSelectedMainCate(newValue)}
+                        onChange={(e, newValue) => setSelectedMainCate(newValue || "")}
                         disablePortal
                         size="small"
                         id="combo-box-demo"
-                        options={mainCategories.map((cate) => cate.name)}
+                        options={mainCategoryOptions}
                         fullWidth
                         renderInput={(params) => <TextField {...params} label="เลือกหมวดหมู่" />}
                       />
                       <Autocomplete
                         value={selectedSupplier}
-                        onChange={(e, newValue) => setSelectedSupplier(newValue)}
+                        onChange={(e, newValue) => setSelectedSupplier(newValue || "")}
                         disablePortal
                         size="small"
                         id="combo-box-demo"
-                        options={suppliers.map((sup) => sup.name)}
+                        options={supplierOptions}
                         fullWidth
                         renderInput={(params) => <TextField {...params} label="เลือกซัพพลายเออร์" />}
                       />
@@ -498,7 +458,7 @@ function ReportPage() {
               </Card>
             </div>
             <Table
-              filteredProduct={selectedReport === "สินค้าเบิกออก" ? filteredProduct : uniqueProductsData}
+              filteredProduct={uniqueProductsData}
               selectedReport={selectedReport}
               setSelectedProduct={setSelectedProduct}
             />

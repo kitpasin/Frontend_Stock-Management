@@ -31,10 +31,10 @@ function ProductsPage() {
   const { t } = useTranslation(["dashboard-page"]);
   const [loading, setLoading] = useState(true);
   const [productsAll, setProductsAll] = useState([]);
-  const [mainCategories, setMainCategories] = useState([]);
   const [title, setTitle] = useState("");
   const [productId, setProductId] = useState("");
   const [mainCategory, setMainCategory] = useState("");
+  const [supplier, setSupplier] = useState("");
   const [vat, setVat] = useState("");
 
   const [productShow, setProductShow] = useState([]);
@@ -50,6 +50,7 @@ function ProductsPage() {
     const matchesMainCategory = mainCategory
       ? product.main_cate_name === mainCategory
       : true;
+    const matchesSupplier = supplier ? product.supplier_name === supplier : true;
     let matchesVat = true;
 
     if (vat === "1") {
@@ -58,7 +59,7 @@ function ProductsPage() {
       matchesVat = product.vat_id == 0;
     }
 
-    return matchesTitle && matchProductId && matchesMainCategory && matchesVat;
+    return matchesTitle && matchProductId && matchesMainCategory && matchesSupplier && matchesVat;
   });
 
   const current_date = dayjs().toISOString().substring(0, 10);
@@ -156,15 +157,8 @@ function ProductsPage() {
     setLoading(false);
   }
 
-  async function getMainCategories() {
-    const response = await axios.get("maincates");
-    const data = response.data.mainCates;
-    setMainCategories(data);
-  }
-
   useEffect(() => {
     getProducts();
-    getMainCategories();
   }, [refreshData]);
 
   const titleOptions = productsAll
@@ -175,8 +169,12 @@ function ProductsPage() {
     .map((product) => product.product_id)
     .filter((value, index, self) => self.indexOf(value) === index);
 
-  const mainCategoryOptions = mainCategories
-    .map((category) => category.name)
+  const mainCategoryOptions = productsAll
+    .map((product) => product.main_cate_name)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  const supplierOptions = productsAll
+    .map((supplier) => supplier.supplier_name)
     .filter((value, index, self) => self.indexOf(value) === index);
 
   return (
@@ -214,68 +212,7 @@ function ProductsPage() {
                   <p>{productsAll.length} รายการ</p>
                 </div>
               </div>
-              <div className="filter">
-                <Autocomplete
-                  size="small"
-                  disablePortal
-                  id="combo-box-title"
-                  options={titleOptions}
-                  onChange={(event, value) => setTitle(value || "")}
-                  sx={{ width: 200 }}
-                  renderInput={(params) => (
-                    <TextField {...params} label="ชื่อ" />
-                  )}
-                />
-                <Autocomplete
-                  size="small"
-                  disablePortal
-                  id="combo-box-product-id"
-                  options={productIdOptions}
-                  onChange={(event, value) => setProductId(value || "")}
-                  sx={{ width: 200 }}
-                  renderInput={(params) => (
-                    <TextField type="number" {...params} label="รหัสสินค้า" />
-                  )}
-                />
-                <Autocomplete
-                  size="small"
-                  disablePortal
-                  id="combo-box-main-category"
-                  options={mainCategoryOptions}
-                  onChange={(event, value) => setMainCategory(value || "")}
-                  sx={{ width: 200 }}
-                  renderInput={(params) => (
-                    <TextField {...params} label="หมวดหมู่หลัก" />
-                  )}
-                />
-                <FormControl>
-                  <RadioGroup
-                    row
-                    aria-labelledby="demo-row-radio-buttons-group-label"
-                    name="row-radio-buttons-group"
-                    value={vat}
-                  >
-                    <FormControlLabel
-                      value=""
-                      control={<Radio />}
-                      label="All"
-                      onChange={(e) => setVat(e.target.value)}
-                    />
-                    <FormControlLabel
-                      value="1"
-                      control={<Radio />}
-                      label="Vat"
-                      onChange={(e) => setVat(e.target.value)}
-                    />
-                    <FormControlLabel
-                      value="0"
-                      control={<Radio />}
-                      label="No Vat"
-                      onChange={(e) => setVat(e.target.value)}
-                    />
-                  </RadioGroup>
-                </FormControl>
-                {hasSlug && (
+              {hasSlug && (
                   <Button
                     style={{ fontSize: "16px" }}
                     className="export"
@@ -291,8 +228,77 @@ function ProductsPage() {
                 >
                   เบิกสินค้า
                 </Button>
-              </div>
             </div>
+            <div style={{display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center", gap: "1rem"}}>
+                <Autocomplete
+                  size="small"
+                  disablePortal
+                  id="combo-box-title"
+                  options={titleOptions}
+                  onChange={(event, value) => setTitle(value || "")}
+                  fullWidth
+                  renderInput={(params) => <TextField {...params} label="ชื่อ" />}
+                />
+                <Autocomplete
+                  size="small"
+                  disablePortal
+                  id="combo-box-product-id"
+                  options={productIdOptions}
+                  onChange={(event, value) => setProductId(value || "")}
+                  fullWidth
+                  renderInput={(params) => (
+                    <TextField type="number" {...params} label="รหัสสินค้า" />
+                  )}
+                />
+                <Autocomplete
+                  size="small"
+                  disablePortal
+                  id="combo-box-main-category"
+                  options={mainCategoryOptions}
+                  onChange={(event, value) => setMainCategory(value || "")}
+                  fullWidth
+                  renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
+                />
+                <Autocomplete
+                  size="small"
+                  disablePortal
+                  id="combo-box-supplier"
+                  options={supplierOptions}
+                  onChange={(event, value) => setSupplier(value || "")}
+                  fullWidth
+                  renderInput={(params) => <TextField {...params} label="ซัพพลายเออร์" />}
+                />
+              </div>
+              <div>
+              <FormControl fullWidth>
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-row-radio-buttons-group-label"
+                    name="row-radio-buttons-group"
+                    value={vat}
+                    >
+                    <FormControlLabel
+                      value=""
+                      control={<Radio />}
+                      label="All"
+                      onChange={(e) => setVat(e.target.value)}
+                    />
+                    <FormControlLabel
+                      value="1"
+                      control={<Radio />}
+                      label="Vat"
+                      onChange={(e) => setVat(e.target.value)}
+                      
+                      />
+                    <FormControlLabel
+                      value="0"
+                      control={<Radio />}
+                      label="No Vat"
+                      onChange={(e) => setVat(e.target.value)}
+                      />
+                  </RadioGroup>
+                </FormControl>
+              </div>
             <div>
               <Table
                 productsData={filteredProduct}

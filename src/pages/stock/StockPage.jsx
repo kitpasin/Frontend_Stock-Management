@@ -24,10 +24,10 @@ function StockPage() {
   const [loading, setLoading] = useState(true);
 
   const [productsStock, setProductsStock] = useState([]);
-  const [mainCategories, setMainCategories] = useState([]);
   const [title, setTitle] = useState("");
   const [productId, setProductId] = useState("");
   const [mainCategory, setMainCategory] = useState("");
+  const [supplier, setSupplier] = useState("");
   const [vat, setVat] = useState("");
 
   const [refreshData, setRefreshData] = useState(0);
@@ -39,6 +39,7 @@ function StockPage() {
     const matchesTitle = title ? product.title === title : true;
     const matchProductId = productId ? product.product_id === productId : true;
     const matchesMainCategory = mainCategory ? product.main_cate_name === mainCategory : true;
+    const matchesSupplier = supplier ? product.supplier_name === supplier : true;
     let matchesVat = true;
 
     if (vat === "1") {
@@ -47,7 +48,7 @@ function StockPage() {
       matchesVat = product.vat_id == 0;
     }
 
-    return matchesTitle && matchProductId && matchesMainCategory && matchesVat;
+    return matchesTitle && matchProductId && matchesMainCategory && matchesSupplier && matchesVat;
   });
 
 
@@ -71,15 +72,8 @@ function StockPage() {
     setLoading(false);
   }
 
-  async function getMainCategories() {
-    const response = await axios.get("maincates");
-    const data = response.data.mainCates;
-    setMainCategories(data);
-  }
-
   useEffect(() => {
     getProductsStock();
-    getMainCategories();
   }, [refreshData]);
 
   const titleOptions = productsStock
@@ -90,8 +84,12 @@ function StockPage() {
     .map((product) => product.product_id)
     .filter((value, index, self) => self.indexOf(value) === index);
 
-  const mainCategoryOptions = mainCategories
-    .map((category) => category.name)
+  const mainCategoryOptions = productsStock
+    .map((product) => product.main_cate_name)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  const supplierOptions = productsStock
+    .map((supplier) => supplier.supplier_name)
     .filter((value, index, self) => self.indexOf(value) === index);
 
   return (
@@ -129,14 +127,15 @@ function StockPage() {
                   <p>{productsStock.length} รายการ</p>
                 </div>
               </div>
-              <div className="filter">
+            </div>
+            <div style={{display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center", gap: "1rem"}}>
                 <Autocomplete
                   size="small"
                   disablePortal
                   id="combo-box-title"
                   options={titleOptions}
                   onChange={(event, value) => setTitle(value || "")}
-                  sx={{ width: 200 }}
+                  fullWidth
                   renderInput={(params) => <TextField {...params} label="ชื่อ" />}
                 />
                 <Autocomplete
@@ -145,7 +144,7 @@ function StockPage() {
                   id="combo-box-product-id"
                   options={productIdOptions}
                   onChange={(event, value) => setProductId(value || "")}
-                  sx={{ width: 200 }}
+                  fullWidth
                   renderInput={(params) => (
                     <TextField type="number" {...params} label="รหัสสินค้า" />
                   )}
@@ -156,16 +155,27 @@ function StockPage() {
                   id="combo-box-main-category"
                   options={mainCategoryOptions}
                   onChange={(event, value) => setMainCategory(value || "")}
-                  sx={{ width: 200 }}
+                  fullWidth
                   renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
                 />
-                <FormControl>
+                <Autocomplete
+                  size="small"
+                  disablePortal
+                  id="combo-box-supplier"
+                  options={supplierOptions}
+                  onChange={(event, value) => setSupplier(value || "")}
+                  fullWidth
+                  renderInput={(params) => <TextField {...params} label="ซัพพลายเออร์" />}
+                />
+              </div>
+              <div>
+              <FormControl fullWidth>
                   <RadioGroup
                     row
                     aria-labelledby="demo-row-radio-buttons-group-label"
                     name="row-radio-buttons-group"
                     value={vat}
-                  >
+                    >
                     <FormControlLabel
                       value=""
                       control={<Radio />}
@@ -177,17 +187,17 @@ function StockPage() {
                       control={<Radio />}
                       label="Vat"
                       onChange={(e) => setVat(e.target.value)}
-                    />
+                      
+                      />
                     <FormControlLabel
                       value="0"
                       control={<Radio />}
                       label="No Vat"
                       onChange={(e) => setVat(e.target.value)}
-                    />
+                      />
                   </RadioGroup>
                 </FormControl>
               </div>
-            </div>
             <div>
               <Table
                 productsData={filteredProduct}

@@ -15,6 +15,7 @@ import Table from "./components/Table";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { maxWidth } from "@mui/system";
 
 function DefectivePage() {
   const { t } = useTranslation(["dashboard-page"]);
@@ -22,10 +23,10 @@ function DefectivePage() {
   const [loading, setLoading] = useState(true);
 
   const [defectiveProducts, setDefectiveProducts] = useState([]);
-  const [mainCategories, setMainCategories] = useState([]);
   const [title, setTitle] = useState("");
   const [productId, setProductId] = useState("")
   const [mainCategory, setMainCategory] = useState("");
+  const [supplier, setSupplier] = useState("");
   const [vat, setVat] = useState("");
 
   const [refreshData, setRefreshData] = useState(0);
@@ -36,6 +37,7 @@ function DefectivePage() {
     const matchesTitle = title ? product.title === title : true;
     const matchProductId = productId ? product.product_id === productId : true;
     const matchesMainCategory = mainCategory ? product.main_cate_name === mainCategory : true;
+    const matchesSupplier = supplier ? product.supplier_name === supplier : true;
     let matchesVat = true;
 
     if (vat === "1") {
@@ -44,7 +46,7 @@ function DefectivePage() {
       matchesVat = product.vat_id == 0;
     }
 
-    return matchesTitle && matchProductId && matchesMainCategory && matchesVat;
+    return matchesTitle && matchProductId && matchesMainCategory && matchesSupplier && matchesVat;
   });
 
   async function getDefectiveProducts() {
@@ -54,16 +56,8 @@ function DefectivePage() {
     setLoading(false);
   }
 
-  async function getMainCategories() {
-    const response = await axios.get("maincates");
-    const data = response.data.mainCates;
-    setMainCategories(data);
-  }
-
   useEffect(() => {
     getDefectiveProducts();
-    getMainCategories();
-    console.log(defectiveProducts)
   }, [refreshData]);
 
   const titleOptions = defectiveProducts
@@ -74,8 +68,12 @@ function DefectivePage() {
     .map((product) => product.product_id)
     .filter((value, index, self) => self.indexOf(value) === index);
 
-  const mainCategoryOptions = mainCategories
-    .map((category) => category.name)
+  const mainCategoryOptions = defectiveProducts
+    .map((product) => product.main_cate_name)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  const supplierOptions = defectiveProducts
+    .map((supplier) => supplier.supplier_name)
     .filter((value, index, self) => self.indexOf(value) === index);
 
   return (
@@ -113,14 +111,18 @@ function DefectivePage() {
                   <p>{defectiveProducts.length} รายการ</p>
                 </div>
               </div>
-              <div className="filter">
+              <Link to="/defective/search" className="export">
+                  เลือกเบิกออกสินค้าชำรุด
+              </Link>
+            </div>
+            <div style={{display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center", gap: "1rem"}}>
                 <Autocomplete
                   size="small"
                   disablePortal
                   id="combo-box-title"
                   options={titleOptions}
                   onChange={(event, value) => setTitle(value || "")}
-                  sx={{ width: 200 }}
+                  fullWidth
                   renderInput={(params) => <TextField {...params} label="ชื่อ" />}
                 />
                 <Autocomplete
@@ -129,7 +131,7 @@ function DefectivePage() {
                   id="combo-box-product-id"
                   options={productIdOptions}
                   onChange={(event, value) => setProductId(value || "")}
-                  sx={{ width: 200 }}
+                  fullWidth
                   renderInput={(params) => (
                     <TextField type="number" {...params} label="รหัสสินค้า" />
                   )}
@@ -140,16 +142,27 @@ function DefectivePage() {
                   id="combo-box-main-category"
                   options={mainCategoryOptions}
                   onChange={(event, value) => setMainCategory(value || "")}
-                  sx={{ width: 200 }}
+                  fullWidth
                   renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
                 />
-                <FormControl>
+                <Autocomplete
+                  size="small"
+                  disablePortal
+                  id="combo-box-supplier"
+                  options={supplierOptions}
+                  onChange={(event, value) => setSupplier(value || "")}
+                  fullWidth
+                  renderInput={(params) => <TextField {...params} label="ซัพพลายเออร์" />}
+                />
+              </div>
+              <div>
+              <FormControl fullWidth>
                   <RadioGroup
                     row
                     aria-labelledby="demo-row-radio-buttons-group-label"
                     name="row-radio-buttons-group"
                     value={vat}
-                  >
+                    >
                     <FormControlLabel
                       value=""
                       control={<Radio />}
@@ -161,20 +174,17 @@ function DefectivePage() {
                       control={<Radio />}
                       label="Vat"
                       onChange={(e) => setVat(e.target.value)}
-                    />
+                      
+                      />
                     <FormControlLabel
                       value="0"
                       control={<Radio />}
                       label="No Vat"
                       onChange={(e) => setVat(e.target.value)}
-                    />
+                      />
                   </RadioGroup>
                 </FormControl>
-                <Link to="/defective/search" className="export">
-                  เลือกเบิกออกสินค้าชำรุด
-                </Link>
               </div>
-            </div>
             <div>
               <Table
                 productsData={filteredProduct}
@@ -182,7 +192,7 @@ function DefectivePage() {
                 setRefreshData={setRefreshData}
                 setProductSelected={setProductSelected}
                 productSelected={productSelected}
-              />
+                />
             </div>
           </Card>
         </>

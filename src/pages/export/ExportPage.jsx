@@ -23,10 +23,10 @@ function ExportPage() {
   const [loading, setLoading] = useState(true);
 
   const [exportedProducts, setExportedProducts] = useState([]);
-  const [mainCategories, setMainCategories] = useState([]);
   const [title, setTitle] = useState("");
   const [productId, setProductId] = useState("");
   const [mainCategory, setMainCategory] = useState("");
+  const [supplier, setSupplier] = useState("");
   const [vat, setVat] = useState("");
 
   const [refreshData, setRefreshData] = useState(0);
@@ -37,6 +37,7 @@ function ExportPage() {
     const matchesTitle = title ? product.title === title : true;
     const matchProductId = productId ? product.product_id === productId : true;
     const matchesMainCategory = mainCategory ? product.main_cate_name === mainCategory : true;
+    const matchesSupplier = supplier ? product.supplier_name === supplier : true;
     let matchesVat = true;
 
     if (vat === "1") {
@@ -45,7 +46,7 @@ function ExportPage() {
       matchesVat = product.vat_id == 0;
     }
 
-    return matchesTitle && matchProductId && matchesMainCategory && matchesVat;
+    return matchesTitle && matchProductId && matchesMainCategory && matchesSupplier && matchesVat;
   });
 
   const multiExportHandle = () => {
@@ -68,28 +69,25 @@ function ExportPage() {
     setLoading(false);
   }
 
-  async function getMainCategories() {
-    const response = await axios.get("maincates");
-    const data = response.data.mainCates;
-    setMainCategories(data);
-  }
-
   useEffect(() => {
     getExportedProduct();
-    getMainCategories();
   }, [refreshData]);
 
-    const titleOptions = exportedProducts
-      .map((product) => product.title)
-      .filter((value, index, self) => self.indexOf(value) === index);
+  const titleOptions = exportedProducts
+    .map((product) => product.title)
+    .filter((value, index, self) => self.indexOf(value) === index);
 
-    const productIdOptions = exportedProducts
-      .map((product) => product.product_id)
-      .filter((value, index, self) => self.indexOf(value) === index);
+  const productIdOptions = exportedProducts
+    .map((product) => product.product_id)
+    .filter((value, index, self) => self.indexOf(value) === index);
 
-    const mainCategoryOptions = mainCategories
-      .map((category) => category.name)
-      .filter((value, index, self) => self.indexOf(value) === index);
+  const mainCategoryOptions = exportedProducts
+    .map((product) => product.main_cate_name)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  const supplierOptions = exportedProducts
+    .map((supplier) => supplier.supplier_name)
+    .filter((value, index, self) => self.indexOf(value) === index);
 
   return (
     <section id="export-page">
@@ -126,64 +124,76 @@ function ExportPage() {
                   <p>{exportedProducts.length} รายการ</p>
                 </div>
               </div>
-              <div className="filter">
-                <Autocomplete
-                  size="small"
-                  disablePortal
-                  id="combo-box-title"
-                  options={titleOptions}
-                  onChange={(event, value) => setTitle(value || "")}
-                  sx={{ width: 200 }}
-                  renderInput={(params) => <TextField {...params} label="ชื่อ" />}
-                />
-                <Autocomplete
-                  size="small"
-                  disablePortal
-                  id="combo-box-product-id"
-                  options={productIdOptions}
-                  onChange={(event, value) => setProductId(value || "")}
-                  sx={{ width: 200 }}
-                  renderInput={(params) => (
-                    <TextField type="number" {...params} label="รหัสสินค้า" />
-                  )}
-                />
-                <Autocomplete
-                  size="small"
-                  disablePortal
-                  id="combo-box-main-category"
-                  options={mainCategoryOptions}
-                  onChange={(event, value) => setMainCategory(value || "")}
-                  sx={{ width: 200 }}
-                  renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
-                />
-                <FormControl>
-                  <RadioGroup
-                    row
-                    aria-labelledby="demo-row-radio-buttons-group-label"
-                    name="row-radio-buttons-group"
-                    value={vat}
-                  >
-                    <FormControlLabel
-                      value=""
-                      control={<Radio />}
-                      label="All"
-                      onChange={(e) => setVat(e.target.value)}
-                    />
-                    <FormControlLabel
-                      value="1"
-                      control={<Radio />}
-                      label="Vat"
-                      onChange={(e) => setVat(e.target.value)}
-                    />
-                    <FormControlLabel
-                      value="0"
-                      control={<Radio />}
-                      label="No Vat"
-                      onChange={(e) => setVat(e.target.value)}
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </div>
+            </div>
+            <div style={{ display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-title"
+                options={titleOptions}
+                onChange={(event, value) => setTitle(value || "")}
+                fullWidth
+                renderInput={(params) => <TextField {...params} label="ชื่อ" />}
+              />
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-product-id"
+                options={productIdOptions}
+                onChange={(event, value) => setProductId(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField type="number" {...params} label="รหัสสินค้า" />
+                )}
+              />
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-main-category"
+                options={mainCategoryOptions}
+                onChange={(event, value) => setMainCategory(value || "")}
+                fullWidth
+                renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
+              />
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-supplier"
+                options={supplierOptions}
+                onChange={(event, value) => setSupplier(value || "")}
+                fullWidth
+                renderInput={(params) => <TextField {...params} label="ซัพพลายเออร์" />}
+              />
+            </div>
+            <div>
+              <FormControl fullWidth>
+                <RadioGroup
+                  row
+                  aria-labelledby="demo-row-radio-buttons-group-label"
+                  name="row-radio-buttons-group"
+                  value={vat}
+                >
+                  <FormControlLabel
+                    value=""
+                    control={<Radio />}
+                    label="All"
+                    onChange={(e) => setVat(e.target.value)}
+                  />
+                  <FormControlLabel
+                    value="1"
+                    control={<Radio />}
+                    label="Vat"
+                    onChange={(e) => setVat(e.target.value)}
+
+                  />
+                  <FormControlLabel
+                    value="0"
+                    control={<Radio />}
+                    label="No Vat"
+                    onChange={(e) => setVat(e.target.value)}
+                  />
+                </RadioGroup>
+              </FormControl>
             </div>
             <div>
               <Table
