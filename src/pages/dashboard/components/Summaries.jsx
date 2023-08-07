@@ -292,10 +292,10 @@ function Summaries({
           <div className="content">
             <div className="text">
               <div className="text-title">
-                <p>ล่าสุด : {latestExport?.title}</p>
+                <p>ล่าสุด : {productsExport.length !== 0 ? latestExport?.title : ""}</p>
               </div>
               <div className="text-description">
-                <p>{latestExport?.export_quantity} หน่วย</p>
+                <p>{productsExport.length !== 0 ? latestExport?.export_quantity : 0} หน่วย</p>
               </div>
             </div>
             <button onClick={toggleLatestExportGraph} className="graph">
