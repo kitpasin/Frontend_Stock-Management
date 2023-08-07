@@ -147,7 +147,7 @@ function ExportDataGrid({ productsExport }) {
                 params.row.import_value -
                   params.row.export_value -
                   params.row.export_defective_value <=
-                50
+                params.row.alert_stock
                   ? "#ff0000"
                   : "#000",
             }}
