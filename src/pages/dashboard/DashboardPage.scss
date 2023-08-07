@@ -222,6 +222,9 @@
 .grid-container-1fr-1fr-table {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    @media screen and (max-width: 1550px) {
+        grid-template-columns: 1fr;
+    }
     gap: 1rem;
     .item {
         padding: 1rem;

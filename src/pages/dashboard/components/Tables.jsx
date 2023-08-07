@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useEffect, useRef, useState } from "react";
-import { Card } from "@mui/material";
+import { Autocomplete, Card, TextField } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -22,12 +22,53 @@ function Tables({
 }) {
   useEffect(() => {}, []);
 
+  const [stockSupplier, setStockSupplier] = useState("")
+  const [expireSupplier, setExpireSupplier] = useState("")
+  const [importSupplier, setImportSupplier] = useState("")
+  const [exportSupplier, setExportSupplier] = useState("")
+
+  const filteredStockProduct = productsOutOfStock.filter((product) => {
+    const matchesStockSupplier = stockSupplier ? product.supplier_name === stockSupplier : true;
+    return matchesStockSupplier;
+  });
+
+  const filteredExpireProduct = productsAboutToExpire.filter((product) => {
+    const matchesExpireSupplier = expireSupplier ? product.supplier_name === expireSupplier : true;
+    return matchesExpireSupplier;
+  });
+
+  const filteredImportProduct = productsImport.filter((product) => {
+    const matchesImportSupplier = importSupplier ? product.supplier_name === importSupplier : true;
+    return matchesImportSupplier;
+  });
+
+  const filteredExportProduct = productsExport.filter((product) => {
+    const matchesExportSupplier = exportSupplier ? product.supplier_name === exportSupplier : true;
+    return matchesExportSupplier;
+  });
+
   // Remove duplicate products based on product_id
   const uniqueProductsMap = new Map();
-  productsOutOfStock.forEach((item) => {
+  filteredStockProduct.forEach((item) => {
     uniqueProductsMap.set(item.product_id, item);
   });
   const uniqueProductsData = Array.from(uniqueProductsMap.values());
+
+  const supplierStockOptions = productsOutOfStock
+    .map((supplier) => supplier.supplier_name)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  const supplierExpireOptions = productsAboutToExpire
+    .map((supplier) => supplier.supplier_name)
+    .filter((value, index, self) => self.indexOf(value) === index);
+  
+  const supplierImportOptions = productsImport
+    .map((supplier) => supplier.supplier_name)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  const supplierExportOptions = productsExport
+    .map((supplier) => supplier.supplier_name)
+    .filter((value, index, self) => self.indexOf(value) === index);
 
   return (
     <>
@@ -43,6 +84,15 @@ function Tables({
               <Link to="/stock">ดูรายการเพิ่มเติม</Link>
             </div>
           </div>
+          <Autocomplete
+            size="small"
+            disablePortal
+            id="combo-box-title"
+            options={supplierStockOptions}
+            onChange={(event, value) => setStockSupplier(value || "")}
+            fullWidth
+            renderInput={(params) => <TextField {...params} label="ซัพพลายเออร์" />}
+          />
           <StockDataGrid uniqueProductsData={uniqueProductsData} />
         </Card>
 
@@ -59,7 +109,16 @@ function Tables({
               </button>
             </div>
           </div>
-          <ExpireDataGrid productsAboutToExpire={productsAboutToExpire} />
+          <Autocomplete
+            size="small"
+            disablePortal
+            id="combo-box-title"
+            options={supplierExpireOptions}
+            onChange={(event, value) => setExpireSupplier(value || "")}
+            fullWidth
+            renderInput={(params) => <TextField {...params} label="ซัพพลายเออร์" />}
+          />
+          <ExpireDataGrid productsAboutToExpire={filteredExpireProduct} />
         </Card>
       </div>
 
@@ -77,7 +136,16 @@ function Tables({
               </button>
             </div>
           </div>
-          <ImportDataGrid productsImport={productsImport} />
+          <Autocomplete
+            size="small"
+            disablePortal
+            id="combo-box-title"
+            options={supplierImportOptions}
+            onChange={(event, value) => setImportSupplier(value || "")}
+            fullWidth
+            renderInput={(params) => <TextField {...params} label="ซัพพลายเออร์" />}
+          />
+          <ImportDataGrid productsImport={filteredImportProduct} />
         </Card>
         <Card className="item">
           <div className="header">
@@ -92,7 +160,16 @@ function Tables({
               </button>
             </div>
           </div>
-          <ExportDataGrid productsExport={productsExport} />
+          <Autocomplete
+            size="small"
+            disablePortal
+            id="combo-box-title"
+            options={supplierExportOptions}
+            onChange={(event, value) => setExportSupplier(value || "")}
+            fullWidth
+            renderInput={(params) => <TextField {...params} label="ซัพพลายเออร์" />}
+          />
+          <ExportDataGrid productsExport={filteredExportProduct} />
         </Card>
       </div>
     </>

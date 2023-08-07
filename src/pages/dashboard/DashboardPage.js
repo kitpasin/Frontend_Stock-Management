@@ -49,22 +49,11 @@ const DashboardPage = () => {
 
     // สินค้าใกล้หมดสต๊อกที่มีการอัพเดทในเดือนปัจจุบัน
     const pStock = response.data.pStock;
-    const filtered_pStock = pStock.filter(
-      (product) =>
-        product.import_value - product.export_value - product.export_defective_value <= 50
-    );
-    setProductsOutOfStock(filtered_pStock);
+    setProductsOutOfStock(pStock);
 
     // สินค้าใกล้หมดอายุที่มีการอัพเดทในเดือนปัจุบัน
     const pExpire = response.data.pExpire;
-    const filtered_pExpire = pExpire.filter((product) => {
-      const expDate = new Date(product.exp_date);
-      const mfdDate = new Date(product.mfd_date);
-      const timeDiff = expDate.getTime() - mfdDate.getTime();
-      const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-      return daysDiff <= 30;
-    });
-    setProductsAboutToExpire(filtered_pExpire);
+    setProductsAboutToExpire(pExpire);
 
     // สินค้าที่นำเข้าในวันนี้
     const pImport = response.data.pImport;
