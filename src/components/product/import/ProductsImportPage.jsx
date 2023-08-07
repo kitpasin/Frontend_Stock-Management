@@ -129,6 +129,19 @@ function ProductsImportPage({
   const formInputRef = useRef(null);
   const webPath = useSelector((state) => state.app.webPath);
   const imgError = "/images/mock/pre-product.png";
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   async function getNets() {
     const netsArr = [];
@@ -639,118 +652,122 @@ function ProductsImportPage({
               </div>
               <div className="content-right">
                 <div className="first-row">
-                  <TextField
-                    required
-                    value={productData.title}
-                    onChange={(e) =>
-                      setProductData(() => {
-                        return { ...productData, title: e.target.value };
-                      })
-                    }
-                    id="outlined-basic"
-                    label="ชื่อสินค้า"
-                    variant="outlined"
-                    size="small"
-                    sx={{ width: "49.5%" }}
-                  />
-                  <TextField
-                    required
-                    type="number"
-                    value={productData.netweight}
-                    onInput={(e) =>
-                      setProductData(() => {
-                        return {
-                          ...productData,
-                          netweight: parseFloat(e.target.value),
-                        };
-                      })
-                    }
-                    id="outlined-basic"
-                    label="ปริมาตรสุทธิ"
-                    variant="outlined"
-                    size="small"
-                    sx={{ width: "150px" }}
-                  />
-                  <Autocomplete
-                    key={productData.reset}
-                    defaultValue={{ name: productData.unit_name || "" }}
-                    required
-                    onChange={(e, value) =>
-                      setProductData(() => {
-                        return { ...productData, unit: value ? value.id : 0 };
-                      })
-                    }
-                    id="combo-box-demo"
-                    options={netsData}
-                    getOptionLabel={(option) => option.name || ""}
-                    sx={{ width: "13.25%" }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="หน่วยปริมาตรสุทธิ"
-                        size="small"
-                        required
-                      />
-                    )}
-                  />
-                  <TextField
-                    required
-                    value={productData.import_value}
-                    onChange={(e) =>
-                      setProductData(() => {
-                        return {
-                          ...productData,
-                          import_value: !isNaN(parseInt(e.target.value))
-                            ? parseInt(e.target.value)
-                            : "",
-                        };
-                      })
-                    }
-                    id="outlined-basic"
-                    label="จำนวน(นำเข้า)"
-                    variant="outlined"
-                    size="small"
-                    sx={{ width: "10.67%" }}
-                  />
-                  <Autocomplete
-                    // value={productData.counting_unit}
-                    key={productData.reset}
-                    defaultValue={{
-                      name: productData.counting_unit_name || "",
-                    }}
-                    onChange={(e, value) =>
-                      setProductData(() => {
-                        return {
-                          ...productData,
-                          counting_unit: value ? value.id : 0,
-                        };
-                      })
-                    }
-                    disablePortal
-                    id="combo-box-demo"
-                    options={amountsData}
-                    getOptionLabel={(option) => option.name || ""}
-                    sx={{ width: "10.87%" }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="หน่วยนับ"
-                        size="small"
-                        required
-                      />
-                    )}
-                  />
+                    <TextField
+                      required
+                      value={productData.title}
+                      onChange={(e) =>
+                        setProductData(() => {
+                          return { ...productData, title: e.target.value };
+                        })
+                      }
+                      id="outlined-basic"
+                      label="ชื่อสินค้า"
+                      variant="outlined"
+                      size="small"
+                      sx={{ width: "100%" }}
+                    />
                 </div>
                 <div className="second-row">
-                  <div style={{ display: "flex", gap: "1rem", width: "50%" }}>
+                <TextField
+                      required
+                      type="number"
+                      value={productData.netweight}
+                      onInput={(e) =>
+                        setProductData(() => {
+                          return {
+                            ...productData,
+                            netweight: parseFloat(e.target.value),
+                          };
+                        })
+                      }
+                      id="outlined-basic"
+                      label="ปริมาตรสุทธิ"
+                      variant="outlined"
+                      size="small"
+                      sx={{ width: "25%" }}
+                    />
+                    <Autocomplete
+                      key={productData.reset}
+                      defaultValue={{ name: productData.unit_name || "" }}
+                      required
+                      onChange={(e, value) =>
+                        setProductData(() => {
+                          return { ...productData, unit: value ? value.id : 0 };
+                        })
+                      }
+                      id="combo-box-demo"
+                      options={netsData}
+                      getOptionLabel={(option) => option.name || ""}
+                      sx={{ width: "25%" }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="หน่วยปริมาตรสุทธิ"
+                          size="small"
+                          required
+                        />
+                      )}
+                    />
+                    <TextField
+                      required
+                      value={productData.import_value}
+                      onChange={(e) =>
+                        setProductData(() => {
+                          return {
+                            ...productData,
+                            import_value: !isNaN(parseInt(e.target.value))
+                              ? parseInt(e.target.value)
+                              : "",
+                          };
+                        })
+                      }
+                      id="outlined-basic"
+                      label="จำนวน(นำเข้า)"
+                      variant="outlined"
+                      size="small"
+                      sx={{ width: "25%" }}
+                    />
+                    <Autocomplete
+                      // value={productData.counting_unit}
+                      key={productData.reset}
+                      defaultValue={{
+                        name: productData.counting_unit_name || "",
+                      }}
+                      onChange={(e, value) =>
+                        setProductData(() => {
+                          return {
+                            ...productData,
+                            counting_unit: value ? value.id : 0,
+                          };
+                        })
+                      }
+                      disablePortal
+                      id="combo-box-demo"
+                      options={amountsData}
+                      getOptionLabel={(option) => option.name || ""}
+                      sx={{ width: "25%" }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="หน่วยนับ"
+                          size="small"
+                          required
+                        />
+                      )}
+                    />
+                </div>
+                <div className="third-row">
+                  <div className="third-row-left" style={{ display: "flex", gap: "1rem", width: "50%" }}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
                         label="วันสั่งซื้อ"
                         inputFormat="YYYY-MM-DD"
+                        sx={{ width: "33.33%" }}
                         renderInput={(params) => (
                           <TextField
                             {...params}
                             size="small"
+                            sx={{ width: "33.33%" }}
                             inputProps={{
                               ...params.inputProps,
                               readOnly: true,
@@ -779,6 +796,7 @@ function ProductsImportPage({
                           <TextField
                             {...params}
                             size="small"
+                            sx={{ width: "33.33%" }}
                             inputProps={{
                               ...params.inputProps,
                               readOnly: true,
@@ -807,6 +825,7 @@ function ProductsImportPage({
                           <TextField
                             {...params}
                             size="small"
+                            sx={{ width: "33.33%" }}
                             inputProps={{
                               ...params.inputProps,
                               readOnly: true,
@@ -830,7 +849,7 @@ function ProductsImportPage({
                       />
                     </LocalizationProvider>
                   </div>
-                  <div style={{ display: "flex", gap: ".5rem", width: "50%" }}>
+                  <div className="third-row-right" style={{ display: "flex", gap: "1rem", width: "50%" }}>
                     <TextField
                       required
                       value={productData.alert_date}
@@ -889,8 +908,8 @@ function ProductsImportPage({
                     />
                   </div>
                 </div>
-                <div className="third-row">
-                  <div style={{ display: "flex", gap: "1rem", width: "50%" }}>
+                <div className="fourth-row">
+                  <div className="fourth-row-left" style={{ display: "flex", gap: "1rem", width: "50%" }}>
                     <Autocomplete
                       // value={productData.main_cate_id}
                       key={productData.reset}
@@ -949,7 +968,7 @@ function ProductsImportPage({
                       )}
                     />
                   </div>
-                  <div style={{ display: "flex", gap: ".5rem", width: "50%" }}>
+                  <div className="fourth-row-right" style={{ display: "flex", gap: "1rem", width: "50%" }}>
                     <TextField
                       value={productData.barcode || ""}
                       onChange={(e) => digitBarcode(e)}
@@ -999,7 +1018,7 @@ function ProductsImportPage({
           </Card>
         </div>
         <Grid container spacing={2}>
-          <Grid item xs={6}>
+          <Grid item xs={windowWidth <= 1550 ? 5.5 : 6}>
             <Grid container direction="column" spacing={2}>
               <Grid item>
                 <Card
@@ -1017,9 +1036,11 @@ function ProductsImportPage({
                     </figure>
                   </div>
                   <div
-                    style={{ display: "flex", gap: "2rem", padding: "1rem" }}
+                    className="pricing"
+                    style={{ display: "flex", gap: "1rem", padding: "1rem", width: "100%" }}
                   >
                     <div
+                      className="pricing-left"
                       style={{
                         display: "flex",
                         flexDirection: "column",
@@ -1117,6 +1138,7 @@ function ProductsImportPage({
                       </div>
                     </div>
                     <div
+                      className="pricing-right"
                       style={{
                         display: "flex",
                         gap: "1rem",
@@ -1160,7 +1182,7 @@ function ProductsImportPage({
                         label="ค่าดำเนินการ/หน่วย"
                         variant="outlined"
                         size="small"
-                        sx={{ width: "33.33%" }}
+                        sx={{ width: "50%" }}
                       />
                     </div>
                   </div>
@@ -1258,7 +1280,7 @@ function ProductsImportPage({
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={windowWidth <= 1550 ? 6.5 : 6}>
             <Card
               className="flex-container-column"
               sx={{ borderRadius: "10px" }}
@@ -1273,7 +1295,7 @@ function ProductsImportPage({
                   <p>ข้อมูลราคา</p>
                 </figure>
               </div>
-              <div style={{ display: "flex", gap: "2rem", padding: "1rem" }}>
+              <div style={{ display: "flex", gap: "1rem", padding: "1rem" }}>
                 <div
                   style={{
                     display: "flex",
@@ -1422,7 +1444,7 @@ function ProductsImportPage({
                 </div>
               </div>
               <hr />
-              <div style={{ display: "flex", gap: "2rem", padding: "1rem" }}>
+              <div style={{ display: "flex", gap: "1rem", padding: "1rem" }}>
                 <div
                   style={{
                     display: "flex",
@@ -1457,6 +1479,7 @@ function ProductsImportPage({
                     style={{
                       display: "flex",
                       alignItems: "center",
+                      justifyContent: "space-between",
                       gap: "1rem",
                     }}
                   >

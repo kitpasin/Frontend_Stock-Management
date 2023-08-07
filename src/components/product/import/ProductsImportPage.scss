@@ -105,8 +105,35 @@
                     justify-content: start;
                     gap: 1rem;
                     width: 100%;
+                    @media screen and (max-width: 1550px) {
+                        flex-direction: column;
+                        &-left, &-right {
+                            width: 100% !important;
+                        }
+                    }
+                }
+                .fourth-row {
+                    display: flex;
+                    justify-content: start;
+                    gap: 1rem;
+                    width: 100%;
+                    @media screen and (max-width: 1550px) {
+                        flex-direction: column;
+                        &-left, &-right {
+                            width: 100% !important;
+                        }
+                    }
                 }
             }
+        }
+    }
+}
+
+.pricing {
+    @media screen and (max-width: 1550px) {
+        flex-direction: column;
+        &-left, &-right {
+            width: 100% !important;
         }
     }
 }
