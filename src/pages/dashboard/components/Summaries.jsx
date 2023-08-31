@@ -38,6 +38,8 @@ function Summaries({
   const [latestImportOpen, setLatestImportOpen] = React.useState(false);
   const [latestExportOpen, setLatestExportOpen] = React.useState(false);
 
+  console.log(mostProductOutOfStock)
+
   const [outOfStockValue, setOutOfStockValue] = useState(
     productsOutOfStock?.map(
       (item) =>
