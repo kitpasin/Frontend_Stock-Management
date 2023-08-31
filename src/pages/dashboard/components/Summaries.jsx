@@ -117,6 +117,8 @@ function Summaries({
   });
   const uniqueProductsData = Array.from(uniqueProductsMap.values());
 
+  console.log(mostProductExpire?.exp_date)
+
   return (
     <>
       <Modal
@@ -186,9 +188,13 @@ function Summaries({
               </div>
               <div className="text-description">
                 <p>
-                  {mostProductOutOfStock?.import_value -
+                {mostProductOutOfStock?.import_value -
                     mostProductOutOfStock?.export_value -
-                    mostProductOutOfStock?.export_defective_value}{" "}
+                    mostProductOutOfStock?.export_defective_value > 0
+                    ? mostProductOutOfStock?.import_value -
+                    mostProductOutOfStock?.export_value -
+                    mostProductOutOfStock?.export_defective_value
+                   : 0 + " "}
                   หน่วย
                 </p>
               </div>
@@ -228,9 +234,11 @@ function Summaries({
               </div>
               <div className="text-description">
                 <p>
-                  {remainingDays + 1 <= 0
+                  {mostProductExpire?.exp_date !== undefined ?
+                    remainingDays + 1 <= 0
                     ? "หมดอายุ"
-                    : remainingDays + 1 + " วัน"}
+                    : remainingDays + 1 + " วัน"
+                  : 0 + " วัน"}
                 </p>
               </div>
             </div>
@@ -264,7 +272,7 @@ function Summaries({
                 <p>ล่าสุด : {mostProductImport?.title}</p>
               </div>
               <div className="text-description">
-                <p>{mostProductImport?.import_value} หน่วย</p>
+                <p>{mostProductImport?.import_value || 0} หน่วย</p>
               </div>
             </div>
             <button onClick={toggleLatestImportGraph} className="graph">
