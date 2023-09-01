@@ -395,18 +395,6 @@ function ProductsImportPage({
       os_price: 0,
       selling_price: "",
     });
-    // setProductData((prev) => {
-    //   return {
-    //     ...prev,
-    //     reset: !productData.reset,
-    //     key: [prev.key[0] + 1, prev.key[1] + 1, prev.key[2] + 1, prev.key[3] + 1],
-    //     state1: !productData.state1,
-    //     state2: !productData.state2,
-    //     state3: !productData.state3,
-    //     vat: "",
-    //     vat_id: "",
-    //   };
-    // });
     formInputRef.current.value = "";
     setPreview({
       src: undefined,
@@ -565,8 +553,6 @@ function ProductsImportPage({
       });
     }
   }
-
-  console.log(productData)
 
   return (
     <section id="products-import-page">
