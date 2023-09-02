@@ -47,6 +47,7 @@
                 align-items: center;
                 gap: 0.5rem;
                 color: #969a99;
+
                 figure {
                     padding: 1rem;
                     border: 2px dotted #969a99;
@@ -57,7 +58,12 @@
                     align-items: center;
                     gap: 1rem;
                     width: 175px;
-                    height: 150px;
+                    min-height: 208px;
+
+                    img {
+                        height: 100%;
+                        max-height: 172px;
+                    }
 
                     .input-file {
                         cursor: pointer;

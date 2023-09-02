@@ -10,6 +10,7 @@ import { svProductAll } from "../../../services/product.service";
 import { svProductOne } from "../../../services/product.service";
 import { svDeleteProduct } from "../../../services/product.service";
 import { ConnectingAirportsOutlined } from "@mui/icons-material";
+import { v4 as uuidv4 } from 'uuid';
 
 import ExportModal from "../../../components/product/modal/ExportModal";
 import { useEffect, useState } from "react";
@@ -61,6 +62,7 @@ function MenuItemList({
         state2: false,
         state3: false,
         reset: 0,
+        key: [uuidv4(), uuidv4(), uuidv4(), uuidv4()],
         unit: dd.unit_id,
         unit_name: dd.net_name,
         netweight: dd.netweight,
@@ -129,6 +131,7 @@ function MenuItemList({
         state2: false,
         state3: false,
         reset: 0,
+        key: [uuidv4(), uuidv4(), uuidv4(), uuidv4()],
         unit: dd.unit_id,
         unit_name: dd.net_name,
         netweight: dd.netweight,

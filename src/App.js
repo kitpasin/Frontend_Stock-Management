@@ -26,6 +26,7 @@ import MenuPage from './pages/menu/menu';
 import InboxPage from './pages/inbox/inbox';
 import ResetPasswordPage from './pages/resetpassword/resetpassword';
 import ProductsPage from './pages/products/ProductsPage';
+import SupproductPage from './pages/supproduct/SupproductPage';
 import ProductsImportPage from './components/product/import/ProductsImportPage'
 import ProductsExportPage from "./components/product/export/ProductsExportPage";
 import ExpirationPage from './pages/expiration/ExpirationPage';
@@ -68,6 +69,9 @@ function App() {
             {pagesAllow.products && <Route path="/products" element={<ProductsPage />} />}
             {pagesAllow.products && (
               <Route path="/products/import" element={<ProductsImportPage />} />
+            )}
+            {pagesAllow.products && (
+              <Route path="/supproduct/import" element={<SupproductPage />} />
             )}
             {pagesAllow.products && (
               <Route path="/products/export" element={<ProductsExportPage />} />
