@@ -20,6 +20,7 @@ import dayjs from "dayjs";
 import MultiExportModal from "../../components/product/modal/MultiExportModal";
 import ProductEditModal from "../../components/product/modal/ProductEditModal";
 import Swal from "sweetalert2";
+import { v4 as uuidv4 } from 'uuid';
 
 function ProductsPage() {
   // Get individual query parameters
@@ -95,7 +96,8 @@ function ProductsPage() {
           state1: false,
           state2: false,
           state3: false,
-          reset: 0,
+          reset: false,
+          key: [uuidv4(), uuidv4(), uuidv4(), uuidv4()],
           unit: dd.unit_id,
           unit_name: dd.net_name,
           netweight: dd.netweight,
@@ -140,6 +142,7 @@ function ProductsPage() {
           profit_per_unit: dd.profit_per_unit,
           pp_profit: dd.pp_profit,
           pp_vat: dd.pp_vat,
+          old_pp_vat: dd.pp_vat,
           os_price: dd.selling_price,
           selling_price: "",
         };

@@ -60,7 +60,6 @@ BootstrapDialogTitle.propTypes = {
 };
 
 const barcodeStyle = {
-  border: "dotted 2px #969a99",
   color: "#969a99",
   borderRadius: "10px",
   width: "100%",
@@ -96,12 +95,22 @@ const buttonStyle = {
 };
 
 const printStyle = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
   marginTop: "1rem",
   width: "auto",
-  display: "grid",
-  gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr",
   gap: "1rem",
 };
+
+// const printStyle = {
+//   marginTop: "1rem",
+//   width: "auto",
+//   display: "grid",
+//   gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr",
+//   gap: "1rem",
+// };
 
 function BarcodeModal({
   open,
@@ -116,7 +125,7 @@ function BarcodeModal({
   const inputRef = React.useRef();
   const barcodeRef = React.useRef();
   const handleClose = () => {
-    setDisabled(true)
+    setDisabled(true);
     setOpen(false);
     setValue(0);
     setBarcodeData([]);
@@ -126,7 +135,7 @@ function BarcodeModal({
     if (e.target.value <= 0) {
       inputRef.current.focus();
       setBarcodeData([]);
-      setDisabled(true)
+      setDisabled(true);
       return false;
     }
     const barcodeArr = [];
@@ -134,7 +143,13 @@ function BarcodeModal({
       barcodeArr.push(productShow.barcode_number);
     }
     setBarcodeData(barcodeArr);
-    setDisabled(false)
+    setDisabled(false);
+  };
+
+  const resetBarcode = () => {
+    setBarcodeData([]);
+    setDisabled(true);
+    return 0;
   };
 
   return (
@@ -172,24 +187,40 @@ function BarcodeModal({
             className="barcode"
             style={{
               width: "100%",
-              height: "40%",
+              height: "35%",
               display: "flex",
+              flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
             }}
           >
-            <figure style={barcodeStyle}>
-              <Barcode value={productShow.barcode_number || ""} />
-            </figure>
+            <div
+              style={{
+                width: "55%",
+                border: "dotted 2px #969a99",
+                borderRadius: "10px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <figure style={barcodeStyle}>
+                <Barcode value={productShow.barcode_number || ""} />
+              </figure>
+              <div className="div">
+                <p>ราคา : {productShow.selling_price} THB</p>
+              </div>
+            </div>
           </div>
           <div
             className="barcode-action"
             style={{
               width: "100%",
-              height: "60%",
+              height: "65%",
               display: "flex",
               flexDirection: "column",
-              justifyContent: "start",
+              justifyContent: "center",
               alignItems: "center",
             }}
           >
@@ -205,26 +236,36 @@ function BarcodeModal({
                   !isNaN(parseInt(e.target.value)) &&
                     parseInt(e.target.value) <= 100
                     ? parseInt(e.target.value)
-                    : 0
+                    : resetBarcode()
                 );
                 if (e.target.value <= 100) setBarcode(e);
               }}
             />
             <ReactToPrint
-              trigger={() => <button disabled={disabled} style={buttonStyle}>Print</button>}
+              trigger={() => (
+                <button disabled={disabled} style={buttonStyle}>
+                  Print
+                </button>
+              )}
               content={() => barcodeRef.current}
             />
           </div>
           <div ref={barcodeRef} style={printStyle}>
             {barcodeData?.map((item, ind) => (
-              <Barcode
-                key={ind}
-                value={String(item)}
-                width={1}
-                height={40}
-                displayValue={true}
-                fontSize={12}
-              />
+              <div>
+                <Barcode
+                  key={ind}
+                  value={String(item)}
+                  width={1}
+                  height={40}
+                  displayValue={true}
+                  fontSize={12}
+                />
+                <p style={{ paddingLeft: "1rem" }}>
+                  ราคา&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;{productShow.selling_price}
+                  &nbsp;&nbsp;&nbsp;THB
+                </p>
+              </div>
             ))}
           </div>
         </DialogContent>

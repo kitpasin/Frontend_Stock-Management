@@ -8,6 +8,7 @@ import {
   IconButton,
   Radio,
   TextField,
+  Typography,
 } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
@@ -24,6 +25,7 @@ import HeadPageComponent from "../../layout/headpage/headpage";
 import { Link, useNavigate } from "react-router-dom";
 import { batch, useSelector } from "react-redux";
 import axios from "axios";
+import { v4 as uuidv4 } from 'uuid';
 import {
   CoPresentOutlined,
   PersonOffRounded,
@@ -37,7 +39,8 @@ const form = {
   state1: false,
   state2: false,
   state3: false,
-  reset: 0,
+  reset: false,
+  key: [uuidv4(), uuidv4(), uuidv4(), uuidv4()],
   unit: "",
   netweight: "",
   counting_unit: "",
@@ -51,7 +54,7 @@ const form = {
   supplier_barcode: "",
   main_cate_id: "",
   sub_cate_id: "",
-  sub_cate: "",
+  sub_cate: "", 
   supplier_id: "",
   supplier_cate: "",
   import_value: "",
@@ -136,10 +139,10 @@ function ProductsImportPage({
       setWindowWidth(window.innerWidth);
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -344,17 +347,53 @@ function ProductsImportPage({
   };
 
   const resetDataHandle = () => {
-    setProductData(form);
-    setProductData((prev) => {
-      return {
-        ...prev,
-        reset: productData.reset + 1,
-        state1: !productData.state1,
-        state2: !productData.state2,
-        state3: !productData.state3,
-        vat: "",
-        vat_id: "",
-      };
+    setProductData({
+      title: "",
+      state1: !productData.state1,
+      state2: !productData.state2,
+      state3: !productData.state3,
+      reset: !productData.reset,
+      key: [uuidv4(), uuidv4(), uuidv4(), uuidv4()],
+      unit: "",
+      netweight: "",
+      counting_unit: "",
+      purchase_date: "",
+      mfd_date: "",
+      exp_date: "",
+      alert_date: "",
+      alert_stock: "",
+      barcode: "",
+      new_barcode: "",
+      supplier_barcode: "",
+      main_cate_id: "",
+      sub_cate_id: "",
+      sub_cate: "",
+      supplier_id: "",
+      supplier_cate: "",
+      import_value: "",
+      defective: 0,
+
+      import_fee: "",
+      fuel_cost: "",
+      other_exp: "",
+      total: 0,
+      op_unit: "",
+      total_product: "",
+
+      oc_unit: "",
+      unit_price: "",
+      product_cost: "",
+      units: "",
+      cost_per_unit: "",
+      total_cost: "",
+      set_profit: "",
+      vat_id: 0,
+      vat: 0,
+      profit_per_unit: "",
+      pp_profit: "",
+      pp_vat: "",
+      os_price: 0,
+      selling_price: "",
     });
     formInputRef.current.value = "";
     setPreview({
@@ -652,112 +691,115 @@ function ProductsImportPage({
               </div>
               <div className="content-right">
                 <div className="first-row">
-                    <TextField
-                      required
-                      value={productData.title}
-                      onChange={(e) =>
-                        setProductData(() => {
-                          return { ...productData, title: e.target.value };
-                        })
-                      }
-                      id="outlined-basic"
-                      label="ชื่อสินค้า"
-                      variant="outlined"
-                      size="small"
-                      sx={{ width: "100%" }}
-                    />
+                  <TextField
+                    required
+                    value={productData.title}
+                    onChange={(e) =>
+                      setProductData(() => {
+                        return { ...productData, title: e.target.value };
+                      })
+                    }
+                    id="outlined-basic"
+                    label="ชื่อสินค้า"
+                    variant="outlined"
+                    size="small"
+                    sx={{ width: "100%" }}
+                  />
                 </div>
                 <div className="second-row">
-                <TextField
-                      required
-                      type="number"
-                      value={productData.netweight}
-                      onInput={(e) =>
-                        setProductData(() => {
-                          return {
-                            ...productData,
-                            netweight: parseFloat(e.target.value),
-                          };
-                        })
-                      }
-                      id="outlined-basic"
-                      label="ปริมาตรสุทธิ"
-                      variant="outlined"
-                      size="small"
-                      sx={{ width: "25%" }}
-                    />
-                    <Autocomplete
-                      key={productData.reset}
-                      defaultValue={{ name: productData.unit_name || "" }}
-                      required
-                      onChange={(e, value) =>
-                        setProductData(() => {
-                          return { ...productData, unit: value ? value.id : 0 };
-                        })
-                      }
-                      id="combo-box-demo"
-                      options={netsData}
-                      getOptionLabel={(option) => option.name || ""}
-                      sx={{ width: "25%" }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="หน่วยปริมาตรสุทธิ"
-                          size="small"
-                          required
-                        />
-                      )}
-                    />
-                    <TextField
-                      required
-                      value={productData.import_value}
-                      onChange={(e) =>
-                        setProductData(() => {
-                          return {
-                            ...productData,
-                            import_value: !isNaN(parseInt(e.target.value))
-                              ? parseInt(e.target.value)
-                              : "",
-                          };
-                        })
-                      }
-                      id="outlined-basic"
-                      label="จำนวน(นำเข้า)"
-                      variant="outlined"
-                      size="small"
-                      sx={{ width: "25%" }}
-                    />
-                    <Autocomplete
-                      // value={productData.counting_unit}
-                      key={productData.reset}
-                      defaultValue={{
-                        name: productData.counting_unit_name || "",
-                      }}
-                      onChange={(e, value) =>
-                        setProductData(() => {
-                          return {
-                            ...productData,
-                            counting_unit: value ? value.id : 0,
-                          };
-                        })
-                      }
-                      disablePortal
-                      id="combo-box-demo"
-                      options={amountsData}
-                      getOptionLabel={(option) => option.name || ""}
-                      sx={{ width: "25%" }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="หน่วยนับ"
-                          size="small"
-                          required
-                        />
-                      )}
-                    />
+                  <TextField
+                    required
+                    type="number"
+                    value={productData.netweight}
+                    onInput={(e) =>
+                      setProductData(() => {
+                        return {
+                          ...productData,
+                          netweight: parseFloat(e.target.value),
+                        };
+                      })
+                    }
+                    id="outlined-basic"
+                    label="ปริมาตรสุทธิ"
+                    variant="outlined"
+                    size="small"
+                    sx={{ width: "25%" }}
+                  />
+                  <Autocomplete
+                    key={productData.key[0]}
+                    defaultValue={{ name: productData.unit_name || "" }}
+                    required
+                    onChange={(e, value) =>
+                      setProductData(() => {
+                        return { ...productData, unit: value ? value.id : 0 };
+                      })
+                    }
+                    id="combo-box-demo"
+                    options={netsData}
+                    getOptionLabel={(option) => option.name || ""}
+                    sx={{ width: "25%" }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="หน่วยปริมาตรสุทธิ"
+                        size="small"
+                        required
+                      />
+                    )}
+                  />
+                  <TextField
+                    required
+                    value={productData.import_value}
+                    onChange={(e) =>
+                      setProductData(() => {
+                        return {
+                          ...productData,
+                          import_value: !isNaN(parseInt(e.target.value))
+                            ? parseInt(e.target.value)
+                            : "",
+                        };
+                      })
+                    }
+                    id="outlined-basic"
+                    label="จำนวน(นำเข้า)"
+                    variant="outlined"
+                    size="small"
+                    sx={{ width: "25%" }}
+                  />
+                  <Autocomplete
+                    // value={productData.counting_unit}
+                    key={productData.key[1]}
+                    defaultValue={{
+                      name: productData.counting_unit_name || "",
+                    }}
+                    onChange={(e, value) =>
+                      setProductData(() => {
+                        return {
+                          ...productData,
+                          counting_unit: value ? value.id : 0,
+                        };
+                      })
+                    }
+                    disablePortal
+                    id="combo-box-demo"
+                    options={amountsData}
+                    getOptionLabel={(option) => option.name || ""}
+                    sx={{ width: "25%" }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="หน่วยนับ"
+                        size="small"
+                        required
+                      />
+                    )}
+                  />
                 </div>
                 <div className="third-row">
-                  <div className="third-row-left" style={{ display: "flex", gap: "1rem", width: "50%" }}>
+                  <div
+                    className="third-row-left"
+                    style={{ display: "flex", gap: "1rem", width: "50%" }}
+                  >
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
                         label="วันสั่งซื้อ"
@@ -849,7 +891,10 @@ function ProductsImportPage({
                       />
                     </LocalizationProvider>
                   </div>
-                  <div className="third-row-right" style={{ display: "flex", gap: "1rem", width: "50%" }}>
+                  <div
+                    className="third-row-right"
+                    style={{ display: "flex", gap: "1rem", width: "50%" }}
+                  >
                     <TextField
                       required
                       value={productData.alert_date}
@@ -909,10 +954,13 @@ function ProductsImportPage({
                   </div>
                 </div>
                 <div className="fourth-row">
-                  <div className="fourth-row-left" style={{ display: "flex", gap: "1rem", width: "50%" }}>
+                  <div
+                    className="fourth-row-left"
+                    style={{ display: "flex", gap: "1rem", width: "50%" }}
+                  >
                     <Autocomplete
                       // value={productData.main_cate_id}
-                      key={productData.reset}
+                      key={productData.key[2]}
                       defaultValue={{ name: productData.main_cate_name || "" }}
                       onChange={(e, value) =>
                         setProductData(() => {
@@ -943,7 +991,7 @@ function ProductsImportPage({
                     />
                     <Autocomplete
                       key={productData.state1}
-                      defaultValue={{ name: productData.sub_cate || "" }}
+                      // defaultValue={{ name: productData.sub_cate || "" }}
                       onChange={(e, value) =>
                         setProductData(() => {
                           return {
@@ -968,7 +1016,10 @@ function ProductsImportPage({
                       )}
                     />
                   </div>
-                  <div className="fourth-row-right" style={{ display: "flex", gap: "1rem", width: "50%" }}>
+                  <div
+                    className="fourth-row-right"
+                    style={{ display: "flex", gap: "1rem", width: "50%" }}
+                  >
                     <TextField
                       value={productData.barcode || ""}
                       onChange={(e) => digitBarcode(e)}
@@ -1037,7 +1088,12 @@ function ProductsImportPage({
                   </div>
                   <div
                     className="pricing"
-                    style={{ display: "flex", gap: "1rem", padding: "1rem", width: "100%" }}
+                    style={{
+                      display: "flex",
+                      gap: "1rem",
+                      padding: "1rem",
+                      width: "100%",
+                    }}
                   >
                     <div
                       className="pricing-left"
@@ -1213,7 +1269,7 @@ function ProductsImportPage({
                   >
                     <Autocomplete
                       // value={productData.supplier_id}
-                      key={productData.reset}
+                      key={productData.key[3]}
                       defaultValue={{ name: productData.supplier_name || "" }}
                       onChange={(e, value) =>
                         setProductData(() => {
@@ -1581,50 +1637,56 @@ function ProductsImportPage({
                     <div
                       style={{
                         display: "flex",
-                        alignItems: "center",
-                        gap: "1rem",
+                        flexDirection: "column",
+                        alignItems: "start",
+                        gap: "0",
                       }}
                     >
-                      <TextField
-                        disabled
-                        type="number"
-                        value={productData.pp_vat}
-                        onChange={(e) =>
-                          setProductData(() => {
-                            return {
-                              ...productData,
-                              pp_vat: !isNaN(parseFloat(e.target.value))
-                                ? parseFloat(e.target.value)
-                                : null,
-                            };
-                          })
-                        }
-                        id="outlined-basic"
-                        label="ราคาสินค้ารวมVat (ราคาขาย)"
-                        variant="outlined"
-                        size="small"
-                        sx={{ width: "50%" }}
-                      />
-                      <TextField
-                        disabled
-                        type="number"
-                        value={productData.os_price}
-                        onChange={(e) =>
-                          setProductData(() => {
-                            return {
-                              ...productData,
-                              os_price: !isNaN(parseFloat(e.target.value))
-                                ? parseFloat(e.target.value)
-                                : null,
-                            };
-                          })
-                        }
-                        id="outlined-basic"
-                        label="ราคาขายเดิม"
-                        variant="outlined"
-                        size="small"
-                        sx={{ width: "50%" }}
-                      />
+                      <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                        <TextField
+                          disabled
+                          type="number"
+                          value={productData.pp_vat}
+                          onChange={(e) =>
+                            setProductData(() => {
+                              return {
+                                ...productData,
+                                pp_vat: !isNaN(parseFloat(e.target.value))
+                                  ? parseFloat(e.target.value)
+                                  : null,
+                              };
+                            })
+                          }
+                          id="outlined-basic"
+                          label="ราคาสินค้ารวมVat (ราคาขาย)"
+                          variant="outlined"
+                          size="small"
+                          sx={{ width: "50%" }}
+                        />
+                        <TextField
+                          disabled
+                          type="number"
+                          value={productData.os_price}
+                          onChange={(e) =>
+                            setProductData(() => {
+                              return {
+                                ...productData,
+                                os_price: !isNaN(parseFloat(e.target.value))
+                                  ? parseFloat(e.target.value)
+                                  : null,
+                              };
+                            })
+                          }
+                          id="outlined-basic"
+                          label="ราคาขายเดิม"
+                          variant="outlined"
+                          size="small"
+                          sx={{ width: "50%" }}
+                        />
+                      </div>
+                      { isFetchImport && parseFloat(productData.old_pp_vat) > parseFloat(productData.pp_vat) && parseFloat(productData.pp_vat) !== 0 &&
+                        <Typography variant="overline" sx={{ color: "red" }}>ราคารวมกำไรต่อชิ้นลดลง</Typography>
+                      } 
                     </div>
                     <TextField
                       required
@@ -1644,7 +1706,7 @@ function ProductsImportPage({
                       label="ราคาขายจริง"
                       variant="outlined"
                       size="small"
-                      sx={{ width: "100%" }}
+                      sx={{ width: "100%", }}
                     />
                   </div>
                 </div>
