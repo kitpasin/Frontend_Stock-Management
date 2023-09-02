@@ -90,6 +90,7 @@ function ProductsExportPage({
   }
 
   const onExportProduct = (_id) => {
+    console.log(productShow)
     const formExport = {
       product_id: productShow.product_id,
       quantity: exportValue,

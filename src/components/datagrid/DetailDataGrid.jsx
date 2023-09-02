@@ -3,7 +3,12 @@ import { DataGrid } from "@mui/x-data-grid";
 import { Typography } from "@mui/material";
 import dayjs from "dayjs";
 
-function DetailDataGrid({ selectedProduct, productShow, productShowArr, stock }) {
+function DetailDataGrid({
+  selectedProduct,
+  productShow,
+  productShowArr,
+  stock,
+}) {
   const current_date = dayjs().toISOString().substring(0, 10);
 
   const columns = [
@@ -30,10 +35,12 @@ function DetailDataGrid({ selectedProduct, productShow, productShowArr, stock })
       renderCell: (params) => (
         <div>
           <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>
-            {params.row.import_value - params.row.export_value - params.row.export_defective_value}
+            {params.row.import_value -
+              params.row.export_value -
+              params.row.export_defective_value}
           </p>
         </div>
-      )
+      ),
     },
     {
       field: "defective_product",
@@ -127,7 +134,11 @@ function DetailDataGrid({ selectedProduct, productShow, productShowArr, stock })
         const duration2 = parseInt(duration) - 1;
         return (
           <div>
-            <p style={{ color: duration2 <= 30 ? "red" : "" }} >{duration2 > 0 ? duration2 + "วัน" : "หมดอายุ"}</p>
+            <p
+              style={{ color: duration2 <= params.row.alert_date ? "red" : "" }}
+            >
+              {duration2 > 0 ? duration2 + "วัน" : "หมดอายุ"}
+            </p>
           </div>
         );
       },

@@ -183,6 +183,9 @@ function ReportPage() {
     const headerRow = worksheet.addRow([
       "รหัสสินค้า",
       "ชื่อสินค้า",
+      "บาร์โค้ดเดิม",
+      "บาร์โค้ดใหม่",
+      "บาร์โค้ดซัพพลายเออร์",
       "คงเหลือต่อหน่วย",
       "วันที่ซื้อ",
       "ค่าดำเนินการต่อหน่วย",
@@ -198,6 +201,9 @@ function ReportPage() {
       worksheet.addRow([
         "" + product.product_id,
         product.title,
+        product.product_barcode,
+        product.barcode_number,
+        product.supplier_barcode,
         product.import_value - product.export_value - product.export_defective_value,
         product.purchase_date,
         product.oc_unit,

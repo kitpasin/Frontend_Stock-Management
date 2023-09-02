@@ -41,7 +41,7 @@ function Table({
             headerName: "ชื่อรายการ",
             headerAlign: "center",
             align: "left",
-            width: isHovered ? 290 : 192.5,
+            width: isHovered ? 290 : 140,
             headerClassName: "table-columns",
             renderCell: (params) => {
                 return (
@@ -67,10 +67,64 @@ function Table({
             },
         },
         {
+            field: "product_barcode",
+            headerName: "บาร์โค้ดเดิม",
+            headerAlign: "center",
+            align: "center",
+            width: 140,
+            headerClassName: "table-columns",
+            renderCell: (params) => {
+                return (
+                    <div>
+                        <p
+                            style={{ fontSize: "12px", lineHeight: "12.5px" }}
+                        >{params.row.product_barcode !== null ? params.row.product_barcode : "-"}</p>
+                        
+                    </div>
+                )
+            }
+        },
+        {
+            field: "barcode_number",
+            headerName: "บาร์โค้ดใหม่",
+            headerAlign: "center",
+            align: "center",
+            width: 140,
+            headerClassName: "table-columns",
+            renderCell: (params) => {
+                return (
+                    <div>
+                        <p
+                            style={{ fontSize: "12px", lineHeight: "12.5px" }}
+                        >{params.row.barcode_number !== null ? params.row.barcode_number : "-"}</p>
+                        
+                    </div>
+                )
+            }
+        },
+        {
+            field: "supplier_barcode",
+            headerName: "บาร์โค้ดซัพพลายเออร์",
+            headerAlign: "center",
+            align: "center",
+            width: 140,
+            headerClassName: "table-columns",
+            renderCell: (params) => {
+                return (
+                    <div>
+                        <p
+                            style={{ fontSize: "12px", lineHeight: "12.5px" }}
+                        >{params.row.supplier_barcode !== null ? params.row.supplier_barcode : "-"}</p>
+                        
+                    </div>
+                )
+            }
+        },
+        {
             field: "quantityPerUnit",
             headerAlign: "center",
             align: "center",
-            width: 192.5,
+            width: 140,
             headerClassName: "table-columns",
             renderHeader: () => (
                 <div>
@@ -112,12 +166,12 @@ function Table({
             headerName: "วันที่ซื้อ",
             headerAlign: "center",
             align: "center",
-            width: 192.5,
+            width: 140,
             headerClassName: "table-columns",
         },
         {
             field: "oc_unit",
-            width: 192.5,
+            width: 140,
             headerAlign: "center",
             align: "center",
             headerClassName: "table-columns",
@@ -143,7 +197,7 @@ function Table({
         },
         {
             field: "unit_price",
-            width: 192.5,
+            width: 140,
             headerAlign: "center",
             align: "center",
             headerClassName: "table-columns",
@@ -169,7 +223,7 @@ function Table({
         },
         {
             field: "set_profit",
-            width: 192.5,
+            width: 140,
             headerAlign: "center",
             align: "center",
             headerClassName: "table-columns",
@@ -192,7 +246,7 @@ function Table({
             field: "pp_vat",
             headerAlign: "center",
             align: "center",
-            width: 192.5,
+            width: 140,
             headerClassName: "table-columns",
             renderHeader: () => (
                 <div>
@@ -211,7 +265,7 @@ function Table({
         },
         {
             field: "selling_price",
-            width: 192.5,
+            width: 140,
             headerAlign: "center",
             align: "center",
             headerClassName: "table-columns",
