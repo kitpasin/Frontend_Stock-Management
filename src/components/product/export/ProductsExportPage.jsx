@@ -41,6 +41,8 @@ function ProductsExportPage({
   const navigate = useNavigate();
   const { t } = useTranslation(["dashboard-page"]);
 
+  const [formExportList, setFormExportList] = useState([])
+
   useEffect(() => {
     if (multiExprot && !exportOne) {
       setProductShowArr((prev) => {
@@ -89,8 +91,10 @@ function ProductsExportPage({
     setExportValue(0);
   }
 
+  console.log(formExportList)
+
   const onExportProduct = (_id) => {
-    console.log(productShow)
+    formExportList.push(productShow)
     const formExport = {
       product_id: productShow.product_id,
       quantity: exportValue,
