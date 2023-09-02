@@ -222,6 +222,7 @@ function ProductsImportPage({
     getNets();
     getAmounts();
     getMainCates();
+    getSubCates();
     getVats();
     getSuppliers();
     getMainCatesBySupplier(productData.supplier_id);
@@ -522,7 +523,6 @@ function ProductsImportPage({
                   const newProductAll = productAll.filter(
                     (item) => item.id !== id
                   );
-                  console.log(newProductAll);
                   setProductAll(newProductAll);
                   setProductData(newProductAll[0]);
                   setId(newProductAll[0].id);
@@ -991,7 +991,7 @@ function ProductsImportPage({
                     />
                     <Autocomplete
                       key={productData.state1}
-                      // defaultValue={{ name: productData.sub_cate || "" }}
+                      defaultValue={{ name: productData.sub_cate || "" }}
                       onChange={(e, value) =>
                         setProductData(() => {
                           return {

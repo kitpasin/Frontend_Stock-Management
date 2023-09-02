@@ -86,7 +86,9 @@ const SidebarComponent = (props) => {
               key={lang}
               onClick={(e) => languageSelectHandler(lang)}
               className={`btn-lang ${
-                lang.toLowerCase() === selectedLanguage.toLowerCase() ? "selected" : ""
+                lang.toLowerCase() === selectedLanguage.toLowerCase()
+                  ? "selected"
+                  : ""
               }`}
             >
               {lang}
@@ -173,6 +175,64 @@ const SidebarComponent = (props) => {
               <hr className="line-section gap" />
               <div className="title-section">{t("ManageSystem")}</div>
               <ul className="nav-menu">
+                {/* <div className="title-section">{t("ManageSystem")}</div> */}
+                <li className="menu-link has-child ">
+                  <a
+                    className={`navlink `}
+                    title={t("ProductsTitleMenu")}
+                    onClick={toggleSubMenu}
+                  >
+                    <FontAwesomeIcon
+                      icon={faCaretDown}
+                      className="toggle-submenu"
+                    />
+                    <figure
+                      className="faIcon"
+                      style={{ paddingRight: ".25rem" }}
+                    >
+                      <img src="/images/icons/imports-icon.png" alt="" />
+                    </figure>
+                    <div className="menu-title">{t("เพิ่มสินค้า")}</div>
+                  </a>
+                  <div className="child-menu ">
+                    <ul className="nav-items ">
+                      <li>
+                        <NavLink
+                          onClick={closeSidebarhandler}
+                          to="/products/import"
+                          className={`items `}
+                          title={t("เพิ่มสินค้าหลัก")}
+                          liClass="sub-items"
+                        >
+                          <span className="collap-title">
+                            <FontAwesomeIcon icon={faSignsPost} />
+                          </span>
+                          <span className="menu-title">
+                            {t("เพิ่มสินค้าหลัก")}
+                          </span>
+                        </NavLink>
+                      </li>
+                      <li>
+                        <NavLink
+                          onClick={closeSidebarhandler}
+                          to="/supproduct/import"
+                          className={`items `}
+                          title={t("เพิ่มสินค้าย่อย")}
+                          liClass="sub-items"
+                        >
+                          <span className="collap-title">
+                            <FontAwesomeIcon icon={faSignsPost} />
+                          </span>
+                          <span className="menu-title">
+                            {t("เพิ่มสินค้าย่อย")}
+                          </span>
+                        </NavLink>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+              </ul>
+              {/* <ul className="nav-menu">
                 <li>
                   <NavLink
                     onClick={closeSidebarhandler}
@@ -181,13 +241,16 @@ const SidebarComponent = (props) => {
                     title={t("เพิ่มสินค้า")}
                     liClass="menu-link"
                   >
-                    <figure className="faIcon" style={{ paddingRight: ".25rem" }}>
+                    <figure
+                      className="faIcon"
+                      style={{ paddingRight: ".25rem" }}
+                    >
                       <img src="/images/icons/imports-icon.png" alt="" />
                     </figure>
                     <div className="menu-title">{t("เพิ่มสินค้า")}</div>
                   </NavLink>
                 </li>
-              </ul>
+              </ul> */}
               <ul className="nav-menu">
                 <li>
                   <NavLink
@@ -277,7 +340,10 @@ const SidebarComponent = (props) => {
                     title={t("Export")}
                     liClass="menu-link"
                   >
-                    <figure className="faIcon" style={{ paddingLeft: ".25rem" }}>
+                    <figure
+                      className="faIcon"
+                      style={{ paddingLeft: ".25rem" }}
+                    >
                       <img src="/images/icons/exports-icon.png" alt="" />
                     </figure>
                     <div className="menu-title">{t("Export")}</div>
@@ -314,80 +380,8 @@ const SidebarComponent = (props) => {
                     </figure>
                     <div className="menu-title">{t("ReportPage")}</div>
                   </NavLink>
-                  </li>
-              </ul>
-
-              {/* <ul className="nav-menu">
-                <div className="title-section">{t("ManageSystem")}</div>
-                <li className="menu-link has-child ">
-                  <a
-                    className={`navlink `}
-                    title={t("ProductsTitleMenu")}
-                    onClick={toggleSubMenu}
-                  >
-                    <FontAwesomeIcon
-                      icon={faCaretDown}
-                      className="toggle-submenu"
-                    />
-                    <span className="collap-title">
-                      <FontAwesomeIcon icon={faBoxOpen} />
-                    </span>
-                    <div className="menu-title">{t("ProductsTitleMenu")}</div>
-                  </a>
-                  <div className="child-menu ">
-                    <ul className="nav-items ">
-                      {pagesAllow.productcate && (
-                        <li>
-                          <NavLink
-                            onClick={closeSidebarhandler}
-                            to="/productcate"
-                            className={`items `}
-                            title={t("ProductCategory")}
-                            liClass="sub-items"
-                          >
-                            <span className="collap-title">
-                              <FontAwesomeIcon icon={faSignsPost} />
-                            </span>
-                            <span className="menu-title">
-                              {t("ProductCategory")}
-                            </span>
-                          </NavLink>
-                        </li>
-                      )}
-                      {pagesAllow.products && (
-                        <NavLink
-                          onClick={closeSidebarhandler}
-                          to="/products"
-                          className={`items `}
-                          title={t("ProductsPage")}
-                          liClass="sub-items"
-                        >
-                          <span className="collap-title">
-                            <FontAwesomeIcon icon={faSignsPost} />
-                          </span>
-                          <span className="menu-title">
-                            {t("ProductsPage")}
-                          </span>
-                        </NavLink>
-                      )}
-                    </ul>
-                  </div>
                 </li>
-                {pagesAllow.members && (
-                  <NavLink
-                    onClick={closeSidebarhandler}
-                    to="/members"
-                    className={`navlink `}
-                    title={t("MembersPage")}
-                    liClass="menu-link"
-                  >
-                    <figure className="faIcon">
-                      <FontAwesomeIcon icon={faStreetView} />
-                    </figure>
-                    <div className="menu-title">{t("MembersPage")}</div>
-                  </NavLink>
-                )}
-              </ul> */}
+              </ul>
             </Fragment>
           )}
 
@@ -498,7 +492,9 @@ const SidebarComponent = (props) => {
               <div className="title-section">{t("SettingsTitle")}</div>
               <ul className="nav-menu">
                 {pagesAllow.suppliers &&
-                  (uPermission.superAdmin || uPermission.admin || uPermission.officer) && (
+                  (uPermission.superAdmin ||
+                    uPermission.admin ||
+                    uPermission.officer) && (
                     <NavLink
                       onClick={closeSidebarhandler}
                       to="/suppliers"
@@ -514,7 +510,9 @@ const SidebarComponent = (props) => {
                     </NavLink>
                   )}
                 {pagesAllow.productcate &&
-                  (uPermission.superAdmin || uPermission.admin || uPermission.officer) && (
+                  (uPermission.superAdmin ||
+                    uPermission.admin ||
+                    uPermission.officer) && (
                     <NavLink
                       onClick={closeSidebarhandler}
                       to="/productcate"
@@ -530,7 +528,9 @@ const SidebarComponent = (props) => {
                     </NavLink>
                   )}
                 {pagesAllow.vat &&
-                  (uPermission.superAdmin || uPermission.admin || uPermission.officer) && (
+                  (uPermission.superAdmin ||
+                    uPermission.admin ||
+                    uPermission.officer) && (
                     <NavLink
                       onClick={closeSidebarhandler}
                       to="/amount"
@@ -540,13 +540,18 @@ const SidebarComponent = (props) => {
                     >
                       <figure className="faIcon">
                         {/* <FontAwesomeIcon icon={faUserShield} /> */}
-                        <img src="/images/icons/majesticons_atom-2.png" alt="" />
+                        <img
+                          src="/images/icons/majesticons_atom-2.png"
+                          alt=""
+                        />
                       </figure>
                       <div className="menu-title">{t("amountPage")}</div>
                     </NavLink>
                   )}
                 {pagesAllow.vat &&
-                  (uPermission.superAdmin || uPermission.admin || uPermission.officer) && (
+                  (uPermission.superAdmin ||
+                    uPermission.admin ||
+                    uPermission.officer) && (
                     <NavLink
                       onClick={closeSidebarhandler}
                       to="/vat"
@@ -556,7 +561,10 @@ const SidebarComponent = (props) => {
                     >
                       <figure className="faIcon">
                         {/* <FontAwesomeIcon icon={faUserShield} /> */}
-                        <img src="/images/icons/foundation_graph-pie.png" alt="" />
+                        <img
+                          src="/images/icons/foundation_graph-pie.png"
+                          alt=""
+                        />
                       </figure>
                       <div className="menu-title">{t("vat")}</div>
                     </NavLink>
@@ -578,7 +586,9 @@ const SidebarComponent = (props) => {
                 )}
 
                 {pagesAllow.admins &&
-                  (uPermission.superAdmin || uPermission.admin || uPermission.officer) && (
+                  (uPermission.superAdmin ||
+                    uPermission.admin ||
+                    uPermission.officer) && (
                     <NavLink
                       onClick={closeSidebarhandler}
                       to="/admins"
@@ -656,7 +666,10 @@ const SidebarComponent = (props) => {
 
         <hr className="line-section gap" />
       </nav>
-      <ul className="nav-menu mini-bar" style={{ marginTop: "auto", paddingRight: ".5rem" }}>
+      <ul
+        className="nav-menu mini-bar"
+        style={{ marginTop: "auto", paddingRight: ".5rem" }}
+      >
         {/* <li className="menu-link footerLink">
           <a href={webPath} target="_blank" className="navlink pink-btn " title={t("GoToWebSite")}>
             <figure className="faIcon">
