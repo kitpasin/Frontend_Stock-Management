@@ -1,23 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Avatar, Typography } from "@mui/material";
+import { Avatar, Button, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 
 import dayjs from "dayjs";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFileImport } from "@fortawesome/free-solid-svg-icons";
 
-export default function Table({
-  productsData,
-  refreshData,
-  setRefreshData,
-}) {
+export default function Table({ productsData, refreshData, setRefreshData, setProductShow, setOpenModal }) {
   const webPath = useSelector((state) => state.app.webPath);
-  const [isHovered, setIsHovered] = React.useState(false);
 
   const columns = [
     {
       field: "thumbnail_link",
       headerName: "ภาพ",
-      width: 50,
+      // style: { maxWidth: '300px !important'  },
+      width: 55,
       headerClassName: "table-columns",
       headerAlign: "center",
       align: "center",
@@ -35,14 +33,12 @@ export default function Table({
       headerName: "ชื่อรายการ",
       headerAlign: "center",
       align: "left",
-      width: isHovered ? 290 : 115,
+      width: 435,
       headerClassName: "table-columns",
       renderCell: (params) => {
         return (
           <div
             style={{ paddingLeft: "0" }}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
           >
             <p
               style={{ fontSize: "12px", lineHeight: "12.5px" }}
@@ -61,125 +57,16 @@ export default function Table({
       },
     },
     {
-      field: "import_value",
-      headerAlign: "center",
-      align: "center",
-      width: 55,
-      headerClassName: "table-columns",
-      renderHeader: () => (
-        <div>
-          <Typography
-            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
-          >
-            นำเข้า
-          </Typography>
-          <Typography
-            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
-          >
-            /หน่วย
-          </Typography>
-        </div>
-      ),
-    },
-    {
-      field: "defective_product",
-      headerAlign: "center",
-      align: "center",
-      width: 55,
-      headerClassName: "table-columns",
-      renderHeader: () => (
-        <div>
-          <Typography
-            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
-          >
-            สินค้า
-          </Typography>
-          <Typography
-            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
-          >
-            มีปัญหา
-          </Typography>
-        </div>
-      ),
-    },
-    {
-      field: "export_value",
-      headerAlign: "center",
-      align: "center",
-      width: 55,
-      headerClassName: "table-columns",
-      renderHeader: () => (
-        <div>
-          <Typography
-            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
-          >
-            เบิกแล้ว
-          </Typography>
-          <Typography
-            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
-          >
-            /หน่วย
-          </Typography>
-        </div>
-      ),
-      renderCell: (params) => (
-        <div>
-          <p>{params.row.export_value + params.row.export_defective_value}</p>
-        </div>
-      ),
-    },
-    {
-      field: "quantityPerUnit",
-      headerAlign: "center",
-      align: "center",
-      width: 55,
-      headerClassName: "table-columns",
-      renderHeader: () => (
-        <div>
-          <Typography
-            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
-          >
-            คงเหลือ
-          </Typography>
-          <Typography
-            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
-          >
-            /หน่วย
-          </Typography>
-        </div>
-      ),
-      renderCell: (params) => (
-        <div>
-          <p
-            style={{
-              fontSize: "12px",
-              lineHeight: "12.5px",
-              color:
-                params.row.import_value -
-                  (params.row.export_value +
-                    params.row.export_defective_value) <=
-                params.row.alert_stock
-                  ? "#ff0000"
-                  : "#000",
-            }}
-          >
-            {params.row.import_value -
-              (params.row.export_value + params.row.export_defective_value)}
-          </p>
-        </div>
-      ),
-    },
-    {
       field: "purchase_date",
       headerName: "วันที่ซื้อ",
       headerAlign: "center",
       align: "center",
-      width: 90,
+      width: 200,
       headerClassName: "table-columns",
     },
     {
       field: "mfd_date",
-      width: 80,
+      width: 200,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -214,6 +101,68 @@ export default function Table({
         </div>
       ),
     },
+    {
+      field: "main_cate_name",
+      headerName: "หมวดหมู่",
+      headerAlign: "center",
+      align: "center",
+      width: 200,
+      headerClassName: "table-columns",
+    },
+    {
+      field: "amount_name",
+      headerName: "หน่วยนับ",
+      headerAlign: "center",
+      align: "center",
+      width: 200,
+      headerClassName: "table-columns",
+    },
+    {
+      field: "volumnPerUnit",
+      headerAlign: "center",
+      align: "center",
+      width: 200,
+      headerClassName: "table-columns",
+      renderHeader: () => (
+        <div>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
+            ปริมาตรสุทธิ
+          </Typography>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
+            /หน่วย
+          </Typography>
+        </div>
+      ),
+    },
+    {
+      field: "action",
+      headerName: "ดึงข้อมูล",
+      headerAlign: "center",
+      align: "center",
+      width: 90,
+      headerClassName: "table-columns",
+      renderCell: (params) => (
+        <Button
+          id={`basic-button${params.row.id}`}
+          onClick={() => handleClick(params.row)}
+          style={{
+            background: "#3B336B",
+            minWidth: "40px",
+            width: "40px",
+            height: "40px",
+            padding: ".65rem",
+            paddingLeft: ".5rem",
+            borderRadius: "5px",
+          }}
+        >
+          <FontAwesomeIcon icon={faFileImport} size="xl" style={{ color: "#ffffff" }} />
+        </Button>
+      ),
+    },
   ];
 
   const rowsClassName = "table-rows";
@@ -224,6 +173,12 @@ export default function Table({
     uniqueProductsMap.set(item.product_id, item);
   });
   const uniqueProductsData = Array.from(uniqueProductsMap.values());
+
+  const handleClick = (product) => {
+    const data = productsData.filter((item) => item.id === product.id)
+    setProductShow(data[0])
+    setOpenModal(true)
+  }
 
   return (
     <div>
@@ -238,6 +193,7 @@ export default function Table({
           },
         }}
         pageSizeOptions={[5, 10, 50, 100]}
+        checkboxSelection={false}
       />
     </div>
   );
