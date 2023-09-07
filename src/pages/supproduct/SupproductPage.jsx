@@ -130,12 +130,9 @@ export default function SupproductPage() {
                   size="small"
                   disablePortal
                   id="combo-box-title"
-                  options={productsAll}
+                  options={filteredData}
                   getOptionLabel={(option) => option.title || ""}
-                  onChange={(event, value) =>
-                    setFilterId((prev) => {
-                      return { ...prev, p_id: value ? value.id : "" };
-                    })
+                  onChange={(event, value) => setFilterId((prev) => { return { ...prev, p_id: value ? value.id : "" } })
                   }
                   fullWidth
                   renderInput={(params) => (
@@ -155,12 +152,14 @@ export default function SupproductPage() {
               />
             </div>
           </Card>
-          <SupproductImport
-            productShow={productShow}
-            open={openModal}
-            setOpen={setOpenModal}
-            isEdit={false}
-          />
+          {openModal && 
+            <SupproductImport
+              productShow={productShow}
+              open={openModal}
+              setOpen={setOpenModal}
+              isEdit={false}
+            />
+          }
         </>
       )}
     </section>

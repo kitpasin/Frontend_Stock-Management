@@ -176,7 +176,7 @@ const SidebarComponent = (props) => {
               <div className="title-section">{t("ManageSystem")}</div>
               <ul className="nav-menu">
                 {/* <div className="title-section">{t("ManageSystem")}</div> */}
-                <li className="menu-link has-child ">
+                <li className="menu-link has-child opened">
                   <a
                     className={`navlink `}
                     title={t("ProductsTitleMenu")}

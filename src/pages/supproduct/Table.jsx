@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Avatar, Button, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
+import { v4 as uuidv4 } from 'uuid';
 
 import dayjs from "dayjs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -176,8 +177,23 @@ export default function Table({ productsData, refreshData, setRefreshData, setPr
 
   const handleClick = (product) => {
     const data = productsData.filter((item) => item.id === product.id)
-    setProductShow(data[0])
-    setOpenModal(true)
+    if (data) {
+      const dd = data[0];
+      const result = {
+        ...dd,
+        new_barcode: dd.barcode_number,
+        barcode: dd.product_barcode,
+        counting_unit_name: dd.amount_name,
+        unit_name: dd.net_name,
+        state1: false,
+        state2: false,
+        state3: false,
+        reset: 0,
+        key: [uuidv4(), uuidv4(), uuidv4(), uuidv4()],
+      };
+      setProductShow(result)
+      setOpenModal(true)
+    }
   }
 
   return (

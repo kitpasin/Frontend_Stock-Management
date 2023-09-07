@@ -1033,7 +1033,7 @@ function ProductsImportPage({
                       id="outlined-basic"
                       label="สร้างบาร์โค้ดใหม่"
                       variant="outlined"
-                      value={productData.new_barcode}
+                      value={productData.new_barcode || ""}
                       onChange={(event) =>
                         setGeneratedNumber(event.target.value)
                       }

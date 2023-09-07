@@ -52,7 +52,7 @@ function MenuItemList({
 
   const fetchImportHandle = (_params) => {
     const data = productData.filter((item) => item.id === _params.id);
-    if (data) {
+    if (data.length > 0) {
       const dd = data[0];
       const result = {
         id: dd.id,
@@ -121,7 +121,7 @@ function MenuItemList({
 
   const editHandle = (_params) => {
     const data = productData.filter((item) => item.id === _params.id);
-    if (data) {
+    if (data.length > 0) {
       const dd = data[0];
       const result = {
         id: dd.id,
