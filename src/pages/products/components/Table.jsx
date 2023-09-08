@@ -531,6 +531,7 @@ function Table({
           refreshData={refreshData}
           setRefreshData={setRefreshData}
           setProductSelected={setProductSelected}
+          productData={productsData}
         />
       ),
     },

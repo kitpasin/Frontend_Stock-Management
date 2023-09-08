@@ -147,7 +147,7 @@ function ProductsImportPage({
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const isSwChecked = (isMultiImport || isFetchImport) ? false : (productData.selling_price > 0 && productData.vat_id !== 0)?false:true;
   const [switchChecked, setSwitchChecked] = useState(isSwChecked);
-    console.log(isSwChecked)
+  
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
