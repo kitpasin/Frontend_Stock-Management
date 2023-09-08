@@ -86,6 +86,8 @@ const form = {
   pp_vat: "",
   os_price: 0,
   selling_price: "",
+
+  importOne: true,
 };
 
 function ProductsImportPage({
@@ -145,9 +147,10 @@ function ProductsImportPage({
   const webPath = useSelector((state) => state.app.webPath);
   const imgError = "/images/mock/pre-product.png";
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const isSwChecked = (isMultiImport || isFetchImport) ? false : (productData.selling_price > 0 && productData.vat_id !== 0)?false:true;
+  const isSwChecked = ((isMultiImport || isFetchImport) || productData.importOne) ? false : (productData.selling_price > 0 && productData.vat_id !== 0)?false:true;
   const [switchChecked, setSwitchChecked] = useState(isSwChecked);
-  
+
+  console.log(productData.vat_id)
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
