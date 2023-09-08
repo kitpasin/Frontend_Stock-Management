@@ -44,6 +44,7 @@ function ProductsPage() {
   const [selectFrom, setSelectFrom] = useState([]);
   const [openMultiExportModal, setOpenMultiexportModal] = useState(false);
   const [openMultiImportModal, setOpenMultiImportModal] = useState(false);
+  const current_date = dayjs().toISOString().substring(0, 10);
 
   const filteredProduct = productsAll.filter((product) => {
     const matchesTitle = title ? product.title === title : true;
@@ -63,10 +64,7 @@ function ProductsPage() {
     return matchesTitle && matchProductId && matchesMainCategory && matchesSupplier && matchesVat;
   });
 
-  const current_date = dayjs().toISOString().substring(0, 10);
-
   const multiExportHandle = () => {
-    console.log(productSelected);
     if (productSelected.length === 0) {
       Swal.fire({
         text: "เลือกสินค้าที่ต้องการเบิก",
@@ -96,6 +94,7 @@ function ProductsPage() {
           state1: false,
           state2: false,
           state3: false,
+          state4: false,
           reset: false,
           key: [uuidv4(), uuidv4(), uuidv4(), uuidv4()],
           unit: dd.unit_id,
@@ -110,6 +109,7 @@ function ProductsPage() {
           alert_stock: dd.alert_stock,
           barcode: dd.product_barcode,
           new_barcode: dd.barcode_number,
+          p_type: dd.p_type,
           main_cate_id: dd.main_cate_id,
           main_cate_name: dd.main_cate_name,
           sub_cate_id: dd.sub_cate_id,
