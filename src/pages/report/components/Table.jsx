@@ -3,6 +3,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { Avatar, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import dayjs from "dayjs";
+import { width } from "@mui/system";
 
 function Table({
     filteredProduct,
@@ -67,6 +68,14 @@ function Table({
             },
         },
         {
+            field: "p_type",
+            headerName: "ประเภทสินค้า",
+            headerAlign: "center",
+            align: "center",
+            width: 140,
+            headerClassName: "table-columns",
+        },
+        {
             field: "product_barcode",
             headerName: "บาร์โค้ดเดิม",
             headerAlign: "center",
@@ -124,7 +133,7 @@ function Table({
             field: "quantityPerUnit",
             headerAlign: "center",
             align: "center",
-            width: 140,
+            width: 70,
             headerClassName: "table-columns",
             renderHeader: () => (
                 <div>
@@ -223,7 +232,7 @@ function Table({
         },
         {
             field: "set_profit",
-            width: 140,
+            width: 70,
             headerAlign: "center",
             align: "center",
             headerClassName: "table-columns",
