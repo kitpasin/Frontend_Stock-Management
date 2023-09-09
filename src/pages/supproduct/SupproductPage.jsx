@@ -8,7 +8,6 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
-import axios from "axios";
 import PulseLoader from "react-spinners/PulseLoader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
@@ -23,46 +22,94 @@ import SupproductImport from "./SupproductImport";
 export default function SupproductPage() {
   const { t } = useTranslation(["supproduct-page"]);
   const [refreshData, setRefreshData] = useState(0);
-  const [productsAll, setProductAll] = useState([]);
-  const [filterId, setFilterId] = useState({ p_id: "", cate_id: "", barcode_number: "" });
+  const [productAll, setProductAll] = useState([]);
+  const [filterId, setFilterId] = useState({
+    title: "",
+    cate_id: "",
+    barcode_number: "",
+  });
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [openModal, setOpenModal] = useState(false);
-  const [productCate, setProductCate] = useState([]);
+  const [cateAll, setCateAll] = useState([]);
   const [productShow, setProductShow] = useState({});
+  const [barcodeOptions, setBarcodeOptions] = useState([]);
+  const [productOptions, setProductOptions] = useState([]);
+  const [titleInit, setTitleInit] = useState([]);
+  const [barcodeInit, setBarcodeInit] = useState([]);
+  const [cateOptions, setCateOptions] = useState([]);
+  const [formFilter, setFormFilter] = useState({
+    barcode_number: "",
+    cate: "",
+    title: "",
+  });
 
   function initData() {
     svProductAll().then((res) => {
       const result = res.data;
+      const barcodes = result?.map((item) => {
+        if (item.barcode_number) {
+          return item.barcode_number;
+        } else {
+          return item.product_barcode;
+        }
+      });
+      const barcodeOptions = barcodes
+        .map((barcode) => barcode)
+        .filter((value, index, self) => self.indexOf(value) === index);
+      const titleOptions = result
+        .map((product) => product.title)
+        .filter((value, index, self) => self.indexOf(value) === index);
       setProductAll(result);
       setFilteredData(result);
       setLoading(false);
+      setBarcodeOptions(barcodeOptions);
+      setBarcodeInit(barcodeOptions);
+      setProductOptions(titleOptions);
+      setTitleInit(titleOptions);
     });
 
     getCategory().then((res) => {
       const result = res.data;
-      setProductCate(result);
+      const cate = result
+        .map((cate) => cate.name)
+        .filter((value, index, self) => self.indexOf(value) === index);
+      setCateOptions(cate);
+      setCateAll(cate);
     });
   }
 
-  function filteredId() {
-    if (!filterId.cate_id && !filterId.p_id && !filterId.barcode_number) {
-      setFilteredData(productsAll);
+  function filteredProduct() {
+    const products = productAll?.filter((product) => {
+      const matchesBarcode = formFilter.barcode_number
+        ? product.barcode_number === formFilter.barcode_number ||
+          product.product_barcode === formFilter.barcode_number
+        : true;
+      const matchesCate = formFilter.cate ? product.main_cate_name === formFilter.cate : true; 
+      const matchesTitle = formFilter.title ? product.title === formFilter.title : true;
+      return matchesBarcode && matchesCate && matchesTitle;
+    });
+    setFilteredData(products)
+
+    /* Filter Options */
+    if (formFilter.barcode_number || formFilter.title) {
+      const cateOption = products?.map(product => {
+        return {cate_name : product.main_cate_name, title : product.title};
+      })
+      setBarcodeOptions([products[0].barcode_number ||products[0].product_barcode])
+      setCateOptions([cateOption[0].cate_name])
+      setProductOptions([cateOption[0].title])
     } else {
-      let data = [];
-      if (!filterId.cate_id && filterId.p_id) {
-        data = productsAll?.filter((item) => item.id == filterId.p_id);
-      } else if (filterId.cate_id && !filterId.p_id) {
-        data = productsAll?.filter(
-          (item) => item.main_cate_id == filterId.cate_id
-        );
-      } else {
-        data = productsAll?.filter(
-          (item) =>
-            item.main_cate_id == filterId.cate_id && item.id == filterId.p_id
-        );
-      }
-      setFilteredData(data);
+      setBarcodeOptions(barcodeInit)
+      setCateOptions(cateAll)
+      setProductOptions(titleInit)
+    }
+
+    if (formFilter.cate && (!formFilter.barcode_number || !formFilter.title)) {
+      const barcode = products?.map(item => item.barcode_number || item.product_barcode).filter((value, index, self) => self.indexOf(value) === index)
+      const title = products?.map(item => item.title).filter((value, index, self) => self.indexOf(value) === index)
+      setBarcodeOptions(barcode)
+      setProductOptions(title)
     }
   }
 
@@ -71,8 +118,8 @@ export default function SupproductPage() {
   }, []);
 
   useEffect(() => {
-    filteredId();
-  }, [refreshData, filterId]);
+    filteredProduct()
+  }, [refreshData, formFilter]);
 
   return (
     <section id="supproduct-page">
@@ -98,7 +145,7 @@ export default function SupproductPage() {
               />
             </div>
           </div>
-          <Card className="flex-container-column" sx={{ borderRadius: "10px", }}>
+          <Card className="flex-container-column" sx={{ borderRadius: "10px" }}>
             <div className="header">
               <div className="wrapper">
                 <figure className="title">
@@ -111,30 +158,28 @@ export default function SupproductPage() {
               </div>
               <div style={{ width: "40%", display: "flex", gap: "1rem" }}>
                 <Autocomplete
-                    size="small"
-                    disablePortal
-                    id="combo-box-barcode"
-                    options={filteredData}
-                    getOptionLabel={(option) => option.barcode_number || option.product_barcode }
-                    onChange={(event, value) =>
-                      setFilterId((prev) => {
-                        return { ...prev, barcode_number: value ? value.barcode_number ? value.barcode_number : value.product_barcode : "" };
-                      })
-                    }
-                    fullWidth
-                    renderInput={(params) => (
-                      <TextField {...params} label="ค้นหาด้วยบาร์โค้ด" />
-                    )}
+                  size="small"
+                  disablePortal
+                  id="combo-box-barcode"
+                  options={barcodeOptions}
+                  onChange={(event, value) =>
+                    setFormFilter((prev) => {
+                      return { ...prev, barcode_number: value ? value : "" };
+                    })
+                  }
+                  fullWidth
+                  renderInput={(params) => (
+                    <TextField {...params} label="ค้นหาด้วยบาร์โค้ด" />
+                  )}
                 />
                 <Autocomplete
                   size="small"
                   disablePortal
                   id="combo-box-cate"
-                  options={productCate}
-                  getOptionLabel={(option) => option.name || ""}
+                  options={cateOptions}
                   onChange={(event, value) =>
-                    setFilterId((prev) => {
-                      return { ...prev, cate_id: value ? value.id : "" };
+                    setFormFilter((prev) => {
+                      return { ...prev, cate: value ? value : "" };
                     })
                   }
                   fullWidth
@@ -146,9 +191,11 @@ export default function SupproductPage() {
                   size="small"
                   disablePortal
                   id="combo-box-title"
-                  options={filteredData}
-                  getOptionLabel={(option) => option.title || ""}
-                  onChange={(event, value) => setFilterId((prev) => { return { ...prev, p_id: value ? value.id : "" } })
+                  options={productOptions}
+                  onChange={(event, value) =>
+                    setFormFilter((prev) => {
+                      return { ...prev, title: value ? value : "" };
+                    })
                   }
                   fullWidth
                   renderInput={(params) => (
@@ -168,14 +215,14 @@ export default function SupproductPage() {
               />
             </div>
           </Card>
-          {openModal && 
+          {openModal && (
             <SupproductImport
               productShow={productShow}
               open={openModal}
               setOpen={setOpenModal}
               isEdit={false}
             />
-          }
+          )}
         </>
       )}
     </section>
