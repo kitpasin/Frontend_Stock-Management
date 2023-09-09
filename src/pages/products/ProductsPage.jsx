@@ -36,6 +36,7 @@ function ProductsPage() {
   const [productId, setProductId] = useState("");
   const [mainCategory, setMainCategory] = useState("");
   const [supplier, setSupplier] = useState("");
+  const [productType, setProductType] = useState("");
   const [vat, setVat] = useState("");
 
   const [productShow, setProductShow] = useState([]);
@@ -53,6 +54,7 @@ function ProductsPage() {
       ? product.main_cate_name === mainCategory
       : true;
     const matchesSupplier = supplier ? product.supplier_name === supplier : true;
+    const matchesProductType = productType ? product.p_type === productType : true;
     let matchesVat = true;
 
     if (vat === "1") {
@@ -61,7 +63,7 @@ function ProductsPage() {
       matchesVat = product.vat_id == 0;
     }
 
-    return matchesTitle && matchProductId && matchesMainCategory && matchesSupplier && matchesVat;
+    return matchesTitle && matchProductId && matchesMainCategory && matchesSupplier && matchesVat && matchesProductType;
   });
 
   const multiExportHandle = () => {
@@ -179,6 +181,8 @@ function ProductsPage() {
   const supplierOptions = productsAll
     .map((supplier) => supplier.supplier_name)
     .filter((value, index, self) => self.indexOf(value) === index);
+  
+  const productTypeOptions = productsAll.map((type) => type.p_type).filter((value, index, self) => self.indexOf(value) === index)
 
   return (
     <section id="products-page">
@@ -235,6 +239,15 @@ function ProductsPage() {
               </div>
             </div>
             <div style={{display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center", gap: "1rem"}}>
+                <Autocomplete
+                  size="small"
+                  disablePortal
+                  id="combo-box-title"
+                  options={productTypeOptions}
+                  onChange={(event, value) => setProductType(value || "")}
+                  fullWidth
+                  renderInput={(params) => <TextField {...params} label="ประเภทสินค้า" />}
+                />
                 <Autocomplete
                   size="small"
                   disablePortal

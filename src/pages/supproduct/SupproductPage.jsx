@@ -24,7 +24,7 @@ export default function SupproductPage() {
   const { t } = useTranslation(["supproduct-page"]);
   const [refreshData, setRefreshData] = useState(0);
   const [productsAll, setProductAll] = useState([]);
-  const [filterId, setFilterId] = useState({ p_id: "", cate_id: "" });
+  const [filterId, setFilterId] = useState({ p_id: "", cate_id: "", barcode_number: "" });
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [openModal, setOpenModal] = useState(false);
@@ -46,7 +46,7 @@ export default function SupproductPage() {
   }
 
   function filteredId() {
-    if (!filterId.cate_id && !filterId.p_id) {
+    if (!filterId.cate_id && !filterId.p_id && !filterId.barcode_number) {
       setFilteredData(productsAll);
     } else {
       let data = [];
@@ -111,9 +111,25 @@ export default function SupproductPage() {
               </div>
               <div style={{ width: "40%", display: "flex", gap: "1rem" }}>
                 <Autocomplete
+                    size="small"
+                    disablePortal
+                    id="combo-box-barcode"
+                    options={filteredData}
+                    getOptionLabel={(option) => option.barcode_number || option.product_barcode }
+                    onChange={(event, value) =>
+                      setFilterId((prev) => {
+                        return { ...prev, barcode_number: value ? value.barcode_number ? value.barcode_number : value.product_barcode : "" };
+                      })
+                    }
+                    fullWidth
+                    renderInput={(params) => (
+                      <TextField {...params} label="ค้นหาด้วยบาร์โค้ด" />
+                    )}
+                />
+                <Autocomplete
                   size="small"
                   disablePortal
-                  id="combo-box-title"
+                  id="combo-box-cate"
                   options={productCate}
                   getOptionLabel={(option) => option.name || ""}
                   onChange={(event, value) =>
