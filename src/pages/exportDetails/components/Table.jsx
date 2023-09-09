@@ -69,6 +69,14 @@ function Table({ exportedProductDetails, refreshData, setRefreshData }) {
       },
     },
     {
+      field: "p_type",
+      headerName: "ประเภทสินค้า",
+      headerAlign: "center",
+      align: "center",
+      width: 140,
+      headerClassName: "table-columns",
+    },
+    {
       field: "export_id",
       headerName: "รหัสเบิก",
       headerAlign: "center",
@@ -105,7 +113,7 @@ function Table({ exportedProductDetails, refreshData, setRefreshData }) {
       headerAlign: "center",
       headerName: "จำนวนเบิก",
       align: "center",
-      width: 140,
+      width: 73,
       headerClassName: "table-columns",
     },
     {
@@ -113,7 +121,7 @@ function Table({ exportedProductDetails, refreshData, setRefreshData }) {
       headerAlign: "center",
       headerName: "คงเหลือ",
       align: "center",
-      width: 140,
+      width: 73,
       headerClassName: "table-columns",
       renderCell: (params) => (
         <div>

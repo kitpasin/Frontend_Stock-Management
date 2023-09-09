@@ -55,36 +55,37 @@ function ReportPage() {
 
   const [products, setProducts] = useState([])
   const [selectedProduct, setSelectedProduct] = useState([]);
-
+  const [selectedProductType, setSelectedProductType] = useState(null)
   const [selectedMainCate, setSelectedMainCate] = useState(null)
-
+  const [selectedSubCate, setSelectedSubCate] = useState(null)
   const [selectedSupplier, setSelectedSupplier] = useState(null)
-
   const [sumProductLeft, setSumProductLeft] = useState(0)
   const [sumProductCost, setSumProductCost] = useState(0)
   const [sumProductProfit, setSumProductProfit] = useState(0)
 
   const filteredProduct = products.filter((product) => {
-    const matchesCate = selectedMainCate ? product.main_cate_name === selectedMainCate : true;
+    const matchesProductType = selectedProductType ? product.p_type === selectedProductType : true;
+    const matchesMainCate = selectedMainCate ? product.main_cate_name === selectedMainCate : true;
+    const matchesSubCate = selectedSubCate ? product.sub_cate_name === selectedSubCate : true;
     const matchesSupplier = selectedSupplier ? product.supplier_name === selectedSupplier : true;
     if (selectedDate !== null) {
       const matchesDate = selectedFormattedDate ? product.purchase_date === selectedFormattedDate : true;
-      return matchesCate && matchesSupplier && matchesDate;
+      return matchesProductType && matchesMainCate && matchesSubCate && matchesSupplier && matchesDate;
     }
     if (selectedMonth !== null) {
       const matchedMonth = selectedFormattedMonth ? product.purchase_date.split("-")[0] + product.purchase_date.split("-")[1] === selectedFormattedMonth.split("-")[0] + selectedFormattedMonth.split("-")[1] : true;
-      return matchesCate && matchesSupplier && matchedMonth;
+      return matchesProductType && matchesMainCate && matchesSubCate && matchesSupplier && matchedMonth;
     }
     if (selectedYear !== null) {
       const matchedYear = selectedFormattedYear ? product.purchase_date.split("-")[0] === selectedFormattedYear : true;
-      return matchesCate && matchesSupplier && matchedYear;
+      return matchesProductType && matchesMainCate && matchesSubCate&& matchesSupplier && matchedYear;
     }
     if (selectedStart !== null && selectedEnd !== null) {
       const matchesBetween = selectedFormattedStart.replace(/-/g, "") <= product.purchase_date.replace(/-/g, "")
         && selectedFormattedEnd.replace(/-/g, "") >= product.purchase_date.replace(/-/g, "")
-      return matchesCate && matchesSupplier && matchesBetween
+      return matchesProductType && matchesMainCate && matchesSubCate && matchesSupplier && matchesBetween
     }
-    return matchesCate && matchesSupplier
+    return matchesProductType && matchesMainCate && matchesSubCate && matchesSupplier
   });
 
   // Remove duplicate products based on product_id
@@ -134,7 +135,7 @@ function ReportPage() {
       const data = response.data.data;
       setProducts(data);
     } else if (selectedReport === "สินค้าเบิกออก") {
-      const response = await axios.get("product/export");
+      const response = await axios.get("get/product/export");
       const data = response.data.data;
       setProducts(data)
     } else if (selectedReport === "สินค้าชำรุด") {
@@ -155,8 +156,16 @@ function ReportPage() {
     setSumProductProfit(uniqueProductsData.reduce((sum, product) => sum + (product.selling_price - product.unit_price), 0).toFixed(2))
   }, [filteredProduct])
 
+  const productTypeOptions = products
+  .map((product) => product.p_type)
+  .filter((value, index, self) => self.indexOf(value) === index);
+
   const mainCategoryOptions = products
   .map((product) => product.main_cate_name)
+  .filter((value, index, self) => self.indexOf(value) === index);
+
+  const subCategoryOptions = products
+  .map((product) => product.sub_cate_name)
   .filter((value, index, self) => self.indexOf(value) === index);
 
   const supplierOptions = products
@@ -183,6 +192,7 @@ function ReportPage() {
     const headerRow = worksheet.addRow([
       "รหัสสินค้า",
       "ชื่อสินค้า",
+      "ประเภทสินค้า",
       "บาร์โค้ดเดิม",
       "บาร์โค้ดใหม่",
       "บาร์โค้ดซัพพลายเออร์",
@@ -201,6 +211,7 @@ function ReportPage() {
       worksheet.addRow([
         "" + product.product_id,
         product.title,
+        product.p_type,
         product.product_barcode,
         product.barcode_number,
         product.supplier_barcode,
@@ -282,6 +293,16 @@ function ReportPage() {
 
                   <div style={{ display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "center", gap: "1rem", width: "100%" }}>
                     <div style={{ display: "flex", width: "100%", gap: "1rem" }}>
+                    <Autocomplete
+                        value={selectedProductType}
+                        onChange={(e, newValue) => setSelectedProductType(newValue || "")}
+                        disablePortal
+                        size="small"
+                        id="combo-box-demo"
+                        options={productTypeOptions}
+                        fullWidth
+                        renderInput={(params) => <TextField {...params} label="ประเภทสินค้า" />}
+                      />
                       <Autocomplete
                         value={selectedMainCate}
                         onChange={(e, newValue) => setSelectedMainCate(newValue || "")}
@@ -290,7 +311,17 @@ function ReportPage() {
                         id="combo-box-demo"
                         options={mainCategoryOptions}
                         fullWidth
-                        renderInput={(params) => <TextField {...params} label="เลือกหมวดหมู่" />}
+                        renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
+                      />
+                      <Autocomplete
+                        value={selectedSubCate}
+                        onChange={(e, newValue) => setSelectedSubCate(newValue || "")}
+                        disablePortal
+                        size="small"
+                        id="combo-box-demo"
+                        options={subCategoryOptions}
+                        fullWidth
+                        renderInput={(params) => <TextField {...params} label="หมวดหมู่ย่อย" />}
                       />
                       <Autocomplete
                         value={selectedSupplier}
@@ -300,7 +331,7 @@ function ReportPage() {
                         id="combo-box-demo"
                         options={supplierOptions}
                         fullWidth
-                        renderInput={(params) => <TextField {...params} label="เลือกซัพพลายเออร์" />}
+                        renderInput={(params) => <TextField {...params} label="ซัพพลายเออร์" />}
                       />
                     </div>
                     <div style={{ display: "flex", width: "100%", gap: "1rem" }}>

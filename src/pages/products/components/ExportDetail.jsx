@@ -106,6 +106,25 @@ function ExportDetail({
       },
     },
     {
+      field: "p_type",
+      headerAlign: "center",
+      align: "center",
+      width: 144,
+      headerClassName: "table-columns",
+      renderHeader: () => (
+        <div>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
+            ประเภทสินค้า
+          </Typography>
+        </div>
+      ),
+      // renderCell: () => (
+      //   <div style={{ lineHeight: "12.5px" }}>{displayName}</div>
+      // ),
+    },
+    {
       field: "product_barcode",
       headerAlign: "center",
       align: "center",
@@ -119,25 +138,6 @@ function ExportDetail({
             บาร์โค้ดเดิม
           </Typography>
         </div>
-      ),
-    },
-    {
-      field: "user",
-      headerAlign: "center",
-      align: "center",
-      width: 144,
-      headerClassName: "table-columns",
-      renderHeader: () => (
-        <div>
-          <Typography
-            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
-          >
-            ผู้ใช้งาน
-          </Typography>
-        </div>
-      ),
-      renderCell: () => (
-        <div style={{ lineHeight: "12.5px" }}>{displayName}</div>
       ),
     },
     {

@@ -10,6 +10,7 @@ function ExportDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [exportedProductDetails, setExportedProductDetails] = useState([]);
   const [refreshData, setRefreshData] = useState(0);
+  const [productType, setProductType] = useState("")
   const [productName, setProductName] = useState("");
   const [productID, setProductID] = useState("");
   const [exportID, setExportID] = useState("");
@@ -20,6 +21,9 @@ function ExportDetailsPage() {
   const [barcode, setBarcode] = useState("");
 
   const filterdProduct = exportedProductDetails.filter((product) => {
+    const matchesProductType = productType
+      ? product.p_type === productType
+      : true;
     const matchesProductName = productName
       ? product.title === productName
       : true;
@@ -39,6 +43,7 @@ function ExportDetailsPage() {
       : true;
     const matchesBarcode = barcode ? product.barcode_number === barcode : true;
     return (
+      matchesProductType &&
       matchesProductName &&
       matchesProductID &&
       matchesExportID &&
@@ -50,6 +55,9 @@ function ExportDetailsPage() {
     );
   });
 
+  const productTypeOptions = exportedProductDetails
+    .map((product) => product.p_type)
+    .filter((value, index, self) => self.indexOf(value) === index);
   const productNameOption = exportedProductDetails
     .map((product) => product.title)
     .filter((value, index, self) => self.indexOf(value) === index);
@@ -129,6 +137,15 @@ function ExportDetailsPage() {
                 gap: "1rem",
               }}
             >
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-product-name"
+                options={productTypeOptions}
+                onChange={(event, value) => setProductType(value || "")}
+                fullWidth
+                renderInput={(params) => <TextField {...params} label="ประเภทสินค้า" />}
+              />
               <Autocomplete
                 size="small"
                 disablePortal
