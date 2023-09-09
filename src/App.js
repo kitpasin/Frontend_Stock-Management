@@ -43,6 +43,7 @@ import DefectiveSearchPage from './components/defective_product/search/Defective
 import DefectiveExportPage from './components/defective_product/export/DefectiveExportPage';
 import ReportPage from './pages/report/ReportPage';
 import { createContext } from 'react';
+import ExportDetailsPage from './pages/exportDetails/ExportDetailsPage';
 
 export const ProductContext = createContext();
 
@@ -80,6 +81,7 @@ function App() {
             {pagesAllow.products && <Route path="/stock" element={<StockPage />} />}
             {pagesAllow.products && <Route path="/import" element={<ImportPage />} />}
             {pagesAllow.products && <Route path="/export" element={<ExportPage />} />}
+            {pagesAllow.products && <Route path="/exportdetails" element={<ExportDetailsPage />} />}
             {pagesAllow.products && <Route path="/defective" element={<DefectivePage />} />}
             {pagesAllow.products && (
               <Route path="/defective/search" element={<DefectiveSearchPage />} />

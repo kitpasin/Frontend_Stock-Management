@@ -60,6 +60,7 @@ function MultiExportModal({
   setRefreshData,
   productSelected,
   setProductSelected,
+  setOpenExportedTempModal
 }) {
   const handleClickOpen = () => {
     setOpen(true);
@@ -109,6 +110,7 @@ function MultiExportModal({
             refreshData={refreshData}
             setRefreshData={setRefreshData}
             setProductSelected={setProductSelected}
+            setOpenExportedTempModal={setOpenExportedTempModal}
           />
         </DialogContent>
       </BootstrapDialog>

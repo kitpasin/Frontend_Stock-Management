@@ -18,6 +18,7 @@ import SupplierDataGrid from "../../datagrid/SupplierDataGrid";
 import { rows } from "../../../pages/products/data/TableData";
 import { svExportProduct } from "../../../services/product.service";
 import dayjs from "dayjs";
+import axios from "axios";
 
 function ProductsExportPage({
   exportOne,
@@ -28,6 +29,7 @@ function ProductsExportPage({
   open,
   setOpen,
   setProductSelected,
+  setOpenExportedTempModal
 }) {
   const [stock, setStock] = useState(0);
   const webPath = useSelector((state) => state.app.webPath);
@@ -40,9 +42,6 @@ function ProductsExportPage({
   const inputRef = useRef();
   const navigate = useNavigate();
   const { t } = useTranslation(["dashboard-page"]);
-
-  const [formExportList, setFormExportList] = useState([])
-  const [exportCount, setExportCount] = useState([])
 
   useEffect(() => {
     if (multiExprot && !exportOne) {
@@ -92,10 +91,9 @@ function ProductsExportPage({
     setExportValue(0);
   }
 
-  console.log(productShow)
+  console.log(multiExprot, exportOne, productData)
 
   const onExportProduct = (_id) => {
-    formExportList.push(productShow)
     const formExport = {
       product_id: productShow.product_id,
       quantity: exportValue,
@@ -104,7 +102,7 @@ function ProductsExportPage({
       inputRef.current.focus();
     } else {
       Swal.fire({
-        title: "ยืนยันการเบิกสินค้า",
+        title: "ยืนยันจำนวนสินค้า",
         html:
           `<p>รหัสสินค้า : ${productShow.product_id}</p>` +
           `<p>ชื่อสินค้า : ${productShow.title}</p>` +
@@ -116,10 +114,11 @@ function ProductsExportPage({
         cancelButtonText: "ยกเลิก",
       }).then((result) => {
         if (result.isConfirmed) {
-          svExportProduct(formExport)
+          // svExportProduct(formExport)
+          axios.post("product/export/temp", formExport)
             .then((res) => {
               Swal.fire({
-                title: "เบิกสินค้าสำเร็จ",
+                title: "ยืนยันจำนวนสินค้าสำเร็จ",
                 icon: "success",
                 showConfirmButton: false,
                 timer: 1500,
@@ -143,9 +142,12 @@ function ProductsExportPage({
                   });
                   setTogleReset(!togleReset)
                 } else {
-                  setOpen(false);
-                  navigate("/export");
+                  setOpen(false)
+                  setOpenExportedTempModal(true)
+                 
+                  // navigate("/export");
                 }
+
               });
             })
             .catch((err) => {

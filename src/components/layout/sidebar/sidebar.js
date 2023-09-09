@@ -332,6 +332,64 @@ const SidebarComponent = (props) => {
                 </li>
               </ul> */}
               <ul className="nav-menu">
+                {/* <div className="title-section">{t("ManageSystem")}</div> */}
+                <li className="menu-link has-child ">
+                  <a
+                    className={`navlink `}
+                    title={t("ProductsTitleMenu")}
+                    onClick={toggleSubMenu}
+                  >
+                    <FontAwesomeIcon
+                      icon={faCaretDown}
+                      className="toggle-submenu"
+                    />
+                    <figure
+                      className="faIcon"
+                      style={{ paddingRight: ".25rem" }}
+                    >
+                      <img src="/images/icons/imports-icon.png" alt="" />
+                    </figure>
+                    <div className="menu-title">{t("สินค้าเบิกออก")}</div>
+                  </a>
+                  <div className="child-menu ">
+                    <ul className="nav-items ">
+                      <li>
+                        <NavLink
+                          onClick={closeSidebarhandler}
+                          to="/export"
+                          className={`items `}
+                          title={t("รายการสินค้า")}
+                          liClass="sub-items"
+                        >
+                          <span className="collap-title">
+                            <FontAwesomeIcon icon={faSignsPost} />
+                          </span>
+                          <span className="menu-title">
+                            {t("รายการสินค้า")}
+                          </span>
+                        </NavLink>
+                      </li>
+                      <li>
+                        <NavLink
+                          onClick={closeSidebarhandler}
+                          to="/exportdetails"
+                          className={`items `}
+                          title={t("รายการเบิก")}
+                          liClass="sub-items"
+                        >
+                          <span className="collap-title">
+                            <FontAwesomeIcon icon={faSignsPost} />
+                          </span>
+                          <span className="menu-title">
+                            {t("รายการเบิก")}
+                          </span>
+                        </NavLink>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+              </ul>
+              {/* <ul className="nav-menu">
                 <li>
                   <NavLink
                     onClick={closeSidebarhandler}
@@ -350,6 +408,25 @@ const SidebarComponent = (props) => {
                   </NavLink>
                 </li>
               </ul>
+              <ul className="nav-menu">
+                <li>
+                  <NavLink
+                    onClick={closeSidebarhandler}
+                    to="/exportdetails"
+                    className="navlink"
+                    title={t("ExportDetail")}
+                    liClass="menu-link"
+                  >
+                    <figure
+                      className="faIcon"
+                      style={{ paddingLeft: ".25rem" }}
+                    >
+                      <img src="/images/icons/exports-icon.png" alt="" />
+                    </figure>
+                    <div className="menu-title">{t("ExportDetail")}</div>
+                  </NavLink>
+                </li>
+              </ul> */}
               <ul className="nav-menu">
                 <li>
                   <NavLink
