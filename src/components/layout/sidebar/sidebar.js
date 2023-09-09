@@ -358,14 +358,14 @@ const SidebarComponent = (props) => {
                           onClick={closeSidebarhandler}
                           to="/export"
                           className={`items `}
-                          title={t("รายการสินค้า")}
+                          title={t("สินค้าเบิกออก")}
                           liClass="sub-items"
                         >
                           <span className="collap-title">
                             <FontAwesomeIcon icon={faSignsPost} />
                           </span>
                           <span className="menu-title">
-                            {t("รายการสินค้า")}
+                            {t("สินค้าเบิกออก")}
                           </span>
                         </NavLink>
                       </li>

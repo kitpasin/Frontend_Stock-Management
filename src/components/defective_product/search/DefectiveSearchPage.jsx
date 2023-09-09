@@ -27,6 +27,10 @@ function DefectiveSearchPage() {
   const [title, setTitle] = useState("");
   const [productId, setProductId] = useState("");
   const [mainCategory, setMainCategory] = useState("");
+  const [subCategory, setSubCategory] = useState("");
+  const [prevBarcode, setPrevBarcode] = useState("");
+  const [curBarcode, setCurBarcode] = useState("");
+  const [productType, setProductType] = useState("");
   const [supplier, setSupplier] = useState("");
   const [vat, setVat] = useState("");
 
@@ -37,8 +41,24 @@ function DefectiveSearchPage() {
   const filteredProduct = products.filter((product) => {
     const matchesTitle = title ? product.title === title : true;
     const matchProductId = productId ? product.product_id === productId : true;
-    const matchesMainCategory = mainCategory ? product.main_cate_name === mainCategory : true;
-    const matchesSupplier = supplier ? product.supplier_name === supplier : true;
+    const matchesMainCategory = mainCategory
+      ? product.main_cate_name === mainCategory
+      : true;
+    const matchesSupplier = supplier
+      ? product.supplier_name === supplier
+      : true;
+    const matchesSubCategory = subCategory
+      ? product.sub_cate_name === subCategory
+      : true;
+    const matchesPrevBarcode = prevBarcode
+      ? product.product_barcode === prevBarcode
+      : true;
+    const matchesCurBarcode = curBarcode
+      ? product.barcode_number === curBarcode
+      : true;
+    const matchesProductType = productType
+      ? product.p_type === productType
+      : true;
     let matchesVat = true;
 
     if (vat === "1") {
@@ -47,7 +67,17 @@ function DefectiveSearchPage() {
       matchesVat = product.vat_id == 0;
     }
 
-    return matchesTitle && matchProductId && matchesMainCategory && matchesSupplier && matchesVat;
+    return (
+      matchesTitle &&
+      matchProductId &&
+      matchesMainCategory &&
+      matchesSupplier &&
+      matchesVat &&
+      matchesSubCategory &&
+      matchesPrevBarcode &&
+      matchesCurBarcode &&
+      matchesProductType
+    );
   });
 
   const multiExportHandle = () => {
@@ -74,21 +104,37 @@ function DefectiveSearchPage() {
     getProducts();
   }, [refreshData]);
 
-    const titleOptions = products
-      .map((product) => product.title)
-      .filter((value, index, self) => self.indexOf(value) === index);
+  const titleOptions = products
+    .map((product) => product.title)
+    .filter((value, index, self) => self.indexOf(value) === index);
 
-    const productIdOptions = products
-      .map((product) => product.product_id)
-      .filter((value, index, self) => self.indexOf(value) === index);
+  const productIdOptions = products
+    .map((product) => product.product_id)
+    .filter((value, index, self) => self.indexOf(value) === index);
 
-    const mainCategoryOptions = products
-      .map((product) => product.main_cate_name)
-      .filter((value, index, self) => self.indexOf(value) === index);
+  const mainCategoryOptions = products
+    .map((product) => product.main_cate_name)
+    .filter((value, index, self) => self.indexOf(value) === index);
 
-    const supplierOptions = products
-      .map((supplier) => supplier.supplier_name)
-      .filter((value, index, self) => self.indexOf(value) === index);
+  const subCategoryOptions = products
+    .map((product) => product.sub_cate_name)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  const prevBarcodeOptions = products
+    .map((product) => product.product_barcode)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  const curBarcodeOptions = products
+    .map((product) => product.barcode_number)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  const productTypeOptions = products
+    .map((product) => product.p_type)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  const supplierOptions = products
+    .map((supplier) => supplier.supplier_name)
+    .filter((value, index, self) => self.indexOf(value) === index);
 
   return (
     <section id="defective-search-page">
@@ -126,79 +172,148 @@ function DefectiveSearchPage() {
                 </div>
               </div>
               <Link onClick={() => multiExportHandle()} className="export">
-                  เบิกออกสินค้าชำรุด
+                เบิกออกสินค้าชำรุด
               </Link>
             </div>
-            <div style={{display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center", gap: "1rem"}}>
-                <Autocomplete
-                  size="small"
-                  disablePortal
-                  id="combo-box-title"
-                  options={titleOptions}
-                  onChange={(event, value) => setTitle(value || "")}
-                  fullWidth
-                  renderInput={(params) => <TextField {...params} label="ชื่อ" />}
-                />
-                <Autocomplete
-                  size="small"
-                  disablePortal
-                  id="combo-box-product-id"
-                  options={productIdOptions}
-                  onChange={(event, value) => setProductId(value || "")}
-                  fullWidth
-                  renderInput={(params) => (
-                    <TextField type="number" {...params} label="รหัสสินค้า" />
-                  )}
-                />
-                <Autocomplete
-                  size="small"
-                  disablePortal
-                  id="combo-box-main-category"
-                  options={mainCategoryOptions}
-                  onChange={(event, value) => setMainCategory(value || "")}
-                  fullWidth
-                  renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
-                />
-                <Autocomplete
-                  size="small"
-                  disablePortal
-                  id="combo-box-supplier"
-                  options={supplierOptions}
-                  onChange={(event, value) => setSupplier(value || "")}
-                  fullWidth
-                  renderInput={(params) => <TextField {...params} label="ซัพพลายเออร์" />}
-                />
-              </div>
-              <div>
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: "1rem",
+              }}
+            >
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-id"
+                options={productTypeOptions}
+                onChange={(event, value) => setProductType(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField {...params} label="ประเภทสินค้า" />
+                )}
+              />
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-title"
+                options={titleOptions}
+                onChange={(event, value) => setTitle(value || "")}
+                fullWidth
+                renderInput={(params) => <TextField {...params} label="ชื่อ" />}
+              />
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-product-id"
+                options={productIdOptions}
+                onChange={(event, value) => setProductId(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField type="number" {...params} label="รหัสสินค้า" />
+                )}
+              />
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-main-category"
+                options={mainCategoryOptions}
+                onChange={(event, value) => setMainCategory(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField {...params} label="หมวดหมู่หลัก" />
+                )}
+              />
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-main-category"
+                options={subCategoryOptions}
+                onChange={(event, value) => setSubCategory(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField {...params} label="หมวดหมู่ย่อย" />
+                )}
+              />
+            </div>
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: "1rem",
+              }}
+            >
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-supplier"
+                options={supplierOptions}
+                onChange={(event, value) => setSupplier(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField {...params} label="ซัพพลายเออร์" />
+                )}
+              />
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-supplier"
+                options={prevBarcodeOptions.filter(
+                  (option) => option !== null && option !== undefined
+                )}
+                onChange={(event, value) => setPrevBarcode(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField {...params} label="บาร์โค้ดเดิม" />
+                )}
+              />
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-supplier"
+                options={curBarcodeOptions.filter(
+                  (option) => option !== null && option !== undefined
+                )}
+                onChange={(event, value) => setCurBarcode(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField {...params} label="บาร์โค้ดใหม่" />
+                )}
+              />
+            </div>
+            <div>
               <FormControl fullWidth>
-                  <RadioGroup
-                    row
-                    aria-labelledby="demo-row-radio-buttons-group-label"
-                    name="row-radio-buttons-group"
-                    value={vat}
-                    >
-                    <FormControlLabel
-                      value=""
-                      control={<Radio />}
-                      label="All"
-                      onChange={(e) => setVat(e.target.value)}
-                    />
-                    <FormControlLabel
-                      value="1"
-                      control={<Radio />}
-                      label="Vat"
-                      onChange={(e) => setVat(e.target.value)}
-                      
-                      />
-                    <FormControlLabel
-                      value="0"
-                      control={<Radio />}
-                      label="No Vat"
-                      onChange={(e) => setVat(e.target.value)}
-                      />
-                  </RadioGroup>
-                </FormControl>
-              </div>
+                <RadioGroup
+                  row
+                  aria-labelledby="demo-row-radio-buttons-group-label"
+                  name="row-radio-buttons-group"
+                  value={vat}
+                >
+                  <FormControlLabel
+                    value=""
+                    control={<Radio />}
+                    label="All"
+                    onChange={(e) => setVat(e.target.value)}
+                  />
+                  <FormControlLabel
+                    value="1"
+                    control={<Radio />}
+                    label="Vat"
+                    onChange={(e) => setVat(e.target.value)}
+                  />
+                  <FormControlLabel
+                    value="0"
+                    control={<Radio />}
+                    label="No Vat"
+                    onChange={(e) => setVat(e.target.value)}
+                  />
+                </RadioGroup>
+              </FormControl>
+            </div>
             <div>
               <Search
                 productsData={filteredProduct}

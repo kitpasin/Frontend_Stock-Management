@@ -56,7 +56,11 @@ function ProductsPage() {
   const [title, setTitle] = useState("");
   const [productId, setProductId] = useState("");
   const [mainCategory, setMainCategory] = useState("");
+  const [subCategory, setSubCategory] = useState("");
   const [supplier, setSupplier] = useState("");
+  const [prevBarcode, setPrevBarcode] = useState("");
+  const [curBarcode, setCurBarcode] = useState("");
+  const [productType, setProductType] = useState("");
   const [vat, setVat] = useState("");
 
   const [productShow, setProductShow] = useState([]);
@@ -66,6 +70,7 @@ function ProductsPage() {
   const [openMultiExportModal, setOpenMultiexportModal] = useState(false);
   const [openMultiImportModal, setOpenMultiImportModal] = useState(false);
   const [openExportedTempModal, setOpenExportedTempModal] = useState(false);
+  const current_date = dayjs().toISOString().substring(0, 10);
   const handleOpen = () => setOpenExportedTempModal(true);
   const handleClose = () => setOpenExportedTempModal(false);
 
@@ -95,8 +100,20 @@ function ProductsPage() {
     const matchesMainCategory = mainCategory
       ? product.main_cate_name === mainCategory
       : true;
+    const matchesSubCategory = subCategory
+      ? product.sub_cate_name === subCategory
+      : true;
     const matchesSupplier = supplier
       ? product.supplier_name === supplier
+      : true;
+    const matchesPrevBarcode = prevBarcode
+      ? product.product_barcode === prevBarcode
+      : true;
+    const matchesCurBarcode = curBarcode
+      ? product.barcode_number === curBarcode
+      : true;
+    const matchesProductType = productType
+      ? product.p_type === productType
       : true;
     let matchesVat = true;
 
@@ -110,12 +127,14 @@ function ProductsPage() {
       matchesTitle &&
       matchProductId &&
       matchesMainCategory &&
+      matchesSubCategory &&
       matchesSupplier &&
+      matchesProductType &&
+      matchesPrevBarcode &&
+      matchesCurBarcode &&
       matchesVat
     );
   });
-
-  const current_date = dayjs().toISOString().substring(0, 10);
 
   const multiExportHandle = () => {
     console.log(productSelected);
@@ -136,7 +155,7 @@ function ProductsPage() {
     const formattedDate = now.toISOString().replace(/[-T:.Z]/g, ""); // Format the current date and time
     setRandomNum(formattedDate);
   }
-  
+
   const multiImportHandle = () => {
     if (productSelected.length === 0) {
       Swal.fire({
@@ -218,6 +237,8 @@ function ProductsPage() {
     setLoading(false);
   }
 
+  console.log(productsAll);
+
   async function getExportedProductTemp() {
     const response = await axios.get("get/product/export/temp");
     const data = response.data.exportedProductTemp;
@@ -232,31 +253,42 @@ function ProductsPage() {
       picker_name: picker,
       approver_name: approver,
       export_type: selectedExportType,
-    }))
-    console.log(formData)
-    if (picker === "" || null && approver === "" || null && export_type === "" || null) {
-      Swal.fire("Error", "Please enter all fields", "error")
+    }));
+    console.log(formData);
+    if (
+      picker === "" ||
+      (null && approver === "") ||
+      (null && export_type === "") ||
+      null
+    ) {
+      Swal.fire("Error", "Please enter all fields", "error");
     } else {
       try {
         const response = await axios.post("product/export/detail", formData);
-        console.log(response)
+        console.log(response);
         if (response.status) {
           Swal.fire(
             "Success!",
             "Product has been exported successfully",
             "success"
-          ).then(() => {
-            axios.post("product/export", formData);
-          }).then(() => {
-            setOpenExportedTempModal(false)
-            setRefreshData(refreshData + 1)
-          })
+          )
+            .then(() => {
+              axios.post("product/export", formData);
+            })
+            .then(() => {
+              setOpenExportedTempModal(false);
+              setRefreshData(refreshData + 1);
+            });
         } else {
           Swal.fire("Error", "Failed to export the product", "error");
         }
       } catch (error) {
         console.error("Error:", error);
-        Swal.fire("Error", "An error occurred while exporting the product", "error");
+        Swal.fire(
+          "Error",
+          "An error occurred while exporting the product",
+          "error"
+        );
       }
     }
   }
@@ -294,8 +326,24 @@ function ProductsPage() {
     .map((product) => product.main_cate_name)
     .filter((value, index, self) => self.indexOf(value) === index);
 
+  const subCategoryOptions = productsAll
+    .map((product) => product.sub_cate_name)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
   const supplierOptions = productsAll
     .map((supplier) => supplier.supplier_name)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  const prevBarcodeOptions = productsAll
+    .map((product) => product.product_barcode)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  const curBarcodeOptions = productsAll
+    .map((product) => product.barcode_number)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  const productTypeOptions = productsAll
+    .map((type) => type.p_type)
     .filter((value, index, self) => self.indexOf(value) === index);
 
   return (
@@ -365,6 +413,17 @@ function ProductsPage() {
                 size="small"
                 disablePortal
                 id="combo-box-title"
+                options={productTypeOptions}
+                onChange={(event, value) => setProductType(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField {...params} label="ประเภทสินค้า" />
+                )}
+              />
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-title"
                 options={titleOptions}
                 onChange={(event, value) => setTitle(value || "")}
                 fullWidth
@@ -395,12 +454,55 @@ function ProductsPage() {
               <Autocomplete
                 size="small"
                 disablePortal
+                id="combo-box-main-category"
+                options={subCategoryOptions}
+                onChange={(event, value) => setSubCategory(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField {...params} label="หมวดหมู่ย่อย" />
+                )}
+              />
+            </div>
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: "1rem",
+              }}
+            >
+              <Autocomplete
+                size="small"
+                disablePortal
                 id="combo-box-supplier"
                 options={supplierOptions}
                 onChange={(event, value) => setSupplier(value || "")}
                 fullWidth
                 renderInput={(params) => (
                   <TextField {...params} label="ซัพพลายเออร์" />
+                )}
+              />
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-prev-barcode"
+                options={prevBarcodeOptions.filter((option) => option !== null && option !== undefined)}
+                onChange={(event, value) => setPrevBarcode(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField {...params} label="บาร์โค้ดเดิม" />
+                )}
+              />
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-cur-barcode"
+                options={curBarcodeOptions.filter((option) => option !== null && option !== undefined)}
+                onChange={(event, value) => setCurBarcode(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField {...params} label="บาร์โค้ดใหม่" />
                 )}
               />
             </div>
@@ -580,7 +682,7 @@ function ProductsPage() {
                     flexDirection: "column",
                     justifyContent: "center",
                     alignItems: "center",
-                    gap: "1rem"
+                    gap: "1rem",
                   }}
                 >
                   <ExportDetail

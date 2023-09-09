@@ -27,7 +27,12 @@ function ExpirationPage() {
   const [title, setTitle] = useState("");
   const [productId, setProductId] = useState("");
   const [mainCategory, setMainCategory] = useState("");
+  const [subCategory, setSubCategory] = useState("");
+  const [prevBarcode, setPrevBarcode] = useState("");
+  const [curBarcode, setCurBarcode] = useState("");
+  const [productType, setProductType] = useState("");
   const [supplier, setSupplier] = useState("");
+
   const [vat, setVat] = useState("");
 
   const [refreshData, setRefreshData] = useState(0);
@@ -38,17 +43,43 @@ function ExpirationPage() {
   const filteredProduct = productsExpiration.filter((product) => {
     const matchesTitle = title ? product.title === title : true;
     const matchProductId = productId ? product.product_id === productId : true;
-    const matchesMainCategory = mainCategory ? product.main_cate_name === mainCategory : true;
-    const matchesSupplier = supplier ? product.supplier_name === supplier : true;
+    const matchesMainCategory = mainCategory
+      ? product.main_cate_name === mainCategory
+      : true;
+    const matchesSupplier = supplier
+      ? product.supplier_name === supplier
+      : true;
+    const matchesSubCategory = subCategory
+      ? product.sub_cate_name === subCategory
+      : true;
+    const matchesPrevBarcode = prevBarcode
+      ? product.product_barcode === prevBarcode
+      : true;
+    const matchesCurBarcode = curBarcode
+      ? product.barcode_number === curBarcode
+      : true;
+    const matchesProductType = productType
+      ? product.p_type === productType
+      : true;
     let matchesVat = true;
 
     if (vat === "1") {
-      matchesVat = product.vat_id !== 0
+      matchesVat = product.vat_id !== 0;
     } else if (vat === "0") {
-      matchesVat = product.vat_id == 0
+      matchesVat = product.vat_id == 0;
     }
 
-    return matchesTitle && matchProductId && matchesMainCategory && matchesSupplier && matchesVat;
+    return (
+      matchesTitle &&
+      matchProductId &&
+      matchesMainCategory &&
+      matchesSubCategory &&
+      matchesSupplier &&
+      matchesProductType &&
+      matchesPrevBarcode &&
+      matchesCurBarcode &&
+      matchesVat
+    );
   });
 
   const multiExportHandle = () => {
@@ -71,6 +102,8 @@ function ExpirationPage() {
     setLoading(false);
   }
 
+  console.log(productsExpiration)
+
   useEffect(() => {
     getProductsExpiration();
   }, [refreshData]);
@@ -87,8 +120,24 @@ function ExpirationPage() {
     .map((product) => product.main_cate_name)
     .filter((value, index, self) => self.indexOf(value) === index);
 
+  const subCategoryOptions = productsExpiration
+    .map((product) => product.sub_cate_name)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
   const supplierOptions = productsExpiration
     .map((supplier) => supplier.supplier_name)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  const prevBarcodeOptions = productsExpiration
+    .map((product) => product.product_barcode)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  const curBarcodeOptions = productsExpiration
+    .map((product) => product.barcode_number)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  const productTypeOptions = productsExpiration
+    .map((type) => type.p_type)
     .filter((value, index, self) => self.indexOf(value) === index);
 
   return (
@@ -134,7 +183,24 @@ function ExpirationPage() {
                 เบิกสินค้า
               </Link>
             </div>
-            <div style={{ display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: "1rem",
+              }}
+            >
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-id"
+                options={productTypeOptions}
+                onChange={(event, value) => setProductType(value || "")}
+                fullWidth
+                renderInput={(params) => <TextField {...params} label="ประเภทสินค้า" />}
+              />
               <Autocomplete
                 size="small"
                 disablePortal
@@ -162,8 +228,31 @@ function ExpirationPage() {
                 options={mainCategoryOptions}
                 onChange={(event, value) => setMainCategory(value || "")}
                 fullWidth
-                renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
+                renderInput={(params) => (
+                  <TextField {...params} label="หมวดหมู่หลัก" />
+                )}
               />
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-main-category"
+                options={subCategoryOptions}
+                onChange={(event, value) => setSubCategory(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField {...params} label="หมวดหมู่ย่อย" />
+                )}
+              />
+            </div>
+            <div 
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: "1rem",
+              }}
+            >
               <Autocomplete
                 size="small"
                 disablePortal
@@ -171,7 +260,31 @@ function ExpirationPage() {
                 options={supplierOptions}
                 onChange={(event, value) => setSupplier(value || "")}
                 fullWidth
-                renderInput={(params) => <TextField {...params} label="ซัพพลายเออร์" />}
+                renderInput={(params) => (
+                  <TextField {...params} label="ซัพพลายเออร์" />
+                )}
+              />
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-supplier"
+                options={prevBarcodeOptions.filter((option) => option !== null && option !== undefined)}
+                onChange={(event, value) => setPrevBarcode(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField {...params} label="บาร์โค้ดเดิม" />
+                )}
+              />
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-supplier"
+                options={curBarcodeOptions.filter((option) => option !== null && option !== undefined)}
+                onChange={(event, value) => setCurBarcode(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField {...params} label="บาร์โค้ดใหม่" />
+                )}
               />
             </div>
             <div>
@@ -193,7 +306,6 @@ function ExpirationPage() {
                     control={<Radio />}
                     label="Vat"
                     onChange={(e) => setVat(e.target.value)}
-
                   />
                   <FormControlLabel
                     value="0"

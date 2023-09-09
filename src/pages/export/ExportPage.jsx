@@ -26,6 +26,10 @@ function ExportPage() {
   const [title, setTitle] = useState("");
   const [productId, setProductId] = useState("");
   const [mainCategory, setMainCategory] = useState("");
+  const [subCategory, setSubCategory] = useState("")
+  const [prevBarcode, setPrevBarcode] = useState("")
+  const [curBarcode, setCurBarcode] = useState("")
+  const [productType, setProductType] = useState("")
   const [supplier, setSupplier] = useState("");
   const [vat, setVat] = useState("");
 
@@ -38,6 +42,10 @@ function ExportPage() {
     const matchProductId = productId ? product.product_id === productId : true;
     const matchesMainCategory = mainCategory ? product.main_cate_name === mainCategory : true;
     const matchesSupplier = supplier ? product.supplier_name === supplier : true;
+    const matchesSubCategory = subCategory ? product.sub_cate_name === subCategory : true;
+    const matchesPrevBarcode = prevBarcode ? product.product_barcode === prevBarcode : true;
+    const matchesCurBarcode = curBarcode ? product.barcode_number === curBarcode : true;
+    const matchesProductType = productType ? product.p_type === productType : true;
     let matchesVat = true;
 
     if (vat === "1") {
@@ -46,8 +54,10 @@ function ExportPage() {
       matchesVat = product.vat_id == 0;
     }
 
-    return matchesTitle && matchProductId && matchesMainCategory && matchesSupplier && matchesVat;
+    return matchesTitle && matchProductId && matchesMainCategory && matchesSupplier && matchesVat && matchesSubCategory && matchesPrevBarcode && matchesCurBarcode && matchesProductType;
   });
+
+  console.log(exportedProducts)
 
   const multiExportHandle = () => {
     if (productSelected.length === 0) {
@@ -63,7 +73,7 @@ function ExportPage() {
   };
 
   async function getExportedProduct() {
-    const response = await axios.get("product/export");
+    const response = await axios.get("get/product/export");
     const data = response.data.data;
     setExportedProducts(data);
     setLoading(false);
@@ -83,6 +93,22 @@ function ExportPage() {
 
   const mainCategoryOptions = exportedProducts
     .map((product) => product.main_cate_name)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  const subCategoryOptions = exportedProducts
+    .map((product) => product.sub_cate_name)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  const prevBarcodeOptions = exportedProducts
+    .map((product) => product.product_barcode)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  const curBarcodeOptions = exportedProducts
+    .map((product) => product.barcode_number)
+    .filter((value, index, self) => self.indexOf(value) === index);
+  
+  const productTypeOptions = exportedProducts
+    .map((product) => product.p_type)
     .filter((value, index, self) => self.indexOf(value) === index);
 
   const supplierOptions = exportedProducts
@@ -125,7 +151,24 @@ function ExportPage() {
                 </div>
               </div>
             </div>
-            <div style={{ display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: "1rem",
+              }}
+            >
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-id"
+                options={productTypeOptions}
+                onChange={(event, value) => setProductType(value || "")}
+                fullWidth
+                renderInput={(params) => <TextField {...params} label="ประเภทสินค้า" />}
+              />
               <Autocomplete
                 size="small"
                 disablePortal
@@ -153,8 +196,31 @@ function ExportPage() {
                 options={mainCategoryOptions}
                 onChange={(event, value) => setMainCategory(value || "")}
                 fullWidth
-                renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
+                renderInput={(params) => (
+                  <TextField {...params} label="หมวดหมู่หลัก" />
+                )}
               />
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-main-category"
+                options={subCategoryOptions}
+                onChange={(event, value) => setSubCategory(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField {...params} label="หมวดหมู่ย่อย" />
+                )}
+              />
+            </div>
+            <div 
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: "1rem",
+              }}
+            >
               <Autocomplete
                 size="small"
                 disablePortal
@@ -162,7 +228,31 @@ function ExportPage() {
                 options={supplierOptions}
                 onChange={(event, value) => setSupplier(value || "")}
                 fullWidth
-                renderInput={(params) => <TextField {...params} label="ซัพพลายเออร์" />}
+                renderInput={(params) => (
+                  <TextField {...params} label="ซัพพลายเออร์" />
+                )}
+              />
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-supplier"
+                options={prevBarcodeOptions.filter((option) => option !== null && option !== undefined)}
+                onChange={(event, value) => setPrevBarcode(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField {...params} label="บาร์โค้ดเดิม" />
+                )}
+              />
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-supplier"
+                options={curBarcodeOptions.filter((option) => option !== null && option !== undefined)}
+                onChange={(event, value) => setCurBarcode(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField {...params} label="บาร์โค้ดใหม่" />
+                )}
               />
             </div>
             <div>

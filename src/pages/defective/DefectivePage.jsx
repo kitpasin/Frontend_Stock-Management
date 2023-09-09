@@ -24,8 +24,12 @@ function DefectivePage() {
 
   const [defectiveProducts, setDefectiveProducts] = useState([]);
   const [title, setTitle] = useState("");
-  const [productId, setProductId] = useState("")
+  const [productId, setProductId] = useState("");
   const [mainCategory, setMainCategory] = useState("");
+  const [subCategory, setSubCategory] = useState("");
+  const [prevBarcode, setPrevBarcode] = useState("");
+  const [curBarcode, setCurBarcode] = useState("");
+  const [productType, setProductType] = useState("");
   const [supplier, setSupplier] = useState("");
   const [vat, setVat] = useState("");
 
@@ -36,8 +40,24 @@ function DefectivePage() {
   const filteredProduct = defectiveProducts.filter((product) => {
     const matchesTitle = title ? product.title === title : true;
     const matchProductId = productId ? product.product_id === productId : true;
-    const matchesMainCategory = mainCategory ? product.main_cate_name === mainCategory : true;
-    const matchesSupplier = supplier ? product.supplier_name === supplier : true;
+    const matchesMainCategory = mainCategory
+      ? product.main_cate_name === mainCategory
+      : true;
+    const matchesSupplier = supplier
+      ? product.supplier_name === supplier
+      : true;
+    const matchesSubCategory = subCategory
+      ? product.sub_cate_name === subCategory
+      : true;
+    const matchesPrevBarcode = prevBarcode
+      ? product.product_barcode === prevBarcode
+      : true;
+    const matchesCurBarcode = curBarcode
+      ? product.barcode_number === curBarcode
+      : true;
+    const matchesProductType = productType
+      ? product.p_type === productType
+      : true;
     let matchesVat = true;
 
     if (vat === "1") {
@@ -46,7 +66,17 @@ function DefectivePage() {
       matchesVat = product.vat_id == 0;
     }
 
-    return matchesTitle && matchProductId && matchesMainCategory && matchesSupplier && matchesVat;
+    return (
+      matchesTitle &&
+      matchProductId &&
+      matchesMainCategory &&
+      matchesSupplier &&
+      matchesVat &&
+      matchesSubCategory &&
+      matchesPrevBarcode &&
+      matchesCurBarcode &&
+      matchesProductType
+    );
   });
 
   async function getDefectiveProducts() {
@@ -70,6 +100,22 @@ function DefectivePage() {
 
   const mainCategoryOptions = defectiveProducts
     .map((product) => product.main_cate_name)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  const subCategoryOptions = defectiveProducts
+    .map((product) => product.sub_cate_name)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  const prevBarcodeOptions = defectiveProducts
+    .map((product) => product.product_barcode)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  const curBarcodeOptions = defectiveProducts
+    .map((product) => product.barcode_number)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  const productTypeOptions = defectiveProducts
+    .map((product) => product.p_type)
     .filter((value, index, self) => self.indexOf(value) === index);
 
   const supplierOptions = defectiveProducts
@@ -112,79 +158,148 @@ function DefectivePage() {
                 </div>
               </div>
               <Link to="/defective/search" className="export">
-                  เลือกเบิกออกสินค้าชำรุด
+                เลือกเบิกออกสินค้าชำรุด
               </Link>
             </div>
-            <div style={{display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center", gap: "1rem"}}>
-                <Autocomplete
-                  size="small"
-                  disablePortal
-                  id="combo-box-title"
-                  options={titleOptions}
-                  onChange={(event, value) => setTitle(value || "")}
-                  fullWidth
-                  renderInput={(params) => <TextField {...params} label="ชื่อ" />}
-                />
-                <Autocomplete
-                  size="small"
-                  disablePortal
-                  id="combo-box-product-id"
-                  options={productIdOptions}
-                  onChange={(event, value) => setProductId(value || "")}
-                  fullWidth
-                  renderInput={(params) => (
-                    <TextField type="number" {...params} label="รหัสสินค้า" />
-                  )}
-                />
-                <Autocomplete
-                  size="small"
-                  disablePortal
-                  id="combo-box-main-category"
-                  options={mainCategoryOptions}
-                  onChange={(event, value) => setMainCategory(value || "")}
-                  fullWidth
-                  renderInput={(params) => <TextField {...params} label="หมวดหมู่หลัก" />}
-                />
-                <Autocomplete
-                  size="small"
-                  disablePortal
-                  id="combo-box-supplier"
-                  options={supplierOptions}
-                  onChange={(event, value) => setSupplier(value || "")}
-                  fullWidth
-                  renderInput={(params) => <TextField {...params} label="ซัพพลายเออร์" />}
-                />
-              </div>
-              <div>
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: "1rem",
+              }}
+            >
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-id"
+                options={productTypeOptions}
+                onChange={(event, value) => setProductType(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField {...params} label="ประเภทสินค้า" />
+                )}
+              />
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-title"
+                options={titleOptions}
+                onChange={(event, value) => setTitle(value || "")}
+                fullWidth
+                renderInput={(params) => <TextField {...params} label="ชื่อ" />}
+              />
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-product-id"
+                options={productIdOptions}
+                onChange={(event, value) => setProductId(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField type="number" {...params} label="รหัสสินค้า" />
+                )}
+              />
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-main-category"
+                options={mainCategoryOptions}
+                onChange={(event, value) => setMainCategory(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField {...params} label="หมวดหมู่หลัก" />
+                )}
+              />
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-main-category"
+                options={subCategoryOptions}
+                onChange={(event, value) => setSubCategory(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField {...params} label="หมวดหมู่ย่อย" />
+                )}
+              />
+            </div>
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: "1rem",
+              }}
+            >
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-supplier"
+                options={supplierOptions}
+                onChange={(event, value) => setSupplier(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField {...params} label="ซัพพลายเออร์" />
+                )}
+              />
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-supplier"
+                options={prevBarcodeOptions.filter(
+                  (option) => option !== null && option !== undefined
+                )}
+                onChange={(event, value) => setPrevBarcode(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField {...params} label="บาร์โค้ดเดิม" />
+                )}
+              />
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-supplier"
+                options={curBarcodeOptions.filter(
+                  (option) => option !== null && option !== undefined
+                )}
+                onChange={(event, value) => setCurBarcode(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField {...params} label="บาร์โค้ดใหม่" />
+                )}
+              />
+            </div>
+            <div>
               <FormControl fullWidth>
-                  <RadioGroup
-                    row
-                    aria-labelledby="demo-row-radio-buttons-group-label"
-                    name="row-radio-buttons-group"
-                    value={vat}
-                    >
-                    <FormControlLabel
-                      value=""
-                      control={<Radio />}
-                      label="All"
-                      onChange={(e) => setVat(e.target.value)}
-                    />
-                    <FormControlLabel
-                      value="1"
-                      control={<Radio />}
-                      label="Vat"
-                      onChange={(e) => setVat(e.target.value)}
-                      
-                      />
-                    <FormControlLabel
-                      value="0"
-                      control={<Radio />}
-                      label="No Vat"
-                      onChange={(e) => setVat(e.target.value)}
-                      />
-                  </RadioGroup>
-                </FormControl>
-              </div>
+                <RadioGroup
+                  row
+                  aria-labelledby="demo-row-radio-buttons-group-label"
+                  name="row-radio-buttons-group"
+                  value={vat}
+                >
+                  <FormControlLabel
+                    value=""
+                    control={<Radio />}
+                    label="All"
+                    onChange={(e) => setVat(e.target.value)}
+                  />
+                  <FormControlLabel
+                    value="1"
+                    control={<Radio />}
+                    label="Vat"
+                    onChange={(e) => setVat(e.target.value)}
+                  />
+                  <FormControlLabel
+                    value="0"
+                    control={<Radio />}
+                    label="No Vat"
+                    onChange={(e) => setVat(e.target.value)}
+                  />
+                </RadioGroup>
+              </FormControl>
+            </div>
             <div>
               <Table
                 productsData={filteredProduct}
@@ -192,7 +307,7 @@ function DefectivePage() {
                 setRefreshData={setRefreshData}
                 setProductSelected={setProductSelected}
                 productSelected={productSelected}
-                />
+              />
             </div>
           </Card>
         </>
