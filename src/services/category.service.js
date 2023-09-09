@@ -1,8 +1,8 @@
 import axios from "axios";
 
-export const getCategory = (language) => {
-    return axios.get(`category/data?language=${language}`).then( 
-      (res) => { return { status: true, data: res.data.data, menu: res.data.menu }} , 
+export const getCategory = () => {
+    return axios.get(`maincates`).then( 
+      (res) => { return { status: true, data: res.data.mainCates }} , 
       (error) => { return { status: false, description: (!error.response.data)?"Something went wrong.": error.response.data.description } }
     )
 }

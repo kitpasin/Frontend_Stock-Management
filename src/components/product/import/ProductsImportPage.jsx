@@ -3,7 +3,9 @@ import { useTranslation } from "react-i18next";
 import {
   Autocomplete,
   Card,
+  FormControl,
   FormControlLabel,
+  FormGroup,
   Grid,
   IconButton,
   Radio,
@@ -19,13 +21,14 @@ import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import AddIcon from "@mui/icons-material/Add";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import Switch from "@mui/material/Switch";
 
 import "./ProductsImportPage.scss";
 import HeadPageComponent from "../../layout/headpage/headpage";
 import { Link, useNavigate } from "react-router-dom";
 import { batch, useSelector } from "react-redux";
 import axios from "axios";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import {
   CoPresentOutlined,
   PersonOffRounded,
@@ -39,6 +42,7 @@ const form = {
   state1: false,
   state2: false,
   state3: false,
+  state4: false,
   reset: false,
   key: [uuidv4(), uuidv4(), uuidv4(), uuidv4()],
   unit: "",
@@ -52,9 +56,10 @@ const form = {
   barcode: "",
   new_barcode: "",
   supplier_barcode: "",
+  p_type: "",
   main_cate_id: "",
   sub_cate_id: "",
-  sub_cate: "", 
+  sub_cate: "",
   supplier_id: "",
   supplier_cate: "",
   import_value: "",
@@ -81,6 +86,8 @@ const form = {
   pp_vat: "",
   os_price: 0,
   selling_price: "",
+
+  importOne: true,
 };
 
 function ProductsImportPage({
@@ -106,6 +113,12 @@ function ProductsImportPage({
     disRadio: false,
     disSelect: false,
   };
+
+  const disableProfit = {
+    profit: false,
+    vat: false,
+    selling_price: false,
+  };
   const modalSwal = withReactContent(Swal);
   const navigate = useNavigate();
   const { t } = useTranslation(["dashboard-page"]);
@@ -119,6 +132,7 @@ function ProductsImportPage({
   );
   const [preview, setPreview] = useState(formPreview);
   const [vat, setVat] = useState(formVat);
+  const [disabledProfit, setDisabledProfit] = useState(disableProfit);
   const [netsData, setNetsData] = useState([]);
   const [amountsData, setAmountsData] = useState([]);
   const [mainCatesData, setMainCatesData] = useState([]);
@@ -133,7 +147,10 @@ function ProductsImportPage({
   const webPath = useSelector((state) => state.app.webPath);
   const imgError = "/images/mock/pre-product.png";
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const isSwChecked = ((isMultiImport || isFetchImport) || productData.importOne) ? false : (productData.selling_price > 0 && productData.vat_id !== 0)?false:true;
+  const [switchChecked, setSwitchChecked] = useState(isSwChecked);
 
+  console.log(productData.vat_id)
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -228,6 +245,53 @@ function ProductsImportPage({
     getMainCatesBySupplier(productData.supplier_id);
   }, []);
 
+  /* Disabled profit */
+  useEffect(() => {
+    if (switchChecked) {
+      setVat(() => {
+        return { ...vat, checked: true };
+      });
+      setProductData(() => {
+        return { ...productData, vat_id: 0, vat: 0, state3: !productData.state3 };
+      });
+      setDisabledProfit({
+        profit: true,
+        vat: true,
+        selling_price: true,
+      });
+      setProductData((prev) => {
+        return {
+          ...prev,
+          pp_profit: 0,
+          set_profit: 0,
+          profit_per_unit: 0,
+          pp_vat: 0,
+          selling_price: 0,
+        };
+      });
+    } else {
+      setDisabledProfit({
+        profit: false,
+        vat: false,
+        selling_price: false,
+      });
+      setVat(() => {
+        return { ...vat, checked: false };
+      });
+      setProductData((prev) => {
+        return {
+          ...prev,
+          vat_id: "",
+          vat: "",
+          state3: !productData.state3,
+          set_profit: "",
+          selling_price: "",
+        };
+      });
+    }
+  }, [switchChecked]);
+  /* Disabled profit */
+
   /* Price details */
   useEffect(() => {
     const import_fee = parseFloat(productData.import_fee) || 0;
@@ -251,19 +315,38 @@ function ProductsImportPage({
     const pp_profit = parseFloat((profit_per_unit + unit_price).toFixed(2));
     const pp_vat = parseFloat((vat * pp_profit) / 100) + parseFloat(pp_profit);
 
-    setProductData(() => {
-      return {
-        ...productData,
-        total: totalAll,
-        op_unit: parseFloat(op_unit),
-        cost_per_unit: parseFloat(cost_per_unit),
-        unit_price: parseFloat(unit_price.toFixed(2)),
-        total_cost: parseFloat(total_cost.toFixed(2)),
-        profit_per_unit: parseFloat(profit_per_unit.toFixed(2)),
-        pp_profit: pp_profit,
-        pp_vat: parseFloat(pp_vat.toFixed(2)),
-      };
-    });
+    if (!switchChecked) {
+      setProductData(() => {
+        return {
+          ...productData,
+          total: totalAll,
+          op_unit: parseFloat(op_unit),
+          cost_per_unit: parseFloat(cost_per_unit),
+          unit_price: parseFloat(unit_price.toFixed(2)),
+          total_cost: parseFloat(total_cost.toFixed(2)),
+          profit_per_unit: parseFloat(profit_per_unit.toFixed(2)),
+          pp_profit: pp_profit,
+          pp_vat: parseFloat(pp_vat.toFixed(2)),
+        };
+      });
+    } else {
+      setProductData(() => {
+        return {
+          ...productData,
+          total: totalAll,
+          op_unit: parseFloat(op_unit),
+          cost_per_unit: parseFloat(cost_per_unit),
+          unit_price: parseFloat(unit_price.toFixed(2)),
+          total_cost: parseFloat(total_cost.toFixed(2)),
+          profit_per_unit: parseFloat(profit_per_unit.toFixed(2)),
+          pp_profit: 0,
+          set_profit: 0,
+          profit_per_unit: 0,
+          pp_vat: 0,
+          selling_price: 0,
+        };
+      });
+    }
   }, [
     productData.import_fee,
     productData.fuel_cost,
@@ -353,6 +436,7 @@ function ProductsImportPage({
       state1: !productData.state1,
       state2: !productData.state2,
       state3: !productData.state3,
+      state4: !productData.state4,
       reset: !productData.reset,
       key: [uuidv4(), uuidv4(), uuidv4(), uuidv4()],
       unit: "",
@@ -366,6 +450,7 @@ function ProductsImportPage({
       barcode: "",
       new_barcode: "",
       supplier_barcode: "",
+      p_type: "",
       main_cate_id: "",
       sub_cate_id: "",
       sub_cate: "",
@@ -406,6 +491,7 @@ function ProductsImportPage({
     setVat((prev) => {
       return { ...prev, checked: false };
     });
+    setSwitchChecked(false);
     setGeneratedNumber("");
   };
 
@@ -436,6 +522,7 @@ function ProductsImportPage({
       });
       return false;
     } else {
+      
       const formData = new FormData();
       /* product */
       if (isEdit) {
@@ -462,6 +549,7 @@ function ProductsImportPage({
       formData.append("barcode", productData.new_barcode || "");
       formData.append("supplier_barcode", productData.supplier_barcode || "");
       formData.append("defective", productData.defective);
+      formData.append("p_type", productData.p_type);
       /* product_expense */
       formData.append("import_fee", productData.import_fee);
       formData.append("fuel_cost", productData.fuel_cost);
@@ -491,7 +579,6 @@ function ProductsImportPage({
   function onSaveProduct(_form) {
     if (isEdit && !isFetchImport) {
       svProductUpdate(productData.id, _form).then((res) => {
-        setOpenModalEdit(false);
         Swal.fire({
           text: "Product has been updated successfully.",
           icon: "success",
@@ -499,6 +586,7 @@ function ProductsImportPage({
           timer: 1000,
         }).then(() => {
           setRefreshData(refreshData + 1);
+          setOpenModalEdit(false);
         });
       });
     } else {
@@ -960,6 +1048,33 @@ function ProductsImportPage({
                   >
                     <Autocomplete
                       // value={productData.main_cate_id}
+                      // key={productData.key[2]}
+                      value={productData.p_type || ""}
+                      onChange={(e, value) =>
+                        setProductData(() => {
+                          const p_type = value ? value : "";
+                          return {
+                            ...productData,
+                            p_type: p_type,
+                          };
+                        })
+                      }
+                      disabled={false}
+                      id="combo-box-demo"
+                      options={["Vending", "Wash&Dry"]}
+                      getOptionLabel={(option) => option || ""}
+                      sx={{ width: "33.33%" }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="ประเภทสินค้า"
+                          size="small"
+                          required
+                        />
+                      )}
+                    />
+                    <Autocomplete
+                      // value={productData.main_cate_id}
                       key={productData.key[2]}
                       defaultValue={{ name: productData.main_cate_name || "" }}
                       onChange={(e, value) =>
@@ -979,7 +1094,7 @@ function ProductsImportPage({
                       id="combo-box-demo"
                       options={mainCatesData}
                       getOptionLabel={(option) => option.name || ""}
-                      sx={{ width: "50%" }}
+                      sx={{ width: "33.33%" }}
                       renderInput={(params) => (
                         <TextField
                           {...params}
@@ -991,7 +1106,7 @@ function ProductsImportPage({
                     />
                     <Autocomplete
                       key={productData.state1}
-                      defaultValue={{ name: productData.sub_cate || "" }}
+                      value={{ name: productData.sub_cate || "" }}
                       onChange={(e, value) =>
                         setProductData(() => {
                           return {
@@ -1005,7 +1120,7 @@ function ProductsImportPage({
                       id="combo-box-demo"
                       options={subCatesData}
                       getOptionLabel={(option) => option.name || ""}
-                      sx={{ width: "50%" }}
+                      sx={{ width: "33.33%" }}
                       renderInput={(params) => (
                         <TextField
                           {...params}
@@ -1033,7 +1148,7 @@ function ProductsImportPage({
                       id="outlined-basic"
                       label="สร้างบาร์โค้ดใหม่"
                       variant="outlined"
-                      value={productData.new_barcode}
+                      value={productData.new_barcode || ""}
                       onChange={(event) =>
                         setGeneratedNumber(event.target.value)
                       }
@@ -1509,6 +1624,22 @@ function ProductsImportPage({
                     width: "50%",
                   }}
                 >
+                  <FormControl component={"fieldset"}>
+                    <FormGroup aria-label="position" row>
+                      <FormControlLabel
+                        value="end"
+                        control={
+                          <Switch
+                            color="primary"
+                            checked={switchChecked}
+                            onChange={() => setSwitchChecked(!switchChecked)}
+                          />
+                        }
+                        label="สินค้าที่ไม่ต้องการกำไร"
+                        labelPlacement="end"
+                      />
+                    </FormGroup>
+                  </FormControl>
                   <div style={{ display: "flex", gap: "1rem", width: "100%" }}>
                     <TextField
                       required
@@ -1529,6 +1660,7 @@ function ProductsImportPage({
                       variant="outlined"
                       size="small"
                       sx={{ width: "100%" }}
+                      disabled={disabledProfit.profit}
                     />
                   </div>
                   <div
@@ -1567,6 +1699,7 @@ function ProductsImportPage({
                           size="small"
                         />
                       )}
+                      disabled={disabledProfit.vat}
                     />
                     <FormControlLabel
                       value="female"
@@ -1610,16 +1743,16 @@ function ProductsImportPage({
                       disabled
                       type="number"
                       value={productData.pp_profit}
-                      onChange={(e) =>
-                        setProductData(() => {
-                          return {
-                            ...productData,
-                            pp_profit: !isNaN(parseFloat(e.target.value))
-                              ? parseFloat(e.target.value)
-                              : null,
-                          };
-                        })
-                      }
+                      // onChange={(e) =>
+                      //   setProductData(() => {
+                      //     return {
+                      //       ...productData,
+                      //       pp_profit: !isNaN(parseFloat(e.target.value))
+                      //         ? parseFloat(e.target.value)
+                      //         : null,
+                      //     };
+                      //   })
+                      // }
                       id="outlined-basic"
                       label="ราคาสินค้ารวมกำไร"
                       variant="outlined"
@@ -1642,7 +1775,13 @@ function ProductsImportPage({
                         gap: "0",
                       }}
                     >
-                      <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "1rem",
+                        }}
+                      >
                         <TextField
                           disabled
                           type="number"
@@ -1684,9 +1823,14 @@ function ProductsImportPage({
                           sx={{ width: "50%" }}
                         />
                       </div>
-                      { isFetchImport && parseFloat(productData.old_pp_vat) > parseFloat(productData.pp_vat) && parseFloat(productData.pp_vat) !== 0 &&
-                        <Typography variant="overline" sx={{ color: "red" }}>ราคารวมกำไรต่อชิ้นลดลง</Typography>
-                      } 
+                      {isFetchImport &&
+                        parseFloat(productData.old_pp_vat) >
+                          parseFloat(productData.pp_vat) &&
+                        parseFloat(productData.pp_vat) !== 0 && (
+                          <Typography variant="overline" sx={{ color: "red" }}>
+                            ราคารวมกำไรต่อชิ้นลดลง
+                          </Typography>
+                        )}
                     </div>
                     <TextField
                       required
@@ -1706,7 +1850,8 @@ function ProductsImportPage({
                       label="ราคาขายจริง"
                       variant="outlined"
                       size="small"
-                      sx={{ width: "100%", }}
+                      sx={{ width: "100%" }}
+                      disabled={disabledProfit.selling_price}
                     />
                   </div>
                 </div>

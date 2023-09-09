@@ -6,14 +6,12 @@ import Swal from "sweetalert2";
 
 import ProductEditModal from "../../../components/product/modal/ProductEditModal";
 import BarcodeModal from "./BarcodeModal";
-import { svProductAll } from "../../../services/product.service";
-import { svProductOne } from "../../../services/product.service";
 import { svDeleteProduct } from "../../../services/product.service";
 import { ConnectingAirportsOutlined } from "@mui/icons-material";
 import { v4 as uuidv4 } from 'uuid';
 
 import ExportModal from "../../../components/product/modal/ExportModal";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBarcode } from "@fortawesome/free-solid-svg-icons";
 
@@ -22,6 +20,7 @@ function MenuItemList({
   refreshData,
   setRefreshData,
   setProductSelected,
+  productData,
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [openMenu, setOpenMenu] = useState(false);
@@ -29,9 +28,7 @@ function MenuItemList({
   const [openModal, setOpenModal] = useState(false);
   const [openExportModal, setOpenExportModal] = useState(false);
   const [openBarcodeModal, setOpenBarcodeModal] = useState(false);
-  const [openBarcode, setBarcode] = useState(false);
   const [productShow, setProductShow] = useState([]);
-  const [productData, setProductData] = useState([]);
   const [modal, setModal] = useState({
     isEdit: false,
     isFetchImport: false,
@@ -39,20 +36,9 @@ function MenuItemList({
   });
   const open = Boolean(anchorEl);
 
-  useEffect(() => {
-    fetchProductdata();
-  }, [refreshData]);
-
-  function fetchProductdata() {
-    svProductAll().then((res) => {
-      const result = res.data;
-      setProductData(result);
-    });
-  }
-
   const fetchImportHandle = (_params) => {
-    const data = productData.filter((item) => item.id === _params.id);
-    if (data) {
+    const data = productData?.filter((item) => item.id === _params.id);
+    if (data.length > 0) {
       const dd = data[0];
       const result = {
         id: dd.id,
@@ -61,6 +47,7 @@ function MenuItemList({
         state1: false,
         state2: false,
         state3: false,
+        state4: false,
         reset: 0,
         key: [uuidv4(), uuidv4(), uuidv4(), uuidv4()],
         unit: dd.unit_id,
@@ -75,6 +62,7 @@ function MenuItemList({
         alert_stock: dd.alert_stock,
         barcode: dd.product_barcode,
         new_barcode: dd.barcode_number,
+        p_type: dd.p_type?dd.p_type:"",
         main_cate_id: dd.main_cate_id,
         main_cate_name: dd.main_cate_name,
         sub_cate_id: dd.sub_cate_id,
@@ -120,8 +108,8 @@ function MenuItemList({
   };
 
   const editHandle = (_params) => {
-    const data = productData.filter((item) => item.id === _params.id);
-    if (data) {
+    const data = productData?.filter((item) => item.id === _params.id);
+    if (data.length > 0) {
       const dd = data[0];
       const result = {
         id: dd.id,
@@ -130,6 +118,7 @@ function MenuItemList({
         state1: false,
         state2: false,
         state3: false,
+        state4: false,
         reset: 0,
         key: [uuidv4(), uuidv4(), uuidv4(), uuidv4()],
         unit: dd.unit_id,
@@ -144,6 +133,7 @@ function MenuItemList({
         alert_stock: dd.alert_stock,
         barcode: dd.product_barcode,
         new_barcode: dd.barcode_number,
+        p_type: dd.p_type?dd.p_type:"",
         main_cate_id: dd.main_cate_id,
         main_cate_name: dd.main_cate_name,
         sub_cate_id: dd.sub_cate_id,
