@@ -13,7 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileImport, faStore } from "@fortawesome/free-solid-svg-icons";
 import Barcode from "react-barcode";
 import { useSelector } from "react-redux";
-import { Autocomplete, Card, TextField } from "@mui/material";
+import { Autocomplete, Card, FormControlLabel, Grid, Radio, TextField } from "@mui/material";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 
 import "./SupproductPage.scss";
@@ -87,6 +87,13 @@ export default function SupproductImport({
     remove: false,
     isError: isEdit || isFetchImport ? false : true,
   };
+
+  const formVat = {
+    checked:
+      (isEdit || isFetchImport) && productShow.vat_id === 0 ? true : false,
+    disRadio: false,
+    disSelect: false,
+  };
   const { t } = useTranslation(["dashboard-page"]);
   const webPath = useSelector((state) => state.app.webPath);
   const [preview, setPreview] = useState(formPreview);
@@ -95,9 +102,10 @@ export default function SupproductImport({
   const [amountsData, setAmountsData] = useState([]);
   const [subCatesData, setSubCatesData] = useState([]);
   const [mainCatesData, setMainCatesData] = useState([]);
+  const [vat, setVat] = useState(formVat);
+  const [vatsData, setVatsData] = useState([]);
 
   const inputRef = useRef(null);
-
 
   const formInputRef = useRef(null);
 
@@ -193,19 +201,35 @@ export default function SupproductImport({
     setMainCatesData(data);
   }
 
+  async function getVats() {
+    const response = await axios.get("vats");
+    const data = response.data.vats;
+    setVatsData(data);
+  }
+
+  const selectNoVat = () => {
+    setVat(() => {
+      return { ...vat, checked: true };
+    });
+    setProductData(() => {
+      return { ...productData, vat_id: 0, vat: 0, state3: !productData.state3 };
+    });
+  };
+
   const createHandle = (evt) => {
     evt.preventDefault();
-    console.log('ok')
-  }
+    console.log("ok");
+  };
 
   useEffect(() => {
     getNets();
-    getAmounts()
-    getSubCates()
-    getMainCates()
-  }, [])
-  
-  console.log(productData)
+    getAmounts();
+    getSubCates();
+    getMainCates();
+    getVats();
+  }, []);
+
+  console.log(productData);
   return (
     <div>
       <BootstrapDialog
@@ -230,7 +254,7 @@ export default function SupproductImport({
           <section id="supproduct-import">
             <Card
               className="flex-container-column"
-              style={{ marginTop: "-1rem" }}
+              style={{ marginTop: "-1rem", marginBottom: "1rem" }}
             >
               <div
                 style={{
@@ -343,493 +367,1004 @@ export default function SupproductImport({
             </BootstrapDialogTitle>
             <div id="form-import">
               <form onSubmit={createHandle}>
-                <div>
-                  <Card className="flex-container-column">
-                    <div className="header">
-                      <figure className="header-title">
-                        <img src="/images/icons/import-icon.png" alt="" />
-                        <p>ข้อมูลสินค้า</p>
-                      </figure>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "1rem",
-                          marginRight: "1.1rem",
-                        }}
+                <Card className="flex-container-column">
+                  <div className="header">
+                    <figure className="header-title">
+                      <img src="/images/icons/import-icon.png" alt="" />
+                      <p>ข้อมูลสินค้า</p>
+                    </figure>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "1rem",
+                        marginRight: "1.1rem",
+                      }}
+                    >
+                      <button
+                        className="btn"
+                        style={{ display: "flex", justifyContent: "center" }}
+                        type="submit"
                       >
-                        <button
-                          className="btn"
-                          type="button"
-                          style={{
-                            display: "flex",
-                            justifyContent: "center",
-                          }}
-                          onClick={() => console.log("ok")}
-                        >
-                          ล้างข้อมูล
-                        </button>
-                        <button
-                          className="btn"
-                          style={{ display: "flex", justifyContent: "center" }}
-                          type="submit"
-                        >
-                          บันทึกข้อมูล
-                        </button>
-                      </div>
+                        บันทึกข้อมูล
+                      </button>
                     </div>
+                  </div>
 
-                    <div className="content">
-                      <div
-                        className="content-left"
-                        style={{ position: "relative" }}
-                      >
-                        <figure style={{ cursor: "pointer" }}>
-                          <div className="input-file">
-                            <input
-                              type="file"
-                              accept="image/*"
-                              onChange={(e) => previewImageHandler(e)}
-                              ref={formInputRef}
-                            />
-                          </div>
-                          {isEdit || isFetchImport ? (
-                            <img
-                              src={
-                                !preview.isError
-                                  ? webPath + productData.image_path
-                                  : preview.src ||
-                                    "/images/mock/pre-product.png"
-                              }
-                              alt={""}
-                            />
-                          ) : (
-                            <img
-                              src={
-                                !preview.isError
-                                  ? preview.src
-                                  : "/images/mock/pre-product.png"
-                              }
-                              alt={""}
-                            />
-                          )}
-                          <p
-                            style={{
-                              display:
-                                preview.isError && !isEdit && !isFetchImport
-                                  ? "block"
-                                  : "none",
-                            }}
-                          >
-                            ขนาดไฟล์ภาพไม่เกิน 10 Gb
-                          </p>
-                        </figure>
-                      </div>
-                      <div className="content-right">
-                        <div className="first-row">
-                          <TextField
-                            required
-                            value={productData.title}
-                            onChange={(e) =>
-                              setProductData(() => {
-                                return {
-                                  ...productData,
-                                  title: e.target.value,
-                                };
-                              })
-                            }
-                            id="outlined-basic"
-                            label="ชื่อสินค้า"
-                            variant="outlined"
-                            size="small"
-                            sx={{ width: "100%" }}
+                  <div className="content">
+                    <div
+                      className="content-left"
+                      style={{ position: "relative" }}
+                    >
+                      <figure style={{ cursor: "pointer" }}>
+                        <div className="input-file">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => previewImageHandler(e)}
+                            ref={formInputRef}
                           />
                         </div>
-                        <div className="second-row">
+                        {isEdit || isFetchImport ? (
+                          <img
+                            src={
+                              !preview.isError
+                                ? webPath + productData.image_path
+                                : preview.src || "/images/mock/pre-product.png"
+                            }
+                            alt={""}
+                          />
+                        ) : (
+                          <img
+                            src={
+                              !preview.isError
+                                ? preview.src
+                                : "/images/mock/pre-product.png"
+                            }
+                            alt={""}
+                          />
+                        )}
+                        <p
+                          style={{
+                            display:
+                              preview.isError && !isEdit && !isFetchImport
+                                ? "block"
+                                : "none",
+                          }}
+                        >
+                          ขนาดไฟล์ภาพไม่เกิน 10 Gb
+                        </p>
+                      </figure>
+                    </div>
+                    <div className="content-right">
+                      <div className="first-row">
+                        <TextField
+                          required
+                          value={productData.title}
+                          onChange={(e) =>
+                            setProductData(() => {
+                              return {
+                                ...productData,
+                                title: e.target.value,
+                              };
+                            })
+                          }
+                          id="outlined-basic"
+                          label="ชื่อสินค้า"
+                          variant="outlined"
+                          size="small"
+                          sx={{ width: "100%" }}
+                        />
+                      </div>
+                      <div className="second-row">
+                        <TextField
+                          required
+                          type="number"
+                          value={productData.netweight}
+                          onInput={(e) =>
+                            setProductData(() => {
+                              return {
+                                ...productData,
+                                netweight: parseFloat(e.target.value),
+                              };
+                            })
+                          }
+                          id="outlined-basic"
+                          label="ปริมาตรสุทธิ"
+                          variant="outlined"
+                          size="small"
+                          sx={{ width: "25%" }}
+                        />
+                        <Autocomplete
+                          key={productData.key[0]}
+                          defaultValue={{ name: productData.unit_name || "" }}
+                          required
+                          onChange={(e, value) =>
+                            setProductData(() => {
+                              return {
+                                ...productData,
+                                unit: value ? value.id : 0,
+                              };
+                            })
+                          }
+                          id="combo-box-demo"
+                          options={netsData}
+                          getOptionLabel={(option) => option.name || ""}
+                          sx={{ width: "25%" }}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="หน่วยปริมาตรสุทธิ"
+                              size="small"
+                              required
+                            />
+                          )}
+                        />
+                        <TextField
+                          required
+                          value={productData.import_value}
+                          onChange={(e) =>
+                            setProductData(() => {
+                              return {
+                                ...productData,
+                                import_value: !isNaN(parseInt(e.target.value))
+                                  ? parseInt(e.target.value)
+                                  : "",
+                              };
+                            })
+                          }
+                          id="outlined-basic"
+                          label="จำนวน(นำเข้า)"
+                          variant="outlined"
+                          size="small"
+                          sx={{ width: "25%" }}
+                        />
+                        <Autocomplete
+                          // value={productData.counting_unit}
+                          key={productData.key[1]}
+                          defaultValue={{
+                            name: productData.counting_unit_name || "",
+                          }}
+                          onChange={(e, value) =>
+                            setProductData(() => {
+                              return {
+                                ...productData,
+                                counting_unit: value ? value.id : 0,
+                              };
+                            })
+                          }
+                          disablePortal
+                          id="combo-box-demo"
+                          options={amountsData}
+                          getOptionLabel={(option) => option.name || ""}
+                          sx={{ width: "25%" }}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="หน่วยนับ"
+                              size="small"
+                              required
+                            />
+                          )}
+                        />
+                      </div>
+                      <div className="third-row">
+                        <div
+                          className="third-row-left"
+                          style={{
+                            display: "flex",
+                            gap: "1rem",
+                            width: "50%",
+                          }}
+                        >
+                          <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                              disabled={true}
+                              label="วันสั่งซื้อ"
+                              inputFormat="YYYY-MM-DD"
+                              sx={{ width: "33.33%" }}
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  size="small"
+                                  sx={{ width: "33.33%" }}
+                                  inputProps={{
+                                    ...params.inputProps,
+                                    readOnly: true,
+                                  }}
+                                  required
+                                  disabled={true}
+                                />
+                              )}
+                              value={productData.purchase_date || null}
+                              onChange={(value) => {
+                                setProductData(() => {
+                                  return {
+                                    ...productData,
+                                    purchase_date: dayjs(value)
+                                      .add(1, "day")
+                                      .toISOString()
+                                      .substring(0, 10),
+                                  };
+                                });
+                              }}
+                            />
+                            <DatePicker
+                              disabled={true}
+                              label="วันผลิต MFD"
+                              inputFormat="YYYY-MM-DD"
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  size="small"
+                                  sx={{ width: "33.33%" }}
+                                  inputProps={{
+                                    ...params.inputProps,
+                                    readOnly: true,
+                                  }}
+                                  required
+                                />
+                              )}
+                              value={productData.mfd_date || null}
+                              onChange={(value) => {
+                                setProductData(() => {
+                                  return {
+                                    ...productData,
+                                    mfd_date: dayjs(value)
+                                      .add(1, "day")
+                                      .toISOString()
+                                      .substring(0, 10),
+                                  };
+                                });
+                              }}
+                            />
+                            <DatePicker
+                              disabled={true}
+                              label="วันหมดอายุ EXP"
+                              inputFormat="YYYY-MM-DD"
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  size="small"
+                                  sx={{ width: "33.33%" }}
+                                  inputProps={{
+                                    ...params.inputProps,
+                                    readOnly: true,
+                                  }}
+                                  required
+                                  disabled={true}
+                                />
+                              )}
+                              value={productData.exp_date || null}
+                              onChange={(value) => {
+                                setProductData(() => {
+                                  return {
+                                    ...productData,
+                                    exp_date: dayjs(value)
+                                      .add(1, "day")
+                                      .toISOString()
+                                      .substring(0, 10),
+                                  };
+                                });
+                              }}
+                            />
+                          </LocalizationProvider>
+                        </div>
+                        <div
+                          className="third-row-right"
+                          style={{
+                            display: "flex",
+                            gap: "1rem",
+                            width: "50%",
+                          }}
+                        >
                           <TextField
                             required
-                            type="number"
-                            value={productData.netweight}
-                            onInput={(e) =>
-                              setProductData(() => {
-                                return {
-                                  ...productData,
-                                  netweight: parseFloat(e.target.value),
-                                };
-                              })
-                            }
-                            id="outlined-basic"
-                            label="ปริมาตรสุทธิ"
-                            variant="outlined"
-                            size="small"
-                            sx={{ width: "25%" }}
-                          />
-                          <Autocomplete
-                            key={productData.key[0]}
-                            defaultValue={{ name: productData.unit_name || "" }}
-                            required
-                            onChange={(e, value) =>
-                              setProductData(() => {
-                                return {
-                                  ...productData,
-                                  unit: value ? value.id : 0,
-                                };
-                              })
-                            }
-                            id="combo-box-demo"
-                            options={netsData}
-                            getOptionLabel={(option) => option.name || ""}
-                            sx={{ width: "25%" }}
-                            renderInput={(params) => (
-                              <TextField
-                                {...params}
-                                label="หน่วยปริมาตรสุทธิ"
-                                size="small"
-                                required
-                              />
-                            )}
-                          />
-                          <TextField
-                            required
-                            value={productData.import_value}
+                            value={productData.alert_date}
                             onChange={(e) =>
                               setProductData(() => {
                                 return {
                                   ...productData,
-                                  import_value: !isNaN(parseInt(e.target.value))
+                                  alert_date: !isNaN(parseInt(e.target.value))
                                     ? parseInt(e.target.value)
                                     : "",
                                 };
                               })
                             }
                             id="outlined-basic"
-                            label="จำนวน(นำเข้า)"
+                            label="จำนวนวันเตือนใกล้หมดอายุ"
                             variant="outlined"
                             size="small"
-                            sx={{ width: "25%" }}
+                            sx={{ width: "33.33%" }}
                           />
-                          <Autocomplete
-                            // value={productData.counting_unit}
-                            key={productData.key[1]}
-                            defaultValue={{
-                              name: productData.counting_unit_name || "",
-                            }}
-                            onChange={(e, value) =>
-                              setProductData(() => {
+                          <TextField
+                            required
+                            value={productData.alert_stock}
+                            onChange={(e) =>
+                              setProductData((prev) => {
                                 return {
                                   ...productData,
-                                  counting_unit: value ? value.id : 0,
+                                  alert_stock: !isNaN(parseInt(e.target.value))
+                                    ? parseInt(e.target.value)
+                                    : "",
                                 };
                               })
                             }
-                            disablePortal
+                            id="outlined-basic"
+                            label="จำนวนเตือนสินค้าใกล้หมด"
+                            variant="outlined"
+                            size="small"
+                            sx={{ width: "33.33%" }}
+                          />
+                          <TextField
+                            value={productData.defective_product}
+                            onChange={(e) =>
+                              setProductData(() => {
+                                return {
+                                  ...productData,
+                                  defective: !isNaN(parseInt(e.target.value))
+                                    ? parseInt(e.target.value)
+                                    : 0,
+                                };
+                              })
+                            }
+                            id="outlined-basic"
+                            label="จำนวนสินค้าที่มีปัญหา"
+                            variant="outlined"
+                            size="small"
+                            sx={{ width: "33.33%" }}
+                          />
+                        </div>
+                      </div>
+                      <div className="fourth-row">
+                        <div
+                          className="fourth-row-left"
+                          style={{
+                            display: "flex",
+                            gap: "1rem",
+                            width: "50%",
+                          }}
+                        >
+                          <Autocomplete
+                            // value={productData.main_cate_id}
+                            // key={productData.key[2]}
+                            // value={productData.p_type || ""}
+                            onChange={(e, value) => console.log("ok")}
+                            disabled={false}
                             id="combo-box-demo"
-                            options={amountsData}
-                            getOptionLabel={(option) => option.name || ""}
-                            sx={{ width: "25%" }}
+                            options={["Vending", "Wash&Dry"]}
+                            sx={{ width: "33.33%" }}
                             renderInput={(params) => (
                               <TextField
                                 {...params}
-                                label="หน่วยนับ"
+                                label="ประเภทสินค้า"
                                 size="small"
                                 required
                               />
                             )}
                           />
-                        </div>
-                        <div className="third-row">
-                          <div
-                            className="third-row-left"
-                            style={{
-                              display: "flex",
-                              gap: "1rem",
-                              width: "50%",
+                          <Autocomplete
+                            // value={productData.main_cate_id}
+                            key={productData.key[2]}
+                            defaultValue={{
+                              name: productData.main_cate_name || "",
                             }}
-                          >
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                              <DatePicker
-                                label="วันสั่งซื้อ"
-                                inputFormat="YYYY-MM-DD"
-                                sx={{ width: "33.33%" }}
-                                renderInput={(params) => (
-                                  <TextField
-                                    {...params}
-                                    size="small"
-                                    sx={{ width: "33.33%" }}
-                                    inputProps={{
-                                      ...params.inputProps,
-                                      readOnly: true,
-                                    }}
-                                    required
-                                  />
-                                )}
-                                value={productData.purchase_date || null}
-                                onChange={(value) => {
-                                  setProductData(() => {
-                                    return {
-                                      ...productData,
-                                      purchase_date: dayjs(value)
-                                        .add(1, "day")
-                                        .toISOString()
-                                        .substring(0, 10),
-                                    };
-                                  });
-                                }}
+                            onChange={(e, value) =>
+                              setProductData(() => {
+                                const cate_id = value ? value.id : 0;
+                                getSubCates(cate_id);
+                                return {
+                                  ...productData,
+                                  sub_cate_id: 0,
+                                  main_cate_id: cate_id,
+                                  sub_cate_name: "",
+                                  state1: !productData.state1,
+                                };
+                              })
+                            }
+                            disabled={false}
+                            id="combo-box-demo"
+                            options={mainCatesData}
+                            getOptionLabel={(option) => option.name || ""}
+                            sx={{ width: "33.33%" }}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                label="หมวดหมู่หลัก"
+                                size="small"
+                                required
                               />
-                              <DatePicker
-                                label="วันผลิต MFD"
-                                inputFormat="YYYY-MM-DD"
-                                renderInput={(params) => (
-                                  <TextField
-                                    {...params}
-                                    size="small"
-                                    sx={{ width: "33.33%" }}
-                                    inputProps={{
-                                      ...params.inputProps,
-                                      readOnly: true,
-                                    }}
-                                    required
-                                  />
-                                )}
-                                value={productData.mfd_date || null}
-                                onChange={(value) => {
-                                  setProductData(() => {
-                                    return {
-                                      ...productData,
-                                      mfd_date: dayjs(value)
-                                        .add(1, "day")
-                                        .toISOString()
-                                        .substring(0, 10),
-                                    };
-                                  });
-                                }}
+                            )}
+                          />
+                          <Autocomplete
+                            key={productData.state1}
+                            defaultValue={{
+                              name: productData.sub_cate_name || "",
+                            }}
+                            onChange={(e, value) =>
+                              setProductData(() => {
+                                return {
+                                  ...productData,
+                                  sub_cate_id: value ? value.id : 0,
+                                  sub_cate: value ? value.name : "",
+                                };
+                              })
+                            }
+                            disabled={false}
+                            id="combo-box-demo"
+                            options={subCatesData}
+                            getOptionLabel={(option) => option.name || ""}
+                            sx={{ width: "33.33%" }}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                label="หมวดหมู่ย่อย"
+                                size="small"
+                                required={
+                                  subCatesData.length > 0 ? true : false
+                                }
                               />
-                              <DatePicker
-                                label="วันหมดอายุ EXP"
-                                inputFormat="YYYY-MM-DD"
-                                renderInput={(params) => (
-                                  <TextField
-                                    {...params}
-                                    size="small"
-                                    sx={{ width: "33.33%" }}
-                                    inputProps={{
-                                      ...params.inputProps,
-                                      readOnly: true,
-                                    }}
-                                    required
+                            )}
+                          />
+                        </div>
+                        <div
+                          className="fourth-row-right"
+                          style={{
+                            display: "flex",
+                            gap: "1rem",
+                            width: "50%",
+                          }}
+                        >
+                          <TextField
+                            value={productData.barcode || ""}
+                            onChange={(e) => digitBarcode(e)}
+                            id="outlined-basic"
+                            label="เลขบาร์โค้ดจากสินค้า"
+                            variant="outlined"
+                            size="small"
+                            sx={{ width: "33.33%" }}
+                            disabled
+                          />
+                          <TextField
+                            id="outlined-basic"
+                            label="สร้างบาร์โค้ดใหม่"
+                            variant="outlined"
+                            value={productData.new_barcode}
+                            size="small"
+                            sx={{ width: "33.33%" }}
+                            inputRef={inputRef}
+                            InputProps={{
+                              readOnly: true,
+                              endAdornment: (
+                                <IconButton
+                                  onClick={generateBarcode}
+                                  sx={{ padding: 0 }}
+                                >
+                                  <CreateNewFolderIcon
+                                    sx={{ cursor: "pointer" }}
                                   />
-                                )}
-                                value={productData.exp_date || null}
-                                onChange={(value) => {
-                                  setProductData(() => {
-                                    return {
-                                      ...productData,
-                                      exp_date: dayjs(value)
-                                        .add(1, "day")
-                                        .toISOString()
-                                        .substring(0, 10),
-                                    };
-                                  });
-                                }}
-                              />
-                            </LocalizationProvider>
-                          </div>
+                                </IconButton>
+                              ),
+                            }}
+                          />
+                          <TextField
+                            required
+                            value={productData.supplier_barcode || ""}
+                            onChange={(e) => digitBarcode(e)}
+                            id="supplier-barcode"
+                            label="เลขบาร์โค้ดจากซัพพลายเออร์"
+                            variant="outlined"
+                            size="small"
+                            sx={{ width: "33.33%" }}
+                            disabled
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <Card
+                      className="flex-container-column"
+                      sx={{ borderRadius: "10px", maxHeight: "250px" }}
+                    >
+                      <div className="header">
+                        <figure className="header-title">
+                          <img
+                            width={25}
+                            src="/images/icons/truck-icon.png"
+                            alt=""
+                          />
+                          <p>ข้อมูลค่าใช้จ่ายและจำนวนสินค้าทั้งหมด</p>
+                        </figure>
+                      </div>
+                      <div
+                        className="pricing"
+                        style={{
+                          display: "flex",
+                          gap: "1rem",
+                          padding: "1rem",
+                          width: "100%",
+                        }}
+                      >
+                        <div
+                          className="pricing-left"
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "1rem",
+                            width: "50%",
+                          }}
+                        >
                           <div
-                            className="third-row-right"
                             style={{
                               display: "flex",
                               gap: "1rem",
-                              width: "50%",
+                              width: "100%",
                             }}
                           >
                             <TextField
                               required
-                              value={productData.alert_date}
+                              type="number"
+                              value={productData.import_fee}
                               onChange={(e) =>
                                 setProductData(() => {
                                   return {
                                     ...productData,
-                                    alert_date: !isNaN(parseInt(e.target.value))
-                                      ? parseInt(e.target.value)
-                                      : "",
-                                  };
-                                })
-                              }
-                              id="outlined-basic"
-                              label="จำนวนวันเตือนใกล้หมดอายุ"
-                              variant="outlined"
-                              size="small"
-                              sx={{ width: "33.33%" }}
-                            />
-                            <TextField
-                              required
-                              value={productData.alert_stock}
-                              onChange={(e) =>
-                                setProductData((prev) => {
-                                  return {
-                                    ...productData,
-                                    alert_stock: !isNaN(
-                                      parseInt(e.target.value)
+                                    import_fee: !isNaN(
+                                      parseFloat(e.target.value)
                                     )
-                                      ? parseInt(e.target.value)
-                                      : "",
+                                      ? parseFloat(e.target.value)
+                                      : null,
                                   };
                                 })
                               }
                               id="outlined-basic"
-                              label="จำนวนเตือนสินค้าใกล้หมด"
+                              label="บรรจุภัณฑ์ (฿)"
                               variant="outlined"
                               size="small"
                               sx={{ width: "33.33%" }}
                             />
                             <TextField
-                              value={productData.defective_product}
+                              required
+                              type="number"
+                              value={productData.fuel_cost}
                               onChange={(e) =>
                                 setProductData(() => {
                                   return {
                                     ...productData,
-                                    defective: !isNaN(parseInt(e.target.value))
-                                      ? parseInt(e.target.value)
-                                      : 0,
+                                    fuel_cost: !isNaN(
+                                      parseFloat(e.target.value)
+                                    )
+                                      ? parseFloat(e.target.value)
+                                      : null,
                                   };
                                 })
                               }
                               id="outlined-basic"
-                              label="จำนวนสินค้าที่มีปัญหา"
+                              label="สติ๊กเกอร์ (฿)"
                               variant="outlined"
                               size="small"
                               sx={{ width: "33.33%" }}
-                            />
-                          </div>
-                        </div>
-                        <div className="fourth-row">
-                          <div
-                            className="fourth-row-left"
-                            style={{
-                              display: "flex",
-                              gap: "1rem",
-                              width: "50%",
-                            }}
-                          >
-                            <Autocomplete
-                              // value={productData.main_cate_id}
-                              key={productData.key[2]}
-                              defaultValue={{
-                                name: productData.main_cate_name || "",
-                              }}
-                              onChange={(e, value) =>
-                                setProductData(() => {
-                                  const cate_id = value ? value.id : 0;
-                                  getSubCates(cate_id);
-                                  return {
-                                    ...productData,
-                                    sub_cate_id: 0,
-                                    main_cate_id: cate_id,
-                                    sub_cate_name: "",
-                                    state1: !productData.state1,
-                                  };
-                                })
-                              }
-                              disabled={false}
-                              id="combo-box-demo"
-                              options={mainCatesData}
-                              getOptionLabel={(option) => option.name || ""}
-                              sx={{ width: "50%" }}
-                              renderInput={(params) => (
-                                <TextField
-                                  {...params}
-                                  label="หมวดหมู่หลัก"
-                                  size="small"
-                                  required
-                                />
-                              )}
-                            />
-                            <Autocomplete
-                              key={productData.state1}
-                              defaultValue={{
-                                name: productData.sub_cate_name || "",
-                              }}
-                              onChange={(e, value) =>
-                                setProductData(() => {
-                                  return {
-                                    ...productData,
-                                    sub_cate_id: value ? value.id : 0,
-                                    sub_cate: value ? value.name : "",
-                                  };
-                                })
-                              }
-                              disabled={false}
-                              id="combo-box-demo"
-                              options={subCatesData}
-                              getOptionLabel={(option) => option.name || ""}
-                              sx={{ width: "50%" }}
-                              renderInput={(params) => (
-                                <TextField
-                                  {...params}
-                                  label="หมวดหมู่ย่อย"
-                                  size="small"
-                                  required={
-                                    subCatesData.length > 0 ? true : false
-                                  }
-                                />
-                              )}
-                            />
-                          </div>
-                          <div
-                            className="fourth-row-right"
-                            style={{
-                              display: "flex",
-                              gap: "1rem",
-                              width: "50%",
-                            }}
-                          >
-                            <TextField
-                              value={productData.barcode || ""}
-                              onChange={(e) => digitBarcode(e)}
-                              id="outlined-basic"
-                              label="เลขบาร์โค้ดจากสินค้า"
-                              variant="outlined"
-                              size="small"
-                              sx={{ width: "33.33%" }}
-                            />
-                            <TextField
-                              id="outlined-basic"
-                              label="สร้างบาร์โค้ดใหม่"
-                              variant="outlined"
-                              value={productData.new_barcode}
-                              size="small"
-                              sx={{ width: "33.33%" }}
-                              inputRef={inputRef}
-                              InputProps={{
-                                readOnly: true,
-                                endAdornment: (
-                                  <IconButton
-                                    onClick={generateBarcode}
-                                    sx={{ padding: 0 }}
-                                  >
-                                    <CreateNewFolderIcon
-                                      sx={{ cursor: "pointer" }}
-                                    />
-                                  </IconButton>
-                                ),
-                              }}
                             />
                             <TextField
                               required
-                              value={productData.supplier_barcode || ""}
-                              onChange={(e) => digitBarcode(e)}
-                              id="supplier-barcode"
-                              label="เลขบาร์โค้ดจากซัพพลายเออร์"
+                              type="number"
+                              value={productData.other_exp}
+                              onChange={(e) =>
+                                setProductData(() => {
+                                  return {
+                                    ...productData,
+                                    other_exp: !isNaN(
+                                      parseFloat(e.target.value)
+                                    )
+                                      ? parseFloat(e.target.value)
+                                      : null,
+                                  };
+                                })
+                              }
+                              id="outlined-basic"
+                              label="ค่าใช้จ่ายอื่นๆ(฿)"
                               variant="outlined"
                               size="small"
                               sx={{ width: "33.33%" }}
+                            />
+                          </div>
+                          <div style={{
+                              display: "flex",
+                              gap: "1rem",
+                              width: "100%",
+                            }}>
+                            <TextField
+                              required
+                              type="number"
+                              value={productData.total_product}
+                              onChange={(e) =>
+                                setProductData(() => {
+                                  return {
+                                    ...productData,
+                                    total_product: !isNaN(
+                                      parseFloat(e.target.value)
+                                    )
+                                      ? parseFloat(e.target.value)
+                                      : null,
+                                  };
+                                })
+                              }
+                              label="จำนวนสินค้าทั้งหมด"
+                              variant="outlined"
+                              size="small"
+                              sx={{ width: "50%" }}
+                            />
+                            <TextField
+                              required
+                              type="number"
+                              value={productData.total_product}
+                              label="ต้นทุนสินค้าราคาดิบ"
+                              variant="outlined"
+                              size="small"
+                              sx={{ width: "50%" }}
+                              disabled
+                            />
+                          </div>
+                        </div>
+                        <div
+                          className="pricing-right"
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "1rem",
+                            width: "50%",
+                            height: "40px",
+                          }}
+                        >
+                          <div style={{
+                              display: "flex",
+                              gap: "1rem",
+                              width: "100%",
+                            }}>
+                          <TextField
+                            disabled
+                            value={productData.total}
+                            onChange={(e) =>
+                              setProductData(() => {
+                                return {
+                                  ...productData,
+                                  total: !isNaN(parseFloat(e.target.value))
+                                    ? parseFloat(e.target.value)
+                                    : null,
+                                };
+                              })
+                            }
+                            id="outlined-basic"
+                            label="รวมค่าดำเนินการทั้งหมด"
+                            variant="outlined"
+                            size="small"
+                            sx={{ width: "50%" }}
+                          />
+                          <TextField
+                            disabled
+                            value={productData.op_unit}
+                            onChange={(e) =>
+                              setProductData(() => {
+                                return {
+                                  ...productData,
+                                  op_unit: !isNaN(parseFloat(e.target.value))
+                                    ? parseFloat(e.target.value)
+                                    : null,
+                                };
+                              })
+                            }
+                            id="outlined-basic"
+                            label="ค่าดำเนินการ/หน่วย"
+                            variant="outlined"
+                            size="small"
+                            sx={{ width: "50%" }}
+                          />
+                          </div>
+                          <div style={{
+                              display: "flex",
+                              gap: "1rem",
+                              width: "100%",
+                            }}>
+                            <TextField
+                              disabled
+                              value={productData.total}
+                              label="Total (รวมต้นทุนสินค้าทั้งหมด)"
+                              variant="outlined"
+                              size="small"
+                              sx={{ width: "50%" }}
+                            />
+                            <TextField
+                              disabled
+                              value={productData.op_unit}
+                              label="ต้นทุนสินค้า/หน่วย"
+                              variant="outlined"
+                              size="small"
+                              sx={{ width: "50%" }}
                             />
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </Card>
-                </div>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Card
+                      className="flex-container-column"
+                      sx={{ borderRadius: "10px" }}
+                    >
+                      <div className="header">
+                        <figure className="header-title">
+                          <img
+                            width={25}
+                            src="/images/icons/currency-icon.png"
+                            alt=""
+                          />
+                          <p>ข้อมูลราคา</p>
+                        </figure>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "1rem",
+                          padding: "1rem",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "1rem",
+                            width: "50%",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              gap: "1rem",
+                              width: "100%",
+                            }}
+                          >
+                            <TextField
+                              required
+                              type="number"
+                              value={productData.set_profit}
+                              onChange={(e) =>
+                                setProductData(() => {
+                                  return {
+                                    ...productData,
+                                    set_profit: !isNaN(
+                                      parseFloat(e.target.value)
+                                    )
+                                      ? parseFloat(e.target.value)
+                                      : "",
+                                  };
+                                })
+                              }
+                              id="outlined-basic"
+                              label="กำไรที่ต้องการ %"
+                              variant="outlined"
+                              size="small"
+                              sx={{ width: "100%" }}
+                            />
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "1rem",
+                            }}
+                          >
+                            <Autocomplete
+                              key={productData.state3}
+                              value={{
+                                name:
+                                  productData.vat_id !== 0
+                                    ? productData.vat
+                                    : "",
+                              }}
+                              onChange={(e, value) => {
+                                setProductData(() => {
+                                  return {
+                                    ...productData,
+                                    vat_id: value ? value.id : 0,
+                                    vat: value ? value.name : "",
+                                  };
+                                });
+                                setVat(() => {
+                                  return { ...vat, checked: false };
+                                });
+                              }}
+                              id="combo-box-demo"
+                              options={vatsData}
+                              getOptionLabel={(option) => option.name || ""}
+                              sx={{ width: "50%" }}
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  label="ตัวเลือกภาษีสินค้า"
+                                  size="small"
+                                />
+                              )}
+                            />
+                            <FormControlLabel
+                              value="female"
+                              control={
+                                <Radio
+                                  checked={vat.checked}
+                                  onChange={selectNoVat}
+                                />
+                              }
+                              label="No Vat"
+                            />
+                          </div>
+                        </div>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "1rem",
+                            width: "50%",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              gap: "1rem",
+                              width: "100%",
+                            }}
+                          >
+                            <TextField
+                              disabled
+                              type="number"
+                              value={productData.profit_per_unit}
+                              onChange={(e) =>
+                                setProductData(() => {
+                                  return {
+                                    ...productData,
+                                    profit_per_unit: !isNaN(
+                                      parseFloat(e.target.value)
+                                    )
+                                      ? parseFloat(e.target.value)
+                                      : null,
+                                  };
+                                })
+                              }
+                              id="outlined-basic"
+                              label="กำไรต่อหน่วยเป็นบาท"
+                              variant="outlined"
+                              size="small"
+                              sx={{ width: "50%" }}
+                            />
+                            <TextField
+                              disabled
+                              type="number"
+                              value={productData.pp_profit}
+                              // onChange={(e) =>
+                              //   setProductData(() => {
+                              //     return {
+                              //       ...productData,
+                              //       pp_profit: !isNaN(parseFloat(e.target.value))
+                              //         ? parseFloat(e.target.value)
+                              //         : null,
+                              //     };
+                              //   })
+                              // }
+                              id="outlined-basic"
+                              label="ราคาสินค้ารวมกำไร"
+                              variant="outlined"
+                              size="small"
+                              sx={{ width: "50%" }}
+                            />
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              gap: "1rem",
+                            }}
+                          >
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "start",
+                                gap: "0",
+                              }}
+                            >
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "1rem",
+                                }}
+                              >
+                                <TextField
+                                  disabled
+                                  type="number"
+                                  value={productData.pp_vat}
+                                  onChange={(e) =>
+                                    setProductData(() => {
+                                      return {
+                                        ...productData,
+                                        pp_vat: !isNaN(
+                                          parseFloat(e.target.value)
+                                        )
+                                          ? parseFloat(e.target.value)
+                                          : null,
+                                      };
+                                    })
+                                  }
+                                  id="outlined-basic"
+                                  label="ราคาสินค้ารวมVat (ราคาขาย)"
+                                  variant="outlined"
+                                  size="small"
+                                  sx={{ width: "50%" }}
+                                />
+                                <TextField
+                                  disabled
+                                  type="number"
+                                  value={productData.os_price}
+                                  onChange={(e) =>
+                                    setProductData(() => {
+                                      return {
+                                        ...productData,
+                                        os_price: !isNaN(
+                                          parseFloat(e.target.value)
+                                        )
+                                          ? parseFloat(e.target.value)
+                                          : null,
+                                      };
+                                    })
+                                  }
+                                  id="outlined-basic"
+                                  label="ราคาขายเดิม"
+                                  variant="outlined"
+                                  size="small"
+                                  sx={{ width: "50%" }}
+                                />
+                              </div>
+                              {isFetchImport &&
+                                parseFloat(productData.old_pp_vat) >
+                                  parseFloat(productData.pp_vat) &&
+                                parseFloat(productData.pp_vat) !== 0 && (
+                                  <Typography
+                                    variant="overline"
+                                    sx={{ color: "red" }}
+                                  >
+                                    ราคารวมกำไรต่อชิ้นลดลง
+                                  </Typography>
+                                )}
+                            </div>
+                            <TextField
+                              required
+                              type="number"
+                              value={productData.selling_price}
+                              onChange={(e) =>
+                                setProductData(() => {
+                                  return {
+                                    ...productData,
+                                    selling_price: !isNaN(
+                                      parseFloat(e.target.value)
+                                    )
+                                      ? parseFloat(e.target.value)
+                                      : null,
+                                  };
+                                })
+                              }
+                              id="outlined-basic"
+                              label="ราคาขายจริง"
+                              variant="outlined"
+                              size="small"
+                              sx={{ width: "100%" }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
+                  </Grid>
+                </Grid>
               </form>
             </div>
           </section>
