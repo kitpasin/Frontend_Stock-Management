@@ -9,10 +9,11 @@ import axios from "axios";
 import { useEffect } from "react";
 import CreateVat from "./create/CreateVat";
 import PulseLoader from "react-spinners/PulseLoader";
+import { useSelector } from "react-redux";
 
 function Vat() {
   const [loading, setLoading] = useState(true);
-
+  const uPermission = useSelector((state) => state.auth.userPermission);
   const [createVatOpen, setCreateVatOpen] = useState(false)
   const [vatsData, setVatsData] = useState([])
 
@@ -22,6 +23,8 @@ function Vat() {
     setVatsData(data)
     setLoading(false)
   }
+
+  console.log(uPermission.superAdmin)
 
   useEffect(() => {
     getVats();
@@ -47,12 +50,18 @@ function Vat() {
               <p>Vat ทั้งหมด</p>
               <p style={{ color: "#ff0000" }}>{vatsData.length} รายการ</p>
             </div>
-            <div className="action">
-              <button onClick={() => setCreateVatOpen(true)}>สร้าง Vat ใหม่</button>
-            </div>
+            {uPermission.superAdmin ? (
+              <div className="action">
+                <button onClick={() => setCreateVatOpen(true)}>สร้าง Vat ใหม่</button>
+              </div>
+            ) : (
+              <div className="action" style={{opacity: "50%"}}>
+                <button disabled onClick={() => setCreateVatOpen(true)}>สร้าง Vat ใหม่</button>
+              </div>
+            )}
           </div>
           <div className="table">
-            <VatTable vatsData={vatsData} getVats={getVats} />
+            <VatTable vatsData={vatsData} getVats={getVats} uPermission={uPermission} />
           </div>
         </div>
       </div>

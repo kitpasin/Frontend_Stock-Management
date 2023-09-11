@@ -15,6 +15,7 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import EditMainCategory from "./editCategory/EditMainCategory";
 import EditSubCategory from "./editCategory/EditSubCategory";
+import { useSelector } from "react-redux";
 
 const btnStyle = {
   display: "flex",
@@ -28,13 +29,16 @@ const btnStyle = {
 };
 function Row({ row, subCatesData, getMainCates, getSubCates }) {
   const [open, setOpen] = useState(false);
-  const [mainCateData, setMainCateData] = useState("")
+  const [mainCateData, setMainCateData] = useState("");
   const [subCateData, setSubCateData] = useState("");
   const [editMainCateOpen, setEditMainCateOpen] = useState(false);
   const [editSubCateOpen, setEditSubCateOpen] = useState(false);
+  const uPermission = useSelector((state) => state.auth.userPermission);
+
+  console.log(uPermission.superAdmin);
 
   function handleEditMainCateOpen(row) {
-    setEditMainCateOpen(true)
+    setEditMainCateOpen(true);
     setMainCateData(row);
   }
 
@@ -55,9 +59,11 @@ function Row({ row, subCatesData, getMainCates, getSubCates }) {
     }).then((result) => {
       if (result.isConfirmed) {
         axios.delete(`maincate/${row.id}`).then(() => {
-          Swal.fire("Deleted!", "Your Data has been deleted.", "success").then(() => {
-            getMainCates();
-          });
+          Swal.fire("Deleted!", "Your Data has been deleted.", "success").then(
+            () => {
+              getMainCates();
+            }
+          );
         });
       }
     });
@@ -75,9 +81,11 @@ function Row({ row, subCatesData, getMainCates, getSubCates }) {
     }).then((result) => {
       if (result.isConfirmed) {
         axios.delete(`subcate/${row.id}`).then(() => {
-          Swal.fire("Deleted!", "Your Data has been deleted.", "success").then(() => {
-            getSubCates();
-          });
+          Swal.fire("Deleted!", "Your Data has been deleted.", "success").then(
+            () => {
+              getSubCates();
+            }
+          );
         });
       }
     });
@@ -87,7 +95,11 @@ function Row({ row, subCatesData, getMainCates, getSubCates }) {
     <>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
         <TableCell width={50}>
-          <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
@@ -96,14 +108,55 @@ function Row({ row, subCatesData, getMainCates, getSubCates }) {
         </TableCell>
         <TableCell align="left">{row.main_product_count}</TableCell>
         <TableCell align="center">
-          <button style={btnStyle} onClick={() => handleEditMainCateOpen(row)}>
-            <img src="images/icons/eva_edit-2-fill.png" alt="" />
-          </button>
+          {uPermission.superAdmin ? (
+            <button
+              style={btnStyle}
+              onClick={() => handleEditMainCateOpen(row)}
+            >
+              <img src="images/icons/eva_edit-2-fill.png" alt="" />
+            </button>
+          ) : (
+            <button
+              disabled
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "35px",
+                height: "35px",
+                borderRadius: "5px",
+                background: "#3B336B",
+                opacity: "50%",
+              }}
+              onClick={() => handleEditMainCateOpen(row)}
+            >
+              <img src="images/icons/eva_edit-2-fill.png" alt="" />
+            </button>
+          )}
         </TableCell>
         <TableCell align="center">
-          <button style={btnStyle} onClick={() => handleDeleteMainCate(row)}>
-            <img src="images/icons/trash-icon.png" alt="" />
-          </button>
+          {uPermission.superAdmin ? (
+            <button style={btnStyle} onClick={() => handleDeleteMainCate(row)}>
+              <img src="images/icons/trash-icon.png" alt="" />
+            </button>
+          ) : (
+            <button
+              disabled
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "35px",
+                height: "35px",
+                borderRadius: "5px",
+                background: "#3B336B",
+                opacity: "50%",
+              }}
+              onClick={() => handleDeleteMainCate(row)}
+            >
+              <img src="images/icons/trash-icon.png" alt="" />
+            </button>
+          )}
         </TableCell>
       </TableRow>
       <TableRow>
@@ -113,15 +166,28 @@ function Row({ row, subCatesData, getMainCates, getSubCates }) {
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell width={50} style={{ color: "#3B326B" }}></TableCell>
+                    <TableCell
+                      width={50}
+                      style={{ color: "#3B326B" }}
+                    ></TableCell>
                     <TableCell width={300} style={{ color: "#3B326B" }}>
                       หมวดหมู่ย่อย
                     </TableCell>
-                    <TableCell style={{ color: "#3B326B" }}>จำนวนรายการสินค้าในหมวดหมู่</TableCell>
-                    <TableCell style={{ color: "#3B326B" }} width={50} align="center">
+                    <TableCell style={{ color: "#3B326B" }}>
+                      จำนวนรายการสินค้าในหมวดหมู่
+                    </TableCell>
+                    <TableCell
+                      style={{ color: "#3B326B" }}
+                      width={50}
+                      align="center"
+                    >
                       แก้ไข
                     </TableCell>
-                    <TableCell style={{ color: "#3B326B" }} width={50} align="center">
+                    <TableCell
+                      style={{ color: "#3B326B" }}
+                      width={50}
+                      align="center"
+                    >
                       ลบ
                     </TableCell>
                   </TableRow>
@@ -135,14 +201,64 @@ function Row({ row, subCatesData, getMainCates, getSubCates }) {
                           <TableCell>{sub.name}</TableCell>
                           <TableCell>{sub.sub_product_count}</TableCell>
                           <TableCell align="center">
-                            <button style={btnStyle} onClick={() => handleEditSubCateOpen(sub)}>
-                              <img src="images/icons/eva_edit-2-fill.png" alt="" />
-                            </button>
+                            {uPermission.superAdmin ? (
+                              <button
+                                style={btnStyle}
+                                onClick={() => handleEditSubCateOpen(sub)}
+                              >
+                                <img
+                                  src="images/icons/eva_edit-2-fill.png"
+                                  alt=""
+                                />
+                              </button>
+                            ) : (
+                              <button
+                                disabled
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  width: "35px",
+                                  height: "35px",
+                                  borderRadius: "5px",
+                                  background: "#3B336B",
+                                  opacity: "50%",
+                                }}
+                                onClick={() => handleEditSubCateOpen(sub)}
+                              >
+                                <img
+                                  src="images/icons/eva_edit-2-fill.png"
+                                  alt=""
+                                />
+                              </button>
+                            )}
                           </TableCell>
                           <TableCell align="center">
-                            <button style={btnStyle} onClick={() => handleDeleteSubCate(sub)}>
-                              <img src="images/icons/trash-icon.png" alt="" />
-                            </button>
+                            {uPermission.superAdmin ? (
+                              <button
+                                style={btnStyle}
+                                onClick={() => handleDeleteSubCate(sub)}
+                              >
+                                <img src="images/icons/trash-icon.png" alt="" />
+                              </button>
+                            ) : (
+                              <button
+                                disabled
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  width: "35px",
+                                  height: "35px",
+                                  borderRadius: "5px",
+                                  background: "#3B336B",
+                                  opacity: "50%",
+                                }}
+                                onClick={() => handleDeleteSubCate(sub)}
+                              >
+                                <img src="images/icons/trash-icon.png" alt="" />
+                              </button>
+                            )}
                           </TableCell>
                         </TableRow>
                       );
@@ -174,9 +290,15 @@ function Row({ row, subCatesData, getMainCates, getSubCates }) {
   );
 }
 
-function ProductCateTable({ mainCatesData, subCatesData, getMainCates, getSubCates }) {
+function ProductCateTable({
+  uPermission,
+  mainCatesData,
+  subCatesData,
+  getMainCates,
+  getSubCates,
+}) {
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(100);
   const [newRows, setNewRows] = useState([]);
 
   const handleChangePage = (event, newPage) => {
@@ -190,7 +312,10 @@ function ProductCateTable({ mainCatesData, subCatesData, getMainCates, getSubCat
 
   /* set paginate  */
   useEffect(() => {
-    let data = mainCatesData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+    let data = mainCatesData.slice(
+      page * rowsPerPage,
+      page * rowsPerPage + rowsPerPage
+    );
     setNewRows(data);
   }, [page, rowsPerPage, mainCatesData]);
 

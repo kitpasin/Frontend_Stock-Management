@@ -11,10 +11,11 @@ import { useEffect } from "react";
 import CreateNet from "./create/CreateNet";
 import CreateAmount from "./create/CreateAmount";
 import PulseLoader from "react-spinners/PulseLoader";
+import { useSelector } from "react-redux";
 
 function Amount() {
   const [loading, setLoading] = useState(true);
-
+  const uPermission = useSelector((state) => state.auth.userPermission);
   const [netsData, setNetsData] = useState([]);
   const [createNetOpen, setCreateNetOpen] = useState(false);
   const [amountsData, setAmountsData] = useState([]);
@@ -66,16 +67,22 @@ function Amount() {
                     <p style={{ color: "#ff0000" }}>{netsData.length} รายการ</p>
                   </div>
                   <div className="action">
-                    <button className="create" onClick={() => setCreateNetOpen(true)}>
+                    {uPermission.superAdmin ? (
+                      <button className="create" onClick={() => setCreateNetOpen(true)}>
                       สร้างหน่วยปริมาณใหม่
                     </button>
+                      ) : (
+                        <button disabled style={{opacity: "50%"}} className="create" onClick={() => setCreateNetOpen(true)}>
+                      สร้างหน่วยปริมาณใหม่
+                    </button>
+                      )}
                     {/* <button className="delete">
                   <img src="images/icons/tabler_trash-x-filled.png" alt="" />
                 </button> */}
                   </div>
                 </div>
                 <div className="table">
-                  <TableNet netsData={netsData} getNets={getNets} mainCatesData={mainCatesData} />
+                  <TableNet uPermission={uPermission} netsData={netsData} getNets={getNets} mainCatesData={mainCatesData} />
                 </div>
               </div>
             </div>
@@ -89,16 +96,22 @@ function Amount() {
                     <p style={{ color: "#ff0000" }}>{amountsData.length} รายการ</p>
                   </div>
                   <div className="action">
+                  {uPermission.superAdmin ? (
                     <button className="create" onClick={() => setCreateAmountOpen(true)}>
                       สร้างหน่วยจำนวนใหม่
                     </button>
+                  ): (
+                    <button disabled style={{opacity: "50%"}} className="create" onClick={() => setCreateAmountOpen(true)}>
+                      สร้างหน่วยจำนวนใหม่
+                    </button>
+                  )}
                     {/* <button className="delete">
                   <img src="images/icons/tabler_trash-x-filled.png" alt="" />
                 </button> */}
                   </div>
                 </div>
                 <div className="table">
-                  <TableAmount amountsData={amountsData} getAmounts={getAmounts} />
+                  <TableAmount uPermission={uPermission} amountsData={amountsData} getAmounts={getAmounts} />
                 </div>
               </div>
             </div>
