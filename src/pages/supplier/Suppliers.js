@@ -18,7 +18,7 @@ import { useSelector } from "react-redux";
 
 function Suppliers() {
   const [loading, setLoading] = useState(true);
-
+  const uPermission = useSelector((state) => state.auth.userPermission);
   const [productData, setProductData] = useState([]);
   const [productAll, setProductAll] = useState([]);
   const [supplier, setSupplier] = useState([]);
@@ -91,20 +91,19 @@ function Suppliers() {
           item.email.includes(text)
       );
       if (supplier.length > 0) {
-        supplier?.map(item => {
-          productData?.map(product => {
+        supplier?.map((item) => {
+          productData?.map((product) => {
             if (product.supplier_id === item.id) {
-              pp.push(product)
+              pp.push(product);
             }
-          })
-        })
-        setProductAll(pp)
+          });
+        });
+        setProductAll(pp);
       } else {
-        setProductAll([])
+        setProductAll([]);
       }
       setSupplier(supplier);
     }
-
   };
 
   useEffect(() => {
@@ -217,8 +216,26 @@ function Suppliers() {
       headerAlign: "center",
       align: "center",
       renderCell: (cellValue) => {
-        return (
+        return uPermission.superAdmin ? (
           <button style={buttonStyle} onClick={() => handleOpen(cellValue)}>
+            {" "}
+            <img src="images/icons/eva_edit-2-fill.png" alt="" />{" "}
+          </button>
+        ) : (
+          <button
+            disabled
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "35px",
+              height: "35px",
+              borderRadius: "5px",
+              background: "#3B336B",
+              opacity: "50%",
+            }}
+            onClick={() => handleOpen(cellValue)}
+          >
             {" "}
             <img src="images/icons/eva_edit-2-fill.png" alt="" />{" "}
           </button>
@@ -234,9 +251,27 @@ function Suppliers() {
       headerAlign: "center",
       align: "center",
       renderCell: (cellValue) => {
-        return (
+        return uPermission.superAdmin ? (
           <button
             style={buttonStyle}
+            onClick={() => handleDeleteSupplier(cellValue)}
+          >
+            {" "}
+            <img src="images/icons/trash-icon.png" alt="" />{" "}
+          </button>
+        ) : (
+          <button
+            disabled
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "35px",
+              height: "35px",
+              borderRadius: "5px",
+              background: "#3B336B",
+              opacity: "50%",
+            }}
             onClick={() => handleDeleteSupplier(cellValue)}
           >
             {" "}
@@ -307,7 +342,17 @@ function Suppliers() {
                     onChange={(e) => searchSupplier(e)}
                   />
                   <div className="action">
-                    <button onClick={handleLink}>เพิ่มซัพพลายเออร์</button>
+                    {uPermission.superAdmin ? (
+                      <button onClick={handleLink}>เพิ่มซัพพลายเออร์</button>
+                    ) : (
+                      <button
+                        disabled
+                        style={{ opacity: "50%" }}
+                        onClick={handleLink}
+                      >
+                        เพิ่มซัพพลายเออร์
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

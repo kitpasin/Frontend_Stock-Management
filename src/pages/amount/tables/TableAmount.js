@@ -5,7 +5,7 @@ import axios from "axios";
 import EditAmount from "../edit/EditAmount";
 import { useState } from "react";
 
-function TableAmount({ amountsData, getAmounts }) {
+function TableAmount({ amountsData, getAmounts, uPermission }) {
   const [editAmountOpen, setEditAmountOpen] = useState(false);
   const [cellData, setCellData] = useState([]);
 
@@ -26,14 +26,16 @@ function TableAmount({ amountsData, getAmounts }) {
     }).then((result) => {
       if (result.isConfirmed) {
         axios.delete(`amount/${cellValue.row.id}`).then(() => {
-          Swal.fire("Deleted!", "Your Data has been deleted.", "success").then(() => {
-            getAmounts();
-          });
+          Swal.fire("Deleted!", "Your Data has been deleted.", "success").then(
+            () => {
+              getAmounts();
+            }
+          );
         });
       }
     });
   }
-  
+
   const buttonStyle = {
     display: "flex",
     justifyContent: "center",
@@ -59,8 +61,29 @@ function TableAmount({ amountsData, getAmounts }) {
       align: "center",
       headerClassName: "table-columns",
       renderCell: (cellValue) => {
-        return (
-          <button style={buttonStyle} onClick={() => handleEditAmountOpen(cellValue)}>
+        return uPermission.superAdmin ? (
+          <button
+            style={buttonStyle}
+            onClick={() => handleEditAmountOpen(cellValue)}
+          >
+            {" "}
+            <img src="images/icons/eva_edit-2-fill.png" alt="" />{" "}
+          </button>
+        ) : (
+          <button
+            disabled
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "35px",
+              height: "35px",
+              borderRadius: "5px",
+              background: "#3B336B",
+              opacity: "50%",
+            }}
+            onClick={() => handleEditAmountOpen(cellValue)}
+          >
             {" "}
             <img src="images/icons/eva_edit-2-fill.png" alt="" />{" "}
           </button>
@@ -76,8 +99,29 @@ function TableAmount({ amountsData, getAmounts }) {
       align: "center",
       headerClassName: "table-columns",
       renderCell: (cellValue) => {
-        return (
-          <button style={buttonStyle} onClick={() => handleDeleteAmount(cellValue)}>
+        return uPermission.superAdmin ? (
+          <button
+            style={buttonStyle}
+            onClick={() => handleDeleteAmount(cellValue)}
+          >
+            {" "}
+            <img src="images/icons/trash-icon.png" alt="" />{" "}
+          </button>
+        ) : (
+          <button
+            disabled
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "35px",
+              height: "35px",
+              borderRadius: "5px",
+              background: "#3B336B",
+              opacity: "50%",
+            }}
+            onClick={() => handleDeleteAmount(cellValue)}
+          >
             {" "}
             <img src="images/icons/trash-icon.png" alt="" />{" "}
           </button>

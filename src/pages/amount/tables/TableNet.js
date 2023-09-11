@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import { useState } from "react";
 import EditNet from "../edit/EditNet";
 
-function TableNet({ netsData, getNets, mainCatesData }) {
+function TableNet({ netsData, getNets, mainCatesData, uPermission }) {
   const [editNetOpen, setEditNetOpen] = useState(false);
   const [cellData, setCellData] = useState([]);
 
@@ -26,9 +26,11 @@ function TableNet({ netsData, getNets, mainCatesData }) {
     }).then((result) => {
       if (result.isConfirmed) {
         axios.delete(`net/${cellValue.row.id}`).then(() => {
-          Swal.fire("Deleted!", "Your Data has been deleted.", "success").then(() => {
-            getNets();
-          });
+          Swal.fire("Deleted!", "Your Data has been deleted.", "success").then(
+            () => {
+              getNets();
+            }
+          );
         });
       }
     });
@@ -66,8 +68,29 @@ function TableNet({ netsData, getNets, mainCatesData }) {
       headerAlign: "center",
       align: "center",
       renderCell: (cellValue) => {
-        return (
-          <button style={buttonStyle} onClick={() => handleEditNetOpen(cellValue)}>
+        return uPermission.superAdmin ? (
+          <button
+            style={buttonStyle}
+            onClick={() => handleEditNetOpen(cellValue)}
+          >
+            {" "}
+            <img src="images/icons/eva_edit-2-fill.png" alt="" />{" "}
+          </button>
+        ) : (
+          <button
+            disabled
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "35px",
+              height: "35px",
+              borderRadius: "5px",
+              background: "#3B336B",
+              opacity: "50%",
+            }}
+            onClick={() => handleEditNetOpen(cellValue)}
+          >
             {" "}
             <img src="images/icons/eva_edit-2-fill.png" alt="" />{" "}
           </button>
@@ -83,8 +106,29 @@ function TableNet({ netsData, getNets, mainCatesData }) {
       headerAlign: "center",
       align: "center",
       renderCell: (cellValue) => {
-        return (
-          <button style={buttonStyle} onClick={() => handleDeleteNet(cellValue)}>
+        return uPermission.superAdmin ? (
+          <button
+            style={buttonStyle}
+            onClick={() => handleDeleteNet(cellValue)}
+          >
+            {" "}
+            <img src="images/icons/trash-icon.png" alt="" />{" "}
+          </button>
+        ) : (
+          <button
+            disabled
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "35px",
+              height: "35px",
+              borderRadius: "5px",
+              background: "#3B336B",
+              opacity: "50%",
+            }}
+            onClick={() => handleDeleteNet(cellValue)}
+          >
             {" "}
             <img src="images/icons/trash-icon.png" alt="" />{" "}
           </button>

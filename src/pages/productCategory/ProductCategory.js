@@ -13,10 +13,11 @@ import { useEffect } from "react";
 import CreateMainCategory from "./createCategory/CreateMainCategory";
 import CreateSubCategory from "./createCategory/CreateSubCategory";
 import PulseLoader from "react-spinners/PulseLoader";
+import { useSelector } from "react-redux";
 
 function ProductCategory() {
   const [loading, setLoading] = useState(true);
-
+  const uPermission = useSelector((state) => state.auth.userPermission);
   const [mainCatesData, setMainCatesData] = useState([]);
   const [subCatesData, setSubCatesData] = useState([]);
   const [createMainCateOpen, setCreateMainCateOpen] = useState(false);
@@ -61,11 +62,38 @@ function ProductCategory() {
                 <div className="title">
                   <img src="/images/icons/uis_layer-group1.png" alt="" />
                   <p>หมวดหมู่สินค้าทั้งหมด</p>
-                  <p style={{ color: "#ff0000" }}>{mainCatesData.length} รายการ</p>
+                  <p style={{ color: "#ff0000" }}>
+                    {mainCatesData.length} รายการ
+                  </p>
                 </div>
                 <div className="action">
-                  <button onClick={handleCreateMainCateOpen}>สร้างหมวดหมู่หลัก</button>
-                  <button onClick={handleCreateSubCateOpen}>สร้างหมวดหมู่ย่อย</button>
+                  {uPermission.superAdmin ? (
+                    <>
+                      <button onClick={handleCreateMainCateOpen}>
+                        สร้างหมวดหมู่หลัก
+                      </button>
+                      <button onClick={handleCreateSubCateOpen}>
+                        สร้างหมวดหมู่ย่อย
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        disabled
+                        style={{ opacity: "50%" }}
+                        onClick={handleCreateMainCateOpen}
+                      >
+                        สร้างหมวดหมู่หลัก
+                      </button>
+                      <button
+                        disabled
+                        style={{ opacity: "50%" }}
+                        onClick={handleCreateSubCateOpen}
+                      >
+                        สร้างหมวดหมู่ย่อย
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
               <div className="table">

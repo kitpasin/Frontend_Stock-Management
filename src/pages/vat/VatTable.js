@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import EditVat from "./edit/EditVat";
 
-function VatTable({ vatsData, getVats }) {
+function VatTable({ vatsData, getVats, uPermission }) {
   const [cellData, setCellData] = useState([]);
   const [editVatOpen, setEditVatOpen] = useState(false);
 
@@ -45,9 +45,11 @@ function VatTable({ vatsData, getVats }) {
         axios
           .put(`vat/${cellValue.row.id}`, data)
           .then(function (response) {
-            Swal.fire("Updated!", "Your vat has been updated.", "success").then(() => {
-              getVats();
-            });
+            Swal.fire("Updated!", "Your vat has been updated.", "success").then(
+              () => {
+                getVats();
+              }
+            );
           })
           .catch(function (error) {
             console.error(error);
@@ -68,9 +70,11 @@ function VatTable({ vatsData, getVats }) {
     }).then((result) => {
       if (result.isConfirmed) {
         axios.delete(`vat/${cellValue.row.id}`).then(() => {
-          Swal.fire("Deleted!", "Your Data has been deleted.", "success").then(() => {
-            getVats();
-          });
+          Swal.fire("Deleted!", "Your Data has been deleted.", "success").then(
+            () => {
+              getVats();
+            }
+          );
         });
       }
     });
@@ -102,9 +106,14 @@ function VatTable({ vatsData, getVats }) {
         <div>
           <p>{params.row.product_count} รายการ</p>
         </div>
-      )
+      ),
     },
-    { field: "percent", headerName: "% Vat", width: 1070, headerClassName: "table-columns" },
+    {
+      field: "percent",
+      headerName: "% Vat",
+      width: 1070,
+      headerClassName: "table-columns",
+    },
     {
       field: "edit",
       headerName: "แก้ไข",
@@ -114,8 +123,29 @@ function VatTable({ vatsData, getVats }) {
       align: "center",
       headerClassName: "table-columns",
       renderCell: (cellValue) => {
-        return (
-          <button style={buttonStyle} onClick={() => handleEditVatOpen(cellValue)}>
+        return uPermission.superAdmin ? (
+          <button
+            style={buttonStyle}
+            onClick={() => handleEditVatOpen(cellValue)}
+          >
+            {" "}
+            <img src="images/icons/eva_edit-2-fill.png" alt="" />{" "}
+          </button>
+        ) : (
+          <button
+            disabled
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "35px",
+              height: "35px",
+              borderRadius: "5px",
+              background: "#3B336B",
+              opacity: "50%",
+            }}
+            onClick={() => handleEditVatOpen(cellValue)}
+          >
             {" "}
             <img src="images/icons/eva_edit-2-fill.png" alt="" />{" "}
           </button>
@@ -131,8 +161,29 @@ function VatTable({ vatsData, getVats }) {
       align: "center",
       headerClassName: "table-columns",
       renderCell: (cellValue) => {
-        return (
-          <button style={buttonStyle} onClick={() => handleDeleteVat(cellValue)}>
+        return uPermission.superAdmin ? (
+          <button
+            style={buttonStyle}
+            onClick={() => handleDeleteVat(cellValue)}
+          >
+            {" "}
+            <img src="images/icons/trash-icon.png" alt="" />{" "}
+          </button>
+        ) : (
+          <button
+            disabled
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "35px",
+              height: "35px",
+              borderRadius: "5px",
+              background: "#3B336B",
+              opacity: "50%",
+            }}
+            onClick={() => handleDeleteVat(cellValue)}
+          >
             {" "}
             <img src="images/icons/trash-icon.png" alt="" />{" "}
           </button>
