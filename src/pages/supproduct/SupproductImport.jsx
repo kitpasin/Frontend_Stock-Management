@@ -490,6 +490,7 @@ export default function SupproductImport({
                           id="combo-box-demo"
                           options={netsData}
                           getOptionLabel={(option) => option.name || ""}
+                          getOptionSelected={(option, value) => option.name === value.name}
                           sx={{ width: "25%" }}
                           renderInput={(params) => (
                             <TextField
@@ -537,6 +538,7 @@ export default function SupproductImport({
                           id="combo-box-demo"
                           options={amountsData}
                           getOptionLabel={(option) => option.name || ""}
+                          getOptionSelected={(option, value) => option.name === value.name}
                           sx={{ width: "25%" }}
                           renderInput={(params) => (
                             <TextField
@@ -766,6 +768,7 @@ export default function SupproductImport({
                             id="combo-box-demo"
                             options={mainCatesData}
                             getOptionLabel={(option) => option.name || ""}
+                            getOptionSelected={(option, value) => option.name === value.name}
                             sx={{ width: "33.33%" }}
                             renderInput={(params) => (
                               <TextField
@@ -794,6 +797,7 @@ export default function SupproductImport({
                             id="combo-box-demo"
                             options={subCatesData}
                             getOptionLabel={(option) => option.name || ""}
+                            getOptionSelected={(option, value) => option.name === value.name}
                             sx={{ width: "33.33%" }}
                             renderInput={(params) => (
                               <TextField
@@ -1179,6 +1183,7 @@ export default function SupproductImport({
                               id="combo-box-demo"
                               options={vatsData}
                               getOptionLabel={(option) => option.name || ""}
+                              getOptionSelected={(option, value) => option.name === value.name}
                               sx={{ width: "50%" }}
                               renderInput={(params) => (
                                 <TextField

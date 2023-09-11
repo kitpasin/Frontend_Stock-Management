@@ -378,7 +378,7 @@ function ProductsPage() {
                   <p>สินค้าทั้งหมด</p>
                 </figure>
                 <div className="description">
-                  <p>{productsAll.length} รายการ</p>
+                  <p>{filteredProduct.length} รายการ</p>
                 </div>
               </div>
               <div style={{ display: "flex", gap: "1rem" }}>
