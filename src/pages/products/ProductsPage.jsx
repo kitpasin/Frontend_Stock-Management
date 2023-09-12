@@ -70,9 +70,9 @@ function ProductsPage() {
   const [openMultiExportModal, setOpenMultiexportModal] = useState(false);
   const [openMultiImportModal, setOpenMultiImportModal] = useState(false);
   const [openExportedTempModal, setOpenExportedTempModal] = useState(false);
-  const current_date = dayjs().toISOString().substring(0, 10);
   const handleOpen = () => setOpenExportedTempModal(true);
   const handleClose = () => setOpenExportedTempModal(false);
+  const current_date = dayjs().toISOString().substring(0, 10);
 
   const [exportedProductTemp, setExportedProductTemp] = useState([]);
   const { displayName } = useSelector((state) => state.auth.profile);
@@ -236,8 +236,6 @@ function ProductsPage() {
     setProductsAll(data);
     setLoading(false);
   }
-
-  console.log(productsAll);
 
   async function getExportedProductTemp() {
     const response = await axios.get("get/product/export/temp");

@@ -661,7 +661,6 @@ const SidebarComponent = (props) => {
                     <div className="menu-title">{t("WebInfoPage")}</div>
                   </NavLink>
                 )}
-
                 {pagesAllow.admins &&
                   (uPermission.superAdmin ||
                     uPermission.admin ||

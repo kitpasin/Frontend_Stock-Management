@@ -9,6 +9,7 @@ import { svProductAll } from "../../../services/product.service";
 import { svProductOne } from "../../../services/product.service";
 import { svDeleteProduct } from "../../../services/product.service";
 import { ConnectingAirportsOutlined } from "@mui/icons-material";
+import { v4 as uuidv4 } from 'uuid';
 
 import ExportModal from "../../../components/product/modal/ExportModal";
 import { useEffect, useState } from "react";
@@ -45,8 +46,8 @@ function MenuItemList({
   }
 
   const fetchImportHandle = (_params) => {
-    const data = productData.filter((item) => item.id === _params.id);
-    if (data) {
+    const data = productData?.filter((item) => item.id === _params.id);
+    if (data.length > 0) {
       const dd = data[0];
       const result = {
         id: dd.id,
@@ -55,7 +56,9 @@ function MenuItemList({
         state1: false,
         state2: false,
         state3: false,
+        state4: false,
         reset: 0,
+        key: [uuidv4(), uuidv4(), uuidv4(), uuidv4()],
         unit: dd.unit_id,
         unit_name: dd.net_name,
         netweight: dd.netweight,
@@ -64,8 +67,11 @@ function MenuItemList({
         purchase_date: "",
         mfd_date: "",
         exp_date: "",
-        barcode: "",
-        new_barcode: "",
+        alert_date: dd.alert_date,
+        alert_stock: dd.alert_stock,
+        barcode: dd.product_barcode,
+        new_barcode: dd.barcode_number,
+        p_type: dd.p_type?dd.p_type:"",
         main_cate_id: dd.main_cate_id,
         main_cate_name: dd.main_cate_name,
         sub_cate_id: dd.sub_cate_id,
@@ -74,6 +80,7 @@ function MenuItemList({
         supplier_cate: dd.supplier_cate_id,
         supplier_name: dd.supplier_name,
         supplier_cate_name: dd.supplier_cate_name,
+        supplier_barcode: dd.supplier_barcode,
         import_value: "",
         defective: dd.defective_product,
         image_path: dd.thumbnail_link,
@@ -100,7 +107,9 @@ function MenuItemList({
         os_price: dd.selling_price,
         selling_price: "",
       };
-      setModal((prev) => { return { ...prev, isEdit: false, isFetchImport: true } })
+      setModal((prev) => {
+        return { ...prev, isEdit: false, isFetchImport: true };
+      });
       setProductShow(result);
       setOpenModal(true);
       handleClose();
