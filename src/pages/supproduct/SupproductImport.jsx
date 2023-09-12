@@ -13,7 +13,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileImport, faStore } from "@fortawesome/free-solid-svg-icons";
 import Barcode from "react-barcode";
 import { useSelector } from "react-redux";
-import { Autocomplete, Card, FormControlLabel, Grid, Radio, TextField } from "@mui/material";
+import {
+  Autocomplete,
+  Card,
+  FormControlLabel,
+  Grid,
+  Radio,
+  TextField,
+} from "@mui/material";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 
 import "./SupproductPage.scss";
@@ -26,6 +33,10 @@ import axios from "axios";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import { svCreateProduct, svProductUpdate } from "../../services/product.service";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { useNavigate } from "react-router-dom";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -81,6 +92,59 @@ export default function SupproductImport({
   setRefreshData,
   productDatas,
 }) {
+  const form = {
+    barcode: productShow.barcode_number,
+    title: "",
+    state1: false,
+    state2: false,
+    state3: false,
+    state4: false,
+    reset: false,
+    unit: "",
+    netweight: "",
+    counting_unit: "",
+    purchase_date: productShow.purchase_date,
+    mfd_date: productShow.mfd_date,
+    exp_date: productShow.exp_date,
+    alert_date: productShow.alert_date,
+    alert_stock: productShow.alert_stock,
+    new_barcode: "",
+    supplier_barcode: productShow.supplier_barcode,
+    p_type: productShow.p_type,
+    main_cate_id: "",
+    sub_cate_id: "",
+    sub_cate: "",
+    supplier_id: "",
+    supplier_cate: "",
+    import_value: "",
+    defective: 0,
+
+    import_fee: "",
+    fuel_cost: "",
+    other_exp: "",
+    total: "",
+    op_unit: "",
+    total_product: "",
+    packaging: "",
+    sticker: "",
+
+    oc_unit: "",
+    unit_price: "",
+    product_cost: productShow.product_cost,
+    units: "",
+    cost_per_unit: "",
+    total_cost: "",
+    set_profit: "",
+    vat_id: "",
+    vat: "",
+    profit_per_unit: "",
+    pp_profit: "",
+    pp_vat: "",
+    os_price: 0,
+    selling_price: "",
+
+    importOne: true,
+  };
   const formPreview = {
     src: "",
     file: "",
@@ -94,10 +158,12 @@ export default function SupproductImport({
     disRadio: false,
     disSelect: false,
   };
+  const navigate = useNavigate();
+  const modalSwal = withReactContent(Swal);
   const { t } = useTranslation(["dashboard-page"]);
   const webPath = useSelector((state) => state.app.webPath);
   const [preview, setPreview] = useState(formPreview);
-  const [productData, setProductData] = useState(productShow);
+  const [productData, setProductData] = useState(form);
   const [netsData, setNetsData] = useState([]);
   const [amountsData, setAmountsData] = useState([]);
   const [subCatesData, setSubCatesData] = useState([]);
@@ -218,8 +284,167 @@ export default function SupproductImport({
 
   const createHandle = (evt) => {
     evt.preventDefault();
-    console.log("ok");
+    const errorArr = [];
+
+    if (productData.barcode === "" && productData.new_barcode === "") {
+      errorArr.push("โปรดสร้างบาร์โค้ด");
+    }
+
+    if (productData.vat_id === "" || productData.vat_id === null) {
+      errorArr.push("โปรดเลือก Vat");
+    }
+
+    if (errorArr.length > 0) {
+      modalSwal.fire({
+        width: 400,
+        text: errorArr[0],
+        icon: "info",
+      });
+      return false;
+    } else {
+      const formData = new FormData();
+      /* product */
+      if (isEdit) {
+        formData.append("id", productData.id);
+        formData.append("product_id", productData.product_id);
+      }
+      formData.append("image", preview.file);
+      formData.append("image_path", productData.image_path);
+      formData.append("title", productData.title);
+      formData.append("main_cate_id", productData.main_cate_id);
+      formData.append("sub_cate_id", productData.sub_cate_id);
+      formData.append("supplier_id", productData.supplier_id);
+      formData.append("supplier_cate_id", productData.supplier_cate);
+      formData.append("import_value", productData.import_value);
+      formData.append("unit_id", productData.unit);
+      formData.append("netweight", productData.netweight);
+      formData.append("counting_unit_id", productData.counting_unit);
+      formData.append("purchase_date", productData.purchase_date);
+      formData.append("mfd_date", productData.mfd_date);
+      formData.append("exp_date", productData.exp_date);
+      formData.append("alert_date", productData.alert_date);
+      formData.append("alert_stock", productData.alert_stock);
+      formData.append("product_barcode", productData.barcode || "");
+      formData.append("barcode", productData.new_barcode || "");
+      formData.append("supplier_barcode", productData.supplier_barcode || "");
+      formData.append("defective", productData.defective);
+      formData.append("p_type", productData.p_type);
+      /* product_expense */
+      formData.append("import_fee", productData.import_fee || 0);
+      formData.append("fuel_cost", productData.fuel_cost || 0);
+      formData.append("packaging", productData.packaging);
+      formData.append("sticker", productData.sticker);
+      formData.append("other_exp", productData.other_exp);
+      formData.append("total", productData.total);
+      formData.append("op_unit", productData.op_unit);
+      formData.append("total_product", productData.total_product);
+      /* product_price_infos */
+      formData.append("oc_unit", productData.op_unit);
+      formData.append("unit_price", productData.unit_price);
+      formData.append("product_cost", productData.product_cost);
+      formData.append("units", productData.units);
+      formData.append("cost_per_unit", productData.cost_per_unit);
+      formData.append("total_cost", productData.total_cost);
+      formData.append("set_profit", productData.set_profit);
+      formData.append("vat_id", productData.vat_id);
+      formData.append("profit_per_unit", productData.profit_per_unit);
+      formData.append("pp_profit", productData.pp_profit);
+      formData.append("pp_vat", productData.pp_vat);
+      formData.append("os_price", productData.os_price);
+      formData.append("selling_price", productData.selling_price);
+
+      onSaveProduct(formData);
+    }
   };
+
+  function onSaveProduct(_form) {
+    if (isEdit) {
+      svProductUpdate(productData.id, _form).then((res) => {
+        Swal.fire({
+          text: "Product has been updated successfully.",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1000,
+        }).then(() => {
+          setRefreshData(refreshData + 1);
+          // setOpenModalEdit(false);
+        });
+      });
+    } else {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "Do you want to save the data?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, save it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          svCreateProduct(_form).then((res) => {
+            if (res.status) {
+              Swal.fire(
+                "Created!",
+                "Product has been created successfully.",
+                "success"
+              ).then(() => {
+                setRefreshData(refreshData + 1);
+              });
+            } else {
+              console.log(res);
+            }
+          });
+        }
+      });
+    }
+  }
+
+  /* Price details */
+  useEffect(() => {
+    const packaging = parseFloat(productData.packaging) || 0;
+    const sticker = parseFloat(productData.sticker) || 0;
+    const other_exp = parseFloat(productData.other_exp) || 0;
+    const product_cost = parseFloat(productData.product_cost) || 0;
+    const units = parseFloat(productData.units) || 1;
+    const set_profit = parseFloat(productData.set_profit) || 0;
+    const vat = parseFloat(productData.vat) || 0;
+
+    const totalAll = packaging + sticker + other_exp;
+    const total_product = parseInt(productData.total_product) || 1;
+
+    const total_cost = parseFloat(product_cost) + parseFloat(totalAll) || 0;
+    const cost_per_unit = (total_cost / total_product).toFixed(2);
+    const op_unit = (totalAll / total_product).toFixed(2);
+    const profit_per_unit = (parseFloat(cost_per_unit) * set_profit) / 100;
+    const unit_price = parseFloat(cost_per_unit);
+    const pp_profit = parseFloat((profit_per_unit + unit_price).toFixed(2));
+    const pp_vat = parseFloat((vat * pp_profit) / 100) + parseFloat(pp_profit);
+
+    setProductData(() => {
+      return {
+        ...productData,
+        total: totalAll,
+        op_unit: parseFloat(op_unit),
+        cost_per_unit: parseFloat(cost_per_unit),
+        unit_price: parseFloat(unit_price.toFixed(2)),
+        total_cost: parseFloat(total_cost.toFixed(2)),
+        profit_per_unit: parseFloat(profit_per_unit.toFixed(2)),
+        pp_profit: pp_profit,
+        pp_vat: parseFloat(pp_vat.toFixed(2)),
+      };
+    });
+  }, [
+    productData.import_fee,
+    productData.sticker,
+    productData.packaging,
+    productData.other_exp,
+    productData.total_product,
+    productData.product_cost,
+    productData.units,
+    productData.set_profit,
+    productData.vat,
+  ]);
+  /* End price details */
 
   useEffect(() => {
     getNets();
@@ -229,7 +454,7 @@ export default function SupproductImport({
     getVats();
   }, []);
 
-  console.log(productData);
+  console.log(productShow);
   return (
     <div>
       <BootstrapDialog
@@ -476,7 +701,6 @@ export default function SupproductImport({
                           sx={{ width: "25%" }}
                         />
                         <Autocomplete
-                          key={productData.key[0]}
                           defaultValue={{ name: productData.unit_name || "" }}
                           required
                           onChange={(e, value) =>
@@ -490,6 +714,9 @@ export default function SupproductImport({
                           id="combo-box-demo"
                           options={netsData}
                           getOptionLabel={(option) => option.name || ""}
+                          getOptionSelected={(option, value) =>
+                            option.name === value.name
+                          }
                           sx={{ width: "25%" }}
                           renderInput={(params) => (
                             <TextField
@@ -521,7 +748,6 @@ export default function SupproductImport({
                         />
                         <Autocomplete
                           // value={productData.counting_unit}
-                          key={productData.key[1]}
                           defaultValue={{
                             name: productData.counting_unit_name || "",
                           }}
@@ -537,6 +763,9 @@ export default function SupproductImport({
                           id="combo-box-demo"
                           options={amountsData}
                           getOptionLabel={(option) => option.name || ""}
+                          getOptionSelected={(option, value) =>
+                            option.name === value.name
+                          }
                           sx={{ width: "25%" }}
                           renderInput={(params) => (
                             <TextField
@@ -659,8 +888,8 @@ export default function SupproductImport({
                           }}
                         >
                           <TextField
-                            required
                             value={productData.alert_date}
+                            required
                             onChange={(e) =>
                               setProductData(() => {
                                 return {
@@ -678,8 +907,8 @@ export default function SupproductImport({
                             sx={{ width: "33.33%" }}
                           />
                           <TextField
-                            required
                             value={productData.alert_stock}
+                            required
                             onChange={(e) =>
                               setProductData((prev) => {
                                 return {
@@ -697,7 +926,8 @@ export default function SupproductImport({
                             sx={{ width: "33.33%" }}
                           />
                           <TextField
-                            value={productData.defective_product}
+                            disabled
+                            value={productData.defective}
                             onChange={(e) =>
                               setProductData(() => {
                                 return {
@@ -727,10 +957,13 @@ export default function SupproductImport({
                         >
                           <Autocomplete
                             // value={productData.main_cate_id}
-                            // key={productData.key[2]}
-                            // value={productData.p_type || ""}
-                            onChange={(e, value) => console.log("ok")}
-                            disabled={false}
+                            value={productData.p_type || ""}
+                            onChange={(e, value) =>
+                              setProductData((prev) => {
+                                return { ...prev, p_type: value };
+                              })
+                            }
+                            required
                             id="combo-box-demo"
                             options={["Vending", "Wash&Dry"]}
                             sx={{ width: "33.33%" }}
@@ -745,7 +978,6 @@ export default function SupproductImport({
                           />
                           <Autocomplete
                             // value={productData.main_cate_id}
-                            key={productData.key[2]}
                             defaultValue={{
                               name: productData.main_cate_name || "",
                             }}
@@ -766,6 +998,9 @@ export default function SupproductImport({
                             id="combo-box-demo"
                             options={mainCatesData}
                             getOptionLabel={(option) => option.name || ""}
+                            getOptionSelected={(option, value) =>
+                              option.name === value.name
+                            }
                             sx={{ width: "33.33%" }}
                             renderInput={(params) => (
                               <TextField
@@ -791,7 +1026,7 @@ export default function SupproductImport({
                               })
                             }
                             disabled={false}
-                            id="combo-box-demo"
+                            id="combo-box-subcate"
                             options={subCatesData}
                             getOptionLabel={(option) => option.name || ""}
                             sx={{ width: "33.33%" }}
@@ -826,10 +1061,11 @@ export default function SupproductImport({
                             disabled
                           />
                           <TextField
+                            value={productData.new_barcode}
+                            required
                             id="outlined-basic"
                             label="สร้างบาร์โค้ดใหม่"
                             variant="outlined"
-                            value={productData.new_barcode}
                             size="small"
                             sx={{ width: "33.33%" }}
                             inputRef={inputRef}
@@ -907,12 +1143,12 @@ export default function SupproductImport({
                             <TextField
                               required
                               type="number"
-                              value={productData.import_fee}
+                              value={productData.packaging}
                               onChange={(e) =>
                                 setProductData(() => {
                                   return {
                                     ...productData,
-                                    import_fee: !isNaN(
+                                    packaging: !isNaN(
                                       parseFloat(e.target.value)
                                     )
                                       ? parseFloat(e.target.value)
@@ -929,14 +1165,12 @@ export default function SupproductImport({
                             <TextField
                               required
                               type="number"
-                              value={productData.fuel_cost}
+                              value={productData.sticker}
                               onChange={(e) =>
                                 setProductData(() => {
                                   return {
                                     ...productData,
-                                    fuel_cost: !isNaN(
-                                      parseFloat(e.target.value)
-                                    )
+                                    sticker: !isNaN(parseFloat(e.target.value))
                                       ? parseFloat(e.target.value)
                                       : null,
                                   };
@@ -971,11 +1205,13 @@ export default function SupproductImport({
                               sx={{ width: "33.33%" }}
                             />
                           </div>
-                          <div style={{
+                          <div
+                            style={{
                               display: "flex",
                               gap: "1rem",
                               width: "100%",
-                            }}>
+                            }}
+                          >
                             <TextField
                               required
                               type="number"
@@ -1000,7 +1236,7 @@ export default function SupproductImport({
                             <TextField
                               required
                               type="number"
-                              value={productData.total_product}
+                              value={productData.product_cost}
                               label="ต้นทุนสินค้าราคาดิบ"
                               variant="outlined"
                               size="small"
@@ -1019,59 +1255,18 @@ export default function SupproductImport({
                             height: "40px",
                           }}
                         >
-                          <div style={{
+                          <div
+                            style={{
                               display: "flex",
                               gap: "1rem",
                               width: "100%",
-                            }}>
-                          <TextField
-                            disabled
-                            value={productData.total}
-                            onChange={(e) =>
-                              setProductData(() => {
-                                return {
-                                  ...productData,
-                                  total: !isNaN(parseFloat(e.target.value))
-                                    ? parseFloat(e.target.value)
-                                    : null,
-                                };
-                              })
-                            }
-                            id="outlined-basic"
-                            label="รวมค่าดำเนินการทั้งหมด"
-                            variant="outlined"
-                            size="small"
-                            sx={{ width: "50%" }}
-                          />
-                          <TextField
-                            disabled
-                            value={productData.op_unit}
-                            onChange={(e) =>
-                              setProductData(() => {
-                                return {
-                                  ...productData,
-                                  op_unit: !isNaN(parseFloat(e.target.value))
-                                    ? parseFloat(e.target.value)
-                                    : null,
-                                };
-                              })
-                            }
-                            id="outlined-basic"
-                            label="ค่าดำเนินการ/หน่วย"
-                            variant="outlined"
-                            size="small"
-                            sx={{ width: "50%" }}
-                          />
-                          </div>
-                          <div style={{
-                              display: "flex",
-                              gap: "1rem",
-                              width: "100%",
-                            }}>
+                            }}
+                          >
                             <TextField
                               disabled
                               value={productData.total}
-                              label="Total (รวมต้นทุนสินค้าทั้งหมด)"
+                              id="outlined-basic"
+                              label="รวมค่าดำเนินการทั้งหมด"
                               variant="outlined"
                               size="small"
                               sx={{ width: "50%" }}
@@ -1079,6 +1274,41 @@ export default function SupproductImport({
                             <TextField
                               disabled
                               value={productData.op_unit}
+                              onChange={(e) =>
+                                setProductData(() => {
+                                  return {
+                                    ...productData,
+                                    op_unit: !isNaN(parseFloat(e.target.value))
+                                      ? parseFloat(e.target.value)
+                                      : null,
+                                  };
+                                })
+                              }
+                              id="outlined-basic"
+                              label="ค่าดำเนินการ/หน่วย"
+                              variant="outlined"
+                              size="small"
+                              sx={{ width: "50%" }}
+                            />
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              gap: "1rem",
+                              width: "100%",
+                            }}
+                          >
+                            <TextField
+                              disabled
+                              value={productData.total_cost}
+                              label="Total (รวมต้นทุนสินค้าทั้งหมด)"
+                              variant="outlined"
+                              size="small"
+                              sx={{ width: "50%" }}
+                            />
+                            <TextField
+                              disabled
+                              value={productData.cost_per_unit}
                               label="ต้นทุนสินค้า/หน่วย"
                               variant="outlined"
                               size="small"
@@ -1168,7 +1398,7 @@ export default function SupproductImport({
                                 setProductData(() => {
                                   return {
                                     ...productData,
-                                    vat_id: value ? value.id : 0,
+                                    vat_id: value ? value.id : "",
                                     vat: value ? value.name : "",
                                   };
                                 });
@@ -1179,6 +1409,9 @@ export default function SupproductImport({
                               id="combo-box-demo"
                               options={vatsData}
                               getOptionLabel={(option) => option.name || ""}
+                              getOptionSelected={(option, value) =>
+                                option.name === value.name
+                              }
                               sx={{ width: "50%" }}
                               renderInput={(params) => (
                                 <TextField
@@ -1241,16 +1474,6 @@ export default function SupproductImport({
                               disabled
                               type="number"
                               value={productData.pp_profit}
-                              // onChange={(e) =>
-                              //   setProductData(() => {
-                              //     return {
-                              //       ...productData,
-                              //       pp_profit: !isNaN(parseFloat(e.target.value))
-                              //         ? parseFloat(e.target.value)
-                              //         : null,
-                              //     };
-                              //   })
-                              // }
                               id="outlined-basic"
                               label="ราคาสินค้ารวมกำไร"
                               variant="outlined"

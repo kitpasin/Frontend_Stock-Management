@@ -189,7 +189,6 @@ export default function Table({ productsData, refreshData, setRefreshData, setPr
         state2: false,
         state3: false,
         reset: 0,
-        key: [uuidv4(), uuidv4(), uuidv4(), uuidv4()],
       };
       setProductShow(result)
       setOpenModal(true)
