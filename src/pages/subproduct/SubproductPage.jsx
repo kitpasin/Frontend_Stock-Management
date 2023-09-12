@@ -23,11 +23,6 @@ export default function SubproductPage() {
   const { t } = useTranslation(["subproduct-page"]);
   const [refreshData, setRefreshData] = useState(0);
   const [productAll, setProductAll] = useState([]);
-  const [filterId, setFilterId] = useState({
-    title: "",
-    cate_id: "",
-    barcode_number: "",
-  });
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [openModal, setOpenModal] = useState(false);
