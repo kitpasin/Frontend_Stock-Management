@@ -8,12 +8,13 @@ import ProductEditModal from "../../../components/product/modal/ProductEditModal
 import BarcodeModal from "./BarcodeModal";
 import { svDeleteProduct } from "../../../services/product.service";
 import { ConnectingAirportsOutlined } from "@mui/icons-material";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 import ExportModal from "../../../components/product/modal/ExportModal";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBarcode } from "@fortawesome/free-solid-svg-icons";
+import SubproductImport from "../../subproduct/SubproductImport";
 
 function MenuItemList({
   params,
@@ -28,6 +29,7 @@ function MenuItemList({
   const [openModal, setOpenModal] = useState(false);
   const [openExportModal, setOpenExportModal] = useState(false);
   const [openBarcodeModal, setOpenBarcodeModal] = useState(false);
+  const [openSubproductModal, setOpenSubproductModal] = useState(false);
   const [productShow, setProductShow] = useState([]);
   const [modal, setModal] = useState({
     isEdit: false,
@@ -62,7 +64,7 @@ function MenuItemList({
         alert_stock: dd.alert_stock,
         barcode: dd.product_barcode,
         new_barcode: dd.barcode_number,
-        p_type: dd.p_type?dd.p_type:"",
+        p_type: dd.p_type ? dd.p_type : "",
         main_cate_id: dd.main_cate_id,
         main_cate_name: dd.main_cate_name,
         sub_cate_id: dd.sub_cate_id,
@@ -111,69 +113,94 @@ function MenuItemList({
     const data = productData?.filter((item) => item.id === _params.id);
     if (data.length > 0) {
       const dd = data[0];
-      const result = {
-        id: dd.id,
-        product_id: dd.product_id,
-        title: dd.title,
-        state1: false,
-        state2: false,
-        state3: false,
-        state4: false,
-        reset: 0,
-        key: [uuidv4(), uuidv4(), uuidv4(), uuidv4()],
-        unit: dd.unit_id,
-        unit_name: dd.net_name,
-        netweight: dd.netweight,
-        counting_unit: dd.counting_unit_id,
-        counting_unit_name: dd.amount_name,
-        purchase_date: dd.purchase_date,
-        mfd_date: dd.mfd_date,
-        exp_date: dd.exp_date,
-        alert_date: dd.alert_date,
-        alert_stock: dd.alert_stock,
-        barcode: dd.product_barcode,
-        new_barcode: dd.barcode_number,
-        p_type: dd.p_type?dd.p_type:"",
-        main_cate_id: dd.main_cate_id,
-        main_cate_name: dd.main_cate_name,
-        sub_cate_id: dd.sub_cate_id,
-        sub_cate: dd.sub_cate_name,
-        supplier_id: dd.supplier_id,
-        supplier_cate: dd.supplier_cate_id,
-        supplier_name: dd.supplier_name,
-        supplier_cate_name: dd.supplier_cate_name,
-        supplier_barcode: dd.supplier_barcode,
-        import_value: dd.import_value,
-        defective: dd.defective_product,
-        image_path: dd.thumbnail_link,
+      if (dd.is_subproduct) {
+        /* Subproduct Edit */
+        const result = {
+          ...dd,
+          image_path: dd.thumbnail_link,
+          new_barcode: dd.barcode_number,
+          barcode: dd.product_barcode,
+          counting_unit_name: dd.amount_name,
+          unit_name: dd.net_name,
+          total: dd.px_total,
+          defective: dd.defective_product,
+          supplier_cate: dd.supplier_cate_id,
+          unit: dd.unit_id,
+          counting_unit: dd.counting_unit_id,
+          state1: false,
+          state2: false,
+          state3: false,
+          reset: 0,
+        };
 
-        import_fee: dd.import_fee,
-        fuel_cost: dd.fuel_cost,
-        other_exp: dd.other_exp,
-        total: dd.px_total,
-        op_unit: dd.op_unit,
-        total_product: dd.total_product,
+        setProductShow(result);
+        setOpenSubproductModal(true);
+      } else {
+        const result = {
+          id: dd.id,
+          product_id: dd.product_id,
+          title: dd.title,
+          state1: false,
+          state2: false,
+          state3: false,
+          state4: false,
+          reset: 0,
+          key: [uuidv4(), uuidv4(), uuidv4(), uuidv4()],
+          unit: dd.unit_id,
+          unit_name: dd.net_name,
+          netweight: dd.netweight,
+          counting_unit: dd.counting_unit_id,
+          counting_unit_name: dd.amount_name,
+          purchase_date: dd.purchase_date,
+          mfd_date: dd.mfd_date,
+          exp_date: dd.exp_date,
+          alert_date: dd.alert_date,
+          alert_stock: dd.alert_stock,
+          barcode: dd.product_barcode,
+          new_barcode: dd.barcode_number,
+          p_type: dd.p_type ? dd.p_type : "",
+          main_cate_id: dd.main_cate_id,
+          main_cate_name: dd.main_cate_name,
+          sub_cate_id: dd.sub_cate_id,
+          sub_cate: dd.sub_cate_name,
+          supplier_id: dd.supplier_id,
+          supplier_cate: dd.supplier_cate_id,
+          supplier_name: dd.supplier_name,
+          supplier_cate_name: dd.supplier_cate_name,
+          supplier_barcode: dd.supplier_barcode,
+          import_value: dd.import_value,
+          defective: dd.defective_product,
+          image_path: dd.thumbnail_link,
 
-        oc_unit: dd.op_unit,
-        unit_price: dd.unit_price,
-        product_cost: dd.product_cost,
-        units: dd.units,
-        cost_per_unit: dd.cost_per_unit,
-        total_cost: dd.total_cost,
-        set_profit: dd.set_profit,
-        vat_id: dd.vat_id,
-        vat: dd.vat_name,
-        profit_per_unit: dd.profit_per_unit,
-        pp_profit: dd.pp_profit,
-        pp_vat: dd.pp_vat,
-        os_price: dd.os_price,
-        selling_price: dd.selling_price,
-      };
+          import_fee: dd.import_fee,
+          fuel_cost: dd.fuel_cost,
+          other_exp: dd.other_exp,
+          total: dd.px_total,
+          op_unit: dd.op_unit,
+          total_product: dd.total_product,
+
+          oc_unit: dd.op_unit,
+          unit_price: dd.unit_price,
+          product_cost: dd.product_cost,
+          units: dd.units,
+          cost_per_unit: dd.cost_per_unit,
+          total_cost: dd.total_cost,
+          set_profit: dd.set_profit,
+          vat_id: dd.vat_id,
+          vat: dd.vat_name,
+          profit_per_unit: dd.profit_per_unit,
+          pp_profit: dd.pp_profit,
+          pp_vat: dd.pp_vat,
+          os_price: dd.os_price,
+          selling_price: dd.selling_price,
+        };
+        setProductShow(result);
+        setOpenModal(true);
+      }
+
       setModal((prev) => {
         return { ...prev, isEdit: true, isFetchImport: false };
       });
-      setProductShow(result);
-      setOpenModal(true);
       handleClose();
     }
   };
@@ -214,7 +241,6 @@ function MenuItemList({
       setOpenExportModal(true);
       handleClose();
     }
-
   };
 
   function handleClick(event) {
@@ -228,13 +254,13 @@ function MenuItemList({
   }
 
   function barcodeHandle(product_id) {
-    const data = productData.filter(
-      (item) => item.product_id === product_id
-    );
+    const data = productData.filter((item) => item.product_id === product_id);
     setProductShow(data[0]);
     setOpenBarcodeModal(true);
-    handleClose()
+    handleClose();
   }
+
+
 
   return (
     <div>
@@ -285,7 +311,7 @@ function MenuItemList({
             ปริ้นบาร์โค้ด
           </p>
         </MenuItem>
-        { false &&
+        {false && (
           <MenuItem
             sx={{
               display: "flex",
@@ -307,7 +333,7 @@ function MenuItemList({
               เพิ่มสินค้า
             </p>
           </MenuItem>
-        }
+        )}
         <MenuItem
           sx={{ display: "flex", gap: "1rem" }}
           onClick={() => editHandle(params.row)}
@@ -355,6 +381,17 @@ function MenuItemList({
         refreshData={refreshData}
         setRefreshData={setRefreshData}
       />
+      { openSubproductModal &&
+        <SubproductImport
+          isEdit={modal.isEdit}
+          isFetchImport={modal.isFetchImport}
+          open={openSubproductModal}
+          setOpen={setOpenSubproductModal}
+          productShow={productShow}
+          refreshData={refreshData}
+          setRefreshData={setRefreshData}
+        />
+      }
       <ExportModal
         setProductSelecte={setProductSelected}
         open={openExportModal}

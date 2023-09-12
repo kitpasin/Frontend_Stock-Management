@@ -36,6 +36,15 @@ export const svProductUpdate = async (_id, _form) => {
     }
 }
 
+export const svTestProductUpdate = async (_id, _form) => {
+    try {
+        const res = await axios.post(`product/testupdate/${_id}`, _form);
+        return { status: true, data: res.data.data, message: "Update product success." };
+    } catch (err) {
+        return { status: false, description: "Something went wrong.", errorMessage: err };
+    }
+}
+
 export const svDeleteProduct = async (product_id) => {
     try {
         const res = await axios.delete(`product/delete/${product_id}`);

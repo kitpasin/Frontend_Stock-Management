@@ -14,13 +14,13 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 import HeadPageComponent from "../../components/layout/headpage/headpage";
 import Table from "./Table";
-import "./SupproductPage.scss";
+import "./SubproductPage.scss";
 import { svProductAll } from "../../services/product.service";
 import { getCategory } from "../../services/category.service";
-import SupproductImport from "./SupproductImport";
+import SubproductImport from "./SubproductImport";
 
-export default function SupproductPage() {
-  const { t } = useTranslation(["supproduct-page"]);
+export default function SubproductPage() {
+  const { t } = useTranslation(["subproduct-page"]);
   const [refreshData, setRefreshData] = useState(0);
   const [productAll, setProductAll] = useState([]);
   const [filterId, setFilterId] = useState({
@@ -115,14 +115,14 @@ export default function SupproductPage() {
 
   useEffect(() => {
     initData();
-  }, []);
+  }, [refreshData]);
 
   useEffect(() => {
     filteredProduct()
   }, [refreshData, formFilter]);
 
   return (
-    <section id="supproduct-page">
+    <section id="subproduct-page">
       {loading ? (
         <PulseLoader color="#3b326b" />
       ) : (
@@ -216,7 +216,8 @@ export default function SupproductPage() {
             </div>
           </Card>
           {openModal && (
-            <SupproductImport
+            <SubproductImport
+              setRefreshData={setRefreshData}
               productShow={productShow}
               open={openModal}
               setOpen={setOpenModal}
