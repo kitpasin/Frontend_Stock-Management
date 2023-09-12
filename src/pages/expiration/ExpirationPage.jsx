@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { TextField } from "@mui/material";
+import { Button, Modal, TextField } from "@mui/material";
 import { Card } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import Radio from "@mui/material/Radio";
@@ -17,7 +17,26 @@ import Table from "./components/Table";
 import axios from "axios";
 import MultiExportModal from "../../components/product/modal/MultiExportModal";
 import Swal from "sweetalert2";
+import dayjs from "dayjs";
+import { useSelector } from "react-redux";
+import { Box } from "@mui/system";
+import ExportDetail from "../products/components/ExportDetail";
 
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "100%",
+  maxWidth: "1700px",
+  height: "100%",
+  maxHeight: "768px",
+  bgcolor: "#fff",
+  borderTop: "#3B326B 20px solid",
+  borderRadius: "10px",
+  boxShadow: 24,
+  p: 4,
+};
 function ExpirationPage() {
   const { t } = useTranslation(["dashboard-page"]);
 
@@ -39,6 +58,30 @@ function ExpirationPage() {
   const [productSelected, setProductSelected] = useState([]);
   const [productData, setProductData] = useState([]);
   const [openMultiExportModal, setOpenMultiexportModal] = useState(false);
+  const [openExportedTempModal, setOpenExportedTempModal] = useState(false);
+  const handleOpen = () => setOpenExportedTempModal(true);
+  const handleClose = () => setOpenExportedTempModal(false);
+  const current_date = dayjs().toISOString().substring(0, 10);
+
+  const [exportedProductTemp, setExportedProductTemp] = useState([]);
+  const { displayName } = useSelector((state) => state.auth.profile);
+  const today = dayjs();
+  const formattedDate = today.format("YYYY/MM/DD HH:mm");
+
+  const exportOption = [
+    {
+      id: 1,
+      option: "หน้าร้าน",
+    },
+    {
+      id: 2,
+      option: "ตู้ขาย",
+    },
+  ];
+  const [randomNum, setRandomNum] = useState(0);
+  const [selectedExportType, setSelectedExportType] = useState("");
+  const [picker, setPicker] = useState("");
+  const [approver, setApprover] = useState("");
 
   const filteredProduct = productsExpiration.filter((product) => {
     const matchesTitle = title ? product.title === title : true;
@@ -82,6 +125,12 @@ function ExpirationPage() {
     );
   });
 
+  function generateRandomNumber() {
+    const now = new Date();
+    const formattedDate = now.toISOString().replace(/[-T:.Z]/g, ""); // Format the current date and time
+    setRandomNum(formattedDate);
+  }
+
   const multiExportHandle = () => {
     if (productSelected.length === 0) {
       Swal.fire({
@@ -95,6 +144,7 @@ function ExpirationPage() {
     }
   };
 
+
   async function getProductsExpiration() {
     const response = await axios.get("product/expiration");
     const data = response.data.data;
@@ -102,11 +152,80 @@ function ExpirationPage() {
     setLoading(false);
   }
 
-  console.log(productsExpiration)
+  async function getExportedProductTemp() {
+    const response = await axios.get("get/product/export/temp");
+    const data = response.data.exportedProductTemp;
+    setExportedProductTemp(data);
+  }
+
+  async function submitExportForm() {
+    const formData = uniqueExportData.map((item) => ({
+      ...item,
+      export_id: parseInt(randomNum),
+      export_date: formattedDate,
+      picker_name: picker,
+      approver_name: approver,
+      export_type: selectedExportType,
+    }));
+    console.log(formData);
+    if (
+      picker === "" ||
+      (null && approver === "") ||
+      (null && export_type === "") ||
+      null
+    ) {
+      Swal.fire("Error", "Please enter all fields", "error");
+    } else {
+      try {
+        const response = await axios.post("product/export/detail", formData);
+        console.log(response);
+        if (response.status) {
+          Swal.fire(
+            "Success!",
+            "Product has been exported successfully",
+            "success"
+          )
+            .then(() => {
+              axios.post("product/export", formData);
+            })
+            .then(() => {
+              setOpenExportedTempModal(false);
+              setRefreshData(refreshData + 1);
+            });
+        } else {
+          Swal.fire("Error", "Failed to export the product", "error");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        Swal.fire(
+          "Error",
+          "An error occurred while exporting the product",
+          "error"
+        );
+      }
+    }
+  }
 
   useEffect(() => {
     getProductsExpiration();
+    getExportedProductTemp();
   }, [refreshData]);
+
+  useEffect(() => {
+    generateRandomNumber();
+  }, []);
+
+  const uniqueProductsMap = new Map();
+  exportedProductTemp.forEach((item) => {
+    uniqueProductsMap.set(item.product_id, item);
+  });
+  const uniqueProductsData = Array.from(uniqueProductsMap.values());
+
+  const uniqueExportMap = new Map();
+  exportedProductTemp.forEach((item) => {
+    uniqueExportMap.set(item.product_id, item);
+  });
+  const uniqueExportData = Array.from(uniqueProductsMap.values());
 
   const titleOptions = productsExpiration
     .map((product) => product.title)
@@ -334,7 +453,155 @@ function ExpirationPage() {
             setRefreshData={setRefreshData}
             setProductSelected={setProductSelected}
             productSelected={productSelected}
+            setOpenExportedTempModal={setOpenExportedTempModal}
           />
+          <Modal
+            open={openExportedTempModal}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "1rem",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    width: "100%",
+                    fontSize: "20px",
+                  }}
+                >
+                  <figure
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "1rem",
+                      color: "#3B336B",
+                    }}
+                  >
+                    <img src="/images/icons/product-icon.png" alt="" />
+                    <p style={{ fontWeight: 400 }}>
+                      รายการสินค้าทั้งหมดที่จะเบิกออก
+                    </p>
+                  </figure>
+                  <p style={{ fontWeight: 400, color: "#3B336B" }}>
+                    {uniqueProductsData?.length} รายการ
+                  </p>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: "1rem",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      gap: "1rem",
+                      width: "100%",
+                    }}
+                  >
+                    <TextField
+                      label="เลขที่เบิก"
+                      variant="outlined"
+                      size="small"
+                      disabled
+                      sx={{ backgroundColor: "#E6E6E6", width: "33%" }}
+                      value={today}
+                    />
+                    <TextField
+                      label="วันที่เวลา"
+                      variant="outlined"
+                      size="small"
+                      disabled
+                      sx={{ backgroundColor: "#E6E6E6", width: "33%" }}
+                      value={formattedDate}
+                    />
+                    <TextField
+                      label="ID ผู้ใช้งาน"
+                      variant="outlined"
+                      size="small"
+                      disabled
+                      sx={{ backgroundColor: "#E6E6E6", width: "33%" }}
+                      value={displayName}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      gap: "1rem",
+                      width: "100%",
+                    }}
+                  >
+                    <Autocomplete
+                      options={exportOption?.map((option) => option.option)}
+                      value={selectedExportType}
+                      onChange={(event, newValue) =>
+                        setSelectedExportType(newValue)
+                      }
+                      sx={{ width: "33%" }}
+                      size="small"
+                      renderInput={(params) => (
+                        <TextField {...params} label="เบิกไปที่" />
+                      )}
+                    />
+                    <TextField
+                      label="ผู้เบิก"
+                      variant="outlined"
+                      size="small"
+                      sx={{ width: "33%" }}
+                      value={picker}
+                      onChange={(e) => setPicker(e.target.value)}
+                    />
+                    <TextField
+                      label="ผู้อนุมัติ"
+                      variant="outlined"
+                      size="small"
+                      sx={{ width: "33%" }}
+                      value={approver}
+                      onChange={(e) => setApprover(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "1rem",
+                  }}
+                >
+                  <ExportDetail
+                    uniqueProductsData={uniqueProductsData}
+                    refreshData={refreshData}
+                    setRefreshData={setRefreshData}
+                    setOpenExportedTempModal={setOpenExportedTempModal}
+                  />
+                  <Button
+                    onClick={submitExportForm}
+                    variant="contained"
+                    sx={{ background: "#3b326b" }}
+                  >
+                    ยืนยันเบิก
+                  </Button>
+                </div>
+              </div>
+            </Box>
+          </Modal>
         </>
       )}
     </section>
