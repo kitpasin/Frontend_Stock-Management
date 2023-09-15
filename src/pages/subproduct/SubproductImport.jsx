@@ -1,11 +1,9 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
@@ -23,7 +21,7 @@ import {
 } from "@mui/material";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 
-import "./SupproductPage.scss";
+import "./SubproductPage.scss";
 import DetailDataGrid from "../../components/datagrid/DetailDataGrid";
 import SupplierDataGrid from "../../components/datagrid/SupplierDataGrid";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
@@ -81,7 +79,7 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-export default function SupproductImport({
+export default function SubproductImport({
   isEdit,
   isFetchImport,
   isMultiImport,
@@ -114,8 +112,8 @@ export default function SupproductImport({
     main_cate_id: "",
     sub_cate_id: "",
     sub_cate: "",
-    supplier_id: "",
-    supplier_cate: "",
+    supplier_id: productShow.supplier_id,
+    supplier_cate: productShow.supplier_cate_id,
     import_value: "",
     defective: 0,
 
@@ -131,7 +129,7 @@ export default function SupproductImport({
     oc_unit: "",
     unit_price: "",
     product_cost: productShow.product_cost,
-    units: "",
+    units: productShow.units,
     cost_per_unit: "",
     total_cost: "",
     set_profit: "",
@@ -163,7 +161,7 @@ export default function SupproductImport({
   const { t } = useTranslation(["dashboard-page"]);
   const webPath = useSelector((state) => state.app.webPath);
   const [preview, setPreview] = useState(formPreview);
-  const [productData, setProductData] = useState(form);
+  const [productData, setProductData] = useState(isEdit ? productShow : form);
   const [netsData, setNetsData] = useState([]);
   const [amountsData, setAmountsData] = useState([]);
   const [subCatesData, setSubCatesData] = useState([]);
@@ -308,6 +306,7 @@ export default function SupproductImport({
         formData.append("id", productData.id);
         formData.append("product_id", productData.product_id);
       }
+      formData.append("is_subproduct", 1);
       formData.append("image", preview.file);
       formData.append("image_path", productData.image_path);
       formData.append("title", productData.title);
@@ -330,8 +329,8 @@ export default function SupproductImport({
       formData.append("defective", productData.defective);
       formData.append("p_type", productData.p_type);
       /* product_expense */
-      formData.append("import_fee", productData.import_fee || 0);
-      formData.append("fuel_cost", productData.fuel_cost || 0);
+      formData.append("import_fee", 0);
+      formData.append("fuel_cost", 0);
       formData.append("packaging", productData.packaging);
       formData.append("sticker", productData.sticker);
       formData.append("other_exp", productData.other_exp);
@@ -360,15 +359,19 @@ export default function SupproductImport({
   function onSaveProduct(_form) {
     if (isEdit) {
       svProductUpdate(productData.id, _form).then((res) => {
-        Swal.fire({
-          text: "Product has been updated successfully.",
-          icon: "success",
-          showConfirmButton: false,
-          timer: 1000,
-        }).then(() => {
-          setRefreshData(refreshData + 1);
-          // setOpenModalEdit(false);
-        });
+        if (res.status) {
+          Swal.fire({
+            text: "Product has been updated successfully.",
+            icon: "success",
+            showConfirmButton: false,
+            timer: 1000,
+          }).then(() => {
+            setRefreshData(refreshData + 1);
+            setOpen(false);
+          });
+        } else {
+          Swal.fire({ icon: "error", text: "Something went wrong!" })
+        }
       });
     } else {
       Swal.fire({
@@ -389,6 +392,8 @@ export default function SupproductImport({
                 "success"
               ).then(() => {
                 setRefreshData(refreshData + 1);
+                setOpen(false);
+                navigate('/products')
               });
             } else {
               console.log(res);
@@ -405,7 +410,6 @@ export default function SupproductImport({
     const sticker = parseFloat(productData.sticker) || 0;
     const other_exp = parseFloat(productData.other_exp) || 0;
     const product_cost = parseFloat(productData.product_cost) || 0;
-    const units = parseFloat(productData.units) || 1;
     const set_profit = parseFloat(productData.set_profit) || 0;
     const vat = parseFloat(productData.vat) || 0;
 
@@ -420,10 +424,11 @@ export default function SupproductImport({
     const pp_profit = parseFloat((profit_per_unit + unit_price).toFixed(2));
     const pp_vat = parseFloat((vat * pp_profit) / 100) + parseFloat(pp_profit);
 
-    setProductData(() => {
+    setProductData((prev) => {
       return {
-        ...productData,
+        ...prev,
         total: totalAll,
+        units: total_product,
         op_unit: parseFloat(op_unit),
         cost_per_unit: parseFloat(cost_per_unit),
         unit_price: parseFloat(unit_price.toFixed(2)),
@@ -454,7 +459,6 @@ export default function SupproductImport({
     getVats();
   }, []);
 
-  console.log(productShow);
   return (
     <div>
       <BootstrapDialog
@@ -472,124 +476,128 @@ export default function SupproductImport({
             style={{ color: "#000000", paddingRight: ".5rem" }}
           />
           {isEdit
-            ? `แก้ไขสินค้า (Product ID : ${productShow.product_id})`
+            ? `แก้ไขสินค้าย่อย (Product ID : ${productShow.product_id})`
             : "รายละเอียดสินค้าสดที่จะแยกย่อย เข้าสต็อก"}
         </BootstrapDialogTitle>
         <DialogContent dividers>
-          <section id="supproduct-import">
-            <Card
-              className="flex-container-column"
-              style={{ marginTop: "-1rem", marginBottom: "1rem" }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <figure className="product-image">
-                  <img src={webPath + productShow.thumbnail_link} alt="" />
-                </figure>
-                <div className="product-name">
-                  <p>ชื่อสินค้า</p>
-                  <span>{productShow.title}</span>
-                </div>
-                <p style={{ width: "2%", textAlign: "center" }}>|</p>
-                <div className="product-number">
-                  <p>รหัสสินค้า</p>
-                  <span>{productShow.product_id}</span>
-                </div>
-                <p style={{ width: "2%", textAlign: "center" }}>|</p>
-                <div className="barcode-number">
-                  <p>รหัสบาร์โค้ดจากสินค้า</p>
-                  <span>{productShow.product_barcode}</span>
-                </div>
-                <p style={{ width: "2%", textAlign: "center" }}>|</p>
-                <div className="barcode-number">
-                  <p>รหัสบาร์โค้ดใหม่</p>
-                  <span>{productShow.barcode_number}</span>
-                </div>
-                <p style={{ width: "2%", textAlign: "center" }}>|</p>
-                <figure className="barcode-image">
-                  <p style={{ color: "#000" }}>บาร์โค้ดจากสินค้า</p>
-                  {productShow.product_barcode && (
-                    <Barcode value={productShow.product_barcode} />
-                  )}
-                </figure>
-                <p style={{ width: "2%", textAlign: "center" }}>|</p>
-                <figure className="barcode-image">
-                  <p style={{ color: "#000" }}>บาร์โค้ดใหม่</p>
-                  {productShow.barcode_number && (
-                    <Barcode value={productShow.barcode_number} />
-                  )}
-                </figure>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-start",
-                  alignItems: "center",
-                  gap: "2.5rem",
-                }}
-              >
-                <div className="flex-container-center">
+          <section id="subproduct-import">
+            {!isEdit && 
+              <>
+                <Card
+                  className="flex-container-column"
+                  style={{ marginTop: "-1rem", marginBottom: "1rem" }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <figure className="product-image">
+                      <img src={webPath + productShow.thumbnail_link} alt="" />
+                    </figure>
+                    <div className="product-name">
+                      <p>ชื่อสินค้า</p>
+                      <span>{productShow.title}</span>
+                    </div>
+                    <p style={{ width: "2%", textAlign: "center" }}>|</p>
+                    <div className="product-number">
+                      <p>รหัสสินค้า</p>
+                      <span>{productShow.product_id}</span>
+                    </div>
+                    <p style={{ width: "2%", textAlign: "center" }}>|</p>
+                    <div className="barcode-number">
+                      <p>รหัสบาร์โค้ดจากสินค้า</p>
+                      <span>{productShow.product_barcode}</span>
+                    </div>
+                    <p style={{ width: "2%", textAlign: "center" }}>|</p>
+                    <div className="barcode-number">
+                      <p>รหัสบาร์โค้ดใหม่</p>
+                      <span>{productShow.barcode_number}</span>
+                    </div>
+                    <p style={{ width: "2%", textAlign: "center" }}>|</p>
+                    <figure className="barcode-image">
+                      <p style={{ color: "#000" }}>บาร์โค้ดจากสินค้า</p>
+                      {productShow.product_barcode && (
+                        <Barcode value={productShow.product_barcode} />
+                      )}
+                    </figure>
+                    <p style={{ width: "2%", textAlign: "center" }}>|</p>
+                    <figure className="barcode-image">
+                      <p style={{ color: "#000" }}>บาร์โค้ดใหม่</p>
+                      {productShow.barcode_number && (
+                        <Barcode value={productShow.barcode_number} />
+                      )}
+                    </figure>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-start",
+                      alignItems: "center",
+                      gap: "2.5rem",
+                    }}
+                  >
+                    <div className="flex-container-center">
+                      <FontAwesomeIcon
+                        icon={faFileImport}
+                        size="xl"
+                        style={{ color: "#3b326b" }}
+                      />
+                      <p
+                        style={{
+                          color: "#3b326b",
+                          fontSize: "18px",
+                          fontWeight: 400,
+                        }}
+                      >
+                        ข้อมูลสินค้า
+                      </p>
+                    </div>
+                  </div>
+                  <DetailDataGrid productShowArr={[productShow]} />
+
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-start",
+                      alignItems: "center",
+                      gap: "2.5rem",
+                    }}
+                  >
+                    <div className="flex-container-center">
+                      <FontAwesomeIcon
+                        icon={faStore}
+                        size="xl"
+                        style={{ color: "#3b326b" }}
+                      />
+                      <p
+                        style={{
+                          color: "#3b326b",
+                          fontSize: "18px",
+                          fontWeight: 400,
+                        }}
+                      >
+                        ซัพพลายเออร์
+                      </p>
+                    </div>
+                  </div>
+                  <SupplierDataGrid productShowArr={[productShow]} />
+                </Card>
+                <BootstrapDialogTitle
+                  id="customized-dialog-title"
+                  onClose={handleClose}
+                >
                   <FontAwesomeIcon
                     icon={faFileImport}
                     size="xl"
-                    style={{ color: "#3b326b" }}
+                    style={{ color: "#000000", paddingRight: ".5rem" }}
                   />
-                  <p
-                    style={{
-                      color: "#3b326b",
-                      fontSize: "18px",
-                      fontWeight: 400,
-                    }}
-                  >
-                    ข้อมูลสินค้า
-                  </p>
-                </div>
-              </div>
-              <DetailDataGrid productShowArr={[productShow]} />
-
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-start",
-                  alignItems: "center",
-                  gap: "2.5rem",
-                }}
-              >
-                <div className="flex-container-center">
-                  <FontAwesomeIcon
-                    icon={faStore}
-                    size="xl"
-                    style={{ color: "#3b326b" }}
-                  />
-                  <p
-                    style={{
-                      color: "#3b326b",
-                      fontSize: "18px",
-                      fontWeight: 400,
-                    }}
-                  >
-                    ซัพพลายเออร์
-                  </p>
-                </div>
-              </div>
-              <SupplierDataGrid productShowArr={[productShow]} />
-            </Card>
-            <BootstrapDialogTitle
-              id="customized-dialog-title"
-              onClose={handleClose}
-            >
-              <FontAwesomeIcon
-                icon={faFileImport}
-                size="xl"
-                style={{ color: "#000000", paddingRight: ".5rem" }}
-              />
-              เพิ่มสินค้าสดย่อย เข้าสต็อก
-            </BootstrapDialogTitle>
+                  เพิ่มสินค้าสดย่อย เข้าสต็อก
+                </BootstrapDialogTitle>
+              </>
+            }
             <div id="form-import">
               <form onSubmit={createHandle}>
                 <Card className="flex-container-column">
@@ -630,7 +638,7 @@ export default function SupproductImport({
                             ref={formInputRef}
                           />
                         </div>
-                        {isEdit || isFetchImport ? (
+                        {isEdit ? (
                           <img
                             src={
                               !preview.isError
@@ -714,9 +722,6 @@ export default function SupproductImport({
                           id="combo-box-demo"
                           options={netsData}
                           getOptionLabel={(option) => option.name || ""}
-                          getOptionSelected={(option, value) =>
-                            option.name === value.name
-                          }
                           sx={{ width: "25%" }}
                           renderInput={(params) => (
                             <TextField
@@ -763,9 +768,6 @@ export default function SupproductImport({
                           id="combo-box-demo"
                           options={amountsData}
                           getOptionLabel={(option) => option.name || ""}
-                          getOptionSelected={(option, value) =>
-                            option.name === value.name
-                          }
                           sx={{ width: "25%" }}
                           renderInput={(params) => (
                             <TextField
@@ -998,9 +1000,6 @@ export default function SupproductImport({
                             id="combo-box-demo"
                             options={mainCatesData}
                             getOptionLabel={(option) => option.name || ""}
-                            getOptionSelected={(option, value) =>
-                              option.name === value.name
-                            }
                             sx={{ width: "33.33%" }}
                             renderInput={(params) => (
                               <TextField
@@ -1409,9 +1408,6 @@ export default function SupproductImport({
                               id="combo-box-demo"
                               options={vatsData}
                               getOptionLabel={(option) => option.name || ""}
-                              getOptionSelected={(option, value) =>
-                                option.name === value.name
-                              }
                               sx={{ width: "50%" }}
                               renderInput={(params) => (
                                 <TextField

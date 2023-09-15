@@ -122,10 +122,6 @@ function ProductsImportPage({
   const modalSwal = withReactContent(Swal);
   const navigate = useNavigate();
   const { t } = useTranslation(["dashboard-page"]);
-  const [selectedPurchaseTime, setSelectedPurchaseTime] = useState(null);
-  const [selectedMFDTime, setSelectedMFDTime] = useState(null);
-  const [selectedEXPTime, setSelectedEXPTime] = useState(null);
-  const [generatedNumber, setGeneratedNumber] = useState("");
   const [productAll, setProductAll] = useState(productDatas);
   const [productData, setProductData] = useState(
     isEdit || isFetchImport ? productShow : form
@@ -150,7 +146,6 @@ function ProductsImportPage({
   const isSwChecked = ((isMultiImport || isFetchImport) || productData.importOne) ? false : (productData.selling_price > 0 && productData.vat_id !== 0)?false:true;
   const [switchChecked, setSwitchChecked] = useState(isSwChecked);
 
-  console.log(productData.vat_id)
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -380,15 +375,11 @@ function ProductsImportPage({
   };
 
   function generateBarcode() {
-    const randomNum = Math.floor(Math.random() * 1000000000);
-    const formattedNum = String(randomNum).padStart(9, "0");
-
     const randomNumber = Math.floor(Math.random() * 1000);
     const barcodeNumber =
       Math.floor(Date.now() / 1000) +
       "" +
       randomNumber.toString().padStart(3, "0");
-    setGeneratedNumber(barcodeNumber);
     setProductData(() => {
       return { ...productData, new_barcode: barcodeNumber };
     });
@@ -492,7 +483,6 @@ function ProductsImportPage({
       return { ...prev, checked: false };
     });
     setSwitchChecked(false);
-    setGeneratedNumber("");
   };
 
   const saveProducthandle = (event) => {
@@ -529,6 +519,7 @@ function ProductsImportPage({
         formData.append("id", productData.id);
         formData.append("product_id", productData.product_id);
       }
+      formData.append("is_subproduct", 0);
       formData.append("image", preview.file);
       formData.append("image_path", productData.image_path);
       formData.append("title", productData.title);
@@ -553,6 +544,8 @@ function ProductsImportPage({
       /* product_expense */
       formData.append("import_fee", productData.import_fee);
       formData.append("fuel_cost", productData.fuel_cost);
+      formData.append("packaging", 0);
+      formData.append("sticker", 0);
       formData.append("other_exp", productData.other_exp);
       formData.append("total", productData.total);
       formData.append("op_unit", productData.op_unit);
@@ -629,6 +622,7 @@ function ProductsImportPage({
                     setOpenModalEdit(false);
                   } else {
                     resetDataHandle();
+                    navigate('/products')
                   }
                 }
                 setRefreshData(refreshData + 1);
@@ -907,7 +901,6 @@ function ProductsImportPage({
                         )}
                         value={productData.purchase_date || null}
                         onChange={(value) => {
-                          setSelectedPurchaseTime(value);
                           setProductData(() => {
                             return {
                               ...productData,
@@ -936,7 +929,6 @@ function ProductsImportPage({
                         )}
                         value={productData.mfd_date || null}
                         onChange={(value) => {
-                          setSelectedMFDTime(value);
                           setProductData(() => {
                             return {
                               ...productData,
@@ -965,7 +957,6 @@ function ProductsImportPage({
                         )}
                         value={productData.exp_date || null}
                         onChange={(value) => {
-                          setSelectedEXPTime(value);
                           setProductData(() => {
                             return {
                               ...productData,
@@ -1149,9 +1140,6 @@ function ProductsImportPage({
                       label="สร้างบาร์โค้ดใหม่"
                       variant="outlined"
                       value={productData.new_barcode || ""}
-                      onChange={(event) =>
-                        setGeneratedNumber(event.target.value)
-                      }
                       size="small"
                       sx={{ width: "33.33%" }}
                       inputRef={inputRef}

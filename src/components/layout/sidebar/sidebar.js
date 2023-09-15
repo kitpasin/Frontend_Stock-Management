@@ -215,7 +215,7 @@ const SidebarComponent = (props) => {
                       <li>
                         <NavLink
                           onClick={closeSidebarhandler}
-                          to="/supproduct/import"
+                          to="/subproduct/import"
                           className={`items `}
                           title={t("เพิ่มสินค้าย่อย")}
                           liClass="sub-items"
