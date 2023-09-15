@@ -136,6 +136,8 @@ function ProductsPage() {
     );
   });
 
+  console.log(productsAll)
+
   const multiExportHandle = () => {
     console.log(productSelected);
     if (productSelected.length === 0) {
