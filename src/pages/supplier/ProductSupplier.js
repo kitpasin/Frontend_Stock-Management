@@ -1,31 +1,59 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
-import { Autocomplete, Avatar, TextField } from "@mui/material";
+import { Autocomplete, Avatar, Modal, TextField } from "@mui/material";
+import { Box } from "@mui/system";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 480,
+  bgcolor: "#fff",
+  borderRadius: "10px",
+  boxShadow: 24,
+  p: 4,
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+};
 
 function ProductSupplier({ productAll }) {
   const webPath = useSelector((state) => state.app.webPath);
+  const [showImg, setShowImg] = useState(null);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  function openImgModal(params) {
+    console.log(params.row.thumbnail_link);
+    setShowImg(params.row.thumbnail_link);
+    handleOpen();
+  }
 
   const columns = [
     {
       field: "thumbnail_link",
       headerName: "ภาพ",
       width: 50,
+      headerClassName: "table-columns",
       headerAlign: "center",
       align: "center",
       renderCell: (params) => (
-        <figure
+        <div
           style={{
             background: "#D0D0E2",
             borderRadius: "5px",
-            padding: ".1rem",
+            cursor: "pointer",
           }}
+          onClick={() => openImgModal(params)}
         >
           <Avatar
-            alt="Thumbnail"
             src={`${webPath}${params.row.thumbnail_link}`}
+            alt={`Image ${params.thumbnail_title}`}
           />
-        </figure>
+        </div>
       ),
     },
     {
@@ -188,6 +216,18 @@ function ProductSupplier({ productAll }) {
           /> */}
         </div>
         <div className="table">
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <figure>
+                <img src={`${webPath}${showImg}`} alt="" />
+              </figure>
+            </Box>
+          </Modal>
           <DataGrid
             checkboxSelection={false}
             sx={{ border: "none" }}

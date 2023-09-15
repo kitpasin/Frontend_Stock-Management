@@ -358,6 +358,7 @@ function ProductsPage() {
               justifyContent: "space-between",
               alignItems: "center",
               gap: "1rem",
+              position: "relative"
             }}
           >
             <figure style={{ width: "30px", marginBottom: "1rem" }}>

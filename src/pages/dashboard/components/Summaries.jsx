@@ -21,6 +21,21 @@ const style = {
   p: 4,
 };
 
+const showImgstyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 480,
+  bgcolor: "#fff",
+  borderRadius: "10px",
+  boxShadow: 24,
+  p: 4,
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center"
+};
+
 function Summaries({
   mostExportedProduct,
   productsExport,
@@ -37,8 +52,18 @@ function Summaries({
   const [aboutToExpireOpen, setAboutToExpireOpen] = React.useState(false);
   const [latestImportOpen, setLatestImportOpen] = React.useState(false);
   const [latestExportOpen, setLatestExportOpen] = React.useState(false);
-
-  console.log(mostProductOutOfStock);
+  const [sum5Open, setSum5Open] = React.useState(false);
+  const [sum6Open, setSum6Open] = React.useState(false);
+  const [sum7Open, setSum7Open] = React.useState(false);
+  const [sum8Open, setSum8Open] = React.useState(false);
+  const handleSum5Open = () => setSum5Open(true);
+  const handleSum5Close = () => setSum5Open(false);
+  const handleSum6Open = () => setSum6Open(true);
+  const handleSum6Close = () => setSum6Open(false);
+  const handleSum7Open = () => setSum7Open(true);
+  const handleSum7Close = () => setSum7Open(false);
+  const handleSum8Open = () => setSum8Open(true);
+  const handleSum8Close = () => setSum8Open(false);
 
   const [outOfStockValue, setOutOfStockValue] = useState(
     productsOutOfStock?.map(
@@ -159,6 +184,54 @@ function Summaries({
       >
         <Box sx={style}>
           <LatestExport productsExport={productsExport} />
+        </Box>
+      </Modal>
+      <Modal
+        open={sum5Open}
+        onClose={handleSum5Close}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={showImgstyle}>
+          <figure>
+            <img src={`${webPath}${mostExportedProduct?.thumbnail_link}`} alt="" />
+          </figure>
+        </Box>
+      </Modal>
+      <Modal
+        open={sum6Open}
+        onClose={handleSum6Close}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={showImgstyle}>
+          <figure>
+            <img src={`${webPath}${mostProductInStock?.thumbnail_link}`} alt="" />
+          </figure>
+        </Box>
+      </Modal>
+      <Modal
+        open={sum7Open}
+        onClose={handleSum7Close}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={showImgstyle}>
+          <figure>
+            <img src={`${webPath}${mostProductExpire?.thumbnail_link}`} alt="" />
+          </figure>
+        </Box>
+      </Modal>
+      <Modal
+        open={sum8Open}
+        onClose={handleSum8Close}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={showImgstyle}>
+          <figure>
+            <img src={`${webPath}${mostProductOutOfStock?.thumbnail_link}`} alt="" />
+          </figure>
         </Box>
       </Modal>
       <div className="grid-container-1fr-1fr-white">
@@ -329,7 +402,7 @@ function Summaries({
           <Card className="item">
             <p className="header">สินค้าเบิกออกมากสุด/เดือน</p>
             <div className="content">
-              <figure className="image">
+              <figure className="image" style={{cursor: "pointer"}} onClick={handleSum5Open}>
                 {mostExportedProduct?.export_value +
                   mostExportedProduct?.export_defective_value !==
                   0 && mostExportedProduct !== null ? (
@@ -404,7 +477,7 @@ function Summaries({
           <Card className="item">
             <p className="header">สินค้าคงเหลือในสต็อกมากสุด/เดือน</p>
             <div className="content">
-              <figure className="image">
+              <figure className="image" style={{cursor: "pointer"}} onClick={handleSum6Open}>
                 {mostProductInStock?.import_value -
                   mostProductInStock?.export_value -
                   mostProductInStock?.export_defective_value !==
@@ -487,7 +560,7 @@ function Summaries({
           <Card className="item">
             <p className="header">สินค้าใกล้หมดอายุมากสุด</p>
             <div className="content">
-              <figure className="image">
+              <figure className="image" style={{cursor: "pointer"}} onClick={handleSum7Open}>
                 {mostProductExpire?.import_value -
                   mostProductExpire?.export_value -
                   mostProductExpire?.export_defective_value !==
@@ -584,7 +657,7 @@ function Summaries({
           <Card className="item">
             <p className="header">สินค้าใกล้หมดสต็อกมากสุด</p>
             <div className="content">
-              <figure className="image">
+              <figure className="image" style={{cursor: "pointer"}} onClick={handleSum8Open}>
                 {mostProductOutOfStock?.import_value -
                   mostProductOutOfStock?.export_value -
                   mostProductOutOfStock?.export_defective_value !==

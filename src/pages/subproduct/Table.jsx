@@ -1,27 +1,52 @@
 import React, { useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Avatar, Button, Typography } from "@mui/material";
+import { Avatar, Button, Modal, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { v4 as uuidv4 } from 'uuid';
 
 import dayjs from "dayjs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileImport } from "@fortawesome/free-solid-svg-icons";
+import { Box } from "@mui/system";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 480,
+  bgcolor: "#fff",
+  borderRadius: "10px",
+  boxShadow: 24,
+  p: 4,
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center"
+};
 
 export default function Table({ productsData, refreshData, setRefreshData, setProductShow, setOpenModal }) {
   const webPath = useSelector((state) => state.app.webPath);
+  const [showImg, setShowImg] = useState(null)
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  function openImgModal(params) {
+    console.log(params.row.thumbnail_link)
+    setShowImg(params.row.thumbnail_link)
+    handleOpen();
+  }
 
   const columns = [
     {
       field: "thumbnail_link",
       headerName: "ภาพ",
-      // style: { maxWidth: '300px !important'  },
-      width: 55,
+      width: 50,
       headerClassName: "table-columns",
       headerAlign: "center",
       align: "center",
       renderCell: (params) => (
-        <div style={{ background: "#D0D0E2", borderRadius: "5px" }}>
+        <div style={{ background: "#D0D0E2", borderRadius: "5px", cursor: "pointer" }} onClick={()=>openImgModal(params)}>
           <Avatar
             src={`${webPath}${params.row.thumbnail_link}`}
             alt={`Image ${params.thumbnail_title}`}
@@ -197,6 +222,18 @@ export default function Table({ productsData, refreshData, setRefreshData, setPr
 
   return (
     <div>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <figure>
+            <img src={`${webPath}${showImg}`} alt="" />
+          </figure>
+        </Box>
+      </Modal>
       <DataGrid
         getRowClassName={() => rowsClassName}
         sx={{ fontSize: "12px", border: "none" }}

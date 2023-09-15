@@ -1,10 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Avatar, Typography } from "@mui/material";
+import { Avatar, Modal, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 
 import MenuItemList from "./MenuItemList";
 import dayjs from "dayjs";
+import { Box } from "@mui/system";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 480,
+  bgcolor: "#fff",
+  borderRadius: "10px",
+  boxShadow: 24,
+  p: 4,
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center"
+};
 
 function Table({
   productsData,
@@ -14,7 +30,11 @@ function Table({
   setProductSelected,
 }) {
   const webPath = useSelector((state) => state.app.webPath);
-  const [isHovered, setIsHovered] = React.useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [showImg, setShowImg] = useState(null)
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const onRowsSelectionHandler = (ids) => {
     const selectedRowsData = ids.map((id) =>
@@ -22,6 +42,12 @@ function Table({
     );
     setProductSelected(selectedRowsData);
   };
+
+  function openImgModal(params) {
+    console.log(params.row.thumbnail_link)
+    setShowImg(params.row.thumbnail_link)
+    handleOpen();
+  }
 
   const columns = [
     {
@@ -32,7 +58,7 @@ function Table({
       headerAlign: "center",
       align: "center",
       renderCell: (params) => (
-        <div style={{ background: "#D0D0E2", borderRadius: "5px" }}>
+        <div style={{ background: "#D0D0E2", borderRadius: "5px", cursor: "pointer" }} onClick={()=>openImgModal(params)}>
           <Avatar
             src={`${webPath}${params.row.thumbnail_link}`}
             alt={`Image ${params.thumbnail_title}`}
@@ -548,6 +574,18 @@ function Table({
 
   return (
     <div>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <figure>
+            <img src={`${webPath}${showImg}`} alt="" />
+          </figure>
+        </Box>
+      </Modal>
       <DataGrid
         getRowClassName={() => rowsClassName}
         sx={{ fontSize: "12px", border: "none" }}
