@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Modal, TextField, Typography } from "@mui/material";
 import { Card } from "@mui/material";
@@ -26,6 +26,17 @@ import ExportDetail from "./components/ExportDetail";
 import { backgroundColor } from "@mui/system/palette";
 import { useSelector } from "react-redux";
 import { parse } from "@fortawesome/fontawesome-svg-core";
+import {
+  PDFDownloadLink,
+  Page,
+  Text,
+  View,
+  Document,
+  StyleSheet,
+  pdf,
+} from "@react-pdf/renderer";
+import ReactToPdf from "react-to-pdf";
+import PDFFile from "./components/PDFFile";
 
 const style = {
   position: "absolute",
@@ -49,6 +60,7 @@ function ProductsPage() {
   const searchParams = new URLSearchParams(location.search);
   const slug = searchParams.get("slug");
   const hasSlug = slug === "fromimport" ? true : false;
+  const ref = useRef();
 
   const { t } = useTranslation(["dashboard-page"]);
   const [loading, setLoading] = useState(true);
@@ -62,6 +74,9 @@ function ProductsPage() {
   const [curBarcode, setCurBarcode] = useState("");
   const [productType, setProductType] = useState("");
   const [vat, setVat] = useState("");
+  const [errorExportType, setErrorExportType] = useState(false)
+  const [errorPicker, setErrorPicker] = useState(false)
+  const [errorApprover, setErrorApprover] = useState(false)
 
   const [productShow, setProductShow] = useState([]);
   const [refreshData, setRefreshData] = useState(0);
@@ -89,6 +104,7 @@ function ProductsPage() {
       option: "ตู้ขาย",
     },
   ];
+  console.log(today)
   const [randomNum, setRandomNum] = useState(0);
   const [selectedExportType, setSelectedExportType] = useState("");
   const [picker, setPicker] = useState("");
@@ -136,7 +152,7 @@ function ProductsPage() {
     );
   });
 
-  console.log(productsAll)
+  console.log(productsAll);
 
   const multiExportHandle = () => {
     console.log(productSelected);
@@ -262,6 +278,21 @@ function ProductsPage() {
       null
     ) {
       Swal.fire("Error", "Please enter all fields", "error");
+      if (selectedExportType !== "" || null) {
+        setErrorExportType(false)
+      } else {
+        setErrorExportType(true)
+      }
+      if (picker !== "" || null) {
+        setErrorPicker(false)
+      } else {
+        setErrorPicker(true)
+      }
+      if (approver !== "" || null) {
+        setErrorApprover(false)
+      } else {
+        setErrorApprover(true)
+      }
     } else {
       try {
         const response = await axios.post("product/export/detail", formData);
@@ -278,7 +309,9 @@ function ProductsPage() {
             .then(() => {
               setOpenExportedTempModal(false);
               setRefreshData(refreshData + 1);
-            });
+            }).then(() => {
+              openPDF();
+            })
         } else {
           Swal.fire("Error", "Failed to export the product", "error");
         }
@@ -293,6 +326,20 @@ function ProductsPage() {
     }
   }
 
+  async function openPDF() {
+    const blob = await pdf(
+      <PDFFile
+        data={exportedProductTemp}
+        export_id={today}
+        export_date={formattedDate}
+        username={displayName}
+        export_type={selectedExportType}
+      />
+    ).toBlob();
+    const pdfURL = URL.createObjectURL(blob);
+    window.open(pdfURL, "_blank");
+  };
+
   useEffect(() => {
     getProducts();
     getExportedProductTemp();
@@ -301,6 +348,18 @@ function ProductsPage() {
   useEffect(() => {
     generateRandomNumber();
   }, []);
+
+  useEffect(() => {
+    if(selectedExportType !== "" || null) {
+      setErrorExportType(false)
+    }
+    if(picker !== "" || null) {
+      setErrorPicker(false)
+    }
+    if(approver !== "" || null) {
+      setErrorApprover(false)
+    }
+  }, [selectedExportType, picker, approver]);
 
   const uniqueProductsMap = new Map();
   exportedProductTemp.forEach((item) => {
@@ -358,7 +417,7 @@ function ProductsPage() {
               justifyContent: "space-between",
               alignItems: "center",
               gap: "1rem",
-              position: "relative"
+              position: "relative",
             }}
           >
             <figure style={{ width: "30px", marginBottom: "1rem" }}>
@@ -488,7 +547,9 @@ function ProductsPage() {
                 size="small"
                 disablePortal
                 id="combo-box-prev-barcode"
-                options={prevBarcodeOptions.filter((option) => option !== null && option !== undefined)}
+                options={prevBarcodeOptions.filter(
+                  (option) => option !== null && option !== undefined
+                )}
                 onChange={(event, value) => setPrevBarcode(value || "")}
                 fullWidth
                 renderInput={(params) => (
@@ -499,7 +560,9 @@ function ProductsPage() {
                 size="small"
                 disablePortal
                 id="combo-box-cur-barcode"
-                options={curBarcodeOptions.filter((option) => option !== null && option !== undefined)}
+                options={curBarcodeOptions.filter(
+                  (option) => option !== null && option !== undefined
+                )}
                 onChange={(event, value) => setCurBarcode(value || "")}
                 fullWidth
                 renderInput={(params) => (
@@ -568,6 +631,8 @@ function ProductsPage() {
                   display: "flex",
                   flexDirection: "column",
                   gap: "1rem",
+                  height: "100%",
+                  overflow: "auto"
                 }}
               >
                 <div
@@ -592,9 +657,19 @@ function ProductsPage() {
                       รายการสินค้าทั้งหมดที่จะเบิกออก
                     </p>
                   </figure>
+                  <div style={{display: "flex", alignItems: "center", gap: "1rem"}}>
+
                   <p style={{ fontWeight: 400, color: "#3B336B" }}>
                     {uniqueProductsData?.length} รายการ
                   </p>
+                  <Button
+                    onClick={submitExportForm}
+                    variant="contained"
+                    sx={{ background: "#3b326b", marginRight: "1rem", width: "150px" }}
+                    >
+                    ยืนยันเบิก
+                  </Button>
+                    </div>
                 </div>
                 <div
                   style={{
@@ -602,6 +677,7 @@ function ProductsPage() {
                     justifyContent: "space-between",
                     alignItems: "center",
                     gap: "1rem",
+                    paddingRight: "1rem"
                   }}
                 >
                   <div
@@ -656,7 +732,7 @@ function ProductsPage() {
                       sx={{ width: "33%" }}
                       size="small"
                       renderInput={(params) => (
-                        <TextField {...params} label="เบิกไปที่" />
+                        <TextField {...params} label="เบิกไปที่" error={errorExportType} />
                       )}
                     />
                     <TextField
@@ -666,6 +742,7 @@ function ProductsPage() {
                       sx={{ width: "33%" }}
                       value={picker}
                       onChange={(e) => setPicker(e.target.value)}
+                      error={errorPicker}
                     />
                     <TextField
                       label="ผู้อนุมัติ"
@@ -674,6 +751,7 @@ function ProductsPage() {
                       sx={{ width: "33%" }}
                       value={approver}
                       onChange={(e) => setApprover(e.target.value)}
+                      error={errorApprover}
                     />
                   </div>
                 </div>
@@ -692,13 +770,6 @@ function ProductsPage() {
                     setRefreshData={setRefreshData}
                     setOpenExportedTempModal={setOpenExportedTempModal}
                   />
-                  <Button
-                    onClick={submitExportForm}
-                    variant="contained"
-                    sx={{ background: "#3b326b" }}
-                  >
-                    ยืนยันเบิก
-                  </Button>
                 </div>
               </div>
             </Box>

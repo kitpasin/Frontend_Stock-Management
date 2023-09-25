@@ -5,12 +5,25 @@ import { useTranslation } from "react-i18next";
 import { Autocomplete, Button, Card, TextField } from "@mui/material";
 import axios from "axios";
 import Table from "./components/Table";
+import { useRef } from "react";
+import {
+  PDFDownloadLink,
+  Page,
+  Text,
+  View,
+  Document,
+  StyleSheet,
+  pdf,
+} from "@react-pdf/renderer";
+import ReactToPdf from "react-to-pdf";
+import PDFFile from "./components/PDFFile";
+
 function ExportDetailsPage() {
   const { t } = useTranslation(["dashboard-page"]);
   const [loading, setLoading] = useState(true);
   const [exportedProductDetails, setExportedProductDetails] = useState([]);
   const [refreshData, setRefreshData] = useState(0);
-  const [productType, setProductType] = useState("")
+  const [productType, setProductType] = useState("");
   const [productName, setProductName] = useState("");
   const [productID, setProductID] = useState("");
   const [exportID, setExportID] = useState("");
@@ -90,6 +103,16 @@ function ExportDetailsPage() {
     getExportedProductDetails().then(() => setLoading(false));
   }, []);
 
+  async function openPDF() {
+    const blob = await pdf(
+      <PDFFile
+        data={exportedProductDetails}
+      />
+    ).toBlob();
+    const pdfURL = URL.createObjectURL(blob);
+    window.open(pdfURL, "_blank");
+  };
+
   console.log(exportedProductDetails);
 
   return (
@@ -127,6 +150,18 @@ function ExportDetailsPage() {
                   <p>{filterdProduct?.length} รายการ</p>
                 </div>
               </div>
+              <Button
+                onClick={openPDF}
+                variant="contained"
+                sx={{
+                  background: "#3b326b",
+                  marginRight: "1rem",
+                  width: "150px",
+                  textTransform: "capitalize"
+                }}
+              >
+                Print
+              </Button>
             </div>
             <div
               style={{
@@ -144,7 +179,9 @@ function ExportDetailsPage() {
                 options={productTypeOptions}
                 onChange={(event, value) => setProductType(value || "")}
                 fullWidth
-                renderInput={(params) => <TextField {...params} label="ประเภทสินค้า" />}
+                renderInput={(params) => (
+                  <TextField {...params} label="ประเภทสินค้า" />
+                )}
               />
               <Autocomplete
                 size="small"

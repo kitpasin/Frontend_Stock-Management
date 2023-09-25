@@ -495,7 +495,7 @@ function ReportPage() {
               </Card>
             </div>
             <Table
-              filteredProduct={uniqueProductsData}
+              filteredProduct={selectedReport === "สินค้าเบิกออก" ? filteredProduct : uniqueProductsData}
               selectedReport={selectedReport}
               setSelectedProduct={setSelectedProduct}
             />

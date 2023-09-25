@@ -9,19 +9,6 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { Box } from "@mui/system";
 
-function CustomToolbar() {
-  return (
-    <GridToolbarContainer>
-      <GridToolbarExport
-        printOptions={{
-          hideFooter: true,
-          hideToolbar: true,
-        }}
-      />
-    </GridToolbarContainer>
-  );
-}
-
 const style = {
   position: "absolute",
   top: "50%",
@@ -171,6 +158,14 @@ function Table({ exportedProductDetails, refreshData, setRefreshData }) {
       ),
     },
     {
+      field: "export_type",
+      headerName: "เบิกไปที่",
+      headerAlign: "center",
+      align: "center",
+      width: 140,
+      headerClassName: "table-columns",
+    },
+    {
       field: "export_date",
       headerName: "วันที่เบิก",
       headerAlign: "center",
@@ -224,7 +219,6 @@ function Table({ exportedProductDetails, refreshData, setRefreshData }) {
         </Box>
       </Modal>
       <DataGrid
-        slots={{ toolbar: CustomToolbar }}
         getRowClassName={() => rowsClassName}
         sx={{ fontSize: "12px", border: "none" }}
         rows={exportedProductDetails}

@@ -80,7 +80,7 @@ function ExportDetail({
       headerName: "ชื่อรายการ",
       headerAlign: "center",
       align: "left",
-      width: 144,
+      width: 143,
       headerClassName: "table-columns",
       renderCell: (params) => {
         return (
@@ -109,7 +109,7 @@ function ExportDetail({
       field: "p_type",
       headerAlign: "center",
       align: "center",
-      width: 144,
+      width: 143,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -128,7 +128,7 @@ function ExportDetail({
       field: "product_barcode",
       headerAlign: "center",
       align: "center",
-      width: 144,
+      width: 143,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -144,7 +144,7 @@ function ExportDetail({
       field: "quantityPerUnit",
       headerAlign: "center",
       align: "center",
-      width: 144,
+      width: 143,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -186,12 +186,12 @@ function ExportDetail({
       headerName: "วันที่ซื้อ",
       headerAlign: "center",
       align: "center",
-      width: 144,
+      width: 143,
       headerClassName: "table-columns",
     },
     {
       field: "mfd_date",
-      width: 144,
+      width: 143,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -231,14 +231,14 @@ function ExportDetail({
       headerName: "หน่วยนับ",
       headerAlign: "center",
       align: "center",
-      width: 144,
+      width: 143,
       headerClassName: "table-columns",
     },
     {
       field: "volumnPerUnit",
       headerAlign: "center",
       align: "center",
-      width: 144,
+      width: 143,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -264,7 +264,7 @@ function ExportDetail({
     },
     {
       field: "selling_price",
-      width: 144,
+      width: 143,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -285,7 +285,7 @@ function ExportDetail({
     },
     {
       field: "quantity",
-      width: 144,
+      width: 143,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -329,7 +329,7 @@ function ExportDetail({
       headerName: "ลบ",
       headerAlign: "center",
       align: "center",
-      width: 144,
+      width: 143,
       headerClassName: "table-columns",
       renderCell: (params) => (
         <DeleteRowExportDetail

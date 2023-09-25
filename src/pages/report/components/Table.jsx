@@ -41,6 +41,8 @@ function Table({ filteredProduct, selectedReport, setSelectedProduct }) {
     handleOpen();
   }
 
+  console.log(selectedReport)
+  
   const columns = [
     {
       field: "thumbnail_link",
@@ -70,7 +72,7 @@ function Table({ filteredProduct, selectedReport, setSelectedProduct }) {
       headerName: "ชื่อรายการ",
       headerAlign: "center",
       align: "left",
-      width: isHovered ? 290 : 140,
+      width: isHovered ? 290 : 128,
       headerClassName: "table-columns",
       renderCell: (params) => {
         return (
@@ -95,12 +97,20 @@ function Table({ filteredProduct, selectedReport, setSelectedProduct }) {
         );
       },
     },
+    selectedReport === "สินค้าเบิกออก" && {
+      field: "export_id",
+      headerName: "รหัสเบิก",
+      headerAlign: "center",
+      align: "center",
+      width: 128,
+      headerClassName: "table-columns",
+    },
     {
       field: "p_type",
       headerName: "ประเภทสินค้า",
       headerAlign: "center",
       align: "center",
-      width: 140,
+      width: 128,
       headerClassName: "table-columns",
     },
     {
@@ -108,7 +118,7 @@ function Table({ filteredProduct, selectedReport, setSelectedProduct }) {
       headerName: "บาร์โค้ดเดิม",
       headerAlign: "center",
       align: "center",
-      width: 140,
+      width: 128,
       headerClassName: "table-columns",
       renderCell: (params) => {
         return (
@@ -127,7 +137,7 @@ function Table({ filteredProduct, selectedReport, setSelectedProduct }) {
       headerName: "บาร์โค้ดใหม่",
       headerAlign: "center",
       align: "center",
-      width: 140,
+      width: 128,
       headerClassName: "table-columns",
       renderCell: (params) => {
         return (
@@ -146,7 +156,7 @@ function Table({ filteredProduct, selectedReport, setSelectedProduct }) {
       headerName: "บาร์โค้ดซัพพลายเออร์",
       headerAlign: "center",
       align: "center",
-      width: 140,
+      width: 128,
       headerClassName: "table-columns",
       renderCell: (params) => {
         return (
@@ -206,12 +216,12 @@ function Table({ filteredProduct, selectedReport, setSelectedProduct }) {
       headerName: "วันที่ซื้อ",
       headerAlign: "center",
       align: "center",
-      width: 140,
+      width: 128,
       headerClassName: "table-columns",
     },
     {
       field: "oc_unit",
-      width: 140,
+      width: 128,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -237,7 +247,7 @@ function Table({ filteredProduct, selectedReport, setSelectedProduct }) {
     },
     {
       field: "unit_price",
-      width: 140,
+      width: 128,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -286,7 +296,7 @@ function Table({ filteredProduct, selectedReport, setSelectedProduct }) {
       field: "pp_vat",
       headerAlign: "center",
       align: "center",
-      width: 140,
+      width: 128,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -305,7 +315,7 @@ function Table({ filteredProduct, selectedReport, setSelectedProduct }) {
     },
     {
       field: "selling_price",
-      width: 140,
+      width: 128,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -324,7 +334,7 @@ function Table({ filteredProduct, selectedReport, setSelectedProduct }) {
         </div>
       ),
     },
-  ];
+  ].filter(Boolean);
 
   const rowsClassName = "table-rows";
 

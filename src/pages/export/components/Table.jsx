@@ -98,19 +98,12 @@ function Table({
       ),
     },
     {
-      field: "user",
-      headerName: "ผู้ใช้งาน",
+      field: "export_id",
+      headerName: "รหัสเบิก",
       headerAlign: "center",
       align: "center",
-      width: 70,
+      width: 150,
       headerClassName: "table-columns",
-      renderCell: () => (
-        <div>
-          <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>
-            {displayName}
-          </p>
-        </div>
-      ),
     },
     {
       field: "export_quantity",

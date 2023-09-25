@@ -22,6 +22,7 @@ function ExportPage() {
 
   const [loading, setLoading] = useState(true);
 
+  const [exportID, setExportID] = useState(null)
   const [exportedProducts, setExportedProducts] = useState([]);
   const [title, setTitle] = useState("");
   const [productId, setProductId] = useState("");
@@ -38,6 +39,7 @@ function ExportPage() {
   const [openMultiExportModal, setOpenMultiexportModal] = useState(false);
 
   const filteredProduct = exportedProducts.filter((product) => {
+    const matchesExportID = exportID ? product.export_id === exportID : true;
     const matchesTitle = title ? product.title === title : true;
     const matchProductId = productId ? product.product_id === productId : true;
     const matchesMainCategory = mainCategory ? product.main_cate_name === mainCategory : true;
@@ -54,7 +56,7 @@ function ExportPage() {
       matchesVat = product.vat_id == 0;
     }
 
-    return matchesTitle && matchProductId && matchesMainCategory && matchesSupplier && matchesVat && matchesSubCategory && matchesPrevBarcode && matchesCurBarcode && matchesProductType;
+    return matchesExportID && matchesTitle && matchProductId && matchesMainCategory && matchesSupplier && matchesVat && matchesSubCategory && matchesPrevBarcode && matchesCurBarcode && matchesProductType;
   });
 
   console.log(exportedProducts)
@@ -82,6 +84,10 @@ function ExportPage() {
   useEffect(() => {
     getExportedProduct();
   }, [refreshData]);
+
+  const exportIDOptions = exportedProducts
+    .map((product) => product.export_id)
+    .filter((value, index, self) => self.indexOf(value) === index);
 
   const titleOptions = exportedProducts
     .map((product) => product.title)
@@ -221,6 +227,17 @@ function ExportPage() {
                 gap: "1rem",
               }}
             >
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-supplier"
+                options={exportIDOptions}
+                onChange={(event, value) => setExportID(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField {...params} label="รหัสเบิก" />
+                )}
+              />
               <Autocomplete
                 size="small"
                 disablePortal
