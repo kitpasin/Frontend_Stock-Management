@@ -84,7 +84,7 @@ function ProductsPage() {
   const [selectFrom, setSelectFrom] = useState([]);
   const [openMultiExportModal, setOpenMultiexportModal] = useState(false);
   const [openMultiImportModal, setOpenMultiImportModal] = useState(false);
-  const [openExportedTempModal, setOpenExportedTempModal] = useState(false);
+  const [openExportedTempModal, setOpenExportedTempModal] = useState(true);
   const handleOpen = () => setOpenExportedTempModal(true);
   const handleClose = () => setOpenExportedTempModal(false);
   const current_date = dayjs().toISOString().substring(0, 10);
@@ -334,6 +334,8 @@ function ProductsPage() {
         export_date={formattedDate}
         username={displayName}
         export_type={selectedExportType}
+        picker={picker}
+        approver={approver}
       />
     ).toBlob();
     const pdfURL = URL.createObjectURL(blob);

@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     backgroundColor: "#475569",
-    paddingTop: 5
+    paddingTop: 5,
   },
   tableRow: {
     flexDirection: "row",
@@ -83,20 +83,29 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     gap: 30,
     width: "100%",
-    fontSize: 20
+    fontSize: 20,
   },
   floatRight: {
     display: "flex",
     flexDirection: "row",
     alignItems: "stretch",
     justifyContent: "flex-end",
+    textAlign: "right",
     gap: 30,
     width: "100%",
-    fontSize: 20
-  }
+    fontSize: 20,
+  },
 });
 
-const PDFFile = ({ data, export_id, export_date, username, export_type }) => {
+const PDFFile = ({
+  data,
+  export_id,
+  export_date,
+  username,
+  export_type,
+  picker,
+  approver,
+}) => {
   return (
     <Document>
       <Page
@@ -121,10 +130,16 @@ const PDFFile = ({ data, export_id, export_date, username, export_type }) => {
           </View>
           <View style={styles.floatRight}>
             <View>
-              <Text>ผู้เบิก : .............................................</Text>
+              <Text>
+                ผู้เบิก : .............................................
+              </Text>
+              <Text style={{width: "36%", textAlign: "center"}}>( {picker} )</Text>
             </View>
             <View>
-              <Text>ผู้อนุมัติ : .............................................</Text>
+              <Text>
+                ผู้อนุมัติ : .............................................
+              </Text>
+              <Text style={{width: "40%", textAlign: "center"}}>( {approver} )</Text>
             </View>
           </View>
         </View>
