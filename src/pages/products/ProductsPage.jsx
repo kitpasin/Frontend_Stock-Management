@@ -373,6 +373,8 @@ function ProductsPage() {
   });
   const uniqueExportData = Array.from(uniqueProductsMap.values());
 
+  console.log(uniqueExportData)
+
   const titleOptions = productsAll
     .map((product) => product.title)
     .filter((value, index, self) => self.indexOf(value) === index);

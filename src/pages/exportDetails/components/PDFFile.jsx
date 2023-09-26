@@ -33,19 +33,45 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginTop: 10,
   },
+  tableRowHeader: {
+    flexDirection: "row",
+    backgroundColor: "#f2f2f2",
+    height: "100%",
+    minHeight: 30,
+  },
+  tableHeader: {
+    fontSize: 16,
+    borderStyle: "solid",
+    borderColor: "#000",
+    borderWidth: 1,
+    flex: 1,
+    textAlign: "center",
+    color: "#fff",
+    fontWeight: "bold",
+    backgroundColor: "#475569",
+    paddingTop: 5,
+  },
   tableRow: {
     flexDirection: "row",
     backgroundColor: "#f2f2f2",
-    minHeight: 20,
+    height: "100%",
+    minHeight: 55,
   },
   tableHeader: {
-    backgroundColor: "#333",
+    fontSize: 16,
+    borderStyle: "solid",
+    borderColor: "#000",
+    borderWidth: 1,
+    flex: 1,
+    textAlign: "center",
     color: "#fff",
     fontWeight: "bold",
+    backgroundColor: "#475569",
+    paddingTop: 5,
   },
   tableCell: {
     padding: 5,
-    fontSize: 12,
+    fontSize: 16,
     borderStyle: "solid",
     borderColor: "#000",
     borderWidth: 1,
@@ -68,7 +94,8 @@ const styles = StyleSheet.create({
     alignItems: "stretch",
     justifyContent: "flex-start",
     gap: 30,
-    width: "100%"
+    width: "100%",
+    fontSize: 20,
   },
   floatRight: {
     display: "flex",
@@ -76,8 +103,9 @@ const styles = StyleSheet.create({
     alignItems: "stretch",
     justifyContent: "flex-end",
     gap: 30,
-    width: "100%"
-  }
+    width: "100%",
+    fontSize: 20,
+  },
 });
 
 const PDFFile = ({ data }) => {
@@ -89,58 +117,58 @@ const PDFFile = ({ data }) => {
         fonts={[{ src: ThaiSarabunRegular, family: "ThaiSarabun" }]}
       >
         <View style={styles.table}>
-          <View style={[styles.tableRow, styles.tableHeader]}>
-            <View style={[styles.tableCell, styles.tableHeader]}>
+          <View style={styles.tableRowHeader}>
+            <View style={{ ...styles.tableHeader, flex: 1.175 }}>
               <Text>สินค้า</Text>
             </View>
-            <View style={[styles.tableCell, styles.tableHeader]}>
+            <View style={styles.tableHeader}>
               <Text>ประเภทสินค้า</Text>
             </View>
-            <View style={[styles.tableCell, styles.tableHeader]}>
+            <View style={{ ...styles.tableHeader, flex: 1.175 }}>
               <Text>รหัสเบิก</Text>
             </View>
-            <View style={[styles.tableCell, styles.tableHeader]}>
+            <View style={styles.tableHeader}>
               <Text>ซัพพลายเออร์</Text>
             </View>
-            <View style={[styles.tableCell, styles.tableHeader]}>
+            <View style={styles.tableHeader}>
               <Text>บาร์โค้ดเดิม</Text>
             </View>
-            <View style={[styles.tableCell, styles.tableHeader]}>
+            <View style={styles.tableHeader}>
               <Text>บาร์โค้ดใหม่</Text>
             </View>
-            <View style={[styles.tableCell, styles.tableHeader]}>
+            <View style={styles.tableHeader}>
               <Text>จำนวนเบิก</Text>
             </View>
-            <View style={[styles.tableCell, styles.tableHeader]}>
+            <View style={styles.tableHeader}>
               <Text>คงเหลือ</Text>
             </View>
-            <View style={[styles.tableCell, styles.tableHeader]}>
+            <View style={styles.tableHeader}>
               <Text>เบิกไปที่</Text>
             </View>
-            <View style={[styles.tableCell, styles.tableHeader]}>
+            <View style={styles.tableHeader}>
               <Text>วันที่เบิก</Text>
             </View>
-            <View style={[styles.tableCell, styles.tableHeader]}>
+            <View style={styles.tableHeader}>
               <Text>ผู้ใช้งาน</Text>
             </View>
-            <View style={[styles.tableCell, styles.tableHeader]}>
+            <View style={styles.tableHeader}>
               <Text>ผู้เบิก</Text>
             </View>
-            <View style={[styles.tableCell, styles.tableHeader]}>
+            <View style={styles.tableHeader}>
               <Text>ผู้อนุมัติ</Text>
             </View>
           </View>
 
           {data.map((item, index) => (
             <View key={index} style={styles.tableRow}>
-              <View style={styles.tableCell}>
+              <View style={{ ...styles.tableCell, flex: 1.2 }}>
                 <Text>{item.title}</Text>
                 <Text>{item.product_id}</Text>
               </View>
               <View style={styles.tableCell}>
                 <Text>{item.p_type}</Text>
               </View>
-              <View style={styles.tableCell}>
+              <View style={{ ...styles.tableCell, flex: 1.2 }}>
                 <Text>{item.export_id}</Text>
               </View>
               <View style={styles.tableCell}>

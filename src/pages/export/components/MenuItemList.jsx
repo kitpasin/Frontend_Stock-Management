@@ -113,8 +113,9 @@ function MenuItemList({
     }
   };
 
-  const deleteHandle = (product_id, export_quantity, export_date) => {
+  const deleteHandle = (product_id, export_id, export_quantity, export_date) => {
     const data = {
+      export_id: export_id,
       quantity: export_quantity,
       date: export_date
     };
@@ -216,6 +217,7 @@ function MenuItemList({
           onClick={() =>
             deleteHandle(
               params.row.product_id,
+              params.row.export_id,
               params.row.export_quantity,
               params.row.formatted_created_at
             )

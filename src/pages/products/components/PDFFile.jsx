@@ -33,19 +33,33 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginTop: 10,
   },
+  tableRowHeader: {
+    flexDirection: "row",
+    backgroundColor: "#f2f2f2",
+    height: "100%",
+    minHeight: 30,
+  },
+  tableHeader: {
+    fontSize: 16,
+    borderStyle: "solid",
+    borderColor: "#000",
+    borderWidth: 1,
+    flex: 1,
+    textAlign: "center",
+    color: "#fff",
+    fontWeight: "bold",
+    backgroundColor: "#475569",
+    paddingTop: 5
+  },
   tableRow: {
     flexDirection: "row",
     backgroundColor: "#f2f2f2",
-    minHeight: 20,
-  },
-  tableHeader: {
-    backgroundColor: "#333",
-    color: "#fff",
-    fontWeight: "bold",
+    height: "100%",
+    minHeight: 50,
   },
   tableCell: {
     padding: 5,
-    fontSize: 12,
+    fontSize: 16,
     borderStyle: "solid",
     borderColor: "#000",
     borderWidth: 1,
@@ -68,7 +82,8 @@ const styles = StyleSheet.create({
     alignItems: "stretch",
     justifyContent: "flex-start",
     gap: 30,
-    width: "100%"
+    width: "100%",
+    fontSize: 20
   },
   floatRight: {
     display: "flex",
@@ -76,7 +91,8 @@ const styles = StyleSheet.create({
     alignItems: "stretch",
     justifyContent: "flex-end",
     gap: 30,
-    width: "100%"
+    width: "100%",
+    fontSize: 20
   }
 });
 
@@ -105,43 +121,43 @@ const PDFFile = ({ data, export_id, export_date, username, export_type }) => {
           </View>
           <View style={styles.floatRight}>
             <View>
-              <Text>ผู้เบิก : ..............................</Text>
+              <Text>ผู้เบิก : .............................................</Text>
             </View>
             <View>
-              <Text>ผู้อนุมัติ : ..............................</Text>
+              <Text>ผู้อนุมัติ : .............................................</Text>
             </View>
           </View>
         </View>
         <View style={styles.table}>
-          <View style={[styles.tableRow, styles.tableHeader]}>
-            <View style={[styles.tableCell, styles.tableHeader]}>
+          <View style={styles.tableRowHeader}>
+            <View style={styles.tableHeader}>
               <Text>สินค้า</Text>
             </View>
-            <View style={[styles.tableCell, styles.tableHeader]}>
+            <View style={styles.tableHeader}>
               <Text>ประเภทสินค้า</Text>
             </View>
-            <View style={[styles.tableCell, styles.tableHeader]}>
+            <View style={styles.tableHeader}>
               <Text>บาร์โค้ดเดิม</Text>
             </View>
-            <View style={[styles.tableCell, styles.tableHeader]}>
+            <View style={styles.tableHeader}>
               <Text>คงเหลือ/หน่วย</Text>
             </View>
-            <View style={[styles.tableCell, styles.tableHeader]}>
+            <View style={styles.tableHeader}>
               <Text>วันที่ซื้อ</Text>
             </View>
-            <View style={[styles.tableCell, styles.tableHeader]}>
+            <View style={styles.tableHeader}>
               <Text>วันผลิต/วันหมดอายุ</Text>
             </View>
-            <View style={[styles.tableCell, styles.tableHeader]}>
+            <View style={styles.tableHeader}>
               <Text>หน่วยนับ</Text>
             </View>
-            <View style={[styles.tableCell, styles.tableHeader]}>
+            <View style={styles.tableHeader}>
               <Text>ปริมาตรสุทธิ/หน่วย</Text>
             </View>
-            <View style={[styles.tableCell, styles.tableHeader]}>
+            <View style={styles.tableHeader}>
               <Text>ราคาขายจริง</Text>
             </View>
-            <View style={[styles.tableCell, styles.tableHeader]}>
+            <View style={styles.tableHeader}>
               <Text>จำนวนเบิกออก</Text>
             </View>
           </View>
