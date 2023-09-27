@@ -84,7 +84,7 @@ function ProductsPage() {
   const [selectFrom, setSelectFrom] = useState([]);
   const [openMultiExportModal, setOpenMultiexportModal] = useState(false);
   const [openMultiImportModal, setOpenMultiImportModal] = useState(false);
-  const [openExportedTempModal, setOpenExportedTempModal] = useState(true);
+  const [openExportedTempModal, setOpenExportedTempModal] = useState(false);
   const handleOpen = () => setOpenExportedTempModal(true);
   const handleClose = () => setOpenExportedTempModal(false);
   const current_date = dayjs().toISOString().substring(0, 10);
