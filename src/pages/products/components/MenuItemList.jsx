@@ -220,7 +220,6 @@ function MenuItemList({
       if (result.isConfirmed) {
         svDeleteProduct(product_id)
           .then((res) => {
-            console.log(res)
             Swal.fire({
               text: "Delete product success.",
               icon: "success",
