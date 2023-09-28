@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import { Card } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import Radio from "@mui/material/Radio";
@@ -50,6 +50,7 @@ export default function SubproductPage() {
     const result = filter.map((d) => {
       return {
         ...d,
+        export_id: d.export_id.toString(),
         amount_id: d.counting_unit_id,
         amount_name: d.counting_unit_name,
         cate_id: d.main_cate_id,
@@ -59,7 +60,6 @@ export default function SubproductPage() {
         export_values: d.export_value + " " + d.counting_unit_name,
       };
     });
-    // console.log(result)
 
     const barcodes = result?.map((item) => {
       if (item.barcode_number) {
@@ -77,7 +77,6 @@ export default function SubproductPage() {
     const exportOptions = result
       .map((id) => id.export_id)
       .filter((value, index, self) => self.indexOf(value) === index);
-
 
     setProductAll(result);
     setFilteredData(result);
@@ -120,15 +119,29 @@ export default function SubproductPage() {
     setFilteredData(products);
 
     /* Filter Options */
-    if (formFilter.barcode_number || formFilter.title) {
-      const cateOption = products?.map((product) => {
-        return { cate_name: product.main_cate_name, title: product.title };
+    if (formFilter.barcode_number || formFilter.title || formFilter.export_id) {
+      let title = [],
+        cate_name = [],
+        expId = [],
+        barcode = [];
+
+      const options = products?.map((product) => {
+        title.push(product.title);
+        cate_name.push(product.main_cate_name);
+        expId.push(product.export_id);
+        barcode.push(product.barcode_number || product.product_barcode);
       });
-      setBarcodeOptions([
-        products[0].barcode_number || products[0].product_barcode,
-      ]);
-      setCateOptions([cateOption[0].cate_name]);
-      setProductOptions([cateOption[0].title]);
+
+      const exIdOptions = expId?.map((exp) => exp).filter((value, index, self) => self.indexOf(value) === index);
+      const barOptions = barcode?.map(barcode => barcode).filter((value, index, self) => self.indexOf(value) === index);
+      const cateOptions = cate_name?.map(cate => cate).filter((value, index, self) => self.indexOf(value) === index);
+      const titleOptions = title?.map(title => title).filter((value, index, self) => self.indexOf(value) === index);
+      
+      setProductOptions(titleOptions);
+      setCateOptions(cateOptions);
+      setExportIdOptions(exIdOptions);
+      setBarcodeOptions(barOptions);
+
     } else {
       setBarcodeOptions(barcodeInit);
       setCateOptions(cateAll);
@@ -136,15 +149,20 @@ export default function SubproductPage() {
       setExportIdOptions(exportIdInit);
     }
 
-    if (formFilter.cate && (!formFilter.barcode_number || !formFilter.title)) {
+    if ( formFilter.cate && (!formFilter.barcode_number || !formFilter.title || !formFilter.export_id)) {
       const barcode = products
         ?.map((item) => item.barcode_number || item.product_barcode)
         .filter((value, index, self) => self.indexOf(value) === index);
+
       const title = products
         ?.map((item) => item.title)
         .filter((value, index, self) => self.indexOf(value) === index);
+
+      const exIdOptions = products?.map((product) => product.export_id);
+
       setBarcodeOptions(barcode);
       setProductOptions(title);
+      setExportIdOptions(exIdOptions);
     }
   }
 
@@ -195,7 +213,7 @@ export default function SubproductPage() {
                 <Autocomplete
                   size="small"
                   disablePortal
-                  id="combo-box-barcode"
+                  id="combo-box-export"
                   options={exportIdOptions}
                   onChange={(event, value) =>
                     setFormFilter((prev) => {
@@ -210,21 +228,7 @@ export default function SubproductPage() {
                 <Autocomplete
                   size="small"
                   disablePortal
-                  id="combo-box-barcode"
-                  options={barcodeOptions}
-                  onChange={(event, value) =>
-                    setFormFilter((prev) => {
-                      return { ...prev, barcode_number: value ? value : "" };
-                    })
-                  }
-                  fullWidth
-                  renderInput={(params) => (
-                    <TextField {...params} label="ค้นหาด้วยเลขบาร์โค้ด" />
-                  )}
-                />
-                <Autocomplete
-                  size="small"
-                  disablePortal
+                  className="cate-complete"
                   id="combo-box-cate"
                   options={cateOptions}
                   onChange={(event, value) =>
@@ -250,6 +254,21 @@ export default function SubproductPage() {
                   fullWidth
                   renderInput={(params) => (
                     <TextField {...params} label="ชื่อสินค้า" />
+                  )}
+                />
+                <Autocomplete
+                  size="small"
+                  disablePortal
+                  id="combo-box-barcode"
+                  options={barcodeOptions}
+                  onChange={(event, value) =>
+                    setFormFilter((prev) => {
+                      return { ...prev, barcode_number: value ? value : "" };
+                    })
+                  }
+                  fullWidth
+                  renderInput={(params) => (
+                    <TextField {...params} label="ค้นหาด้วยเลขบาร์โค้ด" />
                   )}
                 />
               </div>
