@@ -82,15 +82,13 @@ BootstrapDialogTitle.propTypes = {
 export default function SubproductImport({
   isEdit,
   isFetchImport,
-  isMultiImport,
   open,
   setOpen,
   productShow,
   refreshData,
   setRefreshData,
-  productDatas,
 }) {
-  console.log(productShow)
+
   const form = {
     barcode: productShow.barcode_number,
     title: "",
@@ -135,6 +133,7 @@ export default function SubproductImport({
     total_cost: "",
     set_profit: "",
     vat_id: "",
+    vat_name: "",
     vat: "",
     profit_per_unit: "",
     pp_profit: "",
@@ -157,9 +156,9 @@ export default function SubproductImport({
     disRadio: false,
     disSelect: false,
   };
+  const { t } = useTranslation(["dashboard-page"]);
   const navigate = useNavigate();
   const modalSwal = withReactContent(Swal);
-  const { t } = useTranslation(["dashboard-page"]);
   const webPath = useSelector((state) => state.app.webPath);
   const [preview, setPreview] = useState(formPreview);
   const [productData, setProductData] = useState(isEdit ? productShow : form);
@@ -171,12 +170,8 @@ export default function SubproductImport({
   const [vatsData, setVatsData] = useState([]);
 
   const inputRef = useRef(null);
-
   const formInputRef = useRef(null);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
   const handleClose = () => {
     setOpen(false);
   };
@@ -198,8 +193,6 @@ export default function SubproductImport({
 
   function generateBarcode() {
     const randomNum = Math.floor(Math.random() * 1000000000);
-    const formattedNum = String(randomNum).padStart(9, "0");
-
     const randomNumber = Math.floor(Math.random() * 1000);
     const barcodeNumber =
       Math.floor(Date.now() / 1000) +
@@ -413,7 +406,6 @@ export default function SubproductImport({
     const set_profit = parseFloat(productData.set_profit) || 0;
     const vat = parseFloat(productData.vat) || 0;
     const product_cost = parseFloat(productData.product_cost) || 0;
-    const unit_price = parseFloat(productData.unit_price);
 
     const totalAll = packaging + sticker + other_exp;
     const total_product = parseInt(productData.total_product) || 1;
@@ -424,6 +416,8 @@ export default function SubproductImport({
     const profit_per_unit = (parseFloat(cost_per_unit) * set_profit) / 100;
     const pp_profit = parseFloat((profit_per_unit + parseFloat(cost_per_unit)));
     const pp_vat = parseFloat((vat * pp_profit) / 100) + parseFloat(pp_profit);
+
+    console.log(productData)
 
     setProductData((prev) => {
       return {
@@ -1391,7 +1385,8 @@ export default function SubproductImport({
                                   return {
                                     ...productData,
                                     vat_id: value ? value.id : "",
-                                    vat: value ? value.name : "",
+                                    vat : value ? value.percent : "",
+                                    vat_name : value ? value.name : "",
                                   };
                                 });
                                 setVat(() => {

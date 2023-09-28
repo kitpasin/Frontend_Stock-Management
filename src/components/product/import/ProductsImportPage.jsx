@@ -81,6 +81,7 @@ const form = {
   set_profit: "",
   vat_id: 0,
   vat: 0,
+  vat_name: "",
   profit_per_unit: "",
   pp_profit: "",
   pp_vat: "",
@@ -1662,14 +1663,15 @@ function ProductsImportPage({
                     <Autocomplete
                       key={productData.state3}
                       value={{
-                        name: productData.vat_id !== 0 ? productData.vat : "",
+                        name: productData.vat_id !== 0 ? productData.vat_name : "",
                       }}
                       onChange={(e, value) => {
                         setProductData(() => {
                           return {
                             ...productData,
                             vat_id: value ? value.id : 0,
-                            vat: value ? value.name : "",
+                            vat: value ? value.percent : "",
+                            vat_name: value ? value.name : "",
                           };
                         });
                         setVat(() => {
