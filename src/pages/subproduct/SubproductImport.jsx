@@ -97,6 +97,7 @@ export default function SubproductImport({
     state3: false,
     state4: false,
     reset: false,
+    image_path: "",
     unit: "",
     netweight: "",
     counting_unit: "",
@@ -302,7 +303,7 @@ export default function SubproductImport({
       }
       formData.append("is_subproduct", 1);
       formData.append("image", preview.file);
-      formData.append("image_path", productData.image_path);
+      formData.append("image_path", productData.image_path || "");
       formData.append("title", productData.title);
       formData.append("main_cate_id", productData.main_cate_id);
       formData.append("sub_cate_id", productData.sub_cate_id);
@@ -416,8 +417,6 @@ export default function SubproductImport({
     const profit_per_unit = (parseFloat(cost_per_unit) * set_profit) / 100;
     const pp_profit = parseFloat((profit_per_unit + parseFloat(cost_per_unit)));
     const pp_vat = parseFloat((vat * pp_profit) / 100) + parseFloat(pp_profit);
-
-    console.log(productData)
 
     setProductData((prev) => {
       return {

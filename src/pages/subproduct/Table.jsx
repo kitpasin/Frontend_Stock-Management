@@ -222,6 +222,7 @@ export default function Table({ productsData, refreshData, setRefreshData, setPr
       const dd = data[0];
       const result = {
         ...dd,
+        image_path: dd.thumbnail_link || "",
         new_barcode: dd.barcode_number,
         barcode: dd.product_barcode,
         counting_unit_name: dd.amount_name,

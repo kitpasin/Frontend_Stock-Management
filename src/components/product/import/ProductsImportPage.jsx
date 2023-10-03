@@ -15,27 +15,21 @@ import {
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import AddIcon from "@mui/icons-material/Add";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import Switch from "@mui/material/Switch";
-
-import "./ProductsImportPage.scss";
-import HeadPageComponent from "../../layout/headpage/headpage";
-import { Link, useNavigate } from "react-router-dom";
 import { batch, useSelector } from "react-redux";
-import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import {
-  CoPresentOutlined,
-  PersonOffRounded,
-  ResetTvRounded,
-} from "@mui/icons-material";
+import axios from "axios";
+
+import HeadPageComponent from "../../layout/headpage/headpage";
 import { svCreateProduct } from "../../../services/product.service";
 import { svProductUpdate } from "../../../services/product.service";
+import "./ProductsImportPage.scss";
 
 const form = {
   title: "",
@@ -79,8 +73,8 @@ const form = {
   cost_per_unit: "",
   total_cost: "",
   set_profit: "",
-  vat_id: 0,
-  vat: 0,
+  vat_id: "",
+  vat: "",
   vat_name: "",
   profit_per_unit: "",
   pp_profit: "",
@@ -144,7 +138,13 @@ function ProductsImportPage({
   const webPath = useSelector((state) => state.app.webPath);
   const imgError = "/images/mock/pre-product.png";
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const isSwChecked = ((isMultiImport || isFetchImport) || productData.importOne) ? false : (productData.selling_price > 0 && productData.vat_id !== 0)?false:true;
+  const isSwChecked =
+    !productData.selling_price &&
+    productData.set_profit === 0 &&
+    productData.vat_id === 0 &&
+    productData.profit_per_unit === 0
+      ? true
+      : false;
   const [switchChecked, setSwitchChecked] = useState(isSwChecked);
 
   useEffect(() => {
@@ -248,7 +248,13 @@ function ProductsImportPage({
         return { ...vat, checked: true };
       });
       setProductData(() => {
-        return { ...productData, vat_id: 0, vat: 0, state3: !productData.state3 };
+        return {
+          ...productData,
+          vat_id: 0,
+          vat_name: "0%",
+          vat: 0,
+          state3: !productData.state3,
+        };
       });
       setDisabledProfit({
         profit: true,
@@ -271,18 +277,9 @@ function ProductsImportPage({
         vat: false,
         selling_price: false,
       });
+
       setVat(() => {
-        return { ...vat, checked: false };
-      });
-      setProductData((prev) => {
-        return {
-          ...prev,
-          vat_id: "",
-          vat: "",
-          state3: !productData.state3,
-          set_profit: "",
-          selling_price: "",
-        };
+        return { ...vat, checked: productData.vat_id === 0 ? true : false };
       });
     }
   }, [switchChecked]);
@@ -371,7 +368,7 @@ function ProductsImportPage({
       return { ...vat, checked: true };
     });
     setProductData(() => {
-      return { ...productData, vat_id: 0, vat: 0, state3: !productData.state3 };
+      return { ...productData, vat_id: 0, vat_name: "0%", vat: 0, state3: !productData.state3 };
     });
   };
 
@@ -465,8 +462,8 @@ function ProductsImportPage({
       cost_per_unit: "",
       total_cost: "",
       set_profit: "",
-      vat_id: 0,
-      vat: 0,
+      vat_id: "",
+      vat: "",
       profit_per_unit: "",
       pp_profit: "",
       pp_vat: "",
@@ -513,16 +510,16 @@ function ProductsImportPage({
       });
       return false;
     } else {
-      
       const formData = new FormData();
       /* product */
       if (isEdit) {
         formData.append("id", productData.id);
         formData.append("product_id", productData.product_id);
       }
+
       formData.append("is_subproduct", 0);
       formData.append("image", preview.file);
-      formData.append("image_path", productData.image_path);
+      formData.append("image_path", productData.image_path || "");
       formData.append("title", productData.title);
       formData.append("main_cate_id", productData.main_cate_id);
       formData.append("sub_cate_id", productData.sub_cate_id);
@@ -623,7 +620,7 @@ function ProductsImportPage({
                     setOpenModalEdit(false);
                   } else {
                     resetDataHandle();
-                    navigate('/products')
+                    navigate("/products");
                   }
                 }
                 setRefreshData(refreshData + 1);
@@ -1621,7 +1618,22 @@ function ProductsImportPage({
                           <Switch
                             color="primary"
                             checked={switchChecked}
-                            onChange={() => setSwitchChecked(!switchChecked)}
+                            onChange={(evt) => {
+                              if (!evt.target.checked) {
+                                setProductData((prev) => {
+                                  return {
+                                    ...prev,
+                                    vat_id: "",
+                                    vat: "",
+                                    vat_name: "",
+                                    state3: !productData.state3,
+                                    set_profit: "",
+                                    selling_price: "",
+                                  };
+                                });
+                              }
+                              setSwitchChecked(!switchChecked);
+                            }}
                           />
                         }
                         label="สินค้าที่ไม่ต้องการกำไร"
@@ -1663,13 +1675,14 @@ function ProductsImportPage({
                     <Autocomplete
                       key={productData.state3}
                       value={{
-                        name: productData.vat_id !== 0 ? productData.vat_name : "",
+                        name:
+                          productData.vat_id !== 0 ? productData.vat_name : "",
                       }}
                       onChange={(e, value) => {
                         setProductData(() => {
                           return {
                             ...productData,
-                            vat_id: value ? value.id : 0,
+                            vat_id: value ? value.id : "",
                             vat: value ? value.percent : "",
                             vat_name: value ? value.name : "",
                           };

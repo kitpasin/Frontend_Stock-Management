@@ -182,6 +182,7 @@ function ProductsPage() {
     } else {
       const result = productSelected.map((dd) => {
         return {
+          ...dd,
           id: dd.id,
           product_id: dd.product_id,
           title: dd.title,
