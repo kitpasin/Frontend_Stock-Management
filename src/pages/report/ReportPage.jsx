@@ -506,7 +506,7 @@ function ReportPage() {
               </Card>
               <Card style={{ background: "#3b326b", display: "flex", justifyContent: "space-between", padding: "1rem", borderRadius: "10px", width: "33.33%", fontSize: "1rem", color: "#3b326b" }}>
                 <b style={{ color: "#fff" }}>กำไรทั้งหมด : </b>
-                <b style={{ color: "#fff" }}>{sumProductProfit} บาท</b>
+                <b style={{ color: "#fff" }}>{sumProductProfit <= 0 ? 0 : sumProductProfit} บาท</b>
               </Card>
             </div>
             <Table
