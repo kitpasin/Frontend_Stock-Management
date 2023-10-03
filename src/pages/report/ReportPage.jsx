@@ -55,6 +55,7 @@ function ReportPage() {
 
   const [products, setProducts] = useState([])
   const [selectedProduct, setSelectedProduct] = useState([]);
+  const [selectedTitle, setSelectedTitle] = useState(null)
   const [selectedProductType, setSelectedProductType] = useState(null)
   const [selectedMainCate, setSelectedMainCate] = useState(null)
   const [selectedSubCate, setSelectedSubCate] = useState(null)
@@ -64,6 +65,7 @@ function ReportPage() {
   const [sumProductProfit, setSumProductProfit] = useState(0)
 
   const filteredProduct = products.filter((product) => {
+    const matchesTitle = selectedTitle ? product.title === selectedTitle : true;
     const matchesProductType = selectedProductType ? product.p_type === selectedProductType : true;
     const matchesMainCate = selectedMainCate ? product.main_cate_name === selectedMainCate : true;
     const matchesSubCate = selectedSubCate ? product.sub_cate_name === selectedSubCate : true;
@@ -78,15 +80,17 @@ function ReportPage() {
     }
     if (selectedYear !== null) {
       const matchedYear = selectedFormattedYear ? product.purchase_date.split("-")[0] === selectedFormattedYear : true;
-      return matchesProductType && matchesMainCate && matchesSubCate&& matchesSupplier && matchedYear;
+      return matchesProductType && matchesMainCate && matchesSubCate && matchesSupplier && matchedYear;
     }
     if (selectedStart !== null && selectedEnd !== null) {
       const matchesBetween = selectedFormattedStart.replace(/-/g, "") <= product.purchase_date.replace(/-/g, "")
         && selectedFormattedEnd.replace(/-/g, "") >= product.purchase_date.replace(/-/g, "")
       return matchesProductType && matchesMainCate && matchesSubCate && matchesSupplier && matchesBetween
     }
-    return matchesProductType && matchesMainCate && matchesSubCate && matchesSupplier
+    return matchesTitle && matchesProductType && matchesMainCate && matchesSubCate && matchesSupplier
   });
+
+  console.log(filteredProduct)
 
   // Remove duplicate products based on product_id
   const uniqueProductsMap = new Map();
@@ -146,6 +150,7 @@ function ReportPage() {
     setLoading(false)
   }
 
+
   useEffect(() => {
     getProducts()
   }, [selectedReport])
@@ -157,16 +162,16 @@ function ReportPage() {
   }, [filteredProduct])
 
   const productTypeOptions = products
-  .map((product) => product.p_type)
-  .filter((value, index, self) => self.indexOf(value) === index);
+    .map((product) => product.p_type)
+    .filter((value, index, self) => self.indexOf(value) === index);
 
   const mainCategoryOptions = products
-  .map((product) => product.main_cate_name)
-  .filter((value, index, self) => self.indexOf(value) === index);
+    .map((product) => product.main_cate_name)
+    .filter((value, index, self) => self.indexOf(value) === index);
 
   const subCategoryOptions = products
-  .map((product) => product.sub_cate_name)
-  .filter((value, index, self) => self.indexOf(value) === index);
+    .map((product) => product.sub_cate_name)
+    .filter((value, index, self) => self.indexOf(value) === index);
 
   const supplierOptions = products
     .map((supplier) => supplier.supplier_name)
@@ -293,7 +298,17 @@ function ReportPage() {
 
                   <div style={{ display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "center", gap: "1rem", width: "100%" }}>
                     <div style={{ display: "flex", width: "100%", gap: "1rem" }}>
-                    <Autocomplete
+                      <Autocomplete
+                        value={selectedTitle}
+                        onChange={(e, newValue) => setSelectedTitle(newValue || "")}
+                        disablePortal
+                        size="small"
+                        id="combo-box-demo"
+                        options={products.map((product) => product.title)}
+                        fullWidth
+                        renderInput={(params) => <TextField {...params} label="สินค้า" />}
+                      />
+                      <Autocomplete
                         value={selectedProductType}
                         onChange={(e, newValue) => setSelectedProductType(newValue || "")}
                         disablePortal
