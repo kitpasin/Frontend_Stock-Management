@@ -137,6 +137,7 @@ function MenuItemList({
         setOpenSubproductModal(true);
       } else {
         const result = {
+          ...dd,
           id: dd.id,
           product_id: dd.product_id,
           title: dd.title,

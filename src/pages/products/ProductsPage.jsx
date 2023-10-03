@@ -104,7 +104,6 @@ function ProductsPage() {
       option: "ตู้ขาย",
     },
   ];
-  console.log(today)
   const [randomNum, setRandomNum] = useState(0);
   const [selectedExportType, setSelectedExportType] = useState("");
   const [picker, setPicker] = useState("");
@@ -151,8 +150,6 @@ function ProductsPage() {
       matchesVat
     );
   });
-
-  console.log(productsAll);
 
   const multiExportHandle = () => {
     console.log(productSelected);
@@ -374,8 +371,6 @@ function ProductsPage() {
     uniqueExportMap.set(item.product_id, item);
   });
   const uniqueExportData = Array.from(uniqueProductsMap.values());
-
-  console.log(uniqueExportData)
 
   const titleOptions = productsAll
     .map((product) => product.title)

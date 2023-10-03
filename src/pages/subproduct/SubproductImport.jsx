@@ -82,14 +82,13 @@ BootstrapDialogTitle.propTypes = {
 export default function SubproductImport({
   isEdit,
   isFetchImport,
-  isMultiImport,
   open,
   setOpen,
   productShow,
   refreshData,
   setRefreshData,
-  productDatas,
 }) {
+
   const form = {
     barcode: productShow.barcode_number,
     title: "",
@@ -127,13 +126,14 @@ export default function SubproductImport({
     sticker: "",
 
     oc_unit: "",
-    unit_price: "",
+    unit_price: productShow.unit_price,
     product_cost: productShow.product_cost,
     units: productShow.units,
     cost_per_unit: "",
     total_cost: "",
     set_profit: "",
     vat_id: "",
+    vat_name: "",
     vat: "",
     profit_per_unit: "",
     pp_profit: "",
@@ -156,9 +156,9 @@ export default function SubproductImport({
     disRadio: false,
     disSelect: false,
   };
+  const { t } = useTranslation(["dashboard-page"]);
   const navigate = useNavigate();
   const modalSwal = withReactContent(Swal);
-  const { t } = useTranslation(["dashboard-page"]);
   const webPath = useSelector((state) => state.app.webPath);
   const [preview, setPreview] = useState(formPreview);
   const [productData, setProductData] = useState(isEdit ? productShow : form);
@@ -170,12 +170,8 @@ export default function SubproductImport({
   const [vatsData, setVatsData] = useState([]);
 
   const inputRef = useRef(null);
-
   const formInputRef = useRef(null);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
   const handleClose = () => {
     setOpen(false);
   };
@@ -197,8 +193,6 @@ export default function SubproductImport({
 
   function generateBarcode() {
     const randomNum = Math.floor(Math.random() * 1000000000);
-    const formattedNum = String(randomNum).padStart(9, "0");
-
     const randomNumber = Math.floor(Math.random() * 1000);
     const barcodeNumber =
       Math.floor(Date.now() / 1000) +
@@ -284,7 +278,7 @@ export default function SubproductImport({
     evt.preventDefault();
     const errorArr = [];
 
-    if (productData.barcode === "" && productData.new_barcode === "") {
+    if (productData.barcode === "" || productData.new_barcode === "") {
       errorArr.push("โปรดสร้างบาร์โค้ด");
     }
 
@@ -338,7 +332,7 @@ export default function SubproductImport({
       formData.append("op_unit", productData.op_unit);
       formData.append("total_product", productData.total_product);
       /* product_price_infos */
-      formData.append("oc_unit", productData.op_unit);
+      formData.append("oc_unit", productData.oc_unit);
       formData.append("unit_price", productData.unit_price);
       formData.append("product_cost", productData.product_cost);
       formData.append("units", productData.units);
@@ -409,32 +403,35 @@ export default function SubproductImport({
     const packaging = parseFloat(productData.packaging) || 0;
     const sticker = parseFloat(productData.sticker) || 0;
     const other_exp = parseFloat(productData.other_exp) || 0;
-    const product_cost = parseFloat(productData.product_cost) || 0;
     const set_profit = parseFloat(productData.set_profit) || 0;
     const vat = parseFloat(productData.vat) || 0;
+    const product_cost = parseFloat(productData.product_cost) || 0;
 
     const totalAll = packaging + sticker + other_exp;
     const total_product = parseInt(productData.total_product) || 1;
 
     const total_cost = parseFloat(product_cost) + parseFloat(totalAll) || 0;
     const cost_per_unit = (total_cost / total_product).toFixed(2);
-    const op_unit = (totalAll / total_product).toFixed(2);
+    const oc_unit = (totalAll / total_product).toFixed(2);
     const profit_per_unit = (parseFloat(cost_per_unit) * set_profit) / 100;
-    const unit_price = parseFloat(cost_per_unit);
-    const pp_profit = parseFloat((profit_per_unit + unit_price).toFixed(2));
+    const pp_profit = parseFloat((profit_per_unit + parseFloat(cost_per_unit)));
     const pp_vat = parseFloat((vat * pp_profit) / 100) + parseFloat(pp_profit);
+
+    console.log(productData)
 
     setProductData((prev) => {
       return {
         ...prev,
         total: totalAll,
         units: total_product,
-        op_unit: parseFloat(op_unit),
+        oc_unit: parseFloat(oc_unit),
+        op_unit: parseFloat(oc_unit),
         cost_per_unit: parseFloat(cost_per_unit),
-        unit_price: parseFloat(unit_price.toFixed(2)),
+        product_cost: parseFloat(product_cost.toFixed(2)),
+        unit_price: parseFloat(cost_per_unit),
         total_cost: parseFloat(total_cost.toFixed(2)),
         profit_per_unit: parseFloat(profit_per_unit.toFixed(2)),
-        pp_profit: pp_profit,
+        pp_profit: parseFloat(pp_profit.toFixed(2)),
         pp_vat: parseFloat(pp_vat.toFixed(2)),
       };
     });
@@ -1272,17 +1269,7 @@ export default function SubproductImport({
                             />
                             <TextField
                               disabled
-                              value={productData.op_unit}
-                              onChange={(e) =>
-                                setProductData(() => {
-                                  return {
-                                    ...productData,
-                                    op_unit: !isNaN(parseFloat(e.target.value))
-                                      ? parseFloat(e.target.value)
-                                      : null,
-                                  };
-                                })
-                              }
+                              value={productData.oc_unit}
                               id="outlined-basic"
                               label="ค่าดำเนินการ/หน่วย"
                               variant="outlined"
@@ -1390,7 +1377,7 @@ export default function SubproductImport({
                               value={{
                                 name:
                                   productData.vat_id !== 0
-                                    ? productData.vat
+                                    ? productData.vat_name
                                     : "",
                               }}
                               onChange={(e, value) => {
@@ -1398,7 +1385,8 @@ export default function SubproductImport({
                                   return {
                                     ...productData,
                                     vat_id: value ? value.id : "",
-                                    vat: value ? value.name : "",
+                                    vat : value ? value.percent : "",
+                                    vat_name : value ? value.name : "",
                                   };
                                 });
                                 setVat(() => {

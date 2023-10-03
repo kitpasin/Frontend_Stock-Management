@@ -59,7 +59,7 @@ export default function Table({ productsData, refreshData, setRefreshData, setPr
       headerName: "ชื่อรายการ",
       headerAlign: "center",
       align: "left",
-      width: 435,
+      width: 400,
       headerClassName: "table-columns",
       renderCell: (params) => {
         return (
@@ -83,16 +83,32 @@ export default function Table({ productsData, refreshData, setRefreshData, setPr
       },
     },
     {
-      field: "purchase_date",
-      headerName: "วันที่ซื้อ",
+      field: "export_id",
+      headerName: "รหัสการเบิก",
       headerAlign: "center",
       align: "center",
       width: 200,
       headerClassName: "table-columns",
     },
     {
+      field: "export_values",
+      headerName: "จำนวนเบิก",
+      headerAlign: "center",
+      align: "center",
+      width: 100,
+      headerClassName: "table-columns",
+    },
+    {
+      field: "purchase_date",
+      headerName: "วันที่ซื้อ",
+      headerAlign: "center",
+      align: "center",
+      width: 150,
+      headerClassName: "table-columns",
+    },
+    {
       field: "mfd_date",
-      width: 200,
+      width: 150,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -132,7 +148,7 @@ export default function Table({ productsData, refreshData, setRefreshData, setPr
       headerName: "หมวดหมู่",
       headerAlign: "center",
       align: "center",
-      width: 200,
+      width: 150,
       headerClassName: "table-columns",
     },
     {
@@ -140,14 +156,14 @@ export default function Table({ productsData, refreshData, setRefreshData, setPr
       headerName: "หน่วยนับ",
       headerAlign: "center",
       align: "center",
-      width: 200,
+      width: 100,
       headerClassName: "table-columns",
     },
     {
       field: "volumnPerUnit",
       headerAlign: "center",
       align: "center",
-      width: 200,
+      width: 150,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -210,6 +226,7 @@ export default function Table({ productsData, refreshData, setRefreshData, setPr
         barcode: dd.product_barcode,
         counting_unit_name: dd.amount_name,
         unit_name: dd.net_name,
+        product_cost: dd.unit_price,
         state1: false,
         state2: false,
         state3: false,
@@ -237,7 +254,7 @@ export default function Table({ productsData, refreshData, setRefreshData, setPr
       <DataGrid
         getRowClassName={() => rowsClassName}
         sx={{ fontSize: "12px", border: "none" }}
-        rows={uniqueProductsData}
+        rows={productsData}
         columns={columns}
         initialState={{
           pagination: {
