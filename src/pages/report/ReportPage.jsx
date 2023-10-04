@@ -158,8 +158,14 @@ function ReportPage() {
   useEffect(() => {
     setSumProductLeft(uniqueProductsData.reduce((sum, product) => sum + (product.import_value - product.export_value - product.export_defective_value), 0).toFixed(2))
     setSumProductCost(uniqueProductsData.reduce((sum, product) => sum + (product.unit_price), 0).toFixed(2))
-    setSumProductProfit(uniqueProductsData.reduce((sum, product) => sum + (product.selling_price - product.unit_price), 0).toFixed(2))
+    setSumProductProfit(Math.max(uniqueProductsData.reduce((sum, product) => sum + (product.selling_price - product.unit_price), 0).toFixed(2)), 0)
   }, [filteredProduct])
+
+  useEffect(() => {
+    if (sumProductProfit <= 0) {
+      setSumProductProfit(0)
+    }
+  }, [sumProductProfit])
 
   const productTypeOptions = products
     .map((product) => product.p_type)
@@ -506,7 +512,7 @@ function ReportPage() {
               </Card>
               <Card style={{ background: "#3b326b", display: "flex", justifyContent: "space-between", padding: "1rem", borderRadius: "10px", width: "33.33%", fontSize: "1rem", color: "#3b326b" }}>
                 <b style={{ color: "#fff" }}>กำไรทั้งหมด : </b>
-                <b style={{ color: "#fff" }}>{sumProductProfit <= 0 ? 0 : sumProductProfit} บาท</b>
+                <b style={{ color: "#fff" }}>{sumProductProfit} บาท</b>
               </Card>
             </div>
             <Table
