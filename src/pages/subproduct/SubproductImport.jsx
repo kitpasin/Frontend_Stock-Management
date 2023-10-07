@@ -177,9 +177,9 @@ export default function SubproductImport({
     setOpen(false);
   };
 
-  function digitBarcode(e) {
+  function digitBarcode(e, _digit) {
     const dataLength = e.target.value.length;
-    if (dataLength <= 13) {
+    if (dataLength <= _digit) {
       if (e.target.id === "supplier-barcode") {
         setProductData((prev) => {
           return { ...prev, supplier_barcode: e.target.value };
@@ -1047,7 +1047,7 @@ export default function SubproductImport({
                         >
                           <TextField
                             value={productData.barcode || ""}
-                            onChange={(e) => digitBarcode(e)}
+                            onChange={(e) => digitBarcode(e, 13)}
                             id="outlined-basic"
                             label="เลขบาร์โค้ดจากสินค้า"
                             variant="outlined"
@@ -1081,7 +1081,7 @@ export default function SubproductImport({
                           <TextField
                             required
                             value={productData.supplier_barcode || ""}
-                            onChange={(e) => digitBarcode(e)}
+                            onChange={(e) => digitBarcode(e, 20)}
                             id="supplier-barcode"
                             label="เลขบาร์โค้ดจากซัพพลายเออร์"
                             variant="outlined"
