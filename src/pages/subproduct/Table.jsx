@@ -135,7 +135,7 @@ export default function Table({ productsData, refreshData, setRefreshData, setPr
             style={{
               fontSize: "12px",
               lineHeight: "12.5px",
-              color: "#9993B4",
+              color: "#FF0000",
             }}
           >
             {params.row.exp_date}

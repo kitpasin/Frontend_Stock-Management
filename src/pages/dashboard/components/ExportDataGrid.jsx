@@ -220,7 +220,7 @@ function ExportDataGrid({ productsExport }) {
             {params.row.mfd_date}
           </p>
           <p
-            style={{ fontSize: "12px", lineHeight: "12.5px", color: "#9993B4" }}
+            style={{ fontSize: "12px", lineHeight: "12.5px", color: "#FF0000" }}
           >
             {params.row.exp_date}
           </p>
