@@ -30,7 +30,6 @@ const ForgetPasswordPage = () => {
     formData.append('email', emailRef.current.value)
     
     forgetPasswordService(formData).then(res => {
-      console.log(res.description)
       emailRef.current.value = "";
       dispatch(appActions.isSpawnActive(false))
       setIsFetching(false)

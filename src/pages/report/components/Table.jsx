@@ -36,13 +36,10 @@ function Table({ filteredProduct, selectedReport, setSelectedProduct }) {
   };
 
   function openImgModal(params) {
-    console.log(params.row.thumbnail_link);
     setShowImg(params.row.thumbnail_link);
     handleOpen();
   }
 
-  console.log(selectedReport)
-  
   const columns = [
     {
       field: "thumbnail_link",

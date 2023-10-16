@@ -10,8 +10,6 @@ function DeleteRowExportDetail({ params, uniqueProductsData, setOpenExportedTemp
     setCountRow(row)
   }, [deleteRow])
 
-  console.log(countRow)
-
   function deleteRow(product_id, quantity, created_at) {
     setCountRow(row)
     const formData = {

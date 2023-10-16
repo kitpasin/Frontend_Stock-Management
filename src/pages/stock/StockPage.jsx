@@ -100,8 +100,6 @@ function StockPage() {
     setLoading(false);
   }
 
-  console.log(productsStock)
-
   useEffect(() => {
     getProductsStock();
   }, [refreshData]);

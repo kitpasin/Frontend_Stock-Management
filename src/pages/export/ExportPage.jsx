@@ -59,8 +59,6 @@ function ExportPage() {
     return matchesExportID && matchesTitle && matchProductId && matchesMainCategory && matchesSupplier && matchesVat && matchesSubCategory && matchesPrevBarcode && matchesCurBarcode && matchesProductType;
   });
 
-  console.log(exportedProducts)
-
   const multiExportHandle = () => {
     if (productSelected.length === 0) {
       Swal.fire({

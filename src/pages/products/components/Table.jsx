@@ -44,7 +44,6 @@ function Table({
   };
 
   function openImgModal(params) {
-    console.log(params.row.thumbnail_link)
     setShowImg(params.row.thumbnail_link)
     handleOpen();
   }

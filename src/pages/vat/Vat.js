@@ -24,8 +24,6 @@ function Vat() {
     setLoading(false)
   }
 
-  console.log(uPermission.superAdmin)
-
   useEffect(() => {
     getVats();
   }, [])

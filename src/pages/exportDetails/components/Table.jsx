@@ -32,10 +32,8 @@ function Table({ exportedProductDetails, refreshData, setRefreshData }) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  console.log(exportedProductDetails)
 
   function openImgModal(params) {
-    console.log(params.row.thumbnail_link)
     setShowImg(params.row.thumbnail_link)
     handleOpen();
   }

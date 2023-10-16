@@ -116,8 +116,6 @@ function ExportDetailsPage() {
     window.open(pdfURL, "_blank");
   };
 
-  console.log(exportedProductDetails);
-
   return (
     <section id="export-details-page">
       {loading ? (

@@ -35,8 +35,6 @@ function Row({ row, subCatesData, getMainCates, getSubCates }) {
   const [editSubCateOpen, setEditSubCateOpen] = useState(false);
   const uPermission = useSelector((state) => state.auth.userPermission);
 
-  console.log(uPermission.superAdmin);
-
   function handleEditMainCateOpen(row) {
     setEditMainCateOpen(true);
     setMainCateData(row);
