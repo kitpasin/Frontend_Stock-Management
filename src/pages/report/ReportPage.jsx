@@ -13,6 +13,7 @@ import Table from "./components/Table";
 import PulseLoader from "react-spinners/PulseLoader";
 import ExcelJS from "exceljs";
 import saveAs from "file-saver";
+import { ConnectingAirportsOutlined } from "@mui/icons-material";
 
 function ReportPage() {
   const { t } = useTranslation(["dashboard-page"]);
@@ -27,6 +28,7 @@ function ReportPage() {
   const month = String(formattedDate.getMonth() + 1).padStart(2, '0');
   const day = String(formattedDate.getDate()).padStart(2, '0');
   const selectedFormattedDate = `${year}-${month}-${day}`;
+  const selectedFormattedExportDate = `${year}/${month}/${day}`;
 
   const [selectedMonth, setSelectedMonth] = useState(null);
   const formattedMonth = new Date(selectedMonth)
@@ -70,27 +72,48 @@ function ReportPage() {
     const matchesMainCate = selectedMainCate ? product.main_cate_name === selectedMainCate : true;
     const matchesSubCate = selectedSubCate ? product.sub_cate_name === selectedSubCate : true;
     const matchesSupplier = selectedSupplier ? product.supplier_name === selectedSupplier : true;
-    if (selectedDate !== null) {
-      const matchesDate = selectedFormattedDate ? product.purchase_date === selectedFormattedDate : true;
-      return matchesProductType && matchesMainCate && matchesSubCate && matchesSupplier && matchesDate;
+
+    if (selectedReport === "สินค้าเบิกออก") {
+      if (selectedDate !== null) {
+        const matchesDate = selectedFormattedExportDate ? product.export_date?.split(" ")[0] === selectedFormattedExportDate : true;
+        return matchesProductType && matchesMainCate && matchesSubCate && matchesSupplier && matchesDate;
+      }
+      if (selectedMonth !== null) {
+        const matchedMonth = selectedFormattedMonth ? product.export_date?.split("/")[0] + product.export_date?.split("/")[1] === selectedFormattedMonth?.split("-")[0] + selectedFormattedMonth?.split("-")[1] : true;
+        return matchesProductType && matchesMainCate && matchesSubCate && matchesSupplier && matchedMonth;
+      }
+      if (selectedYear !== null) {
+        const matchedYear = selectedFormattedYear ? product.export_date?.split("/")[0] === selectedFormattedYear : true;
+        return matchesProductType && matchesMainCate && matchesSubCate && matchesSupplier && matchedYear;
+      }
+      if (selectedStart !== null && selectedEnd !== null) {
+        const matchesBetween = selectedFormattedStart.replace(/-/g, "") <= product.export_date?.split(" ")[0].replace(/\//g, '')
+          && selectedFormattedEnd.replace(/-/g, "") >= product.export_date?.split(" ")[0].replace(/\//g, '')
+        return matchesProductType && matchesMainCate && matchesSubCate && matchesSupplier && matchesBetween
+      }
+    } else {
+      if (selectedDate !== null) {
+        const matchesDate = selectedFormattedDate ? product.purchase_date === selectedFormattedDate : true;
+        return matchesProductType && matchesMainCate && matchesSubCate && matchesSupplier && matchesDate;
+      }
+      if (selectedMonth !== null) {
+        const matchedMonth = selectedFormattedMonth ? product.purchase_date?.split("-")[0] + product.purchase_date?.split("-")[1] === selectedFormattedMonth?.split("-")[0] + selectedFormattedMonth?.split("-")[1] : true;
+        return matchesProductType && matchesMainCate && matchesSubCate && matchesSupplier && matchedMonth;
+      }
+      if (selectedYear !== null) {
+        const matchedYear = selectedFormattedYear ? product.purchase_date?.split("-")[0] === selectedFormattedYear : true;
+        return matchesProductType && matchesMainCate && matchesSubCate && matchesSupplier && matchedYear;
+      }
+      if (selectedStart !== null && selectedEnd !== null) {
+        const matchesBetween = selectedFormattedStart.replace(/-/g, "") <= product.purchase_date.replace(/-/g, "")
+          && selectedFormattedEnd.replace(/-/g, "") >= product.purchase_date.replace(/-/g, "")
+        return matchesProductType && matchesMainCate && matchesSubCate && matchesSupplier && matchesBetween
+      }
     }
-    if (selectedMonth !== null) {
-      const matchedMonth = selectedFormattedMonth ? product.purchase_date.split("-")[0] + product.purchase_date.split("-")[1] === selectedFormattedMonth.split("-")[0] + selectedFormattedMonth.split("-")[1] : true;
-      return matchesProductType && matchesMainCate && matchesSubCate && matchesSupplier && matchedMonth;
-    }
-    if (selectedYear !== null) {
-      const matchedYear = selectedFormattedYear ? product.purchase_date.split("-")[0] === selectedFormattedYear : true;
-      return matchesProductType && matchesMainCate && matchesSubCate && matchesSupplier && matchedYear;
-    }
-    if (selectedStart !== null && selectedEnd !== null) {
-      const matchesBetween = selectedFormattedStart.replace(/-/g, "") <= product.purchase_date.replace(/-/g, "")
-        && selectedFormattedEnd.replace(/-/g, "") >= product.purchase_date.replace(/-/g, "")
-      return matchesProductType && matchesMainCate && matchesSubCate && matchesSupplier && matchesBetween
-    }
+
     return matchesTitle && matchesProductType && matchesMainCate && matchesSubCate && matchesSupplier
   });
 
-  console.log(filteredProduct)
 
   // Remove duplicate products based on product_id
   const uniqueProductsMap = new Map();
@@ -147,6 +170,7 @@ function ReportPage() {
       const data = response.data.data;
       setProducts(data)
     }
+
     setLoading(false)
   }
 

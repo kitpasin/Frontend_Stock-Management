@@ -92,6 +92,9 @@ function ExportDetailsPage() {
   const barcodeOption = exportedProductDetails
     .map((product) => product.barcode_number)
     .filter((value, index, self) => self.indexOf(value) === index);
+  const exportIds = exportedProductDetails
+    .map((product) => product.export_id)
+    .filter((value, index, self) => self.indexOf(value) === index);
 
   async function getExportedProductDetails() {
     const response = await axios.get("get/product/export/detail");
@@ -207,9 +210,7 @@ function ExportDetailsPage() {
                 size="small"
                 disablePortal
                 id="combo-box-export-id"
-                options={exportedProductDetails.map(
-                  (product) => product.export_id
-                )}
+                options={exportIds}
                 onChange={(event, value) => setExportID(value || "")}
                 fullWidth
                 renderInput={(params) => (

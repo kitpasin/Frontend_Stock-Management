@@ -32,6 +32,8 @@ function Table({ exportedProductDetails, refreshData, setRefreshData }) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  console.log(exportedProductDetails)
+
   function openImgModal(params) {
     console.log(params.row.thumbnail_link)
     setShowImg(params.row.thumbnail_link)
@@ -174,15 +176,15 @@ function Table({ exportedProductDetails, refreshData, setRefreshData }) {
       headerClassName: "table-columns",
     },
     {
-      field: "user",
+      field: "account_name",
       headerAlign: "center",
       headerName: "ผู้ใช้งาน",
       align: "center",
       width: 140,
       headerClassName: "table-columns",
-      renderCell: () => (
-        <div style={{ lineHeight: "12.5px" }}>{displayName}</div>
-      ),
+      // renderCell: () => (
+      //   <div style={{ lineHeight: "12.5px" }}>{displayName}</div>
+      // ),
     },
     {
       field: "picker_name",
