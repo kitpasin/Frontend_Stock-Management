@@ -52,7 +52,7 @@ function StockDataGrid({ uniqueProductsData }) {
         >
           <Avatar
             alt="Thumbnail"
-            src={`${webPath}${params.row.thumbnail_link}`}
+            src={ params.row.thumbnail_link ? `${webPath}${params.row.thumbnail_link}` : '/images/mock/pre-product.png'}
           />
         </figure>
       ),
