@@ -494,7 +494,7 @@ function ProductsImportPage({
       errorArr.push("โปรดเลือกวันสั่งซื้อ วันผลิต และ วันหมดอายุ");
     }
 
-    if (productData.barcode === "" && productData.new_barcode === "") {
+    if (productData.new_barcode === "") {
       errorArr.push("โปรดสร้างบาร์โค้ด");
     }
 
