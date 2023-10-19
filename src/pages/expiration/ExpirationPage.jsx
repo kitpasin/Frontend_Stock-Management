@@ -167,7 +167,6 @@ function ExpirationPage() {
       approver_name: approver,
       export_type: selectedExportType,
     }));
-    console.log(formData);
     if (
       picker === "" ||
       (null && approver === "") ||
@@ -178,7 +177,6 @@ function ExpirationPage() {
     } else {
       try {
         const response = await axios.post("product/export/detail", formData);
-        console.log(response);
         if (response.status) {
           Swal.fire(
             "Success!",

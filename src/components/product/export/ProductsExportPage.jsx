@@ -91,8 +91,6 @@ function ProductsExportPage({
     setExportValue(0);
   }
 
-  console.log(multiExprot, exportOne, productData)
-
   const onExportProduct = (_id) => {
     const formExport = {
       product_id: productShow.product_id,

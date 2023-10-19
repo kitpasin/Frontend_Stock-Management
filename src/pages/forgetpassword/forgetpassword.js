@@ -28,11 +28,12 @@ const ForgetPasswordPage = () => {
     dispatch(appActions.isSpawnActive(true))
     const formData = new FormData();
     formData.append('email', emailRef.current.value)
+    
     forgetPasswordService(formData).then(res => {
       emailRef.current.value = "";
       dispatch(appActions.isSpawnActive(false))
       setIsFetching(false)
-      SwalUI({status: res.status, description: res.description})
+      SwalUI({status: res.status, description: res.description, timer: 2500})
     })
   }
   

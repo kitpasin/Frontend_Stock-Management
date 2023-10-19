@@ -142,8 +142,6 @@ function Summaries({
   });
   const uniqueProductsData = Array.from(uniqueProductsMap.values());
 
-  console.log(mostProductExpire?.exp_date)
-  // console.log(mostProductOutOfStock?.thumbnail_link);
   return (
     <>
       <Modal

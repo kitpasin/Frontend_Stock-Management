@@ -32,7 +32,6 @@ export default function Table({ productsData, refreshData, setRefreshData, setPr
   const handleClose = () => setOpen(false);
 
   function openImgModal(params) {
-    console.log(params.row.thumbnail_link)
     setShowImg(params.row.thumbnail_link)
     handleOpen();
   }
@@ -135,7 +134,7 @@ export default function Table({ productsData, refreshData, setRefreshData, setPr
             style={{
               fontSize: "12px",
               lineHeight: "12.5px",
-              color: "#9993B4",
+              color: "#FF0000",
             }}
           >
             {params.row.exp_date}

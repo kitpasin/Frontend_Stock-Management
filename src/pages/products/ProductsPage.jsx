@@ -152,7 +152,6 @@ function ProductsPage() {
   });
 
   const multiExportHandle = () => {
-    console.log(productSelected);
     if (productSelected.length === 0) {
       Swal.fire({
         text: "เลือกสินค้าที่ต้องการเบิก",
@@ -268,7 +267,7 @@ function ProductsPage() {
       approver_name: approver,
       export_type: selectedExportType,
     }));
-    console.log(formData);
+    
     if (
       picker === "" ||
       (null && approver === "") ||
@@ -294,7 +293,6 @@ function ProductsPage() {
     } else {
       try {
         const response = await axios.post("product/export/detail", formData);
-        console.log(response);
         if (response.status) {
           Swal.fire(
             "Success!",

@@ -59,8 +59,6 @@ function ExportPage() {
     return matchesExportID && matchesTitle && matchProductId && matchesMainCategory && matchesSupplier && matchesVat && matchesSubCategory && matchesPrevBarcode && matchesCurBarcode && matchesProductType;
   });
 
-  console.log(exportedProducts)
-
   const multiExportHandle = () => {
     if (productSelected.length === 0) {
       Swal.fire({
@@ -76,6 +74,7 @@ function ExportPage() {
 
   async function getExportedProduct() {
     const response = await axios.get("get/product/export");
+    console.log(response)
     const data = response.data.data;
     setExportedProducts(data);
     setLoading(false);
