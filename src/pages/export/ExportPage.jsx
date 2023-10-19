@@ -74,6 +74,7 @@ function ExportPage() {
 
   async function getExportedProduct() {
     const response = await axios.get("get/product/export");
+    console.log(response)
     const data = response.data.data;
     setExportedProducts(data);
     setLoading(false);
