@@ -36,8 +36,6 @@ export default function Table({ productsData, refreshData, setRefreshData, setPr
     handleOpen();
   }
 
-  console.log(productsData)
-
   const columns = [
     {
       field: "thumbnail_link",
