@@ -44,7 +44,7 @@ export default function SubproductPage() {
   });
 
   async function initData() {
-    const response = await axios.get("get/product/export");
+    const response = await axios.get("get/product/exportlist");
     const data = response.data.data;
     const filter = data.filter((data) => data.is_subproduct !== 1);
     const result = filter.map((d) => {

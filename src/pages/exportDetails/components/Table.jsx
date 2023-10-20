@@ -32,7 +32,6 @@ function Table({ exportedProductDetails, refreshData, setRefreshData }) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-
   function openImgModal(params) {
     setShowImg(params.row.thumbnail_link)
     handleOpen();
@@ -166,7 +165,7 @@ function Table({ exportedProductDetails, refreshData, setRefreshData }) {
       headerClassName: "table-columns",
     },
     {
-      field: "export_date",
+      field: "formatted_created_at",
       headerName: "วันที่เบิก",
       headerAlign: "center",
       align: "center",

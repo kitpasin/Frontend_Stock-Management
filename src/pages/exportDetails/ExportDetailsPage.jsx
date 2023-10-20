@@ -116,10 +116,6 @@ function ExportDetailsPage() {
     window.open(pdfURL, "_blank");
   };
 
-  // console.log(prevBarcodeOption)
-  console.log(barcodeOption)
-
-
   return (
     <section id="export-details-page">
       {loading ? (
