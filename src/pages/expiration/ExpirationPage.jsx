@@ -227,15 +227,15 @@ function ExpirationPage() {
 
   const titleOptions = productsExpiration
     .map((product) => product.title)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const productIdOptions = productsExpiration
     .map((product) => product.product_id)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const mainCategoryOptions = productsExpiration
     .map((product) => product.main_cate_name)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const subCategoryOptions = productsExpiration
     .map((product) => product.sub_cate_name)
@@ -243,19 +243,19 @@ function ExpirationPage() {
 
   const supplierOptions = productsExpiration
     .map((supplier) => supplier.supplier_name)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const prevBarcodeOptions = productsExpiration
     .map((product) => product.product_barcode)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const curBarcodeOptions = productsExpiration
     .map((product) => product.barcode_number)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const productTypeOptions = productsExpiration
     .map((type) => type.p_type)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   return (
     <section id="expiration-page">

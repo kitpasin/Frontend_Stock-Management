@@ -193,11 +193,11 @@ function ReportPage() {
 
   const productTypeOptions = products
     .map((product) => product.p_type)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const mainCategoryOptions = products
     .map((product) => product.main_cate_name)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const subCategoryOptions = products
     .map((product) => product.sub_cate_name)
@@ -205,7 +205,7 @@ function ReportPage() {
 
   const supplierOptions = products
     .map((supplier) => supplier.supplier_name)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   // Export to Excel
   const handleExport = () => {
