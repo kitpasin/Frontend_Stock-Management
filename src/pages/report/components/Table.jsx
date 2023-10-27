@@ -58,7 +58,7 @@ function Table({ filteredProduct, selectedReport, setSelectedProduct }) {
           onClick={() => openImgModal(params)}
         >
           <Avatar
-            src={`${webPath}${params.row.thumbnail_link}`}
+            src={params.row.thumbnail_link ? `${webPath}${params.row.thumbnail_link}` : "/images/no-image.png"}
             alt={`Image ${params.thumbnail_title}`}
           />
         </div>
