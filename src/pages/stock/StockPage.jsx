@@ -118,7 +118,7 @@ function StockPage() {
 
   const subCategoryOptions = productsStock
     .map((product) => product.sub_cate_name)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const supplierOptions = productsStock
     .map((supplier) => supplier.supplier_name)

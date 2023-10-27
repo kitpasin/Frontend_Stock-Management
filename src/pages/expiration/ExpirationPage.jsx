@@ -239,7 +239,7 @@ function ExpirationPage() {
 
   const subCategoryOptions = productsExpiration
     .map((product) => product.sub_cate_name)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const supplierOptions = productsExpiration
     .map((supplier) => supplier.supplier_name)

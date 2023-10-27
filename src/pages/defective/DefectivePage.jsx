@@ -104,7 +104,7 @@ function DefectivePage() {
 
   const subCategoryOptions = defectiveProducts
     .map((product) => product.sub_cate_name)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const prevBarcodeOptions = defectiveProducts
     .map((product) => product.product_barcode)

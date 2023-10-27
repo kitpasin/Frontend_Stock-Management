@@ -102,7 +102,7 @@ function ExportPage() {
 
   const subCategoryOptions = exportedProducts
     .map((product) => product.sub_cate_name)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const prevBarcodeOptions = exportedProducts
     .map((product) => product.product_barcode)

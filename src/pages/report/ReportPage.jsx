@@ -201,7 +201,7 @@ function ReportPage() {
 
   const subCategoryOptions = products
     .map((product) => product.sub_cate_name)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const supplierOptions = products
     .map((supplier) => supplier.supplier_name)
