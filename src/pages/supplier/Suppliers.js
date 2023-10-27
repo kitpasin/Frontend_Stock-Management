@@ -216,7 +216,7 @@ function Suppliers() {
       headerAlign: "center",
       align: "center",
       renderCell: (cellValue) => {
-        return uPermission.superAdmin ? (
+        return (uPermission.superAdmin || uPermission.officer) ? (
           <button style={buttonStyle} onClick={() => handleOpen(cellValue)}>
             {" "}
             <img src="images/icons/eva_edit-2-fill.png" alt="" />{" "}
@@ -251,7 +251,7 @@ function Suppliers() {
       headerAlign: "center",
       align: "center",
       renderCell: (cellValue) => {
-        return uPermission.superAdmin ? (
+        return (uPermission.superAdmin || uPermission.officer) ? (
           <button
             style={buttonStyle}
             onClick={() => handleDeleteSupplier(cellValue)}
@@ -342,7 +342,7 @@ function Suppliers() {
                     onChange={(e) => searchSupplier(e)}
                   />
                   <div className="action">
-                    {uPermission.superAdmin ? (
+                    {(uPermission.superAdmin || uPermission.officer) ? (
                       <button onClick={handleLink}>เพิ่มซัพพลายเออร์</button>
                     ) : (
                       <button

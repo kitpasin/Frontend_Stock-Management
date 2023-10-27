@@ -37,6 +37,7 @@ import {
 } from "@react-pdf/renderer";
 import ReactToPdf from "react-to-pdf";
 import PDFFile from "./components/PDFFile";
+import { ColorLensOutlined } from "@mui/icons-material";
 
 const style = {
   position: "absolute",
@@ -385,7 +386,7 @@ function ProductsPage() {
 
   const subCategoryOptions = productsAll
     .map((product) => product.sub_cate_name)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const supplierOptions = productsAll
     .map((supplier) => supplier.supplier_name)

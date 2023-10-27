@@ -123,7 +123,7 @@ function VatTable({ vatsData, getVats, uPermission }) {
       align: "center",
       headerClassName: "table-columns",
       renderCell: (cellValue) => {
-        return uPermission.superAdmin ? (
+        return (uPermission.superAdmin || uPermission.officer) ? (
           <button
             style={buttonStyle}
             onClick={() => handleEditVatOpen(cellValue)}
@@ -161,7 +161,7 @@ function VatTable({ vatsData, getVats, uPermission }) {
       align: "center",
       headerClassName: "table-columns",
       renderCell: (cellValue) => {
-        return uPermission.superAdmin ? (
+        return (uPermission.superAdmin || uPermission.officer) ? (
           <button
             style={buttonStyle}
             onClick={() => handleDeleteVat(cellValue)}

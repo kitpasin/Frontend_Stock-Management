@@ -67,7 +67,7 @@ function Amount() {
                     <p style={{ color: "#ff0000" }}>{netsData.length} รายการ</p>
                   </div>
                   <div className="action">
-                    {uPermission.superAdmin ? (
+                    {(uPermission.superAdmin || uPermission.officer) ? (
                       <button className="create" onClick={() => setCreateNetOpen(true)}>
                       สร้างหน่วยปริมาณใหม่
                     </button>
@@ -96,7 +96,7 @@ function Amount() {
                     <p style={{ color: "#ff0000" }}>{amountsData.length} รายการ</p>
                   </div>
                   <div className="action">
-                  {uPermission.superAdmin ? (
+                  {(uPermission.superAdmin || uPermission.officer) ? (
                     <button className="create" onClick={() => setCreateAmountOpen(true)}>
                       สร้างหน่วยจำนวนใหม่
                     </button>

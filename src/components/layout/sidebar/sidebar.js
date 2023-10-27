@@ -694,7 +694,7 @@ const SidebarComponent = (props) => {
                   </NavLink>
                 )}
 
-                {pagesAllow.configs && uPermission.superAdmin && (
+                {pagesAllow.configs && (uPermission.superAdmin || uPermission.officer) && (
                   <NavLink
                     onClick={closeSidebarhandler}
                     to="/configs"

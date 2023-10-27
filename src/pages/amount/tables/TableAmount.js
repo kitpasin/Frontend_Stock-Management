@@ -61,7 +61,7 @@ function TableAmount({ amountsData, getAmounts, uPermission }) {
       align: "center",
       headerClassName: "table-columns",
       renderCell: (cellValue) => {
-        return uPermission.superAdmin ? (
+        return (uPermission.superAdmin || uPermission.officer) ? (
           <button
             style={buttonStyle}
             onClick={() => handleEditAmountOpen(cellValue)}
@@ -99,7 +99,7 @@ function TableAmount({ amountsData, getAmounts, uPermission }) {
       align: "center",
       headerClassName: "table-columns",
       renderCell: (cellValue) => {
-        return uPermission.superAdmin ? (
+        return (uPermission.superAdmin || uPermission.officer) ? (
           <button
             style={buttonStyle}
             onClick={() => handleDeleteAmount(cellValue)}

@@ -68,7 +68,7 @@ function TableNet({ netsData, getNets, mainCatesData, uPermission }) {
       headerAlign: "center",
       align: "center",
       renderCell: (cellValue) => {
-        return uPermission.superAdmin ? (
+        return (uPermission.superAdmin || uPermission.officer) ? (
           <button
             style={buttonStyle}
             onClick={() => handleEditNetOpen(cellValue)}
@@ -106,7 +106,7 @@ function TableNet({ netsData, getNets, mainCatesData, uPermission }) {
       headerAlign: "center",
       align: "center",
       renderCell: (cellValue) => {
-        return uPermission.superAdmin ? (
+        return (uPermission.superAdmin || uPermission.officer) ? (
           <button
             style={buttonStyle}
             onClick={() => handleDeleteNet(cellValue)}
