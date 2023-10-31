@@ -150,7 +150,7 @@ function ReportPage() {
 
   async function getProducts() {
     if (selectedReport === "สินค้าทั้งหมด") {
-      const response = await axios.get("productAll");
+      const response = await axios.get("reportProducts");
       const data = response.data.data;
       setProducts(data);
     } else if (selectedReport === "สินค้าใกล้หมดอายุ") {

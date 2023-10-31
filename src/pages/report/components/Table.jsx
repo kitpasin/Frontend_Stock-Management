@@ -28,6 +28,8 @@ function Table({ filteredProduct, selectedReport, setSelectedProduct }) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  console.log(filteredProduct)
+
   const onRowsSelectionHandler = (ids) => {
     const selectedRowsData = ids.map((id) =>
       filteredProduct.find((product) => product.id === id)
@@ -211,6 +213,14 @@ function Table({ filteredProduct, selectedReport, setSelectedProduct }) {
     {
       field: "purchase_date",
       headerName: "วันที่ซื้อ",
+      headerAlign: "center",
+      align: "center",
+      width: 128,
+      headerClassName: "table-columns",
+    },
+    {
+      field: `export_date`,
+      headerName: "วันที่เบิก",
       headerAlign: "center",
       align: "center",
       width: 128,
