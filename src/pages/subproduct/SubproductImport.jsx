@@ -279,7 +279,7 @@ export default function SubproductImport({
     evt.preventDefault();
     const errorArr = [];
 
-    if (productData.barcode === "" || productData.new_barcode === "") {
+    if (productData.new_barcode === "") {
       errorArr.push("โปรดสร้างบาร์โค้ด");
     }
 

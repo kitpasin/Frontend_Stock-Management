@@ -27,13 +27,13 @@ const btnStyle = {
   color: "#fff",
   borderRadius: "5px",
 };
-function Row({ row, subCatesData, getMainCates, getSubCates }) {
+
+function Row({ row, subCatesData, getMainCates, getSubCates, uPermission }) {
   const [open, setOpen] = useState(false);
   const [mainCateData, setMainCateData] = useState("");
   const [subCateData, setSubCateData] = useState("");
   const [editMainCateOpen, setEditMainCateOpen] = useState(false);
   const [editSubCateOpen, setEditSubCateOpen] = useState(false);
-  const uPermission = useSelector((state) => state.auth.userPermission);
 
   function handleEditMainCateOpen(row) {
     setEditMainCateOpen(true);
@@ -105,57 +105,26 @@ function Row({ row, subCatesData, getMainCates, getSubCates }) {
           {row.name}
         </TableCell>
         <TableCell align="left">{row.main_product_count}</TableCell>
-        <TableCell align="center">
-          {uPermission.superAdmin ? (
-            <button
-              style={btnStyle}
-              onClick={() => handleEditMainCateOpen(row)}
-            >
-              <img src="images/icons/eva_edit-2-fill.png" alt="" />
-            </button>
-          ) : (
-            <button
-              disabled
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "35px",
-                height: "35px",
-                borderRadius: "5px",
-                background: "#3B336B",
-                opacity: "50%",
-              }}
-              onClick={() => handleEditMainCateOpen(row)}
-            >
-              <img src="images/icons/eva_edit-2-fill.png" alt="" />
-            </button>
-          )}
-        </TableCell>
-        <TableCell align="center">
-          {uPermission.superAdmin ? (
-            <button style={btnStyle} onClick={() => handleDeleteMainCate(row)}>
-              <img src="images/icons/trash-icon.png" alt="" />
-            </button>
-          ) : (
-            <button
-              disabled
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "35px",
-                height: "35px",
-                borderRadius: "5px",
-                background: "#3B336B",
-                opacity: "50%",
-              }}
-              onClick={() => handleDeleteMainCate(row)}
-            >
-              <img src="images/icons/trash-icon.png" alt="" />
-            </button>
-          )}
-        </TableCell>
+        {uPermission.officer && !uPermission.superAdmin && (
+          <TableCell align="center">
+            <>
+              <button
+                style={btnStyle}
+                onClick={() => handleEditMainCateOpen(row)}
+              >
+                <img src="images/icons/eva_edit-2-fill.png" alt="" />
+              </button>
+              <TableCell align="center">
+                <button
+                  style={btnStyle}
+                  onClick={() => handleDeleteMainCate(row)}
+                >
+                  <img src="images/icons/trash-icon.png" alt="" />
+                </button>
+              </TableCell>
+            </>
+          </TableCell>
+        )}
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -174,20 +143,24 @@ function Row({ row, subCatesData, getMainCates, getSubCates }) {
                     <TableCell style={{ color: "#3B326B" }}>
                       จำนวนรายการสินค้าในหมวดหมู่
                     </TableCell>
-                    <TableCell
-                      style={{ color: "#3B326B" }}
-                      width={50}
-                      align="center"
-                    >
-                      แก้ไข
-                    </TableCell>
-                    <TableCell
-                      style={{ color: "#3B326B" }}
-                      width={50}
-                      align="center"
-                    >
-                      ลบ
-                    </TableCell>
+                    {uPermission.officer && !uPermission.superAdmin && (
+                      <>
+                        <TableCell
+                          style={{ color: "#3B326B" }}
+                          width={50}
+                          align="center"
+                        >
+                          แก้ไข
+                        </TableCell>
+                        <TableCell
+                          style={{ color: "#3B326B" }}
+                          width={50}
+                          align="center"
+                        >
+                          ลบ
+                        </TableCell>
+                      </>
+                    )}
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -198,66 +171,32 @@ function Row({ row, subCatesData, getMainCates, getSubCates }) {
                           <TableCell></TableCell>
                           <TableCell>{sub.name}</TableCell>
                           <TableCell>{sub.sub_product_count}</TableCell>
-                          <TableCell align="center">
-                            {uPermission.superAdmin ? (
-                              <button
-                                style={btnStyle}
-                                onClick={() => handleEditSubCateOpen(sub)}
-                              >
-                                <img
-                                  src="images/icons/eva_edit-2-fill.png"
-                                  alt=""
-                                />
-                              </button>
-                            ) : (
-                              <button
-                                disabled
-                                style={{
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  alignItems: "center",
-                                  width: "35px",
-                                  height: "35px",
-                                  borderRadius: "5px",
-                                  background: "#3B336B",
-                                  opacity: "50%",
-                                }}
-                                onClick={() => handleEditSubCateOpen(sub)}
-                              >
-                                <img
-                                  src="images/icons/eva_edit-2-fill.png"
-                                  alt=""
-                                />
-                              </button>
-                            )}
-                          </TableCell>
-                          <TableCell align="center">
-                            {uPermission.superAdmin ? (
-                              <button
-                                style={btnStyle}
-                                onClick={() => handleDeleteSubCate(sub)}
-                              >
-                                <img src="images/icons/trash-icon.png" alt="" />
-                              </button>
-                            ) : (
-                              <button
-                                disabled
-                                style={{
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  alignItems: "center",
-                                  width: "35px",
-                                  height: "35px",
-                                  borderRadius: "5px",
-                                  background: "#3B336B",
-                                  opacity: "50%",
-                                }}
-                                onClick={() => handleDeleteSubCate(sub)}
-                              >
-                                <img src="images/icons/trash-icon.png" alt="" />
-                              </button>
-                            )}
-                          </TableCell>
+                          {uPermission.officer && !uPermission.superAdmin && (
+                            <>
+                              <TableCell align="center">
+                                <button
+                                  style={btnStyle}
+                                  onClick={() => handleEditSubCateOpen(sub)}
+                                >
+                                  <img
+                                    src="images/icons/eva_edit-2-fill.png"
+                                    alt=""
+                                  />
+                                </button>
+                              </TableCell>
+                              <TableCell align="center">
+                                <button
+                                  style={btnStyle}
+                                  onClick={() => handleDeleteSubCate(sub)}
+                                >
+                                  <img
+                                    src="images/icons/trash-icon.png"
+                                    alt=""
+                                  />
+                                </button>
+                              </TableCell>
+                            </>
+                          )}
                         </TableRow>
                       );
                     } else {
@@ -289,7 +228,6 @@ function Row({ row, subCatesData, getMainCates, getSubCates }) {
 }
 
 function ProductCateTable({
-  uPermission,
   mainCatesData,
   subCatesData,
   getMainCates,
@@ -298,6 +236,7 @@ function ProductCateTable({
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(100);
   const [newRows, setNewRows] = useState([]);
+  const uPermission = useSelector((state) => state.auth.userPermission);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -328,12 +267,16 @@ function ProductCateTable({
               <TableCell style={{ color: "#3B326B" }} align="left">
                 จำนวนรายการสินค้าในหมวดหมู่
               </TableCell>
-              <TableCell style={{ color: "#3B326B" }} width={60} align="center">
-                แก้ไข
-              </TableCell>
-              <TableCell style={{ color: "#3B326B" }} width={60} align="center">
-                ลบ
-              </TableCell>
+              {uPermission.officer && !uPermission.superAdmin && (
+                <>
+                  <TableCell style={{ color: "#3B326B" }} width={60} align="center">
+                    แก้ไข
+                  </TableCell>
+                  <TableCell style={{ color: "#3B326B" }} width={60} align="center">
+                    ลบ
+                  </TableCell>
+                </>
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -344,6 +287,7 @@ function ProductCateTable({
                 subCatesData={subCatesData}
                 getMainCates={getMainCates}
                 getSubCates={getSubCates}
+                uPermission={uPermission}
               />
             ))}
           </TableBody>

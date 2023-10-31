@@ -44,7 +44,7 @@ function ImportDataGrid({ productsImport }) {
       renderCell: (params) => (
         <div style={{ background: "#D0D0E2", borderRadius: "5px", cursor: "pointer" }} onClick={()=>openImgModal(params)}>
           <Avatar
-            src={`${webPath}${params.row.thumbnail_link}`}
+            src={params.row.thumbnail_link ? `${webPath}${params.row.thumbnail_link}` : '/images/mock/pre-product.png'}
             alt={`Image ${params.thumbnail_title}`}
           />
         </div>

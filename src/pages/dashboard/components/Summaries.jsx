@@ -410,7 +410,7 @@ function Summaries({
                       height: "100px",
                       paddingBlock: ".5rem",
                     }}
-                    src={`${webPath}${mostExportedProduct?.thumbnail_link}`}
+                    src={mostExportedProduct.thumbnail_link ? `${webPath}${mostExportedProduct?.thumbnail_link}` : '/images/mock/pre-product.png'}
                     alt=""
                   />
                 ) : (
@@ -485,7 +485,7 @@ function Summaries({
                       height: "100px",
                       paddingBlock: ".5rem",
                     }}
-                    src={`${webPath}${mostProductInStock?.thumbnail_link}`}
+                    src={mostProductInStock.thumbnail_link ? `${webPath}${mostProductInStock?.thumbnail_link}` : '/images/mock/pre-product.png'}
                     alt=""
                   />
                 ) : (

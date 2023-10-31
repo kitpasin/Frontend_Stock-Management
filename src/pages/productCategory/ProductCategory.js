@@ -44,6 +44,8 @@ function ProductCategory() {
     getSubCates();
   }, []);
 
+  console.log(uPermission)
+
   return (
     <section id="productcate-page">
       {loading ? (
@@ -66,8 +68,8 @@ function ProductCategory() {
                     {mainCatesData.length} รายการ
                   </p>
                 </div>
-                <div className="action">
-                  {uPermission.superAdmin ? (
+                {uPermission.officer && !uPermission.superAdmin && (
+                  <div className="action">
                     <>
                       <button onClick={handleCreateMainCateOpen}>
                         สร้างหมวดหมู่หลัก
@@ -76,25 +78,8 @@ function ProductCategory() {
                         สร้างหมวดหมู่ย่อย
                       </button>
                     </>
-                  ) : (
-                    <>
-                      <button
-                        disabled
-                        style={{ opacity: "50%" }}
-                        onClick={handleCreateMainCateOpen}
-                      >
-                        สร้างหมวดหมู่หลัก
-                      </button>
-                      <button
-                        disabled
-                        style={{ opacity: "50%" }}
-                        onClick={handleCreateSubCateOpen}
-                      >
-                        สร้างหมวดหมู่ย่อย
-                      </button>
-                    </>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
               <div className="table">
                 <ProductCateTable

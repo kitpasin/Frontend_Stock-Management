@@ -48,7 +48,7 @@ function Vat() {
               <p>Vat ทั้งหมด</p>
               <p style={{ color: "#ff0000" }}>{vatsData.length} รายการ</p>
             </div>
-            {uPermission.superAdmin ? (
+            {(uPermission.superAdmin || uPermission.officer) ? (
               <div className="action">
                 <button onClick={() => setCreateVatOpen(true)}>สร้าง Vat ใหม่</button>
               </div>

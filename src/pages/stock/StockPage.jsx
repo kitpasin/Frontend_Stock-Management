@@ -106,35 +106,35 @@ function StockPage() {
 
   const titleOptions = productsStock
     .map((product) => product.title)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const productIdOptions = productsStock
     .map((product) => product.product_id)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const mainCategoryOptions = productsStock
     .map((product) => product.main_cate_name)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const subCategoryOptions = productsStock
     .map((product) => product.sub_cate_name)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const supplierOptions = productsStock
     .map((supplier) => supplier.supplier_name)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const prevBarcodeOptions = productsStock
     .map((product) => product.product_barcode)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const curBarcodeOptions = productsStock
     .map((product) => product.barcode_number)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const productTypeOptions = productsStock
     .map((type) => type.p_type)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   return (
     <section id="stock-page">

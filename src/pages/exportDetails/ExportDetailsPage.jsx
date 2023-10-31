@@ -70,31 +70,31 @@ function ExportDetailsPage() {
 
   const productTypeOptions = exportedProductDetails
     .map((product) => product.p_type)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
   const productNameOption = exportedProductDetails
     .map((product) => product.title)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
   const productIDOption = exportedProductDetails
     .map((product) => product.product_id)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
   const pickerOption = exportedProductDetails
     .map((product) => product.picker_name)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
   const approverOption = exportedProductDetails
     .map((product) => product.approver_name)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
   const supplierOption = exportedProductDetails
     .map((product) => product.supplier_name)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
   const prevBarcodeOption = exportedProductDetails
     .map((product) => product.product_barcode)
     .filter((value, index, self) => value !== null && self.indexOf(value) === index);
   const barcodeOption = exportedProductDetails
     .map((product) => product.barcode_number)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
   const exportIds = exportedProductDetails
     .map((product) => product.export_id)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   async function getExportedProductDetails() {
     const response = await axios.get("get/product/export/detail");

@@ -37,6 +37,7 @@ import {
 } from "@react-pdf/renderer";
 import ReactToPdf from "react-to-pdf";
 import PDFFile from "./components/PDFFile";
+import { ColorLensOutlined } from "@mui/icons-material";
 
 const style = {
   position: "absolute",
@@ -373,35 +374,38 @@ function ProductsPage() {
 
   const titleOptions = productsAll
     .map((product) => product.title)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const productIdOptions = productsAll
     .map((product) => product.product_id)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const mainCategoryOptions = productsAll
     .map((product) => product.main_cate_name)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const subCategoryOptions = productsAll
     .map((product) => product.sub_cate_name)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const supplierOptions = productsAll
     .map((supplier) => supplier.supplier_name)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const prevBarcodeOptions = productsAll
     .map((product) => product.product_barcode)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const curBarcodeOptions = productsAll
     .map((product) => product.barcode_number)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const productTypeOptions = productsAll
     .map((type) => type.p_type)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+
+
+    console.log(mainCategoryOptions)
 
   return (
     <section id="products-page">

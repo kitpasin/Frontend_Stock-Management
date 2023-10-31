@@ -86,39 +86,39 @@ function ExportPage() {
 
   const exportIDOptions = exportedProducts
     .map((product) => product.export_id)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const titleOptions = exportedProducts
     .map((product) => product.title)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const productIdOptions = exportedProducts
     .map((product) => product.product_id)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const mainCategoryOptions = exportedProducts
     .map((product) => product.main_cate_name)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const subCategoryOptions = exportedProducts
     .map((product) => product.sub_cate_name)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const prevBarcodeOptions = exportedProducts
     .map((product) => product.product_barcode)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const curBarcodeOptions = exportedProducts
     .map((product) => product.barcode_number)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
   
   const productTypeOptions = exportedProducts
     .map((product) => product.p_type)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const supplierOptions = exportedProducts
     .map((supplier) => supplier.supplier_name)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   return (
     <section id="export-page">

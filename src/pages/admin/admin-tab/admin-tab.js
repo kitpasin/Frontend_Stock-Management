@@ -38,8 +38,8 @@ const AdminTab = (props) => {
   const userPermission = useSelector(state => state.auth.userPermission)
   const tabLists = [
     {index: 0, title: "All", allow: true },
-    {index: 1, title: "Superadmin", allow: userPermission.superAdmin },
-    {index: 2, title: "Admin", allow: userPermission.admin },
+    {index: 1, title: "Superadmin", allow: userPermission.superAdmin || userPermission.officer },
+    {index: 2, title: "Admin", allow: userPermission.admin || userPermission.officer },
     {index: 3, title: "Officer", allow: userPermission.officer },
     {index: 4, title: "User", allow: userPermission.user },
   ]

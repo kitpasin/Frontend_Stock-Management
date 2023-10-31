@@ -64,7 +64,7 @@ function Table({
           onClick={() => openImgModal(params)}
         >
           <Avatar
-            src={`${webPath}${params.row.thumbnail_link}`}
+            src={params.row.thumbnail_link ? `${webPath}${params.row.thumbnail_link}` : '/images/mock/pre-product.png'}
             alt={`Image ${params.thumbnail_title}`}
           />
         </div>

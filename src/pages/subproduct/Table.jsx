@@ -98,8 +98,8 @@ export default function Table({ productsData, refreshData, setRefreshData, setPr
       headerClassName: "table-columns",
     },
     {
-      field: "purchase_date",
-      headerName: "วันที่ซื้อ",
+      field: "formatted_created_at",
+      headerName: "วันเวลาเบิก",
       headerAlign: "center",
       align: "center",
       width: 150,

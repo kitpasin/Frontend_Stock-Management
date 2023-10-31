@@ -32,7 +32,6 @@ function Table({ exportedProductDetails, refreshData, setRefreshData }) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-
   function openImgModal(params) {
     setShowImg(params.row.thumbnail_link)
     handleOpen();
@@ -49,7 +48,7 @@ function Table({ exportedProductDetails, refreshData, setRefreshData }) {
       renderCell: (params) => (
         <div style={{ background: "#D0D0E2", borderRadius: "5px", cursor: "pointer" }} onClick={()=>openImgModal(params)}>
           <Avatar
-            src={`${webPath}${params.row.thumbnail_link}`}
+            src={params.row.thumbnail_link ? `${webPath}${params.row.thumbnail_link}` : "/images/no-image.png"}
             alt={`Image ${params.thumbnail_title}`}
           />
         </div>
@@ -166,7 +165,7 @@ function Table({ exportedProductDetails, refreshData, setRefreshData }) {
       headerClassName: "table-columns",
     },
     {
-      field: "export_date",
+      field: "formatted_created_at",
       headerName: "วันที่เบิก",
       headerAlign: "center",
       align: "center",
