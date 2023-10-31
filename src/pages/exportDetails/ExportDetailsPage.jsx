@@ -88,7 +88,7 @@ function ExportDetailsPage() {
     .filter((value, index, self) => self.indexOf(value) === index);
   const prevBarcodeOption = exportedProductDetails
     .map((product) => product.product_barcode)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .filter((value, index, self) => value !== null && self.indexOf(value) === index);
   const barcodeOption = exportedProductDetails
     .map((product) => product.barcode_number)
     .filter((value, index, self) => self.indexOf(value) === index);
@@ -115,6 +115,8 @@ function ExportDetailsPage() {
     const pdfURL = URL.createObjectURL(blob);
     window.open(pdfURL, "_blank");
   };
+
+  console.log(exportedProductDetails)
 
   return (
     <section id="export-details-page">

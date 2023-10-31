@@ -478,7 +478,7 @@ function Summaries({
                 {mostProductInStock?.import_value -
                   mostProductInStock?.export_value -
                   mostProductInStock?.export_defective_value !==
-                  0 && mostProductInStock !== null ? (
+                  0 && mostProductInStock !== null && mostProductInStock?.thumbnail_link !== null ? (
                   <img
                     style={{
                       width: "100px",
