@@ -11,25 +11,37 @@ import Summaries from "./components/Summaries";
 import Tables from "./components/Tables";
 import { rows } from "./data/TableData";
 import axios from "axios";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { TextField, Typography } from "@mui/material";
+import { Box } from "@mui/system";
+import dayjs from "dayjs";
+import "dayjs/locale/en";
 
 const DashboardPage = () => {
+  dayjs.locale("en");
+
   const { t } = useTranslation(["dashboard-page"]);
-
-  const [loading, setLoading] = useState(true);
-
-  const [mostExportedProduct, setMostExportedProduct] = useState([])
-  const [mostProductInStock, setMostProductInStock] = useState([])
-  const [mostProductExpire, setMostProductExpire] = useState([])
-  const [mostProductOutOfStock, setMostProductOutOfStock] = useState([])
-  const [productsOutOfStock, setProductsOutOfStock] = useState([])
-  const [productsAboutToExpire, setProductsAboutToExpire] = useState([])
-  const [productsImport, setProductsImport] = useState([])
-  const [mostProductImport, setMostProductImport] = useState([])
+  const [loading, setLoading] = useState(false);
+  const [mostExportedProduct, setMostExportedProduct] = useState([]);
+  const [mostProductInStock, setMostProductInStock] = useState([]);
+  const [mostProductExpire, setMostProductExpire] = useState([]);
+  const [mostProductOutOfStock, setMostProductOutOfStock] = useState([]);
+  const [productsOutOfStock, setProductsOutOfStock] = useState([]);
+  const [productsAboutToExpire, setProductsAboutToExpire] = useState([]);
+  const [productsImport, setProductsImport] = useState([]);
+  const [mostProductImport, setMostProductImport] = useState([]);
   const [productsExport, setProductsExport] = useState([]);
-  const [latestExport, setLatestExport] = useState([])
+  const [latestExport, setLatestExport] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(dayjs());
 
   async function getProducts() {
-    const response = await axios.get("product/dashboard");
+    const month = selectedDate.format("MM");
+    const year = selectedDate.format("YYYY");
+
+    const response = await axios.get(
+      `product/dashboard?month=${month}&year=${year}`
+    );
 
     // สินค้าเบิกออกมากที่สุด/เดือน
     const mostExport = response.data.mostExportedProduct;
@@ -65,29 +77,71 @@ const DashboardPage = () => {
 
     // สินค้าเบิกออกวันนี้
     const pExport = response.data.pExport;
-    setProductsExport(pExport)
+    setProductsExport(pExport);
 
     const latestExport = response.data.latestExport;
-    setLatestExport(latestExport)
-  } 
+    setLatestExport(latestExport);
+  }
 
   useEffect(() => {
+    setLoading(true);
     getProducts().then(() => {
-      setLoading(false)
-    })
-  }, []);
+      setLoading(false);
+    });
+  }, [selectedDate]);
 
   return (
     <section id="dashboard-page">
+      <HeadPageComponent
+        h1={t("dashboardPage")}
+        icon={<FontAwesomeIcon icon={faGamepad} />}
+        breadcrums={[{ title: t("dashboardPage"), link: false }]}
+      />
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "start",
+          alignItems: "center",
+          gap: ".5rem",
+          marginBottom: ".5rem",
+        }}
+      >
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            // label="วันสั่งซื้อ"
+            // defaultValue={dayjs()}
+            value={selectedDate}
+            openTo="year"
+            views={["year", "month"]}
+            inputFormat="MM-YYYY"
+            sx={{ width: "140px" }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                size="small"
+                sx={{ width: "140px" }}
+                inputProps={{
+                  ...params.inputProps,
+                  readOnly: false,
+                  style: { textAlign: "center" },
+                }}
+              />
+            )}
+            onAccept={(value) => setSelectedDate(value)}
+            onChange={() => true}
+          />
+        </LocalizationProvider>
+        <div
+          style={{ height: "40px", width: "3px", backgroundColor: "#3b336b" }}
+        ></div>
+        <Typography variant="h6" style={{ fontWeight: "400" }}>
+          {selectedDate.format("MMMM YYYY")}
+        </Typography>
+      </Box>
       {loading ? (
         <PulseLoader color="#3b326b" />
       ) : (
         <>
-          <HeadPageComponent
-            h1={t("dashboardPage")}
-            icon={<FontAwesomeIcon icon={faGamepad} />}
-            breadcrums={[{ title: t("dashboardPage"), link: false }]}
-          />
           <Summaries
             mostExportedProduct={mostExportedProduct}
             productsExport={productsExport}

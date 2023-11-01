@@ -404,9 +404,6 @@ function ProductsPage() {
     .map((type) => type.p_type)
     .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
-
-    console.log(mainCategoryOptions)
-
   return (
     <section id="products-page">
       {loading ? (
