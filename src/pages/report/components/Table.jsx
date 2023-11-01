@@ -28,8 +28,6 @@ function Table({ filteredProduct, selectedReport, setSelectedProduct }) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  console.log(filteredProduct)
-
   const onRowsSelectionHandler = (ids) => {
     const selectedRowsData = ids.map((id) =>
       filteredProduct.find((product) => product.id === id)
