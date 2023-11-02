@@ -110,7 +110,7 @@ function Table({
       field: "import_value",
       headerAlign: "center",
       align: "center",
-      width: 55,
+      width: 50,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -220,7 +220,7 @@ function Table({
       headerName: "วันนำเข้า",
       headerAlign: "center",
       align: "center",
-      width: 100,
+      width: 90,
       headerClassName: "table-columns",
       renderCell: (params) => (
         <div>
@@ -249,7 +249,7 @@ function Table({
     },
     {
       field: "mfd_date",
-      width: 80,
+      width: 70,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -550,7 +550,7 @@ function Table({
     },
     {
       field: "selling_price",
-      width: 80,
+      width: 60,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -559,7 +559,12 @@ function Table({
           <Typography
             style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
           >
-            ราคาขายจริง
+            ราคา
+          </Typography>
+          <Typography
+            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+          >
+            ขายจริง
           </Typography>
           <Typography
             style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
