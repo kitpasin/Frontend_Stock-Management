@@ -19,7 +19,7 @@ const style = {
   p: 4,
   display: "flex",
   justifyContent: "center",
-  alignItems: "center"
+  alignItems: "center",
 };
 
 function Table({
@@ -31,7 +31,7 @@ function Table({
 }) {
   const webPath = useSelector((state) => state.app.webPath);
   const [isHovered, setIsHovered] = useState(false);
-  const [showImg, setShowImg] = useState(null)
+  const [showImg, setShowImg] = useState(null);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -44,7 +44,7 @@ function Table({
   };
 
   function openImgModal(params) {
-    setShowImg(params.row.thumbnail_link)
+    setShowImg(params.row.thumbnail_link);
     handleOpen();
   }
 
@@ -57,9 +57,20 @@ function Table({
       headerAlign: "center",
       align: "center",
       renderCell: (params) => (
-        <div style={{ background: "#D0D0E2", borderRadius: "5px", cursor: "pointer" }} onClick={()=>openImgModal(params)}>
+        <div
+          style={{
+            background: "#D0D0E2",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+          onClick={() => openImgModal(params)}
+        >
           <Avatar
-            src={params.row.thumbnail_link ? `${webPath}${params.row.thumbnail_link}` : "/images/no-image.png"}
+            src={
+              params.row.thumbnail_link
+                ? `${webPath}${params.row.thumbnail_link}`
+                : "/images/no-image.png"
+            }
             alt={`Image ${params.thumbnail_title}`}
           />
         </div>
@@ -205,6 +216,30 @@ function Table({
       ),
     },
     {
+      field: "created_at",
+      headerName: "วันนำเข้า",
+      headerAlign: "center",
+      align: "center",
+      width: 100,
+      headerClassName: "table-columns",
+      renderCell: (params) => (
+        <div>
+          <p style={{ fontSize: "12px", lineHeight: "12.5px", color: "#000" }}>
+            {params.row.created_at.split(' ')[0]}
+          </p>
+          <p
+            style={{
+              fontSize: "12px",
+              lineHeight: "12.5px",
+              color: "gray",
+            }}
+          >
+            {params.row.created_at.split(' ')[1]}
+          </p>
+        </div>
+      ),
+    },
+    {
       field: "purchase_date",
       headerName: "วันที่ซื้อ",
       headerAlign: "center",
@@ -279,7 +314,10 @@ function Table({
               style={{
                 fontSize: "12px",
                 lineHeight: "12.5px",
-                color: remainingDays + 1 <= params.row.alert_date ? "#FF0000" : "#000",
+                color:
+                  remainingDays + 1 <= params.row.alert_date
+                    ? "#FF0000"
+                    : "#000",
               }}
             >
               {remainingDays + 1 <= 0 ? "หมดอายุ" : remainingDays + 1 + " วัน"}
@@ -288,19 +326,7 @@ function Table({
         );
       },
     },
-    {
-      field: "vat_name",
-      headerName: "Vat",
-      headerAlign: "center",
-      align: "center",
-      width: 40,
-      headerClassName: "table-columns",
-      renderCell: (params) => (
-        <div>
-          <p>{params.row.vat_name === null ? "0%" : params.row.vat_name}</p>
-        </div>
-      ),
-    },
+
     {
       field: "main_cate_name",
       headerName: "หมวดหมู่",

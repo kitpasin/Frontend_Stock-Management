@@ -22,15 +22,15 @@ function ExportPage() {
 
   const [loading, setLoading] = useState(true);
 
-  const [exportID, setExportID] = useState(null)
+  const [exportID, setExportID] = useState(null);
   const [exportedProducts, setExportedProducts] = useState([]);
   const [title, setTitle] = useState("");
   const [productId, setProductId] = useState("");
   const [mainCategory, setMainCategory] = useState("");
-  const [subCategory, setSubCategory] = useState("")
-  const [prevBarcode, setPrevBarcode] = useState("")
-  const [curBarcode, setCurBarcode] = useState("")
-  const [productType, setProductType] = useState("")
+  const [subCategory, setSubCategory] = useState("");
+  const [prevBarcode, setPrevBarcode] = useState("");
+  const [curBarcode, setCurBarcode] = useState("");
+  const [productType, setProductType] = useState("");
   const [supplier, setSupplier] = useState("");
   const [vat, setVat] = useState("");
 
@@ -42,12 +42,24 @@ function ExportPage() {
     const matchesExportID = exportID ? product.export_id === exportID : true;
     const matchesTitle = title ? product.title === title : true;
     const matchProductId = productId ? product.product_id === productId : true;
-    const matchesMainCategory = mainCategory ? product.main_cate_name === mainCategory : true;
-    const matchesSupplier = supplier ? product.supplier_name === supplier : true;
-    const matchesSubCategory = subCategory ? product.sub_cate_name === subCategory : true;
-    const matchesPrevBarcode = prevBarcode ? product.product_barcode === prevBarcode : true;
-    const matchesCurBarcode = curBarcode ? product.barcode_number === curBarcode : true;
-    const matchesProductType = productType ? product.p_type === productType : true;
+    const matchesMainCategory = mainCategory
+      ? product.main_cate_name === mainCategory
+      : true;
+    const matchesSupplier = supplier
+      ? product.supplier_name === supplier
+      : true;
+    const matchesSubCategory = subCategory
+      ? product.sub_cate_name === subCategory
+      : true;
+    const matchesPrevBarcode = prevBarcode
+      ? product.product_barcode === prevBarcode
+      : true;
+    const matchesCurBarcode = curBarcode
+      ? product.barcode_number === curBarcode
+      : true;
+    const matchesProductType = productType
+      ? product.p_type === productType
+      : true;
     let matchesVat = true;
 
     if (vat === "1") {
@@ -56,7 +68,18 @@ function ExportPage() {
       matchesVat = product.vat_id == 0;
     }
 
-    return matchesExportID && matchesTitle && matchProductId && matchesMainCategory && matchesSupplier && matchesVat && matchesSubCategory && matchesPrevBarcode && matchesCurBarcode && matchesProductType;
+    return (
+      matchesExportID &&
+      matchesTitle &&
+      matchProductId &&
+      matchesMainCategory &&
+      matchesSupplier &&
+      matchesVat &&
+      matchesSubCategory &&
+      matchesPrevBarcode &&
+      matchesCurBarcode &&
+      matchesProductType
+    );
   });
 
   const multiExportHandle = () => {
@@ -74,8 +97,20 @@ function ExportPage() {
 
   async function getExportedProduct() {
     const response = await axios.get("get/product/export");
-    console.log(response)
+    const vats = response.data.vats;
+    let productArr = [];
+    const products = response.data.data?.forEach((p) => {
+      vats.forEach(vat => {
+        if (vat.id === p.vat_id) {
+          productArr.push({ ...p, vat_name: vat.name }) 
+        } else if (p.vat_id === 0) {
+          productArr.push({ ...p, vat_name: '0%' }) 
+        }
+      })
+    });
+    
     const data = response.data.data;
+    console.log(data);
     setExportedProducts(data);
     setLoading(false);
   }
@@ -86,39 +121,57 @@ function ExportPage() {
 
   const exportIDOptions = exportedProducts
     .map((product) => product.export_id)
-    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+    .filter(
+      (value, index, self) => self.indexOf(value) === index && value !== null
+    );
 
   const titleOptions = exportedProducts
     .map((product) => product.title)
-    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+    .filter(
+      (value, index, self) => self.indexOf(value) === index && value !== null
+    );
 
   const productIdOptions = exportedProducts
     .map((product) => product.product_id)
-    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+    .filter(
+      (value, index, self) => self.indexOf(value) === index && value !== null
+    );
 
   const mainCategoryOptions = exportedProducts
     .map((product) => product.main_cate_name)
-    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+    .filter(
+      (value, index, self) => self.indexOf(value) === index && value !== null
+    );
 
   const subCategoryOptions = exportedProducts
     .map((product) => product.sub_cate_name)
-    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+    .filter(
+      (value, index, self) => self.indexOf(value) === index && value !== null
+    );
 
   const prevBarcodeOptions = exportedProducts
     .map((product) => product.product_barcode)
-    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+    .filter(
+      (value, index, self) => self.indexOf(value) === index && value !== null
+    );
 
   const curBarcodeOptions = exportedProducts
     .map((product) => product.barcode_number)
-    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
-  
+    .filter(
+      (value, index, self) => self.indexOf(value) === index && value !== null
+    );
+
   const productTypeOptions = exportedProducts
     .map((product) => product.p_type)
-    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+    .filter(
+      (value, index, self) => self.indexOf(value) === index && value !== null
+    );
 
   const supplierOptions = exportedProducts
     .map((supplier) => supplier.supplier_name)
-    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+    .filter(
+      (value, index, self) => self.indexOf(value) === index && value !== null
+    );
 
   return (
     <section id="export-page">
@@ -172,7 +225,9 @@ function ExportPage() {
                 options={productTypeOptions}
                 onChange={(event, value) => setProductType(value || "")}
                 fullWidth
-                renderInput={(params) => <TextField {...params} label="ประเภทสินค้า" />}
+                renderInput={(params) => (
+                  <TextField {...params} label="ประเภทสินค้า" />
+                )}
               />
               <Autocomplete
                 size="small"
@@ -217,7 +272,7 @@ function ExportPage() {
                 )}
               />
             </div>
-            <div 
+            <div
               style={{
                 display: "flex",
                 width: "100%",
@@ -252,7 +307,9 @@ function ExportPage() {
                 size="small"
                 disablePortal
                 id="combo-box-supplier"
-                options={prevBarcodeOptions.filter((option) => option !== null && option !== undefined)}
+                options={prevBarcodeOptions.filter(
+                  (option) => option !== null && option !== undefined
+                )}
                 onChange={(event, value) => setPrevBarcode(value || "")}
                 fullWidth
                 renderInput={(params) => (
@@ -263,7 +320,9 @@ function ExportPage() {
                 size="small"
                 disablePortal
                 id="combo-box-supplier"
-                options={curBarcodeOptions.filter((option) => option !== null && option !== undefined)}
+                options={curBarcodeOptions.filter(
+                  (option) => option !== null && option !== undefined
+                )}
                 onChange={(event, value) => setCurBarcode(value || "")}
                 fullWidth
                 renderInput={(params) => (
@@ -290,7 +349,6 @@ function ExportPage() {
                     control={<Radio />}
                     label="Vat"
                     onChange={(e) => setVat(e.target.value)}
-
                   />
                   <FormControlLabel
                     value="0"

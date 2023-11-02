@@ -249,6 +249,7 @@ function ProductsPage() {
   async function getProducts() {
     const response = await axios.get("productAll");
     const data = response.data.data;
+    console.log(data)
     setProductsAll(data);
     setLoading(false);
   }
