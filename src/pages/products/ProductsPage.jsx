@@ -249,7 +249,6 @@ function ProductsPage() {
   async function getProducts() {
     const response = await axios.get("productAll");
     const data = response.data.data;
-    console.log(data)
     setProductsAll(data);
     setLoading(false);
   }
@@ -404,8 +403,6 @@ function ProductsPage() {
   const productTypeOptions = productsAll
     .map((type) => type.p_type)
     .filter((value, index, self) => self.indexOf(value) === index && value !== null);
-
-  console.log(productIdOptions)
 
   return (
     <section id="products-page">
