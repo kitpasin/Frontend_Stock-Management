@@ -207,6 +207,10 @@ function ReportPage() {
     .map((supplier) => supplier.supplier_name)
     .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
+  const titleOptions = products
+    .map((product) => product.title)
+    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+
   // Export to Excel
   const handleExport = () => {
     const workbook = new ExcelJS.Workbook();
@@ -334,7 +338,7 @@ function ReportPage() {
                         disablePortal
                         size="small"
                         id="combo-box-demo"
-                        options={products.map((product) => product.title)}
+                        options={titleOptions}
                         fullWidth
                         renderInput={(params) => <TextField {...params} label="สินค้า" />}
                       />

@@ -157,10 +157,10 @@ const ModalEditAdmin = (props) => {
                     })
                   }
                 >
-                  {uPermission.superAdmin && (
+                  {uPermission.superAdmin || uPermission.officer && (
                     <option value="1">{t("modal-superadmin")}</option>
                   )}
-                  {uPermission.admin && (
+                  {uPermission.admin || uPermission.officer && (
                     <option value="2">{t("modal-admin")}</option>
                   )}
                   {uPermission.officer && (

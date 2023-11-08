@@ -378,7 +378,7 @@ function ProductsPage() {
     .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const productIdOptions = productsAll
-    .map((product) => product.product_id)
+    .map((product) => product.product_id.toString())
     .filter((value, index, self) => self.indexOf(value) === index && value !== null);
 
   const mainCategoryOptions = productsAll
@@ -404,6 +404,8 @@ function ProductsPage() {
   const productTypeOptions = productsAll
     .map((type) => type.p_type)
     .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+
+  console.log(productIdOptions)
 
   return (
     <section id="products-page">
@@ -494,7 +496,7 @@ function ProductsPage() {
                 disablePortal
                 id="combo-box-product-id"
                 options={productIdOptions}
-                onChange={(event, value) => setProductId(value || "")}
+                onChange={(event, value) => setProductId(parseInt(value) || "")}
                 fullWidth
                 renderInput={(params) => (
                   <TextField type="number" {...params} label="รหัสสินค้า" />

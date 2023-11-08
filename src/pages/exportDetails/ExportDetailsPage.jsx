@@ -75,7 +75,7 @@ function ExportDetailsPage() {
     .map((product) => product.title)
     .filter((value, index, self) => self.indexOf(value) === index && value !== null);
   const productIDOption = exportedProductDetails
-    .map((product) => product.product_id)
+    .map((product) => product.product_id.toString())
     .filter((value, index, self) => self.indexOf(value) === index && value !== null);
   const pickerOption = exportedProductDetails
     .map((product) => product.picker_name)
@@ -200,7 +200,7 @@ function ExportDetailsPage() {
                 disablePortal
                 id="combo-box-product-name"
                 options={productIDOption}
-                onChange={(event, value) => setProductID(value || "")}
+                onChange={(event, value) => setProductID(parseInt(value) || "")}
                 fullWidth
                 renderInput={(params) => (
                   <TextField {...params} label="รหัสสินค้า" />
