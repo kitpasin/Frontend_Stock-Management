@@ -38,7 +38,7 @@ function ExportPage() {
   const [productSelected, setProductSelected] = useState([]);
   const [openMultiExportModal, setOpenMultiexportModal] = useState(false);
 
-  const filteredProduct = exportedProducts.filter((product) => {
+  const filteredProduct = exportedProducts?.filter((product) => {
     const matchesExportID = exportID ? product.export_id === exportID : true;
     const matchesTitle = title ? product.title === title : true;
     const matchProductId = productId ? product.product_id === productId : true;
@@ -83,7 +83,7 @@ function ExportPage() {
   });
 
   const multiExportHandle = () => {
-    if (productSelected.length === 0) {
+    if (productSelected?.length === 0) {
       Swal.fire({
         text: "เลือกสินค้าที่ต้องการเบิก",
         icon: "info",
@@ -110,7 +110,7 @@ function ExportPage() {
     });
     
     const data = response.data.data;
-    console.log(data);
+    console.log(response);
     setExportedProducts(data);
     setLoading(false);
   }
@@ -120,56 +120,56 @@ function ExportPage() {
   }, [refreshData]);
 
   const exportIDOptions = exportedProducts
-    .map((product) => product.export_id)
-    .filter(
+    ?.map((product) => product.export_id)
+    ?.filter(
       (value, index, self) => self.indexOf(value) === index && value !== null
     );
 
   const titleOptions = exportedProducts
-    .map((product) => product.title)
-    .filter(
+    ?.map((product) => product.title)
+    ?.filter(
       (value, index, self) => self.indexOf(value) === index && value !== null
     );
 
   const productIdOptions = exportedProducts
-    .map((product) => product.product_id.toString())
-    .filter(
+    ?.map((product) => product.product_id.toString())
+    ?.filter(
       (value, index, self) => self.indexOf(value) === index && value !== null
     );
 
   const mainCategoryOptions = exportedProducts
-    .map((product) => product.main_cate_name)
-    .filter(
+    ?.map((product) => product.main_cate_name)
+    ?.filter(
       (value, index, self) => self.indexOf(value) === index && value !== null
     );
 
   const subCategoryOptions = exportedProducts
-    .map((product) => product.sub_cate_name)
-    .filter(
+    ?.map((product) => product.sub_cate_name)
+    ?.filter(
       (value, index, self) => self.indexOf(value) === index && value !== null
     );
 
   const prevBarcodeOptions = exportedProducts
-    .map((product) => product.product_barcode)
-    .filter(
+    ?.map((product) => product.product_barcode)
+    ?.filter(
       (value, index, self) => self.indexOf(value) === index && value !== null
     );
 
   const curBarcodeOptions = exportedProducts
-    .map((product) => product.barcode_number)
-    .filter(
+    ?.map((product) => product.barcode_number)
+    ?.filter(
       (value, index, self) => self.indexOf(value) === index && value !== null
     );
 
   const productTypeOptions = exportedProducts
-    .map((product) => product.p_type)
-    .filter(
+    ?.map((product) => product.p_type)
+    ?.filter(
       (value, index, self) => self.indexOf(value) === index && value !== null
     );
 
   const supplierOptions = exportedProducts
-    .map((supplier) => supplier.supplier_name)
-    .filter(
+    ?.map((supplier) => supplier.supplier_name)
+    ?.filter(
       (value, index, self) => self.indexOf(value) === index && value !== null
     );
 
@@ -205,7 +205,7 @@ function ExportPage() {
                   <p>สินค้าทั้งหมด</p>
                 </figure>
                 <div className="description">
-                  <p>{exportedProducts.length} รายการ</p>
+                  <p>{exportedProducts?.length} รายการ</p>
                 </div>
               </div>
             </div>
@@ -307,7 +307,7 @@ function ExportPage() {
                 size="small"
                 disablePortal
                 id="combo-box-supplier"
-                options={prevBarcodeOptions.filter(
+                options={prevBarcodeOptions?.filter(
                   (option) => option !== null && option !== undefined
                 )}
                 onChange={(event, value) => setPrevBarcode(value || "")}
@@ -320,7 +320,7 @@ function ExportPage() {
                 size="small"
                 disablePortal
                 id="combo-box-supplier"
-                options={curBarcodeOptions.filter(
+                options={curBarcodeOptions?.filter(
                   (option) => option !== null && option !== undefined
                 )}
                 onChange={(event, value) => setCurBarcode(value || "")}
