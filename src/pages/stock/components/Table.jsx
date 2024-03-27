@@ -69,7 +69,7 @@ function Table({
       headerName: "ชื่อรายการ",
       headerAlign: "center",
       align: "left",
-      width: isHovered ? 290 : 150,
+      width: isHovered ? 390 : 150,
       headerClassName: "table-columns",
       renderCell: (params) => (
         <div
@@ -274,7 +274,7 @@ function Table({
       headerClassName: "table-columns",
     },
     {
-      field: "counting_unit_name",
+      field: "amount_name",
       headerName: "หน่วยนับ",
       headerAlign: "center",
       align: "center",
@@ -285,7 +285,7 @@ function Table({
       field: "netweight",
       headerAlign: "center",
       align: "center",
-      width: 75.35,
+      width: 80,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -302,30 +302,30 @@ function Table({
         </div>
       ),
     },
-    {
-      field: "total",
-      headerAlign: "center",
-      align: "center",
-      width: 75.35,
-      headerClassName: "table-columns",
-      renderHeader: () => (
-        <div>
-          <Typography
-            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
-          >
-            ค่าดำเนินการ
-          </Typography>
-          <Typography
-            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
-          >
-            (THB)
-          </Typography>
-        </div>
-      ),
-    },
+    // {
+    //   field: "total",
+    //   headerAlign: "center",
+    //   align: "center",
+    //   width: 75.35,
+    //   headerClassName: "table-columns",
+    //   renderHeader: () => (
+    //     <div>
+    //       <Typography
+    //         style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+    //       >
+    //         ค่าดำเนินการ
+    //       </Typography>
+    //       <Typography
+    //         style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+    //       >
+    //         (THB)
+    //       </Typography>
+    //     </div>
+    //   ),
+    // },
     {
       field: "oc_unit",
-      width: 50,
+      width: 70,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -375,7 +375,7 @@ function Table({
       field: "cost_per_unit",
       headerAlign: "center",
       align: "center",
-      width: 50,
+      width: 70,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -476,7 +476,7 @@ function Table({
     },
     {
       field: "selling_price",
-      width: 75.35,
+      width: 85,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",

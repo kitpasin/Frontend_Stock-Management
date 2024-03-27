@@ -340,7 +340,7 @@ function Table({ productsData, setProductSelected }) {
     // },
     {
       field: "oc_unit",
-      width: 50,
+      width: 70,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -440,7 +440,7 @@ function Table({ productsData, setProductSelected }) {
     },
     {
       field: "total_cost",
-      width: 80,
+      width: 70,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
