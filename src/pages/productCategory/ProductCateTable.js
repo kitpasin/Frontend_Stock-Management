@@ -106,24 +106,24 @@ function Row({ row, subCatesData, getMainCates, getSubCates, uPermission }) {
         </TableCell>
         <TableCell align="left">{row.main_product_count}</TableCell>
         {uPermission.officer && !uPermission.superAdmin && (
-          <TableCell align="center">
-            <>
+          <>
+            <TableCell align="center">
               <button
                 style={btnStyle}
                 onClick={() => handleEditMainCateOpen(row)}
               >
                 <img src="images/icons/eva_edit-2-fill.png" alt="" />
               </button>
-              <TableCell align="center">
-                <button
-                  style={btnStyle}
-                  onClick={() => handleDeleteMainCate(row)}
-                >
-                  <img src="images/icons/trash-icon.png" alt="" />
-                </button>
-              </TableCell>
-            </>
-          </TableCell>
+            </TableCell>
+            <TableCell align="center">
+              <button
+                style={btnStyle}
+                onClick={() => handleDeleteMainCate(row)}
+              >
+                <img src="images/icons/trash-icon.png" alt="" />
+              </button>
+            </TableCell>
+          </>
         )}
       </TableRow>
       <TableRow>
@@ -269,10 +269,18 @@ function ProductCateTable({
               </TableCell>
               {uPermission.officer && !uPermission.superAdmin && (
                 <>
-                  <TableCell style={{ color: "#3B326B" }} width={60} align="center">
+                  <TableCell
+                    style={{ color: "#3B326B" }}
+                    width={60}
+                    align="center"
+                  >
                     แก้ไข
                   </TableCell>
-                  <TableCell style={{ color: "#3B326B" }} width={60} align="center">
+                  <TableCell
+                    style={{ color: "#3B326B" }}
+                    width={60}
+                    align="center"
+                  >
                     ลบ
                   </TableCell>
                 </>

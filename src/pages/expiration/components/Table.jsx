@@ -18,19 +18,13 @@ const style = {
   p: 4,
   display: "flex",
   justifyContent: "center",
-  alignItems: "center"
+  alignItems: "center",
 };
 
-function Table({
-  productsData,
-  refreshData,
-  setRefreshData,
-  productSelected,
-  setProductSelected,
-}) {
+function Table({ productsData, setProductSelected }) {
   const webPath = useSelector((state) => state.app.webPath);
   const [isHovered, setIsHovered] = useState(false);
-  const [showImg, setShowImg] = useState(null)
+  const [showImg, setShowImg] = useState(null);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -43,7 +37,7 @@ function Table({
   };
 
   function openImgModal(params) {
-    setShowImg(params.row.thumbnail_link)
+    setShowImg(params.row.thumbnail_link);
     handleOpen();
   }
 
@@ -56,9 +50,20 @@ function Table({
       headerAlign: "center",
       align: "center",
       renderCell: (params) => (
-        <div style={{ background: "#D0D0E2", borderRadius: "5px", cursor: "pointer" }} onClick={()=>openImgModal(params)}>
+        <div
+          style={{
+            background: "#D0D0E2",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+          onClick={() => openImgModal(params)}
+        >
           <Avatar
-            src={params.row.thumbnail_link ? `${webPath}${params.row.thumbnail_link}` : "/images/no-image.png"}
+            src={
+              params.row.thumbnail_link
+                ? `${webPath}${params.row.thumbnail_link}`
+                : "/images/no-image.png"
+            }
             alt={`Image ${params.thumbnail_title}`}
           />
         </div>
@@ -69,7 +74,7 @@ function Table({
       headerName: "ชื่อรายการ",
       headerAlign: "center",
       align: "left",
-      width: isHovered ? 290 : 140,
+      width: isHovered ? 400 : 140,
       headerClassName: "table-columns",
       renderCell: (params) => (
         <div
@@ -243,7 +248,10 @@ function Table({
               style={{
                 fontSize: "12px",
                 lineHeight: "12.5px",
-                color: remainingDays + 1 <= params.row.alert_date ? "#FF0000" : "#000",
+                color:
+                  remainingDays + 1 <= params.row.alert_date
+                    ? "#FF0000"
+                    : "#000",
               }}
             >
               {remainingDays + 1 <= 0 ? "หมดอายุ" : remainingDays + 1 + " วัน"}
@@ -274,7 +282,7 @@ function Table({
       headerClassName: "table-columns",
     },
     {
-      field: "counting_unit_name",
+      field: "amount_name",
       headerName: "หน่วยนับ",
       headerAlign: "center",
       align: "center",
@@ -309,27 +317,27 @@ function Table({
         </div>
       ),
     },
-    {
-      field: "total",
-      headerAlign: "center",
-      align: "center",
-      width: 79,
-      headerClassName: "table-columns",
-      renderHeader: () => (
-        <div>
-          <Typography
-            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
-          >
-            ค่าดำเนินการ
-          </Typography>
-          <Typography
-            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
-          >
-            (THB)
-          </Typography>
-        </div>
-      ),
-    },
+    // {
+    //   field: "total",
+    //   headerAlign: "center",
+    //   align: "center",
+    //   width: 79,
+    //   headerClassName: "table-columns",
+    //   renderHeader: () => (
+    //     <div>
+    //       <Typography
+    //         style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+    //       >
+    //         ค่าดำเนินการ
+    //       </Typography>
+    //       <Typography
+    //         style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+    //       >
+    //         (THB)
+    //       </Typography>
+    //     </div>
+    //   ),
+    // },
     {
       field: "oc_unit",
       width: 50,
@@ -382,7 +390,7 @@ function Table({
       field: "cost_per_unit",
       headerAlign: "center",
       align: "center",
-      width: 50,
+      width: 65,
       headerClassName: "table-columns",
       renderHeader: () => (
         <div>
@@ -406,7 +414,7 @@ function Table({
     },
     {
       field: "unit_price",
-      width: 50,
+      width: 70,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -432,7 +440,7 @@ function Table({
     },
     {
       field: "total_cost",
-      width: 50,
+      width: 80,
       headerAlign: "center",
       align: "center",
       headerClassName: "table-columns",
@@ -520,6 +528,7 @@ function Table({
         </Box>
       </Modal>
       <DataGrid
+        getRowId={(row) => row.product_id}
         getRowClassName={() => rowsClassName}
         sx={{ fontSize: "12px", border: "none" }}
         rows={productsData}

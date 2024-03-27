@@ -81,7 +81,7 @@ function Table({
       headerName: "ชื่อรายการ",
       headerAlign: "center",
       align: "left",
-      width: isHovered ? 290 : 115,
+      width: isHovered ? 450 : 155,
       headerClassName: "table-columns",
       renderCell: (params) => {
         return (
@@ -343,27 +343,27 @@ function Table({
       width: 60,
       headerClassName: "table-columns",
     },
-    {
-      field: "volumnPerUnit",
-      headerAlign: "center",
-      align: "center",
-      width: 90,
-      headerClassName: "table-columns",
-      renderHeader: () => (
-        <div>
-          <Typography
-            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
-          >
-            ปริมาตรสุทธิ
-          </Typography>
-          <Typography
-            style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
-          >
-            /หน่วย
-          </Typography>
-        </div>
-      ),
-    },
+    // {
+    //   field: "volumnPerUnit",
+    //   headerAlign: "center",
+    //   align: "center",
+    //   width: 90,
+    //   headerClassName: "table-columns",
+    //   renderHeader: () => (
+    //     <div>
+    //       <Typography
+    //         style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+    //       >
+    //         ปริมาตรสุทธิ
+    //       </Typography>
+    //       <Typography
+    //         style={{ fontSize: "12px", fontWeight: 500, lineHeight: "12.5px" }}
+    //       >
+    //         /หน่วย
+    //       </Typography>
+    //     </div>
+    //   ),
+    // },
     {
       field: "px_total",
       headerAlign: "center",

@@ -66,7 +66,11 @@ function Table({
           onClick={() => openImgModal(params)}
         >
           <Avatar
-            src={params.row.thumbnail_link ? `${webPath}${params.row.thumbnail_link}` : "/images/no-image.png"}
+            src={
+              params.row.thumbnail_link
+                ? `${webPath}${params.row.thumbnail_link}`
+                : "/images/no-image.png"
+            }
             alt={`Image ${params.thumbnail_title}`}
           />
         </div>
@@ -77,7 +81,7 @@ function Table({
       headerName: "ชื่อรายการ",
       headerAlign: "center",
       align: "left",
-      width: isHovered ? 290 : 150,
+      width: isHovered ? 450 : 150,
       headerClassName: "table-columns",
       renderCell: (params) => (
         <div
@@ -147,7 +151,12 @@ function Table({
           >
             {params.row.import_value -
               params.row.export_value -
-              params.row.export_defective_value}
+              params.row.export_defective_value >
+            0
+              ? params.row.import_value -
+                params.row.export_value -
+                params.row.export_defective_value
+              : 0}
           </p>
         </div>
       ),
@@ -267,17 +276,12 @@ function Table({
       },
     },
     {
-      field: "vat_name",
+      field: "vat_percent",
       headerName: "Vat",
       headerAlign: "center",
       align: "center",
       width: 50,
       headerClassName: "table-columns",
-      renderCell: (params) => (
-        <div>
-          <p>{params.row.vat_name === null ? "0%" : params.row.vat_name}</p>
-        </div>
-      ),
     },
     {
       field: "main_cate_name",
@@ -529,6 +533,7 @@ function Table({
         </Box>
       </Modal>
       <DataGrid
+        getRowId={(row) => row.e_id}
         getRowClassName={() => rowsClassName}
         sx={{ fontSize: "12px", border: "none" }}
         rows={productsData}

@@ -23,7 +23,9 @@ const initialAppState = {
     features: appConfig.features,
     frontOffice: {
         pageAvailable: []
-    }
+    },
+    alertExp: 0,
+    alertStock: 0,
 }
  
 const appSlice = createSlice({
@@ -79,7 +81,17 @@ const appSlice = createSlice({
                 string += characters.charAt(Math.floor(Math.random() * charactersLength)); 
             }
             state.randomString = string.replaceAll(" ", "");
-        }
+        },
+        setProductAlert(state, action) {
+            state.alertExp = action.payload.alertExp
+            state.alertStock = action.payload.alertStock
+        },
+        setExpAlert(state, action) {
+            state.alertExp = action.payload.alertExp
+        },
+        setStockAlert(state, action) {
+            state.alertStock = action.payload.alertStock
+        },
     }
 })
 

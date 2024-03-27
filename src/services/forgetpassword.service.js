@@ -3,7 +3,6 @@ import axios from "axios";
 export const forgetPasswordService = (formData) => {
   return axios.post(`forget-password`, formData).then(
     (res) => {
-      console.log(res)
       return { status: true, description: res.data.description };
     },
     (error) => {

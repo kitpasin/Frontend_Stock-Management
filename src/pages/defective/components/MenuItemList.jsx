@@ -26,23 +26,11 @@ function MenuItemList({
   const [openExportModal, setOpenExportModal] = useState(false);
   const [openFetchImportModal, setOpenFetchImportModal] = useState(false);
   const [productShow, setProductShow] = useState([]);
-  const [productData, setProductData] = useState([]);
   const [modal, setModal] = useState({
     isEdit: false,
     isFetchImport: false,
   });
   const open = Boolean(anchorEl);
-
-  useEffect(() => {
-    fetchProductdata();
-  }, [refreshData]);
-
-  function fetchProductdata() {
-    svProductAll().then((res) => {
-      const result = res.data;
-      setProductData(result);
-    });
-  }
 
   const deleteHandle = (product_id, export_quantity, export_date) => {
     const data = {

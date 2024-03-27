@@ -70,13 +70,19 @@ export default function SubproductPage() {
     });
     const barcodeOptions = barcodes
       .map((barcode) => barcode)
-      .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+      .filter(
+        (value, index, self) => self.indexOf(value) === index && value !== null
+      );
     const titleOptions = result
       .map((product) => product.title)
-      .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+      .filter(
+        (value, index, self) => self.indexOf(value) === index && value !== null
+      );
     const exportOptions = result
       .map((id) => id.export_id)
-      .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+      .filter(
+        (value, index, self) => self.indexOf(value) === index && value !== null
+      );
 
     setProductAll(result);
     setFilteredData(result);
@@ -132,16 +138,35 @@ export default function SubproductPage() {
         barcode.push(product.barcode_number || product.product_barcode);
       });
 
-      const exIdOptions = expId?.map((exp) => exp).filter((value, index, self) => self.indexOf(value) === index && value !== null);
-      const barOptions = barcode?.map(barcode => barcode).filter((value, index, self) => self.indexOf(value) === index && value !== null);
-      const cateOptions = cate_name?.map(cate => cate).filter((value, index, self) => self.indexOf(value) === index && value !== null);
-      const titleOptions = title?.map(title => title).filter((value, index, self) => self.indexOf(value) === index && value !== null);
-      
+      const exIdOptions = expId
+        ?.map((exp) => exp)
+        .filter(
+          (value, index, self) =>
+            self.indexOf(value) === index && value !== null
+        );
+      const barOptions = barcode
+        ?.map((barcode) => barcode)
+        .filter(
+          (value, index, self) =>
+            self.indexOf(value) === index && value !== null
+        );
+      const cateOptions = cate_name
+        ?.map((cate) => cate)
+        .filter(
+          (value, index, self) =>
+            self.indexOf(value) === index && value !== null
+        );
+      const titleOptions = title
+        ?.map((title) => title)
+        .filter(
+          (value, index, self) =>
+            self.indexOf(value) === index && value !== null
+        );
+
       setProductOptions(titleOptions);
       setCateOptions(cateOptions);
       setExportIdOptions(exIdOptions);
       setBarcodeOptions(barOptions);
-
     } else {
       setBarcodeOptions(barcodeInit);
       setCateOptions(cateAll);
@@ -149,14 +174,23 @@ export default function SubproductPage() {
       setExportIdOptions(exportIdInit);
     }
 
-    if ( formFilter.cate && (!formFilter.barcode_number || !formFilter.title || !formFilter.export_id)) {
+    if (
+      formFilter.cate &&
+      (!formFilter.barcode_number || !formFilter.title || !formFilter.export_id)
+    ) {
       const barcode = products
         ?.map((item) => item.barcode_number || item.product_barcode)
-        .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+        .filter(
+          (value, index, self) =>
+            self.indexOf(value) === index && value !== null
+        );
 
       const title = products
         ?.map((item) => item.title)
-        .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+        .filter(
+          (value, index, self) =>
+            self.indexOf(value) === index && value !== null
+        );
 
       const exIdOptions = products?.map((product) => product.export_id);
 

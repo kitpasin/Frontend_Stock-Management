@@ -17,12 +17,14 @@ import Table from "./components/Table";
 import axios from "axios";
 import MultiExportModal from "../../components/product/modal/MultiExportModal";
 import Swal from "sweetalert2";
+import { useDispatch } from "react-redux";
+import { appActions } from "../../store/app-slice";
 
 function StockPage() {
   const { t } = useTranslation(["dashboard-page"]);
+  const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(true);
-
   const [productsStock, setProductsStock] = useState([]);
   const [title, setTitle] = useState("");
   const [productId, setProductId] = useState("");
@@ -97,6 +99,8 @@ function StockPage() {
     const response = await axios.get("product/stock");
     const data = response.data.data;
     setProductsStock(data);
+    dispatch(appActions.setStockAlert({ alertStock: response.data.count }));
+
     setLoading(false);
   }
 
@@ -106,35 +110,51 @@ function StockPage() {
 
   const titleOptions = productsStock
     .map((product) => product.title)
-    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+    .filter(
+      (value, index, self) => self.indexOf(value) === index && value !== null
+    );
 
   const productIdOptions = productsStock
     .map((product) => product.product_id.toString())
-    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+    .filter(
+      (value, index, self) => self.indexOf(value) === index && value !== null
+    );
 
   const mainCategoryOptions = productsStock
     .map((product) => product.main_cate_name)
-    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+    .filter(
+      (value, index, self) => self.indexOf(value) === index && value !== null
+    );
 
   const subCategoryOptions = productsStock
     .map((product) => product.sub_cate_name)
-    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+    .filter(
+      (value, index, self) => self.indexOf(value) === index && value !== null
+    );
 
   const supplierOptions = productsStock
     .map((supplier) => supplier.supplier_name)
-    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+    .filter(
+      (value, index, self) => self.indexOf(value) === index && value !== null
+    );
 
   const prevBarcodeOptions = productsStock
     .map((product) => product.product_barcode)
-    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+    .filter(
+      (value, index, self) => self.indexOf(value) === index && value !== null
+    );
 
   const curBarcodeOptions = productsStock
     .map((product) => product.barcode_number)
-    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+    .filter(
+      (value, index, self) => self.indexOf(value) === index && value !== null
+    );
 
   const productTypeOptions = productsStock
     .map((type) => type.p_type)
-    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+    .filter(
+      (value, index, self) => self.indexOf(value) === index && value !== null
+    );
 
   return (
     <section id="stock-page">
@@ -188,7 +208,9 @@ function StockPage() {
                 options={productTypeOptions}
                 onChange={(event, value) => setProductType(value || "")}
                 fullWidth
-                renderInput={(params) => <TextField {...params} label="ประเภทสินค้า" />}
+                renderInput={(params) => (
+                  <TextField {...params} label="ประเภทสินค้า" />
+                )}
               />
               <Autocomplete
                 size="small"
@@ -233,7 +255,7 @@ function StockPage() {
                 )}
               />
             </div>
-            <div 
+            <div
               style={{
                 display: "flex",
                 width: "100%",
@@ -257,7 +279,9 @@ function StockPage() {
                 size="small"
                 disablePortal
                 id="combo-box-supplier"
-                options={prevBarcodeOptions.filter((option) => option !== null && option !== undefined)}
+                options={prevBarcodeOptions.filter(
+                  (option) => option !== null && option !== undefined
+                )}
                 onChange={(event, value) => setPrevBarcode(value || "")}
                 fullWidth
                 renderInput={(params) => (
@@ -268,7 +292,9 @@ function StockPage() {
                 size="small"
                 disablePortal
                 id="combo-box-supplier"
-                options={curBarcodeOptions.filter((option) => option !== null && option !== undefined)}
+                options={curBarcodeOptions.filter(
+                  (option) => option !== null && option !== undefined
+                )}
                 onChange={(event, value) => setCurBarcode(value || "")}
                 fullWidth
                 renderInput={(params) => (

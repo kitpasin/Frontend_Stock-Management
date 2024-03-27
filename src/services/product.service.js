@@ -53,3 +53,12 @@ export const svExportProduct = async (form) => {
         return { status: false, description: "Something went wrong.", errorMessage: err };
     }
 }
+
+export const svGetProductAlert = async () => {
+    try {
+        const res = await axios.get(`productalert`);
+        return { status: true, data: res.data.data, message: "Get product alert success." };
+    } catch (err) {
+        return { status: false, description: "Something went wrong.", errorMessage: err };
+    }
+}

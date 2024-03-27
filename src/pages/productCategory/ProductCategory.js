@@ -44,8 +44,6 @@ function ProductCategory() {
     getSubCates();
   }, []);
 
-  console.log(uPermission)
-
   return (
     <section id="productcate-page">
       {loading ? (

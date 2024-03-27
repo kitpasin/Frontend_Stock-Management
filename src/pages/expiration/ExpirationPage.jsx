@@ -10,6 +10,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import { Link } from "react-router-dom";
 import PulseLoader from "react-spinners/PulseLoader";
+import { appActions } from "../../store/app-slice";
 
 import "./ExpirationPage.scss";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
@@ -18,7 +19,7 @@ import axios from "axios";
 import MultiExportModal from "../../components/product/modal/MultiExportModal";
 import Swal from "sweetalert2";
 import dayjs from "dayjs";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Box } from "@mui/system";
 import ExportDetail from "../products/components/ExportDetail";
 
@@ -39,9 +40,9 @@ const style = {
 };
 function ExpirationPage() {
   const { t } = useTranslation(["dashboard-page"]);
+  const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(true);
-
   const [productsExpiration, setProductsExpiration] = useState([]);
   const [title, setTitle] = useState("");
   const [productId, setProductId] = useState("");
@@ -51,23 +52,21 @@ function ExpirationPage() {
   const [curBarcode, setCurBarcode] = useState("");
   const [productType, setProductType] = useState("");
   const [supplier, setSupplier] = useState("");
-
   const [vat, setVat] = useState("");
-
   const [refreshData, setRefreshData] = useState(0);
   const [productSelected, setProductSelected] = useState([]);
-  const [productData, setProductData] = useState([]);
   const [openMultiExportModal, setOpenMultiexportModal] = useState(false);
   const [openExportedTempModal, setOpenExportedTempModal] = useState(false);
-  const handleOpen = () => setOpenExportedTempModal(true);
-  const handleClose = () => setOpenExportedTempModal(false);
-  const current_date = dayjs().toISOString().substring(0, 10);
-
   const [exportedProductTemp, setExportedProductTemp] = useState([]);
   const { displayName } = useSelector((state) => state.auth.profile);
+  const [randomNum, setRandomNum] = useState(0);
+  const [selectedExportType, setSelectedExportType] = useState("");
+  const [picker, setPicker] = useState("");
+  const [approver, setApprover] = useState("");
+
+  const handleClose = () => setOpenExportedTempModal(false);
   const today = dayjs();
   const formattedDate = today.format("YYYY/MM/DD HH:mm");
-
   const exportOption = [
     {
       id: 1,
@@ -78,10 +77,6 @@ function ExpirationPage() {
       option: "ตู้ขาย",
     },
   ];
-  const [randomNum, setRandomNum] = useState(0);
-  const [selectedExportType, setSelectedExportType] = useState("");
-  const [picker, setPicker] = useState("");
-  const [approver, setApprover] = useState("");
 
   const filteredProduct = productsExpiration.filter((product) => {
     const matchesTitle = title ? product.title === title : true;
@@ -144,11 +139,12 @@ function ExpirationPage() {
     }
   };
 
-
   async function getProductsExpiration() {
     const response = await axios.get("product/expiration");
     const data = response.data.data;
     setProductsExpiration(data);
+    dispatch(appActions.setExpAlert({ alertExp: response.data.count }));
+    
     setLoading(false);
   }
 
@@ -227,35 +223,51 @@ function ExpirationPage() {
 
   const titleOptions = productsExpiration
     .map((product) => product.title)
-    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+    .filter(
+      (value, index, self) => self.indexOf(value) === index && value !== null
+    );
 
   const productIdOptions = productsExpiration
     .map((product) => product.product_id.toString())
-    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+    .filter(
+      (value, index, self) => self.indexOf(value) === index && value !== null
+    );
 
   const mainCategoryOptions = productsExpiration
     .map((product) => product.main_cate_name)
-    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+    .filter(
+      (value, index, self) => self.indexOf(value) === index && value !== null
+    );
 
   const subCategoryOptions = productsExpiration
     .map((product) => product.sub_cate_name)
-    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+    .filter(
+      (value, index, self) => self.indexOf(value) === index && value !== null
+    );
 
   const supplierOptions = productsExpiration
     .map((supplier) => supplier.supplier_name)
-    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+    .filter(
+      (value, index, self) => self.indexOf(value) === index && value !== null
+    );
 
   const prevBarcodeOptions = productsExpiration
     .map((product) => product.product_barcode)
-    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+    .filter(
+      (value, index, self) => self.indexOf(value) === index && value !== null
+    );
 
   const curBarcodeOptions = productsExpiration
     .map((product) => product.barcode_number)
-    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+    .filter(
+      (value, index, self) => self.indexOf(value) === index && value !== null
+    );
 
   const productTypeOptions = productsExpiration
     .map((type) => type.p_type)
-    .filter((value, index, self) => self.indexOf(value) === index && value !== null);
+    .filter(
+      (value, index, self) => self.indexOf(value) === index && value !== null
+    );
 
   return (
     <section id="expiration-page">
@@ -316,7 +328,9 @@ function ExpirationPage() {
                 options={productTypeOptions}
                 onChange={(event, value) => setProductType(value || "")}
                 fullWidth
-                renderInput={(params) => <TextField {...params} label="ประเภทสินค้า" />}
+                renderInput={(params) => (
+                  <TextField {...params} label="ประเภทสินค้า" />
+                )}
               />
               <Autocomplete
                 size="small"
@@ -361,7 +375,7 @@ function ExpirationPage() {
                 )}
               />
             </div>
-            <div 
+            <div
               style={{
                 display: "flex",
                 width: "100%",
@@ -385,7 +399,9 @@ function ExpirationPage() {
                 size="small"
                 disablePortal
                 id="combo-box-supplier"
-                options={prevBarcodeOptions.filter((option) => option !== null && option !== undefined)}
+                options={prevBarcodeOptions.filter(
+                  (option) => option !== null && option !== undefined
+                )}
                 onChange={(event, value) => setPrevBarcode(value || "")}
                 fullWidth
                 renderInput={(params) => (
@@ -396,7 +412,9 @@ function ExpirationPage() {
                 size="small"
                 disablePortal
                 id="combo-box-supplier"
-                options={curBarcodeOptions.filter((option) => option !== null && option !== undefined)}
+                options={curBarcodeOptions.filter(
+                  (option) => option !== null && option !== undefined
+                )}
                 onChange={(event, value) => setCurBarcode(value || "")}
                 fullWidth
                 renderInput={(params) => (

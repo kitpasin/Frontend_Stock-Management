@@ -45,7 +45,6 @@ const PostPage = () => {
         }
         setCategory(arr)
         setMenuList(res.menu)
-        console.log('then')
       }
     })
   }, [language])

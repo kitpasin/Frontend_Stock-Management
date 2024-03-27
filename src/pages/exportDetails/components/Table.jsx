@@ -21,19 +21,19 @@ const style = {
   p: 4,
   display: "flex",
   justifyContent: "center",
-  alignItems: "center"
+  alignItems: "center",
 };
 
-function Table({ exportedProductDetails, refreshData, setRefreshData }) {
+function Table({ exportedProductDetails }) {
   const { displayName } = useSelector((state) => state.auth.profile);
   const webPath = useSelector((state) => state.app.webPath);
-  const [showImg, setShowImg] = useState(null)
+  const [showImg, setShowImg] = useState(null);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   function openImgModal(params) {
-    setShowImg(params.row.thumbnail_link)
+    setShowImg(params.row.thumbnail_link);
     handleOpen();
   }
 
@@ -46,9 +46,20 @@ function Table({ exportedProductDetails, refreshData, setRefreshData }) {
       headerAlign: "center",
       align: "center",
       renderCell: (params) => (
-        <div style={{ background: "#D0D0E2", borderRadius: "5px", cursor: "pointer" }} onClick={()=>openImgModal(params)}>
+        <div
+          style={{
+            background: "#D0D0E2",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+          onClick={() => openImgModal(params)}
+        >
           <Avatar
-            src={params.row.thumbnail_link ? `${webPath}${params.row.thumbnail_link}` : "/images/no-image.png"}
+            src={
+              params.row.thumbnail_link
+                ? `${webPath}${params.row.thumbnail_link}`
+                : "/images/no-image.png"
+            }
             alt={`Image ${params.thumbnail_title}`}
           />
         </div>
@@ -151,7 +162,11 @@ function Table({ exportedProductDetails, refreshData, setRefreshData }) {
             }}
           >
             {params.row.import_value -
-              (params.row.export_value + params.row.export_defective_value)}
+              (params.row.export_value + params.row.export_defective_value) >
+            0
+              ? params.row.import_value -
+                (params.row.export_value + params.row.export_defective_value)
+              : 0}
           </p>
         </div>
       ),
@@ -218,6 +233,7 @@ function Table({ exportedProductDetails, refreshData, setRefreshData }) {
         </Box>
       </Modal>
       <DataGrid
+        getRowId={(row) => row.e_id}
         getRowClassName={() => rowsClassName}
         sx={{ fontSize: "12px", border: "none" }}
         rows={exportedProductDetails}

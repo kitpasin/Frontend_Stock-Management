@@ -1,18 +1,13 @@
 import React from "react";
+import { useEffect, useState } from "react";
 import { Menu } from "@mui/material";
 import { MenuItem } from "@mui/material";
 import { Button } from "@mui/material";
+import { v4 as uuidv4 } from "uuid";
 import Swal from "sweetalert2";
 
 import ProductEditModal from "../../../components/product/modal/ProductEditModal";
-import { svProductAll } from "../../../services/product.service";
-import { svProductOne } from "../../../services/product.service";
-import { svDeleteProduct } from "../../../services/product.service";
-import { ConnectingAirportsOutlined } from "@mui/icons-material";
-import { v4 as uuidv4 } from 'uuid';
-
 import ExportModal from "../../../components/product/modal/ExportModal";
-import { useEffect, useState } from "react";
 
 function MenuItemList({
   params,
@@ -25,198 +20,79 @@ function MenuItemList({
   const [btnId, setbtnId] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [openExportModal, setOpenExportModal] = useState(false);
-  const [openFetchImportModal, setOpenFetchImportModal] = useState(false);
   const [productShow, setProductShow] = useState([]);
-  const [productData, setProductData] = useState([]);
   const [modal, setModal] = useState({
     isEdit: false,
     isFetchImport: false,
   });
   const open = Boolean(anchorEl);
 
-  useEffect(() => {
-    fetchProductdata();
-  }, [refreshData]);
-
-  function fetchProductdata() {
-    svProductAll().then((res) => {
-      const result = res.data;
-      setProductData(result);
-    });
-  }
-
   const fetchImportHandle = (_params) => {
-    const data = productData?.filter((item) => item.id === _params.id);
-    if (data.length > 0) {
-      const dd = data[0];
-      const result = {
-        id: dd.id,
-        product_id: dd.product_id,
-        title: dd.title,
-        state1: false,
-        state2: false,
-        state3: false,
-        state4: false,
-        reset: 0,
-        key: [uuidv4(), uuidv4(), uuidv4(), uuidv4()],
-        unit: dd.unit_id,
-        unit_name: dd.net_name,
-        netweight: dd.netweight,
-        counting_unit: dd.counting_unit_id,
-        counting_unit_name: dd.amount_name,
-        purchase_date: "",
-        mfd_date: "",
-        exp_date: "",
-        alert_date: dd.alert_date,
-        alert_stock: dd.alert_stock,
-        barcode: dd.product_barcode,
-        new_barcode: dd.barcode_number,
-        p_type: dd.p_type?dd.p_type:"",
-        main_cate_id: dd.main_cate_id,
-        main_cate_name: dd.main_cate_name,
-        sub_cate_id: dd.sub_cate_id,
-        sub_cate: dd.sub_cate_name,
-        supplier_id: dd.supplier_id,
-        supplier_cate: dd.supplier_cate_id,
-        supplier_name: dd.supplier_name,
-        supplier_cate_name: dd.supplier_cate_name,
-        supplier_barcode: dd.supplier_barcode,
-        import_value: "",
-        defective: dd.defective_product,
-        image_path: dd.thumbnail_link,
+    const dd = _params;
+    const result = {
+      id: dd.id,
+      product_id: dd.product_id,
+      title: dd.title,
+      state1: false,
+      state2: false,
+      state3: false,
+      state4: false,
+      reset: 0,
+      key: [uuidv4(), uuidv4(), uuidv4(), uuidv4()],
+      unit: dd.unit_id,
+      unit_name: dd.net_name,
+      netweight: dd.netweight,
+      counting_unit: dd.counting_unit_id,
+      counting_unit_name: dd.amount_name,
+      purchase_date: "",
+      mfd_date: "",
+      exp_date: "",
+      alert_date: dd.alert_date,
+      alert_stock: dd.alert_stock,
+      barcode: dd.product_barcode,
+      new_barcode: dd.barcode_number,
+      p_type: dd.p_type ? dd.p_type : "",
+      main_cate_id: dd.main_cate_id,
+      main_cate_name: dd.main_cate_name,
+      sub_cate_id: dd.sub_cate_id,
+      sub_cate: dd.sub_cate_name,
+      supplier_id: dd.supplier_id,
+      supplier_cate: dd.supplier_cate_id,
+      supplier_name: dd.supplier_name,
+      supplier_cate_name: dd.supplier_cate_name,
+      supplier_barcode: dd.supplier_barcode,
+      import_value: "",
+      defective: dd.defective_product,
+      image_path: dd.thumbnail_link,
 
-        import_fee: "",
-        fuel_cost: "",
-        other_exp: "",
-        total: "",
-        op_unit: "",
-        total_product: "",
+      import_fee: "",
+      fuel_cost: "",
+      other_exp: "",
+      total: "",
+      op_unit: "",
+      total_product: "",
 
-        oc_unit: dd.op_unit,
-        unit_price: dd.unit_price,
-        product_cost: "",
-        units: "",
-        cost_per_unit: dd.cost_per_unit,
-        total_cost: "",
-        set_profit: dd.set_profit,
-        vat_id: dd.vat_id,
-        vat: dd.vat_name,
-        profit_per_unit: dd.profit_per_unit,
-        pp_profit: dd.pp_profit,
-        pp_vat: dd.pp_vat,
-        os_price: dd.selling_price,
-        selling_price: "",
-      };
-      setModal((prev) => {
-        return { ...prev, isEdit: false, isFetchImport: true };
-      });
-      setProductShow(result);
-      setOpenModal(true);
-      handleClose();
-    }
-  };
-
-  const editHandle = (_params) => {
-    const data = productData.filter((item) => item.id === _params.id);
-    if (data) {
-      const dd = data[0];
-      const result = {
-        id: dd.id,
-        product_id: dd.product_id,
-        title: dd.title,
-        state1: false,
-        state2: false,
-        state3: false,
-        reset: 0,
-        unit: dd.unit_id,
-        unit_name: dd.net_name,
-        netweight: dd.netweight,
-        counting_unit: dd.counting_unit_id,
-        counting_unit_name: dd.amount_name,
-        purchase_date: dd.purchase_date,
-        mfd_date: dd.mfd_date,
-        exp_date: dd.exp_date,
-        barcode: dd.barcode_number,
-        new_barcode: "",
-        main_cate_id: dd.main_cate_id,
-        main_cate_name: dd.main_cate_name,
-        sub_cate_id: dd.sub_cate_id,
-        sub_cate: dd.sub_cate_name,
-        supplier_id: dd.supplier_id,
-        supplier_cate: dd.supplier_cate_id,
-        supplier_name: dd.supplier_name,
-        supplier_cate_name: dd.supplier_cate_name,
-        import_value: dd.import_value,
-        defective: dd.defective_product,
-        image_path: dd.thumbnail_link,
-
-        import_fee: dd.import_fee,
-        fuel_cost: dd.fuel_cost,
-        other_exp: dd.other_exp,
-        total: dd.px_total,
-        op_unit: dd.op_unit,
-        total_product: dd.total_product,
-
-        oc_unit: dd.op_unit,
-        unit_price: dd.unit_price,
-        product_cost: dd.product_cost,
-        units: dd.units,
-        cost_per_unit: dd.cost_per_unit,
-        total_cost: dd.total_cost,
-        set_profit: dd.set_profit,
-        vat_id: dd.vat_id,
-        vat: dd.vat_name,
-        profit_per_unit: dd.profit_per_unit,
-        pp_profit: dd.pp_profit,
-        pp_vat: dd.pp_vat,
-        os_price: dd.os_price,
-        selling_price: dd.selling_price,
-      };
-      setModal((prev) => { return { ...prev, isEdit: true, isFetchImport: false } })
-      setProductShow(result);
-      setOpenModal(true);
-      handleClose();
-    }
-
-  };
-
-  const deleteHandle = (product_id) => {
-    handleClose();
-    Swal.fire({
-      title: "Are you sure?",
-      text: "Do you want to delete this product?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        svDeleteProduct(product_id)
-          .then((res) => {
-            Swal.fire({
-              text: "Delete product success.",
-              icon: "success",
-              showConfirmButton: false,
-              timer: 1000,
-            }).then(() => {
-              setRefreshData(refreshData + 1);
-            });
-          })
-          .catch((err) => console.log(err));
-      }
+      oc_unit: dd.op_unit,
+      unit_price: dd.unit_price,
+      product_cost: "",
+      units: "",
+      cost_per_unit: dd.cost_per_unit,
+      total_cost: "",
+      set_profit: dd.set_profit,
+      vat_id: dd.vat_id,
+      vat: dd.vat_name,
+      profit_per_unit: dd.profit_per_unit,
+      pp_profit: dd.pp_profit,
+      pp_vat: dd.pp_vat,
+      os_price: dd.selling_price,
+      selling_price: "",
+    };
+    setModal((prev) => {
+      return { ...prev, isEdit: false, isFetchImport: true };
     });
-  };
-
-  const exportProductOne = (_id) => {
-    const data = productData.filter((item) => item.id === _id);
-    if (data) {
-      const result = data[0];
-      setProductShow(result);
-      setOpenExportModal(true);
-      handleClose();
-    }
-    
+    setProductShow(result);
+    setOpenModal(true);
+    handleClose();
   };
 
   function handleClick(event) {

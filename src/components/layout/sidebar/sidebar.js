@@ -1,46 +1,38 @@
-import React, { Fragment, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { appActions } from "../../../store/app-slice";
-import { authActions } from "../../../store/auth-slice";
+import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "./sidebar.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { Badge, Button } from "@mui/material";
+import { Link } from "react-router-dom";
 import {
   faCaretDown,
-  faListOl,
   faSignsPost,
-  faSitemap,
-  faNewspaper,
   faGamepad,
-  faBoxOpen,
-  faImages,
   faTools,
   faLanguage,
   faUserShield,
   faCircleInfo,
-  faStreetView,
   faInbox,
   faComments,
   faFileCsv,
-  faHome,
-  faIcons,
   faEnvelope,
-  faBook,
 } from "@fortawesome/free-solid-svg-icons";
-import { Button } from "@mui/material";
+
+import { authActions } from "../../../store/auth-slice";
+import { appActions } from "../../../store/app-slice";
 import NavLink from "./navlink";
-import { Link } from "react-router-dom";
+import "./sidebar.scss";
 
 const SidebarComponent = (props) => {
   const { t, i18n } = useTranslation("sidebar");
-
   const dispatch = useDispatch();
   const uPermission = useSelector((state) => state.auth.userPermission);
   const selectedLanguage = useSelector((state) => state.app.language);
-  const webPath = useSelector((state) => state.app.webPath);
   const activateLanguage = useSelector((state) => state.auth.activateLanguage);
   const pagesAllow = useSelector((state) => state.app.pages);
+  const alertExp = useSelector((state) => state.app.alertExp);
+  const alertStock = useSelector((state) => state.app.alertStock);
+  const webPath = useSelector((state) => state.app.webPath);
   const uploadPath = useSelector((state) => state.app.uploadPath);
   const isDevMode = useSelector((state) => state.app.isDevMode);
 
@@ -80,19 +72,22 @@ const SidebarComponent = (props) => {
         <hr className="line-section" />
         <div className="title-section">{t("Languages")}</div>
         <div className="language-selection">
-          {activateLanguage.map((lang) => (
-            <Button
-              variant="outlined"
-              key={lang}
-              onClick={(e) => languageSelectHandler(lang)}
-              className={`btn-lang ${
-                lang.toLowerCase() === selectedLanguage.toLowerCase()
-                  ? "selected"
-                  : ""
-              }`}
-            >
-              {lang}
-            </Button>
+          {activateLanguage.map((lang, index) => (
+            <React.Fragment key={lang}>
+              {index == 0 && (
+                <Button
+                  variant="outlined"
+                  onClick={(e) => languageSelectHandler(lang)}
+                  className={`btn-lang ${
+                    lang.toLowerCase() === selectedLanguage.toLowerCase()
+                      ? "selected"
+                      : ""
+                  }`}
+                >
+                  {lang}
+                </Button>
+              )}
+            </React.Fragment>
           ))}
         </div>
 
@@ -232,25 +227,6 @@ const SidebarComponent = (props) => {
                   </div>
                 </li>
               </ul>
-              {/* <ul className="nav-menu">
-                <li>
-                  <NavLink
-                    onClick={closeSidebarhandler}
-                    to="/products/import"
-                    className="navlink"
-                    title={t("เพิ่มสินค้า")}
-                    liClass="menu-link"
-                  >
-                    <figure
-                      className="faIcon"
-                      style={{ paddingRight: ".25rem" }}
-                    >
-                      <img src="/images/icons/imports-icon.png" alt="" />
-                    </figure>
-                    <div className="menu-title">{t("เพิ่มสินค้า")}</div>
-                  </NavLink>
-                </li>
-              </ul> */}
               <ul className="nav-menu">
                 <li>
                   <NavLink
@@ -275,7 +251,9 @@ const SidebarComponent = (props) => {
                     className="navlink"
                     title={t("Expiration")}
                     liClass="menu-link"
+                    style={{ alignItems: "center" }}
                   >
+                    <Badge badgeContent={alertExp} color="warning" />
                     <figure className="faIcon">
                       <img src="/images/icons/expiration-icon.png" alt="" />
                     </figure>
@@ -292,6 +270,7 @@ const SidebarComponent = (props) => {
                     title={t("Stock")}
                     liClass="menu-link"
                   >
+                    <Badge badgeContent={alertStock} color="warning" />
                     <figure className="faIcon">
                       <img src="/images/icons/stock-icon.png" alt="" />
                     </figure>
@@ -299,41 +278,8 @@ const SidebarComponent = (props) => {
                   </NavLink>
                 </li>
               </ul>
-              {/* <ul className="nav-menu">
-                <li>
-                  <NavLink
-                    onClick={closeSidebarhandler}
-                    to="/import"
-                    className="navlink"
-                    title={t("Import")}
-                    liClass="menu-link"
-                  >
-                    <figure className="faIcon" style={{ paddingRight: ".25rem" }}>
-                      <img src="/images/icons/imports-icon.png" alt="" />
-                    </figure>
-                    <div className="menu-title">{t("Import")}</div>
-                  </NavLink>
-                </li>
-              </ul> */}
-              {/* <ul className="nav-menu">
-                <li>
-                  <NavLink
-                    onClick={closeSidebarhandler}
-                    to="products/export"
-                    className="navlink"
-                    title={t("เบิกออกสินค้า")}
-                    liClass="menu-link"
-                  >
-                    <figure className="faIcon" style={{ paddingLeft: ".25rem" }}>
-                      <img src="/images/icons/exports-icon.png" alt="" />
-                    </figure>
-                    <div className="menu-title">{t("เบิกออกสินค้า")}</div>
-                  </NavLink>
-                </li>
-              </ul> */}
               <ul className="nav-menu">
-                {/* <div className="title-section">{t("ManageSystem")}</div> */}
-                <li className="menu-link has-child ">
+                <li className="menu-link has-child opened">
                   <a
                     className={`navlink `}
                     title={t("ProductsTitleMenu")}
@@ -380,53 +326,13 @@ const SidebarComponent = (props) => {
                           <span className="collap-title">
                             <FontAwesomeIcon icon={faSignsPost} />
                           </span>
-                          <span className="menu-title">
-                            {t("รายการเบิก")}
-                          </span>
+                          <span className="menu-title">{t("รายการเบิก")}</span>
                         </NavLink>
                       </li>
                     </ul>
                   </div>
                 </li>
               </ul>
-              {/* <ul className="nav-menu">
-                <li>
-                  <NavLink
-                    onClick={closeSidebarhandler}
-                    to="/export"
-                    className="navlink"
-                    title={t("Export")}
-                    liClass="menu-link"
-                  >
-                    <figure
-                      className="faIcon"
-                      style={{ paddingLeft: ".25rem" }}
-                    >
-                      <img src="/images/icons/exports-icon.png" alt="" />
-                    </figure>
-                    <div className="menu-title">{t("Export")}</div>
-                  </NavLink>
-                </li>
-              </ul>
-              <ul className="nav-menu">
-                <li>
-                  <NavLink
-                    onClick={closeSidebarhandler}
-                    to="/exportdetails"
-                    className="navlink"
-                    title={t("ExportDetail")}
-                    liClass="menu-link"
-                  >
-                    <figure
-                      className="faIcon"
-                      style={{ paddingLeft: ".25rem" }}
-                    >
-                      <img src="/images/icons/exports-icon.png" alt="" />
-                    </figure>
-                    <div className="menu-title">{t("ExportDetail")}</div>
-                  </NavLink>
-                </li>
-              </ul> */}
               <ul className="nav-menu">
                 <li>
                   <NavLink
@@ -461,85 +367,6 @@ const SidebarComponent = (props) => {
               </ul>
             </Fragment>
           )}
-
-          {/* {pagesAllow.groups.article && (
-            <Fragment>
-              <hr className="line-section gap" />
-              <div className="title-section">{t("ManageContent")}</div>
-              <ul className="nav-menu">
-                {pagesAllow.slides && (
-                  <NavLink
-                    onClick={closeSidebarhandler}
-                    to="/slides"
-                    className={`navlink `}
-                    title={t("SlidesPage")}
-                    liClass="menu-link"
-                  >
-                    <figure className="faIcon">
-                      <FontAwesomeIcon icon={faImages} />
-                    </figure>
-                    <div className="menu-title">{t("SlidesPage")}</div>
-                  </NavLink>
-                )}
-                <li className={`menu-link has-child opened`}>
-                  <a className={`navlink `} onClick={toggleSubMenu} title={t("ManageWebContent")}>
-                    <FontAwesomeIcon icon={faCaretDown} className="toggle-submenu" />
-                    <span className="collap-title">
-                      <FontAwesomeIcon icon={faListOl} />
-                    </span>
-                    <div className="menu-title">{t("ManageWebContent")}</div>
-                  </a>
-                  <div className="child-menu ">
-                    <ul className="nav-items ">
-                      {pagesAllow.menu && (
-                        <NavLink
-                          onClick={closeSidebarhandler}
-                          to="/menu"
-                          className={`items `}
-                          title={t("ManageWebContent")}
-                          liClass="sub-items"
-                        >
-                          <span className="collap-title">
-                            <FontAwesomeIcon icon={faSignsPost} />
-                          </span>
-                          <span className="menu-title">{t("MenuPage")}</span>
-                        </NavLink>
-                      )}
-                      {pagesAllow.category && (
-                        <NavLink
-                          onClick={closeSidebarhandler}
-                          to="/category"
-                          className={`items `}
-                          title={t("ManageWebContent")}
-                          liClass="sub-items"
-                        >
-                          <span className="collap-title">
-                            <FontAwesomeIcon icon={faSitemap} />
-                          </span>
-                          <span className="menu-title">{t("CategoryPage")}</span>
-                        </NavLink>
-                      )}
-                      {pagesAllow.posts && (
-                        <NavLink
-                          onClick={closeSidebarhandler}
-                          to="/posts"
-                          className={`items `}
-                          title={t("ManageWebContent")}
-                          liClass="sub-items"
-                        >
-                          <span className="collap-title">
-                            <FontAwesomeIcon icon={faNewspaper} />
-                          </span>
-                          <span className="menu-title">{t("PostPage")}</span>
-                        </NavLink>
-                      )}
-                    </ul>
-                  </div>
-                </li>
-              </ul>
-            </Fragment>
-          )} */}
-
           {pagesAllow.groups.report && (
             <Fragment>
               <hr className="line-section gap" />
@@ -694,47 +521,21 @@ const SidebarComponent = (props) => {
                   </NavLink>
                 )}
 
-                {pagesAllow.configs && (uPermission.superAdmin || uPermission.officer) && (
-                  <NavLink
-                    onClick={closeSidebarhandler}
-                    to="/configs"
-                    className={`navlink `}
-                    title={t("ConfigPage")}
-                    liClass="menu-link"
-                  >
-                    <figure className="faIcon">
-                      <FontAwesomeIcon icon={faTools} />
-                    </figure>
-                    <div className="menu-title">{t("ConfigPage")}</div>
-                  </NavLink>
-                )}
-                {/* {isDevMode && (
-                  <NavLink
-                    onClick={closeSidebarhandler}
-                    to="/componentui"
-                    className={`navlink `}
-                    title="UI Components"
-                    liClass="menu-link"
-                  >
-                    <figure className="faIcon">
-                      <FontAwesomeIcon icon={faIcons} />
-                    </figure>
-                    <div className="menu-title">UI Components</div>
-                  </NavLink>
-                )} */}
-                {/* <div className="menu-link">
-                  <a
-                    href={`${uploadPath}upload/manual/manual.pdf`}
-                    className={`navlink `}
-                    target="_blank"
-                    title="Manual"
-                  >
-                    <figure className="faIcon">
-                      <FontAwesomeIcon icon={faBook} />
-                    </figure>
-                    <div className="menu-title">Manual</div>
-                  </a>
-                </div> */}
+                {pagesAllow.configs &&
+                  (uPermission.superAdmin || uPermission.officer) && (
+                    <NavLink
+                      onClick={closeSidebarhandler}
+                      to="/configs"
+                      className={`navlink `}
+                      title={t("ConfigPage")}
+                      liClass="menu-link"
+                    >
+                      <figure className="faIcon">
+                        <FontAwesomeIcon icon={faTools} />
+                      </figure>
+                      <div className="menu-title">{t("ConfigPage")}</div>
+                    </NavLink>
+                  )}
               </ul>
             </Fragment>
           )}
@@ -745,19 +546,9 @@ const SidebarComponent = (props) => {
       <ul
         className="nav-menu mini-bar"
         style={{ marginTop: "auto", paddingRight: ".5rem" }}
-      >
-        {/* <li className="menu-link footerLink">
-          <a href={webPath} target="_blank" className="navlink pink-btn " title={t("GoToWebSite")}>
-            <figure className="faIcon">
-              <FontAwesomeIcon icon={faHome} />
-            </figure>
-            <span className="menu-title">{t("GoToWebSite")}</span>
-          </a>
-        </li> */}
-      </ul>
+      ></ul>
       <p className="powerBy">Backoffice v. 1 </p>
     </aside>
   );
 };
-
 export default SidebarComponent;

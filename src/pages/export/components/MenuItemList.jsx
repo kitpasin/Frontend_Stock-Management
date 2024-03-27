@@ -30,89 +30,11 @@ function MenuItemList({
   const [openExportModal, setOpenExportModal] = useState(false);
   const [openBarcodeModal, setOpenBarcodeModal] = useState(false);
   const [productShow, setProductShow] = useState([]);
-  const [productData, setProductData] = useState([]);
   const [modal, setModal] = useState({
     isEdit: false,
     isFetchImport: false,
   });
   const open = Boolean(anchorEl);
-
-  useEffect(() => {
-    fetchProductdata();
-  }, [refreshData]);
-
-  function fetchProductdata() {
-    svProductAll().then((res) => {
-      const result = res.data;
-      setProductData(result);
-    });
-  }
-
-  const fetchImportHandle = (_params) => {
-    const data = productData.filter((item) => item.id === _params.id);
-    if (data) {
-      const dd = data[0];
-      const result = {
-        id: dd.id,
-        product_id: dd.product_id,
-        title: dd.title,
-        state1: false,
-        state2: false,
-        state3: false,
-        reset: 0,
-        unit: dd.unit_id,
-        unit_name: dd.net_name,
-        netweight: dd.netweight,
-        counting_unit: dd.counting_unit_id,
-        counting_unit_name: dd.amount_name,
-        purchase_date: "",
-        mfd_date: "",
-        exp_date: "",
-        barcode: "",
-        new_barcode: "",
-        main_cate_id: dd.main_cate_id,
-        main_cate_name: dd.main_cate_name,
-        sub_cate_id: dd.sub_cate_id,
-        sub_cate: dd.sub_cate_name,
-        supplier_id: dd.supplier_id,
-        supplier_cate: dd.supplier_cate_id,
-        supplier_name: dd.supplier_name,
-        supplier_cate_name: dd.supplier_cate_name,
-        import_value: "",
-        defective: dd.defective_product,
-        image_path: dd.thumbnail_link,
-
-        import_fee: "",
-        fuel_cost: "",
-        other_exp: "",
-        total: "",
-        op_unit: "",
-        total_product: "",
-
-        oc_unit: dd.op_unit,
-        unit_price: dd.unit_price,
-        product_cost: "",
-        units: "",
-        cost_per_unit: dd.cost_per_unit,
-        total_cost: "",
-        set_profit: dd.set_profit,
-        vat_id: dd.vat_id,
-        vat: dd.vat_name,
-        profit_per_unit: dd.profit_per_unit,
-        pp_profit: dd.pp_profit,
-        pp_vat: dd.pp_vat,
-        os_price: dd.selling_price,
-        selling_price: "",
-      };
-      setModal((prev) => {
-        return { ...prev, isEdit: false, isFetchImport: true };
-      });
-      setProductShow(result);
-      setOpenModal(true);
-      handleClose();
-    }
-  };
-
   const deleteHandle = (product_id, export_id, export_quantity, export_date) => {
     const data = {
       export_id: export_id,
@@ -156,11 +78,8 @@ function MenuItemList({
     setOpenMenu(false);
   }
 
-  function barcodeHandle(product_id) {
-    const data = productData.filter(
-      (item) => item.product_id === product_id
-    );
-    setProductShow(data[0]);
+  function barcodeHandle(product) {
+    setProductShow(product);
     setOpenBarcodeModal(true);
     handleClose()
   }
@@ -200,7 +119,7 @@ function MenuItemList({
             display: "flex",
             gap: "1rem",
           }}
-          onClick={() => barcodeHandle(params.row.product_id)}
+          onClick={() => barcodeHandle(params.row)}
         >
           <figure
             style={{

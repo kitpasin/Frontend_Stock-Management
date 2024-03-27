@@ -79,7 +79,6 @@ const ModalEditPost = (props) => {
   
   useEffect(() => {
     if (items !== null) {
-      console.log("in")
       let newData = {}
       for (let key in items) {
         if(key === "status_display" || key === "is_maincontent" || key === "pin"){

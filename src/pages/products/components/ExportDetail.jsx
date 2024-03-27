@@ -20,6 +20,7 @@ function ExportDetail({
   const webPath = useSelector((state) => state.app.webPath);
   const [isHovered, setIsHovered] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // Simulate data loading after 2 seconds
@@ -29,32 +30,38 @@ function ExportDetail({
   }, []);
 
   function minusQuantity(data) {
+    // setLoading(true)
     if (data.quantity > 1) {
       const newData = data.quantity -= 1
-      const formData = {
-        'product_id': data.product_id,
-        'quantity': newData
-      }
-      axios.post("product/export/minus/quantity", formData).then(() => {
-        setRefreshData(refreshData + 1)
-      })
+      // const formData = {
+      //   'product_id': data.product_id,
+      //   'quantity': newData
+      // }
+      // axios.post("product/export/minus/quantity", formData).then(() => {
+      //   setLoading(false)
+      //   // setRefreshData(refreshData + 1)
+      // }).catch(err => setLoading(false))
     } else {
+      setLoading(false)
       console.log("Error, quantity shouldn't less than 0")
     }
   }
 
   function plusQuantity(data) {
+    // setLoading(true)
     if (data.quantity >= 0 && data.quantity < (data.import_value - data.export_value - data.export_defective_value)) {
       const newData = data.quantity += 1
-      const formData = {
-        'product_id': data.product_id,
-        'quantity': newData
-      }
-      axios.post("product/export/plus/quantity", formData).then(() => {
-        setRefreshData(refreshData + 1)
-      })
+      // const formData = {
+      //   'product_id': data.product_id,
+      //   'quantity': newData
+      // }
+      // axios.post("product/export/plus/quantity", formData).then(() => {
+      //   setLoading(false)
+      //   // setRefreshData(refreshData + 1)
+      // }).catch(err => setLoading(false))
     } else {
-      console.log("Error, quantity shouldn't less than 0")
+      setLoading(false)
+      console.log("Error, invalid quantity")
     }
   }
 
@@ -313,13 +320,13 @@ function ExportDetail({
           }}
         >
           <figure onClick={() => minusQuantity(params.row)}>
-            <RemoveCircleOutlineIcon sx={{ cursor: "pointer" }} />
+            <RemoveCircleOutlineIcon sx={{ cursor: "pointer", opacity: loading?0.5:1, pointerEvents: loading??"none" }} />
           </figure>
           <p style={{ fontSize: "12px", lineHeight: "12.5px" }}>
             {params.row.quantity}
           </p>
           <figure onClick={() => plusQuantity(params.row)}>
-            <AddCircleOutlineIcon sx={{ cursor: "pointer" }} />
+            <AddCircleOutlineIcon sx={{ cursor: "pointer", opacity: loading?0.5:1, pointerEvents: loading??"none" }} />
           </figure>
         </div>
       ),

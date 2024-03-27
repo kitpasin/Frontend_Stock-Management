@@ -8,22 +8,18 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
-import { Link } from "react-router-dom";
 import PulseLoader from "react-spinners/PulseLoader";
 
 import "./ExportPage.scss";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
 import Table from "./components/Table";
 import axios from "axios";
-import Swal from "sweetalert2";
 
 function ExportPage() {
   const { t } = useTranslation(["dashboard-page"]);
-
   const [loading, setLoading] = useState(true);
-
+  const [exportedProducts, setExportedProducts] = useState(null);
   const [exportID, setExportID] = useState(null);
-  const [exportedProducts, setExportedProducts] = useState([]);
   const [title, setTitle] = useState("");
   const [productId, setProductId] = useState("");
   const [mainCategory, setMainCategory] = useState("");
@@ -33,145 +29,174 @@ function ExportPage() {
   const [productType, setProductType] = useState("");
   const [supplier, setSupplier] = useState("");
   const [vat, setVat] = useState("");
-
   const [refreshData, setRefreshData] = useState(0);
   const [productSelected, setProductSelected] = useState([]);
-  const [openMultiExportModal, setOpenMultiexportModal] = useState(false);
+  const [filteredProduct, setFilteredProduct] = useState([]);
 
-  const filteredProduct = exportedProducts?.filter((product) => {
-    const matchesExportID = exportID ? product.export_id === exportID : true;
-    const matchesTitle = title ? product.title === title : true;
-    const matchProductId = productId ? product.product_id === productId : true;
-    const matchesMainCategory = mainCategory
-      ? product.main_cate_name === mainCategory
-      : true;
-    const matchesSupplier = supplier
-      ? product.supplier_name === supplier
-      : true;
-    const matchesSubCategory = subCategory
-      ? product.sub_cate_name === subCategory
-      : true;
-    const matchesPrevBarcode = prevBarcode
-      ? product.product_barcode === prevBarcode
-      : true;
-    const matchesCurBarcode = curBarcode
-      ? product.barcode_number === curBarcode
-      : true;
-    const matchesProductType = productType
-      ? product.p_type === productType
-      : true;
-    let matchesVat = true;
-
-    if (vat === "1") {
-      matchesVat = product.vat_id !== 0;
-    } else if (vat === "0") {
-      matchesVat = product.vat_id == 0;
-    }
-
-    return (
-      matchesExportID &&
-      matchesTitle &&
-      matchProductId &&
-      matchesMainCategory &&
-      matchesSupplier &&
-      matchesVat &&
-      matchesSubCategory &&
-      matchesPrevBarcode &&
-      matchesCurBarcode &&
-      matchesProductType
-    );
+  const [options, setOptions] = useState({
+    productTypeOptions: [],
+    productNameOption: [],
+    productIDOption: [],
+    subCategoryOptions: [],
+    mainCategoryOptions: [],
+    supplierOption: [],
+    prevBarcodeOption: [],
+    barcodeOption: [],
+    exportIds: [],
   });
 
-  const multiExportHandle = () => {
-    if (productSelected?.length === 0) {
-      Swal.fire({
-        text: "เลือกสินค้าที่ต้องการเบิก",
-        icon: "info",
-      }).then(() => {
-        return false;
-      });
-    } else {
-      setOpenMultiexportModal(true);
-    }
-  };
-
-  async function getExportedProduct() {
-    const response = await axios.get("get/product/export");
-    const vats = response.data.vats;
-    let productArr = [];
-    const products = response.data.data?.forEach((p) => {
-      vats.forEach(vat => {
-        if (vat.id === p.vat_id) {
-          productArr.push({ ...p, vat_name: vat.name }) 
-        } else if (p.vat_id === 0) {
-          productArr.push({ ...p, vat_name: '0%' }) 
-        }
-      })
-    });
-    
-    const data = response.data.data;
-    console.log(response);
-    setExportedProducts(data);
-    setLoading(false);
-  }
-
   useEffect(() => {
+    setExportedProducts([]);
+    setFilteredProduct([]);
+
     getExportedProduct();
   }, [refreshData]);
 
-  const exportIDOptions = exportedProducts
-    ?.map((product) => product.export_id)
-    ?.filter(
-      (value, index, self) => self.indexOf(value) === index && value !== null
-    );
+  useEffect(() => {
+    if (exportedProducts) {
+      setFilteredProduct([]);
+      const filtered = exportedProducts?.filter((product) => {
+        const matchesExportID = exportID
+          ? product.export_id.toString() === exportID
+          : true;
+        const matchesTitle = title ? product.title === title : true;
+        const matchProductId = productId
+          ? product.product_id === productId
+          : true;
+        const matchesMainCategory = mainCategory
+          ? product.main_cate_name === mainCategory
+          : true;
+        const matchesSupplier = supplier
+          ? product.supplier_name === supplier
+          : true;
+        const matchesSubCategory = subCategory
+          ? product.sub_cate_name === subCategory
+          : true;
+        const matchesPrevBarcode = prevBarcode
+          ? product.product_barcode === prevBarcode
+          : true;
+        const matchesCurBarcode = curBarcode
+          ? product.barcode_number === curBarcode
+          : true;
+        const matchesProductType = productType
+          ? product.p_type === productType
+          : true;
+        let matchesVat = true;
 
-  const titleOptions = exportedProducts
-    ?.map((product) => product.title)
-    ?.filter(
-      (value, index, self) => self.indexOf(value) === index && value !== null
-    );
+        if (vat === "1") {
+          matchesVat = product.vat_id !== 0;
+        } else if (vat === "0") {
+          matchesVat = product.vat_id == 0;
+        }
 
-  const productIdOptions = exportedProducts
-    ?.map((product) => product.product_id.toString())
-    ?.filter(
-      (value, index, self) => self.indexOf(value) === index && value !== null
-    );
+        return (
+          matchesExportID &&
+          matchesTitle &&
+          matchProductId &&
+          matchesMainCategory &&
+          matchesSupplier &&
+          matchesVat &&
+          matchesSubCategory &&
+          matchesPrevBarcode &&
+          matchesCurBarcode &&
+          matchesProductType
+        );
+      });
+      setFilteredProduct(filtered);
+    }
+  }, [
+    exportedProducts,
+    supplier,
+    productType,
+    curBarcode,
+    prevBarcode,
+    subCategory,
+    mainCategory,
+    productId,
+    title,
+    exportID,
+    vat,
+  ]);
 
-  const mainCategoryOptions = exportedProducts
-    ?.map((product) => product.main_cate_name)
-    ?.filter(
-      (value, index, self) => self.indexOf(value) === index && value !== null
-    );
+  async function setOptionAll(data) {
+    if (data && data.length > 0) {
+      const productTypeOptions = await data
+        .map((product) => product.p_type)
+        .filter(
+          (value, index, self) =>
+            self.indexOf(value) === index && value !== null
+        );
+      const productNameOption = await data
+        .map((product) => product.title)
+        .filter(
+          (value, index, self) =>
+            self.indexOf(value) === index && value !== null
+        );
+      const productIDOption = await data
+        .map((product) => product.product_id.toString())
+        .filter(
+          (value, index, self) =>
+            self.indexOf(value) === index && value !== null
+        );
+      const mainCategoryOptions = await data
+        .map((product) => product.main_cate_name)
+        .filter(
+          (value, index, self) =>
+            self.indexOf(value) === index && value !== null
+        );
+      const subCategoryOptions = await data
+        .map((product) => product.sub_cate_name)
+        .filter(
+          (value, index, self) =>
+            self.indexOf(value) === index && value !== null
+        );
+      const supplierOption = await data
+        .map((product) => product.supplier_name)
+        .filter(
+          (value, index, self) =>
+            self.indexOf(value) === index && value !== null
+        );
+      const prevBarcodeOption = await data
+        .map((product) => product.product_barcode)
+        .filter(
+          (value, index, self) =>
+            self.indexOf(value) === index && value !== null
+        );
+      const barcodeOption = await data
+        .map((product) => product.barcode_number)
+        .filter(
+          (value, index, self) =>
+            self.indexOf(value) === index && value !== null
+        );
+      const exportIds = await data
+        .map((product) => product.export_id.toString())
+        .filter(
+          (value, index, self) =>
+            self.indexOf(value) === index && value !== null
+        );
 
-  const subCategoryOptions = exportedProducts
-    ?.map((product) => product.sub_cate_name)
-    ?.filter(
-      (value, index, self) => self.indexOf(value) === index && value !== null
-    );
+      setOptions({
+        productTypeOptions,
+        productNameOption,
+        productIDOption,
+        supplierOption,
+        prevBarcodeOption,
+        barcodeOption,
+        exportIds,
+        mainCategoryOptions,
+        subCategoryOptions,
+      });
+    }
+  }
 
-  const prevBarcodeOptions = exportedProducts
-    ?.map((product) => product.product_barcode)
-    ?.filter(
-      (value, index, self) => self.indexOf(value) === index && value !== null
-    );
+  async function getExportedProduct() {
+    const response = await axios.get("get/product/export");
+    const data = response.data.data;
 
-  const curBarcodeOptions = exportedProducts
-    ?.map((product) => product.barcode_number)
-    ?.filter(
-      (value, index, self) => self.indexOf(value) === index && value !== null
-    );
-
-  const productTypeOptions = exportedProducts
-    ?.map((product) => product.p_type)
-    ?.filter(
-      (value, index, self) => self.indexOf(value) === index && value !== null
-    );
-
-  const supplierOptions = exportedProducts
-    ?.map((supplier) => supplier.supplier_name)
-    ?.filter(
-      (value, index, self) => self.indexOf(value) === index && value !== null
-    );
+    setExportedProducts(data);
+    setOptionAll(data);
+    setLoading(false);
+  }
 
   return (
     <section id="export-page">
@@ -205,7 +230,7 @@ function ExportPage() {
                   <p>สินค้าทั้งหมด</p>
                 </figure>
                 <div className="description">
-                  <p>{exportedProducts?.length} รายการ</p>
+                  <p>{filteredProduct?.length} รายการ</p>
                 </div>
               </div>
             </div>
@@ -222,7 +247,7 @@ function ExportPage() {
                 size="small"
                 disablePortal
                 id="combo-box-id"
-                options={productTypeOptions}
+                options={options.productTypeOptions}
                 onChange={(event, value) => setProductType(value || "")}
                 fullWidth
                 renderInput={(params) => (
@@ -233,16 +258,18 @@ function ExportPage() {
                 size="small"
                 disablePortal
                 id="combo-box-title"
-                options={titleOptions}
+                options={options.productNameOption}
                 onChange={(event, value) => setTitle(value || "")}
                 fullWidth
-                renderInput={(params) => <TextField {...params} label="ชื่อ" />}
+                renderInput={(params) => (
+                  <TextField {...params} label="ชื่อสินค้า" />
+                )}
               />
               <Autocomplete
                 size="small"
                 disablePortal
                 id="combo-box-product-id"
-                options={productIdOptions}
+                options={options.productIDOption}
                 onChange={(event, value) => setProductId(parseInt(value) || "")}
                 fullWidth
                 renderInput={(params) => (
@@ -252,23 +279,23 @@ function ExportPage() {
               <Autocomplete
                 size="small"
                 disablePortal
-                id="combo-box-main-category"
-                options={mainCategoryOptions}
-                onChange={(event, value) => setMainCategory(value || "")}
+                id="combo-box-export-id"
+                options={options.exportIds}
+                onChange={(event, value) => setExportID(value || "")}
                 fullWidth
                 renderInput={(params) => (
-                  <TextField {...params} label="หมวดหมู่หลัก" />
+                  <TextField {...params} label="รหัสเบิก" />
                 )}
               />
               <Autocomplete
                 size="small"
                 disablePortal
-                id="combo-box-main-category"
-                options={subCategoryOptions}
-                onChange={(event, value) => setSubCategory(value || "")}
+                id="combo-box-supplier"
+                options={options.supplierOption}
+                onChange={(event, value) => setSupplier(value || "")}
                 fullWidth
                 renderInput={(params) => (
-                  <TextField {...params} label="หมวดหมู่ย่อย" />
+                  <TextField {...params} label="ซัพพลายเออร์" />
                 )}
               />
             </div>
@@ -285,31 +312,10 @@ function ExportPage() {
                 size="small"
                 disablePortal
                 id="combo-box-supplier"
-                options={exportIDOptions}
-                onChange={(event, value) => setExportID(value || "")}
-                fullWidth
-                renderInput={(params) => (
-                  <TextField {...params} label="รหัสเบิก" />
-                )}
-              />
-              <Autocomplete
-                size="small"
-                disablePortal
-                id="combo-box-supplier"
-                options={supplierOptions}
-                onChange={(event, value) => setSupplier(value || "")}
-                fullWidth
-                renderInput={(params) => (
-                  <TextField {...params} label="ซัพพลายเออร์" />
-                )}
-              />
-              <Autocomplete
-                size="small"
-                disablePortal
-                id="combo-box-supplier"
-                options={prevBarcodeOptions?.filter(
-                  (option) => option !== null && option !== undefined
-                )}
+                options={options.prevBarcodeOption}
+                // options={prevBarcodeOptions?.filter(
+                //   (option) => option !== null && option !== undefined
+                // )}
                 onChange={(event, value) => setPrevBarcode(value || "")}
                 fullWidth
                 renderInput={(params) => (
@@ -320,13 +326,33 @@ function ExportPage() {
                 size="small"
                 disablePortal
                 id="combo-box-supplier"
-                options={curBarcodeOptions?.filter(
-                  (option) => option !== null && option !== undefined
-                )}
+                options={options.barcodeOption}
                 onChange={(event, value) => setCurBarcode(value || "")}
                 fullWidth
                 renderInput={(params) => (
                   <TextField {...params} label="บาร์โค้ดใหม่" />
+                )}
+              />
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-main-category"
+                options={options.mainCategoryOptions}
+                onChange={(event, value) => setMainCategory(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField {...params} label="หมวดหมู่หลัก" />
+                )}
+              />
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="combo-box-main-category"
+                options={options.subCategoryOptions}
+                onChange={(event, value) => setSubCategory(value || "")}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField {...params} label="หมวดหมู่ย่อย" />
                 )}
               />
             </div>

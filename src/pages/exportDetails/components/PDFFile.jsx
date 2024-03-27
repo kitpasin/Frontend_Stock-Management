@@ -39,18 +39,6 @@ const styles = StyleSheet.create({
     height: "100%",
     minHeight: 30,
   },
-  tableHeader: {
-    fontSize: 16,
-    borderStyle: "solid",
-    borderColor: "#000",
-    borderWidth: 1,
-    flex: 1,
-    textAlign: "center",
-    color: "#fff",
-    fontWeight: "bold",
-    backgroundColor: "#475569",
-    paddingTop: 5,
-  },
   tableRow: {
     flexDirection: "row",
     backgroundColor: "#f2f2f2",
@@ -112,28 +100,32 @@ const PDFFile = ({ data }) => {
   return (
     <Document>
       <Page
-        size={{ width: "100%", height: "100%" }}
+        // size={{ width: "100%", height: "100%" }}
+        size="A4"
         style={styles.page}
         fonts={[{ src: ThaiSarabunRegular, family: "ThaiSarabun" }]}
       >
         <View style={styles.table}>
           <View style={styles.tableRowHeader}>
-            <View style={{ ...styles.tableHeader, flex: 1.175 }}>
+            <View style={{ ...styles.tableHeader, flex: .567 }}>
+              <Text>ลำดับ</Text>
+            </View>
+            <View style={{ ...styles.tableHeader, flex: 2 }}>
               <Text>สินค้า</Text>
             </View>
             <View style={styles.tableHeader}>
               <Text>ประเภทสินค้า</Text>
             </View>
-            <View style={{ ...styles.tableHeader, flex: 1.175 }}>
+            <View style={{ ...styles.tableHeader, flex: 1.5 }}>
               <Text>รหัสเบิก</Text>
             </View>
-            <View style={styles.tableHeader}>
+            <View style={{ ...styles.tableHeader, flex: 2 }}>
               <Text>ซัพพลายเออร์</Text>
             </View>
-            <View style={styles.tableHeader}>
+            <View style={{ ...styles.tableHeader, flex: 1.5 }}>
               <Text>บาร์โค้ดเดิม</Text>
             </View>
-            <View style={styles.tableHeader}>
+            <View style={{ ...styles.tableHeader, flex: 1.5 }}>
               <Text>บาร์โค้ดใหม่</Text>
             </View>
             <View style={styles.tableHeader}>
@@ -161,23 +153,26 @@ const PDFFile = ({ data }) => {
 
           {data.map((item, index) => (
             <View key={index} style={styles.tableRow}>
-              <View style={{ ...styles.tableCell, flex: 1.2 }}>
+              <View style={{ ...styles.tableCell, flex: .5 }}>
+                <Text>{index + 1}</Text>
+              </View>
+              <View style={{ ...styles.tableCell, flex: 2.15 }}>
                 <Text>{item.title}</Text>
                 <Text>{item.product_id}</Text>
               </View>
               <View style={styles.tableCell}>
                 <Text>{item.p_type}</Text>
               </View>
-              <View style={{ ...styles.tableCell, flex: 1.2 }}>
+              <View style={{ ...styles.tableCell, flex: 1.6 }}>
                 <Text>{item.export_id}</Text>
               </View>
-              <View style={styles.tableCell}>
+              <View style={{ ...styles.tableCell, flex: 2.1 }}>
                 <Text>{item.supplier_name}</Text>
               </View>
-              <View style={styles.tableCell}>
+              <View style={{ ...styles.tableCell, flex: 1.6 }}>
                 <Text>{item.product_barcode}</Text>
               </View>
-              <View style={styles.tableCell}>
+              <View style={{ ...styles.tableCell, flex: 1.6 }}>
                 <Text>{item.barcode_number}</Text>
               </View>
               <View style={styles.tableCell}>
