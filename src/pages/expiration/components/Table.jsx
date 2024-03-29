@@ -28,11 +28,12 @@ function Table({ productsData, setProductSelected }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+  
   const onRowsSelectionHandler = (ids) => {
-    const selectedRowsData = ids.map((id) =>
-      productsData.find((product) => product.id === id)
-    );
+    const selectedRowsData = productsData?.filter((product) => ids.includes(product.product_id));
+    // const selectedRowsData = ids.map((id) =>
+    // productsData.find((product) => product.product_id === id)
+    // );
     setProductSelected(selectedRowsData);
   };
 
